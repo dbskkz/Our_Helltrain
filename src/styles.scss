@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+   /* 關鍵：Inter 寫前面，Noto Sans TC 寫後面 */
+  font-family: "Inter", "Noto Sans TC", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
