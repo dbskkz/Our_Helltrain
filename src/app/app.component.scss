@@ -1,15 +1,6 @@
 @use './styles/variables' as *;
 
-h1{
-  background-color: $text-black;
-  width: fit-content;
-  border-radius: $border-radius-lg;
-  padding: 1rem;
-  color: $primary-yellow;
-}
-
 .variable{
-  color: aqua;
   display: none;
   visibility: hidden;
 }
