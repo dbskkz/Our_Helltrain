@@ -1,0 +1,26 @@
+import { Component, EventEmitter, Output } from '@angular/core';
+
+// 素材庫
+import { LucideAngularModule, Menu } from 'lucide-angular';
+
+import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { UserActionsComponent } from '../user-actions/user-actions.component';
+
+@Component({
+  selector: 'app-top-nav',
+  imports: [LucideAngularModule, SearchBarComponent, UserActionsComponent],
+  templateUrl: './top-nav.component.html',
+  styleUrl: './top-nav.component.scss'
+})
+export class TopNavComponent {
+  // Declare icon
+  readonly HomeIcon = Menu;
+
+  // Call the side-bar
+  @Output() menuClick = new EventEmitter<void>();
+
+  onMenuBtnClick() {
+    this.menuClick.emit(); // 按下時，把訊號射出去
+  }
+
+}
