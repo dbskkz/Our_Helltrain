@@ -1,1 +1,20 @@
 <p>back-index works!</p>
+<div>
+  今日概覽
+  <div class="view">
+    <div class="viewbox">新增用戶
+      <p class="viewnumber">{{newuser}}</p>
+    </div>
+    <div class="viewbox">待處理爭議
+      <p class="viewnumber">{{dispute}}</p>
+    </div>
+  </div>
+</div>
+<div class="boxModel">需立即處理
+  <!-- 待處理案件以@if生成div，判斷:爭議用紅底、審核用淡橘底，ex -->
+   <div>N件爭議事件尚未處裡
+    <button mat-stroked-button>前往處裡</button>
+    <button mat-fab aria-label="Example icon button with a delete icon">前往處裡</button>
+   </div>
+</div>
+<div class="boxModel">近期操作</div>
