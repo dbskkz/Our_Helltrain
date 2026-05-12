@@ -6,6 +6,9 @@ import { BackProductComponent } from './@component/back-product/back-product.com
 import { ReportComponent } from './@component/report/report.component';
 import { ProfileSettingsComponent } from './@component/profile-settings/profile-settings.component';
 import { OrderInformationComponent } from './@component/order-information/order-information.component';
+import { MainLayoutComponent } from './@component/main-layout/main-layout.component';
+import { HomepageComponent } from './@component/homepage/homepage.component';
+import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
 
 export const routes: Routes = [
   //後台
@@ -17,5 +20,16 @@ export const routes: Routes = [
 
   //前台
   { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
-  { path: 'order_information', component: OrderInformationComponent }, //訂單資料
+
+  // 第一類：需要導覽列和側邊欄的頁面
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      { path: 'home', component: HomepageComponent },
+      { path: 'test', component: ForegroundTestComponent },
+      { path: 'order_information', component: OrderInformationComponent }, //訂單資料
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+    ],
+  },
 ];

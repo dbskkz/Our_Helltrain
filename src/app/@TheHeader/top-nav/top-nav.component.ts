@@ -13,14 +13,5 @@ import { UserActionsComponent } from '../user-actions/user-actions.component';
   styleUrl: './top-nav.component.scss'
 })
 export class TopNavComponent {
-  // Declare icon
-  readonly HomeIcon = Menu;
-
-  // Call the side-bar
-  @Output() menuClick = new EventEmitter<void>();
-
-  onMenuBtnClick() {
-    this.menuClick.emit(); // 按下時，把訊號射出去
-  }
 
 }
