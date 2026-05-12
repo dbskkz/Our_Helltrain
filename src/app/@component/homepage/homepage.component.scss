@@ -1,1 +1,199 @@
 @use '../../styles/variables' as *;
+
+// 內容區塊的間距建議
+.content {
+  padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 1rem; // 手機版縮小內縮
+  }
+}
+
+
+// 建議包裹一個父層容器，方便管理間距
+.Carousel-Notification {
+  margin-bottom: 2rem; // 跟下方商品列表拉開距離
+
+  #carouselExample {
+    width: 100%;
+    // 1. 拿掉固定的 height: 20rem;
+    // 2. 設定固定的寬高比 (例如 3:1 或 21:9，視你的 Banner 圖案而定)
+    aspect-ratio: 21 / 9;
+
+    // 讓整個輪播範圍也有圓角
+    overflow: hidden;
+    border-radius: 12px; // 也可以用你的變數 $border-radius-lg
+
+    .carousel-inner {
+      height: 100%;
+    }
+
+    .carousel-item {
+      height: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        // 3. 關鍵：確保圖片填滿格子且不變形
+        object-fit: cover;
+        // 如果圖片重要內容在中間，可以設定定位
+        object-position: center;
+      }
+    }
+  }
+}
+
+
+
+.content-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba($background-gray, 0.15);
+
+  // 左側：正在查看標籤
+  .applied-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .label {
+      font-size: 0.95rem;
+      color: $text-black;
+      font-weight: 500;
+    }
+
+    .filter-tag {
+      background-color: $background-yellow;
+      color: $text-price;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid rgba($primary-yellow, 0.5);
+      font-weight: 600;
+    }
+  }
+
+  // 右側：排序下拉選單
+  .sorting-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 180px;
+
+    // 前綴圖示 (排序)
+    .icon-select-prefix {
+      position: absolute;
+      left: 12px;
+      z-index: 2;
+      color: $text-gray;
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    // 後綴圖示 (下拉箭頭)
+    .icon-select-suffix {
+      position: absolute;
+      right: 12px;
+      z-index: 2;
+      color: $background-gray;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
+
+    select {
+      width: fit-content;
+      text-align: center;
+      appearance: none; // 隱藏原生箭頭
+      // background-color: $background-white;
+      color: $text-black;
+      // border: 1.5px solid rgba($background-gray, 0.2);
+      border: transparent;
+      padding: 0.5rem 0rem 0.5rem 0.5rem; // 左側留空間給前綴 Icon
+      border-radius: $border-radius-sm;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+
+      &:focus {
+        outline: none;
+        background-color: #EEE;
+      }
+    }
+  }
+
+  lucide-icon {
+    color: $text-gray;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// --- RWD 響應式優化 ---
+@media (max-width: 768px) {
+  .content-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+
+    .applied-filters, .sorting-dropdown {
+      width: 100%;
+    }
+
+    .sorting-dropdown select {
+      padding: 0.75rem 2.2rem 0.75rem 2.5rem; // 手機版稍微加高好點擊
+    }
+  }
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap; // 讓卡片可以換行
+  gap: 20px;       // 卡片之間的間距
+
+  width: 100%;
+  box-sizing: border-box;
+
+  .card {
+    // 設定平滑過渡動畫
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // 預設：一排 4 個 (計算扣掉間距後的寬度)
+    // 公式：(100% - (數量-1)*間距) / 數量
+    width: calc((100% - 20px * 3) / 4);
+
+    &:hover {
+      transform: translateY(-2px); // 滑鼠移上去的小特效
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .card-body {
+      .title { font-weight: bold; }
+      .price { color: #2c3e50; }
+    }
+  }
+
+  // --- RWD 斷點設定 ---
+
+  // 過渡態：中等螢幕 (例如平板) 變一排 3 個
+  @media (max-width: 1024px) {
+    .card {
+      width: calc((100% - 20px * 2) / 3);
+    }
+  }
+
+  // 變一排 2 個
+  @media (max-width: 768px) {
+    .card {
+      width: calc((100% - 20px * 1) / 2);
+    }
+  }
+
+
+}
