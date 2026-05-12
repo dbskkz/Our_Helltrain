@@ -1,2 +1,13 @@
-<p>main-layout works!</p>
-<router-outlet></router-outlet>
+<app-top-nav (menuClick)="mySidenav.toggle()"></app-top-nav>
+
+<div class="main-content" >
+  <app-side-nav #mySidenav class="variable"></app-side-nav>
+  @if (mySidenav.isOpen) {
+    <app-side-nav #mySidenav></app-side-nav>
+  }
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+

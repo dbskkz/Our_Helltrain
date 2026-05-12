@@ -1,1 +1,55 @@
-<p>side-nav works!</p>
+<div class="side-wrapper">
+  <ul class="nav-list">
+    <li class="nav-item active">
+      <lucide-icon [img]="HomeIcon" size="16"></lucide-icon>
+      <span>首頁</span>
+    </li>
+    <li class="nav-item">
+      <lucide-icon [img]="BookIcon" size="16"></lucide-icon>
+      <span>書籍</span>
+    </li>
+    <li class="nav-item">
+      <lucide-icon [img]="BoxIcon" size="16"></lucide-icon>
+      <span>科系用品</span>
+    </li>
+    <li class="nav-item">
+      <lucide-icon [img]="HandbagIcon" size="16"></lucide-icon>
+      <span>生活雜貨</span>
+    </li>
+
+    <li class="nav-item">
+      <lucide-icon [img]="SmartphoneIcon" size="16"></lucide-icon>
+      <span>3C 電子</span>
+    </li>
+
+    <li class="nav-item">
+      <lucide-icon [img]="LampIcon" size="16"></lucide-icon>
+      <span>家具家電</span>
+    </li>
+
+    <li class="nav-item">
+      <lucide-icon [img]="ListIcon" size="16"></lucide-icon>
+      <span>其他</span>
+    </li>
+
+    </ul>
+
+  <hr class="divider">
+
+  <div class="filter-section">
+    <h4>篩選條件</h4>
+    <div class="filter-row">
+      <span>價格範圍</span>
+      <span class="value">$0 - $20,000+ <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon></span>
+    </div>
+    <div class="filter-row">
+      <span>地區</span>
+      <span class="value">選擇地區 <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon></span>
+    </div>
+    </div>
+
+  <div class="promo-card">
+    <p class="title">讓物品找到<br>下一個好主人</p>
+    <p class="slogan">Reuse, Reduce, Relove.</p>
+  </div>
+</div>

@@ -1,1 +1,19 @@
-<p>search-bar works!</p>
+<div class="search-bar-wrapper">
+  <div class="text-search-wrapper">
+    <lucide-icon [img]="SearchIcon" class="icon"></lucide-icon>
+    <input type="text" placeholder="搜尋書籍、商品、分類或學校...">
+  </div>
+
+  <div class="category-filter-wrapper">
+    <div class="filter-item type-filter">
+      <lucide-icon [img]="ShapesIcon" class="icon" size="16"></lucide-icon>
+      <select><option>選擇分類</option></select>
+    </div>
+
+    <div class="filter-item location-filter">
+      <lucide-icon [img]="MapPinIcon" class="icon" size="16"></lucide-icon>
+      <select><option>選擇地區</option></select>
+    </div>
+  </div>
+</div>
+

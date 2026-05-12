@@ -1,0 +1,58 @@
+@use '../../styles/variables' as *;
+
+
+.user-actions-wrapper {
+  display: flex;
+  align-items: center; // 確保圖示、頭像、名字垂直置中
+  gap: 1.25rem;        // 訊息圖示與頭像區的間距
+  flex-shrink: 0;      // 確保在縮放時這一區塊不會被壓扁
+
+  lucide-icon {
+    cursor: pointer;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;       // 頭像與 select 之間的間距
+    cursor: pointer;
+
+    .picture {
+      height: 2rem;    // 稍微加大一點比較符合視覺
+      width: 2rem;
+      background-color: rgb(186, 186, 186);
+      border-radius: 999px;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;  // 防止頭像變形
+    }
+
+    .user-name{
+      font-size: 0.8rem;
+    }
+  }
+
+  select {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    padding-right: 4px;
+
+    // 讓 select 寬度根據內容自適應 (如果需要更精準可以改用 div + icon)
+    &:focus {
+      outline: none;
+    }
+  }
+}
