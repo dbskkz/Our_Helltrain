@@ -1,0 +1,86 @@
+<div class="container py-5">
+  <h1 class="page-title">訂單資料 / 交易清單</h1>
+
+  <!-- tabs -->
+  <div>
+    <ul class="nav nav-tabs custom-tabs">
+      <li class="nav-item">
+        <button class="nav-link active">全部訂單</button>
+      </li>
+      <li class="nav-item active"><button class="nav-link">交易中</button></li>
+      <li class="nav-item active"><button class="nav-link">已完成</button></li>
+      <li class="nav-item active"><button class="nav-link">已取消</button></li>
+    </ul>
+  </div>
+
+  <!-- 資料頁 -->
+  <div class="order-card">
+    <div class="order-header">
+      <div class="order-info">
+        <span class="order-no">訂單編號：ORD202405160001</span>
+        <span class="order-date">下單時間：2024/05/16 14:32</span>
+      </div>
+      <div class="order-amount">訂單金額：<span class="price">$180</span></div>
+    </div>
+
+    <div class="order-body">
+      <div class="row align-items-center">
+        <div class="col-md-2">
+          <div class="product-img">
+            <img
+              src="https://d2lfcsub12kx0l.cloudfront.net/tw/product/img/Apple_apple_airpods_pro_2_0907194607052_640x480.jpg"
+              alt="商品"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="product-content">
+            <h5 class="name">AirPods (第二代)</h5>
+            <p class="seller">賣家：小麗的生活選物</p>
+            <div class="details">
+              <span class="unit-price">$180</span>
+              <span class="qty">數量：1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="delivery-status">
+            <div class="status-tag success">已完成</div>
+            <p>交易已完成，感謝您的購買！</p>
+            <button class="btn-action outline">查看評價</button>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="button-group">
+            <button class="btn-action primary">再次購買</button>
+            <button class="btn-action outline">聯絡賣家</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分頁 -->
+  <div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link">1</a></li>
+        <li class="page-item"><a class="page-link">2</a></li>
+        <li class="page-item"><a class="page-link">3</a></li>
+        <li class="page-item">
+          <a class="page-link" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
