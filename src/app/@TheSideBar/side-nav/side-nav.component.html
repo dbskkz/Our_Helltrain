@@ -1,37 +1,17 @@
 <div class="side-wrapper">
   <ul class="nav-list">
-    <li class="nav-item active">
-      <lucide-icon [img]="HomeIcon" size="16"></lucide-icon>
-      <span>首頁</span>
-    </li>
-    <li class="nav-item">
-      <lucide-icon [img]="BookIcon" size="16"></lucide-icon>
-      <span>書籍</span>
-    </li>
-    <li class="nav-item">
-      <lucide-icon [img]="BoxIcon" size="16"></lucide-icon>
-      <span>科系用品</span>
-    </li>
-    <li class="nav-item">
-      <lucide-icon [img]="HandbagIcon" size="16"></lucide-icon>
-      <span>生活雜貨</span>
-    </li>
-
-    <li class="nav-item">
-      <lucide-icon [img]="SmartphoneIcon" size="16"></lucide-icon>
-      <span>3C 電子</span>
-    </li>
-
-    <li class="nav-item">
-      <lucide-icon [img]="LampIcon" size="16"></lucide-icon>
-      <span>家具家電</span>
-    </li>
-
-    <li class="nav-item">
-      <lucide-icon [img]="ListIcon" size="16"></lucide-icon>
-      <span>其他</span>
-    </li>
-
+    @for (item of categories; track $index) {
+      <li class="nav-item">
+        <button
+          type="button"
+          class="nav-link"
+          (click)="selectCategory(item.value)"
+          [class.active]="selectedCategory === item.value">
+          <lucide-icon [name]="item.icon"></lucide-icon>
+          <span>{{item.label}}</span>
+        </button>
+      </li>
+    }
     </ul>
 
   <hr class="divider">

@@ -1,1 +1,80 @@
-<p>homepage works!</p>
+<main class="content">
+
+  <!-- 輪播公告 -->
+  <section class="Carousel-Notification">
+    <div id="carouselExample" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- <nav class="category-list">
+    <ul>
+      @for (item of categories; track item.value) {
+      <li>
+        <button type="button"
+        (click)="selectCategory(item.value)"
+        [class.active] = "selectedCategory === item.value">
+          <lucide-icon [name]="item.icon" [size]="18"></lucide-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      </li>
+    }
+    </ul>
+  </nav> -->
+
+  <div class="content-toolbar">
+    <div class="applied-filters">
+      <span>正在查看：</span>
+    </div>
+    <div class="sorting-dropdown">
+      <select >
+        <option value="newest">最新上架</option>
+        <option value="newest">最新上架</option>
+        <option value="price-low">價格從低到高</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="product-list">
+    @for (item of products; track item.title) {
+      <div class="card" style="width: 18rem;">
+        <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h6 class="title">{{ item.title }}</h6>
+          <p class="price">${{ item.price }}</p>
+
+          <div class="meta-info">
+            <span>{{ item.location }}</span>
+            <span>{{ item.time }}</span>
+          </div>
+
+          <div class="user-info">
+            <span>大頭照</span>
+            <span class="department">生科吉娃娃</span>
+          </div>
+
+        </div>
+      </div>
+    }
+  </section>
+
+</main>
+

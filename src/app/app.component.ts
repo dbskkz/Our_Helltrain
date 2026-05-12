@@ -6,7 +6,7 @@ import { SideNavComponent } from "./@TheSideBar/side-nav/side-nav.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SideNavComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
