@@ -8,10 +8,4 @@ import { Component } from '@angular/core';
 })
 export class SideNavComponent {
 
-  // Switch
-  isOpen = false;
-
-  toggle() {
-    this.isOpen = !this.isOpen;
-  }
 }
