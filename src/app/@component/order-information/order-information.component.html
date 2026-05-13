@@ -5,11 +5,17 @@
   <div>
     <ul class="nav nav-tabs custom-tabs">
       <li class="nav-item">
-        <button class="nav-link active">全部訂單</button>
+        <button class="nav-link" [class.active]="currentTab === '全部'" (click)="changeTab('全部')">全部訂單</button>
       </li>
-      <li class="nav-item active"><button class="nav-link">交易中</button></li>
-      <li class="nav-item active"><button class="nav-link">已完成</button></li>
-      <li class="nav-item active"><button class="nav-link">已取消</button></li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="currentTab === '交易中'" (click)="changeTab('交易中')">交易中</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="currentTab === '已完成'" (click)="changeTab('已完成')">已完成</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="currentTab === '已取消'" (click)="changeTab('已取消')">已取消</button>
+      </li>
     </ul>
   </div>
 
@@ -29,25 +35,26 @@
           <div class="product-img">
             <img
               src="https://d2lfcsub12kx0l.cloudfront.net/tw/product/img/Apple_apple_airpods_pro_2_0907194607052_640x480.jpg"
-              alt="商品"
-            />
+              alt="商品" />
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="product-content">
             <h5 class="name">AirPods (第二代)</h5>
-            <p class="seller">賣家：小麗的生活選物</p>
+            <p class="seller">賣家：小麗的生活選物 <lucide-icon [name]="MessageCircleMore" (click)="chat()"></lucide-icon></p>
             <div class="details">
-              <span class="unit-price">$180</span>
-              <span class="qty">數量：1</span>
+              <p class="unit-price">$180</p>
+              <p class="qty">數量：1</p>
             </div>
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 ">
           <div class="delivery-status">
-            <div class="status-tag success">已完成</div>
+            <div class="status-tag">
+              <lucide-icon [name]="CircleCheckBig"></lucide-icon> 已完成
+            </div>
             <p>交易已完成，感謝您的購買！</p>
             <button class="btn-action outline">查看評價</button>
           </div>
@@ -55,7 +62,9 @@
 
         <div class="col-md-3">
           <div class="button-group">
-            <button class="btn-action primary">再次購買</button>
+            <button class="btn-action primary" (click)="buyAgain()">
+              再次購買
+            </button>
             <button class="btn-action outline">聯絡賣家</button>
           </div>
         </div>
@@ -67,16 +76,19 @@
   <div>
     <nav aria-label="Page navigation example">
       <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" aria-label="Previous">
+        <span>共5筆資料</span>
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li class="page-item"><a class="page-link">1</a></li>
-        <li class="page-item"><a class="page-link">2</a></li>
-        <li class="page-item"><a class="page-link">3</a></li>
-        <li class="page-item">
-          <a class="page-link" aria-label="Next">
+        @for (p of [1, 2, 3]; track p) {
+        <li class="page-item" [class.active]="currentPage === p">
+          <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
+        </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

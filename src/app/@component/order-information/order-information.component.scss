@@ -47,19 +47,16 @@
 }
 
 .delivery-status {
-  text-align: center;
+  text-align: start;
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
   padding: 0 15px;
 }
 
-.status-tag.success {
-  color: #28a745;
+.status-tag {
+  color: $semantic-green;
   font-weight: 500;
   margin-bottom: 8px;
-  &::before {
-    content: "● ";
-  }
 }
 
 p {
@@ -71,7 +68,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-end;
+  align-items: center;
 }
 
 // 通用按鈕封裝
@@ -84,11 +81,11 @@ p {
   transition: all 0.3s;
 
   &.primary {
-    background-color: #fff1e6;
-    color: #f0821e;
-    border-color: #ffd8b8;
+    background-color: $background-yellow;
+    color: $primary-yellow;
+    border-color: #fff3ce;
     &:hover {
-      background: #f0821e;
+      background: $primary-yellow;
       color: #fff;
     }
   }
@@ -103,15 +100,64 @@ p {
 }
 
 // 自訂 Tabs
-.custom-tabs {
-  .nav-link {
-    border: none;
-    color: #666;
-    padding: 10px 20px;
-    &.active {
-      color: #f0821e;
-      border-bottom: 3px solid #f0821e;
-      background: none;
-    }
+.nav-link {
+  border: none;
+  font-weight: bold;
+  color: #666;
+  padding: 10px 20px;
+  &.active {
+    color: $primary-yellow;
+    border-bottom: 3px solid $primary-yellow;
+
+    // &::after {
+    //   content: "";
+    //   position: absolute;
+    //   bottom: -2px;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 4px;
+    //   background-color: $primary-yellow;
+    //   z-index: 5;
+    // }
   }
+}
+
+// 頁碼
+.pagination {
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.page-item {
+  &.active .page-link {
+    background-color: $primary-yellow;
+    border-color: $primary-yellow;
+    color: $background-white;
+  }
+}
+.page-link {
+  color: $text-gray;
+  border-radius: $border-radius-sm;
+  border: 1px solid #eee;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background-color: $background-yellow;
+    color: $primary-yellow;
+  }
+}
+.disabled .page-link {
+  color: #ccc;
+  background-color: #f9f9f9;
+}
+
+.unit-price {
+  color: $text-price;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.pagination {
+  justify-content: center;
+  margin: 10px 0;
 }
