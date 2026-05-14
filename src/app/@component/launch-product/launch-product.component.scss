@@ -1,0 +1,498 @@
+
+.page-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+}
+
+/* ── 操作步驟 ── */
+.stepper {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* step1.2.3的內容 */
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  position: relative;
+}
+
+// 將step 3的線隱藏
+.step::after {
+  content: ''; //空字串 畫一條線
+  position: absolute;
+  top: 50%;
+  left: 120px;
+  width: calc(100% - 140px); //扣掉文字地方的線
+  height: 1px;
+  background: var(--step-line);
+}
+
+/* 步驟圓圈 */
+.step-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: var(--transition);
+  background: #f0f2f5;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* 觸發時變化 */
+.step.active .step-badge {
+  background: var(--accent);
+  color: #fefefe;
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+/* 步驟文字 */
+.step-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap; //強制不換行
+}
+
+/* 觸發時變化 */
+.step.active .step-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Main grid ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;  //右欄固定大小，剩餘給左欄
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── 左欄 ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.req {
+  color: var(--red);
+  font-size: 14px;
+}
+
+.optional { //往下放
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* 商品圖片上傳區 */
+.image-grid {
+  display: grid;
+  grid-template-columns: 160px repeat(3, 1fr); //主圖固定， 剩餘空間平均分成 3 欄
+  grid-template-rows: repeat(2, 80px);//2 列各為80px
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.img-slot {
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition); //當值改變時，不要瞬間切換，而是用動畫過渡
+  position: relative;
+  overflow: hidden; //子元素內容超出容器邊界時，直接裁掉不顯示
+  background: #fafbfc;
+}
+
+.img-slot:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+
+}
+
+/* 上傳主圖區 */
+.img-slot.main {
+  grid-row: 1 / 3; //主圖格跨越第一列到第三列之前(佔滿兩列高度;格線 1 開始，到格線 3 結束)
+  border-color: #c7d0ff;
+  background: #f5f7ff;
+}
+
+.img-slot.main:hover {
+  border-color: var(--accent);
+}
+
+.slot-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8a9df0;
+  margin-top: 6px;
+}
+
+.slot-hint {
+  font-size: 10px;
+  color: #a8b4e8;
+}
+
+.img-slot .plus {
+  font-size: 20px;
+  color: #bdc3cf;
+  line-height: 1;
+}
+
+.img-slot:hover .plus {
+  color: var(--accent);
+}
+
+.img-hint {
+  font-size: 12px;
+  color: var(--text-placeholder);
+  margin-bottom: 20px;
+}
+
+/* ── 商品名稱、商品描述 ── */
+.field {
+  margin-bottom: 20px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 5px;
+}
+
+/*  Input(text)  */
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  -webkit-appearance: none;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: var(--text-placeholder);
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(91, 127, 255, 0.12);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.char-count {
+  font-size: 11px;
+  color: var(--text-placeholder);
+}
+
+
+/* ── Select ── */
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  color: var(--text-placeholder);
+}
+
+select.selected {
+  color: var(--text-primary);
+}
+
+select option {
+  color: var(--text-primary);
+}
+
+/* ── Right panel ── */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Tags ── */
+.tags-input-wrapper {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  cursor: text;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  min-height: 42px;
+  align-items: center;
+}
+
+.tags-input-wrapper:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(91, 127, 255, 0.12);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  color: var(--tag-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px 2px 10px;
+  border-radius: 20px;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ba8e8;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 1px;
+  display: flex;
+  align-items: center;
+}
+
+.tag-remove:hover {
+  color: var(--red);
+}
+
+.tags-input {
+  flex: 1;
+  min-width: 80px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+}
+
+.tags-input::placeholder {
+  color: var(--text-placeholder);
+}
+
+/* ── AI Box ── */
+.ai-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  min-height: 80px;
+  font-size: 12px;
+  color: var(--text-placeholder);
+  line-height: 1.6;
+  background: #fafbfc;
+}
+
+.ai-box.has-content {
+  color: var(--text-secondary);
+  background: #f5f7ff;
+}
+
+.btn-ai {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--tag-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  margin-top: 8px;
+}
+
+.btn-ai:hover {
+  background: #dce3ff;
+  transform: translateY(-1px);
+}
+
+.btn-ai:active {
+  transform: translateY(0);
+}
+
+/* ── Spinner ── */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--tag-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Footer ── */
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-outline {
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--btn-secondary-border);
+  color: var(--text-primary);
+  flex: 0 0 auto;
+  min-width: 120px;
+}
+
+.btn-outline:hover {
+  background: #f0f2f5;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  flex: 1;
+  max-width: 260px;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(91, 127, 255, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 16px rgba(91, 127, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary.disabled {
+  background: #c7d0ff;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1a1d23;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-grid {
+    grid-template-columns: 120px repeat(3, 1fr);
+    grid-template-rows: repeat(2, 64px);
+  }
+
+  .step:not(:last-child)::after {
+    display: none;
+  }
+}
