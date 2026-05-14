@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 // 素材庫
-import { LucideAngularModule, Filter, ArrowUpDown, ChevronDown } from 'lucide-angular';
+import { LucideAngularModule, Filter, ArrowUpDown, ChevronDown, MapPin } from 'lucide-angular';
 
 @Component({
   selector: 'app-homepage',
@@ -15,12 +15,14 @@ export class HomepageComponent {
   readonly FilterIcon = Filter;
   readonly ArrowUpDownIcon = ArrowUpDown;
   readonly ChevronDownIcon= ChevronDown;
+  readonly MapPinIcon= MapPin;
 
   products = [
     {
       title: '極簡黑後背包',
       price: 300,
-      location: '清大',
+      university: '清大',
+      location: '新竹',
       time: '2小時前',
       category: '生科系',
       imgUrl: 'assets/bag.jpg',
@@ -29,7 +31,8 @@ export class HomepageComponent {
     {
       title: '極簡黑後背包',
       price: 300,
-      location: '清大',
+      university: '清大',
+      location: '新竹',
       time: '2小時前',
       category: '生科系',
       imgUrl: 'assets/bag.jpg',
@@ -38,7 +41,8 @@ export class HomepageComponent {
     {
       title: '極簡黑後背包',
       price: 300,
-      location: '清大',
+      university: '清大',
+      location: '新竹',
       time: '2小時前',
       category: '生科系',
       imgUrl: 'assets/bag.jpg',
@@ -47,7 +51,8 @@ export class HomepageComponent {
     {
       title: '極簡黑後背包',
       price: 300,
-      location: '清大',
+      university: '清大',
+      location: '新竹',
       time: '2小時前',
       category: '生科系',
       imgUrl: 'assets/bag.jpg',
@@ -56,7 +61,8 @@ export class HomepageComponent {
     {
       title: '極簡黑後背包',
       price: 300,
-      location: '清大',
+      university: '清大',
+      location: '新竹',
       time: '2小時前',
       category: '生科系',
       imgUrl: 'assets/bag.jpg',
@@ -64,4 +70,6 @@ export class HomepageComponent {
     },
     // ... 更多資料
   ];
+
+
 }

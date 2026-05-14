@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 // 素材庫
 import { LucideAngularModule, Home, Book, Box,
   Smartphone, Handbag, Lamp, List, ChevronDown} from 'lucide-angular';
@@ -10,6 +12,9 @@ import { LucideAngularModule, Home, Book, Box,
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent {
+
+  constructor(private router: Router){}
+
   // Declare icon
   readonly HomeIcon = Home;
   readonly BookIcon = Book;
@@ -46,5 +51,12 @@ export class SideNavComponent {
 
   toggle() {
     this.isOpen = !this.isOpen;
+  }
+
+  // go back to the home page
+  isHomePage = "false";
+
+  goToHome(){
+    this.router.navigate(['/home'])
   }
 }

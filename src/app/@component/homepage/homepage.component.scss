@@ -67,7 +67,7 @@
 
     .filter-tag {
       background-color: $background-yellow;
-      color: $text-price;
+      color: $text-gray;
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 0.85rem;
@@ -82,46 +82,50 @@
     display: flex;
     align-items: center;
     min-width: 180px;
+    justify-content: end;
 
-    // 前綴圖示 (排序)
-    .icon-select-prefix {
-      position: absolute;
-      left: 12px;
-      z-index: 2;
-      color: $text-gray;
-      width: 16px;
-      height: 16px;
-      pointer-events: none;
+    .rearrange{
+      border-radius: 999rem;
+      padding: 0.5rem;
+
+      &:hover{
+        cursor: pointer;
+        transition: ease 0.3s;
+        background-color: $primary-yellow;
+        lucide-icon{
+          color: white;
+        }
+      }
     }
 
-    // 後綴圖示 (下拉箭頭)
-    .icon-select-suffix {
-      position: absolute;
-      right: 12px;
-      z-index: 2;
-      color: $background-gray;
-      width: 14px;
-      height: 14px;
-      pointer-events: none;
-    }
-
-    select {
-      width: fit-content;
-      text-align: center;
-      appearance: none; // 隱藏原生箭頭
-      // background-color: $background-white;
-      color: $text-black;
-      // border: 1.5px solid rgba($background-gray, 0.2);
-      border: transparent;
-      padding: 0.5rem 0rem 0.5rem 0.5rem; // 左側留空間給前綴 Icon
+    .sort-selection{
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
       border-radius: $border-radius-sm;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.25s ease-in-out;
+      gap: 0.5rem;
 
-      &:focus {
-        outline: none;
-        background-color: #EEE;
+      select {
+        width: fit-content;
+        text-align: center;
+        appearance: none; // 隱藏原生箭頭
+        background-color: transparent;
+        color: $text-black;
+        // border: 1.5px solid rgba($background-gray, 0.2);
+        border: transparent;
+
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.25s ease-in-out;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      &:hover {
+        transition: ease 0.3s;
+        background-color: $background-yellow;
       }
     }
   }
@@ -150,50 +154,139 @@
     }
   }
 }
-
-.product-list {
+.product{
   display: flex;
-  flex-wrap: wrap; // 讓卡片可以換行
-  gap: 20px;       // 卡片之間的間距
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
 
-  width: 100%;
-  box-sizing: border-box;
+  .product-list {
+    display: flex;
+    flex-wrap: wrap; // 讓卡片可以換行
+    gap: 20px;       // 卡片之間的間距
 
-  .card {
-    // 設定平滑過渡動畫
-    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-sizing: border-box;
 
-    // 預設：一排 4 個 (計算扣掉間距後的寬度)
-    // 公式：(100% - (數量-1)*間距) / 數量
-    width: calc((100% - 20px * 3) / 4);
+    .card {
+      // 設定平滑過渡動畫
+      transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &:hover {
-      transform: translateY(-2px); // 滑鼠移上去的小特效
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      // 預設：一排 4 個 (計算扣掉間距後的寬度)
+      // 公式：(100% - (數量-1)*間距) / 數量
+      width: calc((100% - 20px * 3) / 4);
+
+      &:hover {
+        transform: translateY(-2px); // 滑鼠移上去的小特效
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        cursor: pointer;
+      }
+
+      .card-body {
+
+        .title {
+          font-size: 1.1rem;
+          font-weight: bolder;
+        }
+        .price {
+          font-weight: bold;
+          font-size: 1.6rem;
+          color: $text-price;
+        }
+
+        // .meta-info{
+        //   display: flex;
+        //   flex-direction: column;
+        //   gap: 0.2rem;
+        //   font-size: 12px;
+        //   margin: 0.5rem 0;
+        //   color: $text-gray;
+        // }
+
+        .meta-info {
+          display: flex;
+          justify-content: space-between; // 讓地點在左，時間在右
+          align-items: center;
+          font-size: 11px;
+          color: $text-gray;
+          margin-bottom: 0.8rem;
+
+          .location {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+          }
+        }
+
+        .divider {
+          border: 0;
+          border-top: 1px solid #eee;
+          margin: 0.8rem 0;
+        }
+
+        // .user-info{
+        //   display: flex;
+        //   gap: 0.5rem;
+        //   font-size: 12px;
+        //   color: $text-gray;
+
+        //   .picture {
+        //     height: 1rem;    // 稍微加大一點比較符合視覺
+        //     width: 1rem;
+        //     background-color: rgb(186, 186, 186);
+        //     border-radius: 999px;
+        //     background-size: cover;
+        //     background-position: center;
+        //     flex-shrink: 0;  // 防止頭像變形
+        //   }
+        // }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 11px;
+          color: lighten($text-gray, 10%);
+
+          .picture {
+            height: 1.2rem;
+            width: 1.2rem;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            flex-shrink: 0;
+          }
+        }
+
+      }
+    }
+    // 過渡態：中等螢幕 (例如平板) 變一排 3 個
+    @media (max-width: 1024px) {
+      .card {
+        width: calc((100% - 20px * 2) / 3);
+      }
+    }
+
+    // 變一排 2 個
+    @media (max-width: 768px) {
+      .card {
+        width: calc((100% - 20px * 1) / 2);
+      }
+    }
+  }
+
+  .view-more{
+    background-color: transparent;
+    border: 1px solid $text-gray;
+    border-radius: $border-radius-tiny;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.5rem 1.6rem;
+    font-weight: 500;
+    color: $text-black;
+
+    &:hover{
+      background-color: #efefef;
       cursor: pointer;
     }
-
-    .card-body {
-      .title { font-weight: bold; }
-      .price { color: #2c3e50; }
-    }
   }
-
-  // --- RWD 斷點設定 ---
-
-  // 過渡態：中等螢幕 (例如平板) 變一排 3 個
-  @media (max-width: 1024px) {
-    .card {
-      width: calc((100% - 20px * 2) / 3);
-    }
-  }
-
-  // 變一排 2 個
-  @media (max-width: 768px) {
-    .card {
-      width: calc((100% - 20px * 1) / 2);
-    }
-  }
-
-
 }

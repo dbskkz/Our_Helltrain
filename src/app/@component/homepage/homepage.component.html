@@ -50,16 +50,26 @@
     </div>
 
     <div class="sorting-dropdown">
-      <lucide-icon [img]="ArrowUpDownIcon" size="18"></lucide-icon>
-      <select >
-        <option value="newest">上架順序</option>
-        <option value="price-low">價格</option>
-        <option value="price-high">優質賣家</option>
-      </select>
-      <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
+      <div class="rearrange">
+        <lucide-icon [img]="ArrowUpDownIcon" size="18"></lucide-icon>
+      </div>
+
+      <div class="sort-selection">
+
+        <select >
+          <option value="sort-newest">上架順序</option>
+          <option value="sort-price">價格</option>
+          <option value="sort-seller">優質賣家</option>
+        </select>
+        <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
+
+      </div>
     </div>
 
   </div>
+
+  <section class="product">
+
 
   <section class="product-list">
     @for (item of products; track item.title) {
@@ -67,15 +77,31 @@
         <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="card-img-top" alt="...">
         <div class="card-body">
           <h6 class="title">{{ item.title }}</h6>
-          <p class="price">${{ item.price }}</p>
+          <h5 class="price">${{ item.price }}</h5>
+
+          <!-- <div class="meta-info">
+            <span class="location">
+              <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
+              {{ item.location }} · {{item.university}}
+            </span>
+
+            <span class="time">
+              {{ item.time }}
+            </span>
+          </div> -->
 
           <div class="meta-info">
-            <span>{{ item.location }}</span>
-            <span>{{ item.time }}</span>
+            <span class="location">
+              <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
+              {{ item.location }} · {{item.university}}
+            </span>
+            <span class="time">{{ item.time }}</span>
           </div>
 
+          <hr class="divider">
+
           <div class="user-info">
-            <span>大頭照</span>
+            <div class="picture"></div>
             <span class="department">生科吉娃娃</span>
           </div>
 
@@ -83,6 +109,8 @@
       </div>
     }
   </section>
+  <button class="view-more">查看更多</button>
+   </section>
 
 </main>
 

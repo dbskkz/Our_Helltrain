@@ -20,16 +20,6 @@
     margin: 0;
 
     .nav-item {
-      // display: flex;
-      // align-items: center;
-      // gap: 0.6rem;        // 原本 1rem
-      // padding: 0.5rem 0.8rem;  // 原本 0.8rem 1.2rem
-      // border-radius: 10px;     // 原本 12px
-      // color: $text-gray;
-      // cursor: pointer;
-      // margin-bottom: 0.3rem;   // 原本 0.5rem
-      // transition: all 0.2s ease-in-out;
-
       // 這裡只負責動畫，不要寫樣式
       opacity: 0;
       transform: translateY(10px);

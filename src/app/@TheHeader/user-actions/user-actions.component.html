@@ -1,8 +1,24 @@
 <div class="user-actions-wrapper">
   <lucide-icon [img]="MessageIcon"></lucide-icon>
-  <div class="profile">
+
+  <div class="profile"
+    (click) = "showMenu($event)"
+    [class.active]="isDisplayed">
     <div class="picture"></div>
     <span class="user-name">{{userName}}</span>
     <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
+
+     @if(isDisplayed === true)
+     {
+       <div class="drop-menu">
+         <ul>
+           <li>個人資料</li>
+           <li>購物車</li>
+           <hr>
+           <li>登出</li>
+         </ul>
+       </div>
+     }
+
   </div>
 </div>

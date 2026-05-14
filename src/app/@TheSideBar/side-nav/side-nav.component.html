@@ -1,5 +1,14 @@
 <div class="side-wrapper">
   <ul class="nav-list">
+    <li class="nav-item">
+      <button
+        type="button"
+        class="nav-link"
+      >
+        <lucide-icon [name]="HomeIcon"></lucide-icon>
+        <span>回首頁</span>
+      </button>
+    </li>
     @for (item of categories; track $index) {
       <li class="nav-item">
         <button

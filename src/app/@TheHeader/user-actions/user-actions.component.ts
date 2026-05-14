@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 // 素材庫
 import { LucideAngularModule, MessageCircleMore, ChevronDownIcon} from 'lucide-angular';
 
@@ -15,4 +15,17 @@ export class UserActionsComponent {
 
   // Declare
   userName = "小明";
+
+  // Show menu
+  isDisplayed = false;
+
+  showMenu(event:Event){
+    event.stopPropagation();
+    this.isDisplayed = !this.isDisplayed;
+  }
+
+  @HostListener('document:click')
+  closeMenu(){
+    this.isDisplayed = false;
+  }
 }
