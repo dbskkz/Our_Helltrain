@@ -1,13 +1,18 @@
-<app-top-nav (menuClick)="mySidenav.toggle()"></app-top-nav>
+<div class="father">
 
-<div class="main-content" >
-  <app-side-nav #mySidenav class="variable"></app-side-nav>
-  @if (mySidenav.isOpen) {
-    <app-side-nav #mySidenav></app-side-nav>
-  }
+  <app-top-nav (menuClick)="mySidenav.toggle()" class="header"></app-top-nav>
 
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+  <div class="main-content" >
+    <app-side-nav #mySidenav class="variable"></app-side-nav>
+    @if (mySidenav.isOpen) {
+      <app-side-nav #mySidenav></app-side-nav>
+    }
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
 </div>
+
 

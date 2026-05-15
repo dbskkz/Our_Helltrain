@@ -22,3 +22,14 @@
 main{
   flex:1;
 }
+
+.father{
+  position: absolute;
+  width: stretch;
+}
+
+.header{
+  position: sticky;
+  z-index: 9999;
+}
+

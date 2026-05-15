@@ -9,6 +9,7 @@ import { OrderInformationComponent } from './@component/order-information/order-
 import { MainLayoutComponent } from './@component/main-layout/main-layout.component';
 import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
+import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 
 export const routes: Routes = [
   //後台
@@ -27,6 +28,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
+      { path: 'product-list', component:ProductListingComponent},
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: '', redirectTo: 'home', pathMatch: 'full' },
