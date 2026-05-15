@@ -9,7 +9,11 @@ import { OrderInformationComponent } from './@component/order-information/order-
 import { MainLayoutComponent } from './@component/main-layout/main-layout.component';
 import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
+<<<<<<< HEAD
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
+=======
+import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
+>>>>>>> 9a01ad34e5f5a48e4bf9f4e0d651bbafe3c135c5
 
 export const routes: Routes = [
   //後台
@@ -21,6 +25,8 @@ export const routes: Routes = [
 
   //前台
   { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
+  { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
+
 
   // 第一類：需要導覽列和側邊欄的頁面
   {
