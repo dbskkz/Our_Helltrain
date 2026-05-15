@@ -6,8 +6,14 @@
 
   <div class="up_card">
     <div class="main_card_left">
-      <img src="/favicon.ico" alt="">
-      <p>更換頭像</p>
+      <img [src]="avatarUrl" alt="頭像預覽">
+      <p class="change_text" (click)="fileInput.click()">更換頭像</p>
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        accept="image/*"
+        (change)="onFileSelected($event)">
     </div>
 
 
@@ -149,10 +155,14 @@
           <mat-form-field class="self-care" appearance="outline">
             <textarea matInput
                       [formControl]="profileControl"
-                      placeholder="範例:常駐於xx大學，本人是yy科系..."
+                      placeholder="範例:常駐於xx大學，本人是yy科系...(限200字)"
+                      maxlength="200"
                       rows="5"></textarea>
           </mat-form-field>
         </form>
+        <div class="count-hint">
+    {{ profileControl.value?.length || 0 }} / 200
+  </div>
       }
     </div>
   </div>

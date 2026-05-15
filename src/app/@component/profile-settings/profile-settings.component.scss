@@ -56,19 +56,21 @@ h4 {
   margin-right: 48px; // 與右側拉開距離
 
   img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%; // 圓形頭像
-    border: 4px solid #fff2e6; // 加上淡淡的圓環感
-    object-fit: cover;
-    margin-bottom: 12px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%; // 變圓形
+    border: 4px solid $background-yellow; // 使用妳定義的淺黃背景色當邊框
+    object-fit: cover; // 確保圖片比例不會被拉伸
+    margin-bottom: 10px;
   }
 
-  p {
-    color: $semantic-orange; // 調整成文藝的橘褐色
-    font-size: 0.85rem;
+  .change_text {
+    color: $semantic-orange; // 使用妳定義的提醒橘色
     cursor: pointer;
-    &:hover { text-decoration: underline; }
+    font-size: 14px;
+    &:hover {
+      text-decoration: underline; // 懸停時加底線，讓使用者知道可以點
+    }
   }
 }
 
@@ -354,7 +356,30 @@ h4 {
   }
 }
 
+.count-hint {
+  display: flex;
+  justify-content: flex-end; // 這會讓文字靠右對齊
+  width: 100%;               // 確保撐滿寬度才能靠右
+  color: $text-gray;         // 使用妳定義的灰色
+}
 
+:host ::v-deep {
+  .self-care {
+    // 這是關鍵：把輸入框下方的隱形容器叫出來
+    .mat-mdc-form-field-subscript-wrapper {
+      display: block !important;
+      position: static !important; // 讓它佔據實際高度，把卡片撐開
+      padding: 4px 0 0 4px !important; // 稍微往右移動 4px，對齊輸入框左邊邊緣
+    }
+
+    // 提示文字的樣式
+    .mat-mdc-form-field-hint {
+      color: $text-gray !important; // 妳的灰色變數
+      font-size: 12px;
+      visibility: visible !important;
+    }
+  }
+}
 
 
 mat-form-field {

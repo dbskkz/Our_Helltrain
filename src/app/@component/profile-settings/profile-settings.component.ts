@@ -8,11 +8,13 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe} from '@angular/common';
 import { map, Observable, startWith } from 'rxjs';
 import { LucideAngularModule, PencilLine, BookUser, ClipboardPenLine, LockKeyhole } from 'lucide-angular';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-profile-settings',
   imports: [MatIconModule, FormsModule, MatFormFieldModule,
      MatInputModule, MatSelectModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule,MatSnackBarModule,
     ReactiveFormsModule,
     AsyncPipe,LucideAngularModule],
   templateUrl: './profile-settings.component.html',
@@ -20,11 +22,15 @@ import { LucideAngularModule, PencilLine, BookUser, ClipboardPenLine, LockKeyhol
 })
 export class ProfileSettingsComponent {
 
+  constructor(private snackBar: MatSnackBar) {}
+
   readonly pencilIcon = PencilLine; //鉛筆icon
   readonly bookUser = BookUser; //個人資料icon
   readonly clipboardPenLine = ClipboardPenLine; //自介icon
   readonly lockKeyhole = LockKeyhole; //密碼icon
 
+// 預設頭像（可以是妳專案裡的預設圖路徑）
+  avatarUrl: string | ArrayBuffer | null = '/img/頭像範例.png';
 
   name: string = '小明'; //名字
   isEditingName: boolean = false; // 控制是否處於編輯模式
@@ -97,6 +103,42 @@ export class ProfileSettingsComponent {
     const filterValue = value.toLowerCase();
     return options.filter(opt => opt.toLowerCase().includes(filterValue));
   }
+
+
+
+/* 改頭像 */
+
+// 當使用者選取檔案時觸發
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // 1. 檢查檔案大小 (例如不能超過 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        this.snackBar.open('檔案太大囉，請選擇 2MB 以下的圖片', '知道了', {
+        duration: 3000, // 3秒後自動消失
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-orange-snackbar'] // 關鍵：套用剛才寫的 CSS
+        });
+        console.log('檔案太大囉，請選擇');
+        return;
+      }
+
+      // 2. 讀取檔案並產生預覽圖
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.avatarUrl = reader.result; // 將讀取結果存入變數，畫面會自動更新
+      };
+      reader.readAsDataURL(file);
+
+      // 3. (未來) 在這裡呼叫 Service 把 file 送到 Java 後端
+      // this.yourService.uploadAvatar(file).subscribe(...);
+    }
+  }
+
 
   /* 改名字 */
 
