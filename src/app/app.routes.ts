@@ -10,6 +10,7 @@ import { MainLayoutComponent } from './@component/main-layout/main-layout.compon
 import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
 import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
+import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
 
 export const routes: Routes = [
 
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'home', component: HomepageComponent },
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
+      { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

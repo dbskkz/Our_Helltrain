@@ -2,7 +2,7 @@
 .page-title {
   font-size: 18px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: #6b7280;
   letter-spacing: 0.06em;
   margin-bottom: 20px;
 }
@@ -11,12 +11,12 @@
 .stepper {
   display: flex;
   align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: #FFF;
+  border: 1px solid #e2e5ea;
+  border-radius: 10px;
   padding: 18px 28px;
   margin-bottom: 24px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 /* step1.2.3的內容 */
@@ -36,7 +36,7 @@
   left: 120px;
   width: calc(100% - 140px); //扣掉文字地方的線
   height: 1px;
-  background: var(--step-line);
+  background: #d1d5db;
 }
 
 /* 步驟圓圈 */
@@ -50,30 +50,30 @@
   font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
-  transition: var(--transition);
+  transition: 180ms ease;
   background: #f0f2f5;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
+  color: #6b7280;
+  border: 1px solid #e2e5ea;
 }
 
 /* 觸發時變化 */
 .step.active .step-badge {
-  background: var(--accent);
+  background: #5b7fff;
   color: #fefefe;
-  box-shadow: 0 0 0 5px var(--accent-soft);
+  box-shadow: 0 0 0 5px  #eef1ff;
 }
 
 /* 步驟文字 */
 .step-label {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color:  #6b7280;
   white-space: nowrap; //強制不換行
 }
 
 /* 觸發時變化 */
 .step.active .step-label {
-  color: var(--accent);
+  color:  #5b7fff;
   font-weight: 600;
 }
 
@@ -85,19 +85,19 @@
   align-items: start;
 }
 
-/* ── 左欄 ── */
+/* ── 左欄、右欄 ── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: #ffffff;
+  border: 1px solid  #e2e5ea;
+  border-radius: 10px;
   padding: 28px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04); // 小陰影，兩層疊加讓陰影更自然立體
 }
 
 .section-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-primary);
+  color:   #1E1E1E;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -105,7 +105,7 @@
 }
 
 .req {
-  color: var(--red);
+  color: #ef4444;
   font-size: 14px;
 }
 
@@ -125,22 +125,22 @@
 }
 
 .img-slot {
-  border: 1.5px dashed var(--border);
-  border-radius: var(--radius-sm);
+  border: 1.5px dashed #e2e5ea;
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color var(--transition), background var(--transition); //當值改變時，不要瞬間切換，而是用動畫過渡
+  transition: border-color 180ms ease, background 180ms ease; //當值改變時，不要瞬間切換，而是用動畫過渡
   position: relative;
   overflow: hidden; //子元素內容超出容器邊界時，直接裁掉不顯示
   background: #fafbfc;
 }
 
 .img-slot:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: #5b7fff;
+  background:  #eef1ff;
 
 }
 
@@ -152,7 +152,7 @@
 }
 
 .img-slot.main:hover {
-  border-color: var(--accent);
+  border-color: #5b7fff;
 }
 
 .slot-label {
@@ -174,16 +174,16 @@
 }
 
 .img-slot:hover .plus {
-  color: var(--accent);
+  color: #5b7fff;
 }
 
 .img-hint {
   font-size: 12px;
-  color: var(--text-placeholder);
+  color:  #b0b7c3;
   margin-bottom: 20px;
 }
 
-/* ── 商品名稱、商品描述 ── */
+/* ── 左欄、右上欄 ── */
 .field {
   margin-bottom: 20px;
 }
@@ -201,70 +201,69 @@
 
 .field-hint {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: #6b7280;
   margin-top: 5px;
 }
 
-/*  Input(text)  */
+/*  商品名稱欄位,描述欄位,分類、商品狀況  */
 input[type="text"],
 textarea,
 select {
   width: 100%;
   font-family: inherit;
   font-size: 13px;
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  color: #1E1E1E;
+  background: #FFF;
+  border: 1px solid #e2e5ea;
+  border-radius: 6px;
   padding: 10px 13px;
-  outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
-  -webkit-appearance: none;
+  outline: none; //移除瀏覽器預設的藍色外框
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  -webkit-appearance: none; //移除 Safari／舊版瀏覽器的預設樣式
 }
 
 input[type="text"]::placeholder,
 textarea::placeholder {
-  color: var(--text-placeholder);
+  color: #b0b7c3;
 }
 
 input[type="text"]:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--border-focus);
+  border-color: #5b7fff;
   box-shadow: 0 0 0 3px rgba(91, 127, 255, 0.12);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 120px;
-  line-height: 1.6;
 }
 
 .char-count {
   font-size: 11px;
-  color: var(--text-placeholder);
+  color:  #b0b7c3;
 }
 
+textarea {
+  resize: vertical; //只能垂直拖曳
+  min-height: 120px;
+  line-height: 1.6;
+}
 
-/* ── Select ── */
+/* ── 右欄 Select ── */
 select {
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); //用內嵌 SVG 畫一個 ∨ 向下箭頭
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 32px;
-  color: var(--text-placeholder);
+  color: #b0b7c3;
 }
 
 select.selected {
-  color: var(--text-primary);
+  color: #1E1E1E;
 }
 
 select option {
-  color: var(--text-primary);
+  color: #1E1E1E;
 }
 
-/* ── Right panel ── */
+/* ── 右欄 ── */
 .right-panel {
   display: flex;
   flex-direction: column;

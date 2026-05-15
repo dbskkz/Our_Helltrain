@@ -71,21 +71,24 @@
       </div>
     </div>
 
-    <!-- Right panel -->
+    <!-- 右欄 -->
     <div class="right-panel">
       <div class="card">
         <!-- Category -->
         <div class="field">
           <div class="section-label">分類 <span class="req">*</span></div>
-          <select id="catMain" aria-label="主分類">
+          <select id="catMain">
             <option value="" disabled selected>請選擇分類</option>
+            <option>書籍</option>
             <option>服飾與配件</option>
-            <option>鞋子</option>
-            <option>3C 電子</option>
+            <option>3C、電子產品</option>
             <option>運動用品</option>
             <option>美妝保養</option>
+            <option>家俱</option>
+            <option>民生用品</option>
+            <option>其他</option>
           </select>
-          <select id="catSub" style="margin-top:8px;" aria-label="子分類">
+          <select id="catSub" style="margin-top:8px;">
             <option value="" disabled selected>請選擇</option>
           </select>
         </div>
@@ -93,7 +96,7 @@
         <!-- Condition -->
         <div class="field">
           <div class="section-label">商品狀況 <span class="req">*</span></div>
-          <select id="condition" aria-label="商品狀況">
+          <select id="condition">
             <option value="" disabled selected>請選擇商品狀況</option>
             <option>全新</option>
             <option>九成新以上</option>
