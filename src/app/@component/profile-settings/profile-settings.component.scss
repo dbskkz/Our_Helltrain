@@ -1,0 +1,362 @@
+@use '../../styles/variables' as *;
+
+.big-box{
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  // 增加一點標題與卡片的間距
+  .top {
+    margin-bottom: 24px;
+    h3 { font-weight: 600; color: #333; }
+    p { color: #888; font-size: 0.9rem; }
+  }
+}
+
+.up_card{
+  display: flex;
+  align-items: center; // 確保左右垂直居中
+   background: $background-white;
+  border-radius: $border-radius-lg;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(47, 31, 8, 0.05); /* 乾淨清透的微陰影 */
+}
+
+.main_card{
+  background: $background-white;
+  border-radius: $border-radius-lg;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(47, 31, 8, 0.05); /* 乾淨清透的微陰影 */
+h4 {
+    display: flex;         // 讓內部元素可以對齊
+    align-items: center;   // 關鍵：強制垂直居中
+    gap: 8px;              // 圖示與文字的間距
+    color: $text-black;
+    font-size: $font-size-base * 1.25; // 比基礎字體稍大
+    margin-bottom: 24px;
+    font-weight: 600;
+
+    span {
+      display: inline-flex; // 確保容器高度與內容一致
+      align-items: center;
+    }
+
+    lucide-icon {
+      margin: 0;           // 移除預設可能造成的偏移
+      vertical-align: middle;
+      color: $semantic-orange; // 標題小圖示可以用提醒色或主色
+    }
+  }
+}
+
+// 左側頭像區
+.main_card_left {
+  text-align: center;
+  margin-right: 48px; // 與右側拉開距離
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; // 圓形頭像
+    border: 4px solid #fff2e6; // 加上淡淡的圓環感
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: $semantic-orange; // 調整成文藝的橘褐色
+    font-size: 0.85rem;
+    cursor: pointer;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// 右側內容區
+.main_card_right {
+  flex: 1;
+
+  .main_card_right_up {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .edit-input {
+    background-color: $background-yellow;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+
+  }
+
+  .confirm-btn {
+    background: $semantic-orange;
+    color: white;
+    border: none;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.2s;
+
+    &:hover { transform: translateY(-2px); } // 微互動
+  }
+
+  .cancel-btn{
+    background: $background-gray;
+    color: white;
+    border: none;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.2s;
+
+    &:hover { transform: translateY(-2px); } // 微互動
+  }
+
+    p { color: #666; font-size: 0.9rem; margin: 0; }
+    h4 {
+    margin: 0;
+    display: inline-flex; // 關鍵：讓 h4 內部的文字跟 span 對齊
+    align-items: center;  // 關鍵：讓文字跟筆的圖示垂直置中
+
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 4px;
+      cursor: pointer;
+
+      lucide-icon {
+        color: $background-gray;
+        font-size: 14px;    // 調整筆的大小
+        vertical-align: middle; // 再次保險對齊
+      }
+    }
+  }
+  }
+}
+
+// 三個小統計盒子的容器
+.main_card_right_dowm {
+  display: flex;
+  gap: 16px; // 讓三個盒子之間有呼吸空間
+}
+
+// 統計小盒子
+.main_card_1 {
+  background: $background-yellow;
+  border-radius: $border-radius-lg;
+  padding: 16px 0;
+  width: 100px; // 固定寬度
+  text-align: center;
+  margin-bottom: 0; // 取消原本的 margin-bottom
+  box-shadow: none; // 取消小盒子的陰影，整體才不會太亂
+  transition: transform 0.2s;
+
+  &:hover { transform: translateY(-2px); } // 微互動
+
+  h5 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $semantic-orange; // 數字突出
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+  }
+}
+
+.card_header {
+  display: flex;
+  justify-content: space-between; // 讓標題在左，按鈕在右
+  align-items: center;
+  margin-bottom: 15px;
+
+  .edit_btn {
+  background-color: $primary-yellow; // 使用主色黃
+    color: $text-black;
+    border: none;
+    padding: 6px 16px;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: darken($primary-yellow, 5%); // 稍微變深一點點
+      transform: translateY(-2px);
+    }
+
+  }
+}
+
+// 當不可編輯時，讓輸入框看起來像一般文字
+.mat-mdc-form-field.mat-form-field-disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+// 讓學校與科系並排的關鍵
+.school_group {
+  display: flex;
+  gap: 20px; // 兩者間的呼吸間距
+  width: 100%;
+  margin-top: 15px;
+
+  .school, .department {
+    flex: 1; // 平分寬度
+  }
+}
+
+// 統一欄位標題樣式
+.school, .department, .area {
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+  }
+}
+
+.area{
+  margin-top: 15px;
+}
+
+// Email 區塊排版
+.email_group {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee; // 增加一條淺淺的分隔線
+
+  p { margin: 0; line-height: 1.8; }
+
+  // 標題與膠囊
+  p:first-child {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  // 膠囊色塊實作
+  .isVerify {
+    background: #e6f7ed; // 淡淡的草綠色背景
+    color: #27ae60;    // 深綠色文字
+    font-size: 0.75rem;
+    padding: 2px 12px;
+    border-radius: 50px; // 膠囊形狀
+    font-weight: 500;
+  }
+
+  // Email 地址文字
+  p:nth-child(2) {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 500;
+    margin: 4px 0;
+  }
+
+  // 提示文字
+  p:last-child {
+    font-size: 0.8rem;
+    color: #999;
+  }
+}
+
+// 修正 Material 預設背景色（讓它更清透）
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: $background-yellow !important;
+}
+
+// 去除 Material 底線與相關裝飾線
+::ng-deep {
+  // 1. 隱藏底下的那條線
+  .mat-mdc-form-field-focus-indicator,
+  .mat-mdc-form-field-bottom-align::before,
+  .mat-mdc-form-field-bottom-align::after {
+    display: none !important;
+  }
+
+  // 2. 徹底隱藏底線容器，消除下方多餘的空白
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+
+  // 3. 確保輸入框包裝層沒有邊框或底部線條
+  .mdc-line-ripple {
+    display: none !important;
+  }
+
+  // 4. 讓背景顏色更完整地填充圓角
+  .mat-mdc-text-field-wrapper {
+    background-color: $background-yellow !important;
+    border-radius: 8px; // 既然去掉了底線，可以自己加圓角增加質感
+  }
+}
+
+.password_content {
+  .label { font-size: 14px; color:$text-gray; margin-bottom: 5px; }
+
+  .dots { font-size: 10px;  letter-spacing: 5px; color: $background-gray; padding: 10px 0; }
+
+  .divider { border: 0; border-top: 1px solid #f0f0f0; margin: 20px 0; }
+
+  .strength_bar {
+    display: flex;
+    gap: 5px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    span {
+      flex: 1; height: 4px; border-radius: 2px;
+      background: $background-yellow; // 之後可以根據 input 長度動態變色
+
+    // 假設密碼強度夠了，可以變成語義綠
+      &.active {
+        background: $semantic-green;
+      }
+    }
+  }
+}
+
+
+.button_group {
+  display: flex;
+  gap: 8px; // 讓兩個按鈕之間有點「呼吸空間」
+
+  .edit_btn {
+    background-color: $primary-yellow; // 使用主色黃
+    color: $text-black;
+    border: none;
+    padding: 6px 16px;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($primary-yellow, 5%); // 稍微變深一點點
+    }
+  }
+
+  .cancel_btn {
+    background-color: transparent;
+    color: $text-gray;
+    border: 1px solid $text-gray;
+    padding: 6px 16px;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $background-yellow;
+    }
+  }
+}
+
+
+
+
+mat-form-field {
+  width: 100%;
+}
