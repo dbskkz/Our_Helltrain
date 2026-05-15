@@ -1,1 +1,69 @@
-<p>back-user works!</p>
+<div class="page-wrapper user-management-page">
+  <h1 class="page-title">用戶管理</h1>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" placeholder="以ID或名字搜尋" />
+    </div>
+    <span class="filter-tag">
+      <lucide-icon [name]="mapIcon" class="filter-tag-icon"></lucide-icon>
+      地區：高雄
+    </span>
+    <span class="filter-tag">
+      <lucide-icon [name]="GridIcon" class="filter-tag-icon" ></lucide-icon>
+      學校：[名稱]
+    </span>
+    <button class="clear-btn" onclick="clearFilters()">清除過濾條件</button>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <span class="col-label">用戶</span>
+      <span class="col-label">帳號狀態</span>
+      <span class="col-label">學生驗證</span>
+      <span class="col-label">地區</span>
+      <span class="col-label">交易數</span>
+      <span class="col-label">操作</span>
+    </div>
+
+    <div id="user-list">
+      @for (user of users; track user.id) {
+        <div class="user-row">
+          <div class="user-cell">
+            <img class="avatar" [src]="user.avatarUrl" [alt]="user.name" />
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-id">ID: {{ user.id }}</span>
+            </div>
+          </div>
+          <div>
+            <span class="badge" [ngClass]="getAccountBadge(user.accountStatus)">
+              {{ user.accountStatus }}
+            </span>
+          </div>
+          <div>
+            <span class="badge" [ngClass]="getVerifyBadge(user.verifyStatus)">
+              {{ user.verifyStatus }}
+            </span>
+          </div>
+          <div class="region-text">{{ user.region }}</div>
+          <div class="count-text">{{ user.tradeCount }}</div>
+          <div class="action-cell">
+            @if (user.accountStatus === "審查中") {
+              <button class="btn btn-approve">驗證通過</button>
+              <button class="btn btn-danger">駁回</button>
+            } @else {
+              <button class="btn btn-view">查看</button>
+              @if (user.accountStatus === "完全停權") {
+                <button class="btn btn-neutral">解除停權</button>
+              } @else {
+                <button class="btn btn-danger">停權</button>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

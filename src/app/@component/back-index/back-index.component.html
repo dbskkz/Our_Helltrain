@@ -1,20 +1,45 @@
-<p>back-index works!</p>
-<div>
-  今日概覽
-  <div class="view">
-    <div class="viewbox">新增用戶
-      <p class="viewnumber">{{newuser}}</p>
-    </div>
-    <div class="viewbox">待處理爭議
-      <p class="viewnumber">{{dispute}}</p>
+<div class="page-wrapper">
+
+  <!-- 今日概覽 -->
+  <div class="overview-card">
+    <h2 class="card-title">今日概覽</h2>
+    <div class="overview-grid">
+      <div class="overview-box">
+        <span class="overview-label">新增用戶</span>
+        <p class="overview-number">{{ newuser }}</p>
+      </div>
+      <div class="overview-box">
+        <span class="overview-label">待處理爭議</span>
+        <p class="overview-number">{{ dispute }}</p>
+      </div>
     </div>
   </div>
+
+  <!-- 需立即處理 -->
+  <div class="urgent-card">
+    <h2 class="card-title">需立即處理</h2>
+
+    <!-- 待處理案件數量以 @if 判斷是否顯示 -->
+    @if (disputeCount > 0) {
+      <div class="urgent-item dispute">
+        <span>尚未處理的爭議事件（{{ disputeCount }} 筆）</span>
+        <button class="btn-outline">前往處理</button>
+      </div>
+    }
+    @if (pendingCount > 0) {
+      <div class="urgent-item pending">
+        <span>待審核學生身分（{{ pendingCount }} 筆）</span>
+        <button class="btn-outline">前往審核</button>
+      </div>
+    }
+    @if (disputeCount === 0 && pendingCount === 0) {
+      <p class="empty-text">目前沒有需要立即處理的項目</p>
+    }
+  </div>
+
+  <!-- 近期操作 -->
+  <div class="recent-card">
+    <h2 class="card-title">近期操作</h2>
+  </div>
+
 </div>
-<div class="boxModel">需立即處理
-  <!-- 待處理案件以@if生成div，判斷:爭議用紅底、審核用淡橘底，ex -->
-   <div>N件爭議事件尚未處裡
-    <button mat-stroked-button>前往處裡</button>
-    <button mat-fab aria-label="Example icon button with a delete icon">前往處裡</button>
-   </div>
-</div>
-<div class="boxModel">近期操作</div>

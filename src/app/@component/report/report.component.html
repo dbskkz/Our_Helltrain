@@ -1,1 +1,81 @@
-<p>report works!</p>
+<div class="page-wrapper">
+
+  <h1 class="page-title">爭議處理</h1>
+
+  <!-- 搜尋列 -->
+  <div class="search-bar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="請輸入案件ID、相關商品、買方、賣方..."
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="search()"
+    />
+    <button class="btn btn-search" (click)="search()">搜尋</button>
+  </div>
+
+  <!-- 待處理爭議案件概覽 -->
+  <div class="table-card">
+
+    <h2 class="section-title">
+      <lucide-icon [name]="panelsIcon" class="section-icon"></lucide-icon>
+      待處理爭議案件概覽
+    </h2>
+
+    <div class="table-header">
+      <span class="col-label">案件ID</span>
+      <span class="col-label">相關商品</span>
+      <span class="col-label">買方</span>
+      <span class="col-label">賣方</span>
+      <span class="col-label">檢舉日期</span>
+      <span class="col-label">狀態</span>
+      <span class="col-label">操作</span>
+    </div>
+
+    <div id="dispute-list">
+      @for (dispute of disputes; track dispute.caseId) {
+        <div class="dispute-row">
+          <div class="case-id">{{ dispute.caseId }}</div>
+          <div class="product-info">
+            <span class="product-name">{{ dispute.productName }}</span>
+            <span class="product-id">(ID: {{ dispute.productId }})</span>
+          </div>
+          <div class="party-text">{{ dispute.buyerName }}</div>
+          <div class="party-text">{{ dispute.sellerName }}</div>
+          <div class="time-text">{{ dispute.submittedAt }}</div>
+          <div class="status-text">{{ dispute.status }}</div>
+          <div class="action-cell">
+            <button class="btn btn-reason" (click)="viewReason(dispute)">查看事由</button>
+            <button class="btn btn-reject" (click)="reject(dispute)">駁回</button>
+            <button class="btn btn-approve" (click)="approve(dispute)">驗證通過</button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-row">
+          <span class="empty-text">目前沒有待處理案件</span>
+        </div>
+      }
+    </div>
+
+    <div class="table-footer">
+      還有 {{ pendingCount }} 筆待處理案件
+    </div>
+
+  </div>
+
+  <!-- 分頁 -->
+  <div class="pagination">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    @for (page of pageNumbers; track page) {
+      <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    }
+    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+</div>

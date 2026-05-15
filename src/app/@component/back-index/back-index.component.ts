@@ -10,6 +10,8 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrl: './back-index.component.scss'
 })
 export class BackIndexComponent {
-newuser=0;
-dispute=0;
+newuser: number = 0;
+dispute: number = 0;
+disputeCount: number = 0;
+pendingCount: number = 0;
 }

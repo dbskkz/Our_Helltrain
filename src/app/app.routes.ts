@@ -9,19 +9,12 @@ import { OrderInformationComponent } from './@component/order-information/order-
 import { MainLayoutComponent } from './@component/main-layout/main-layout.component';
 import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
-import { ProductListingComponent } from './@component/product-listing/product-listing.component';
-import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
+import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
 
 export const routes: Routes = [
-  //後台
-  { path: 'announcement', component: AnnouncementComponent }, //公告
-  { path: 'back_index', component: BackIndexComponent }, //首頁
-  { path: 'back_product', component: BackProductComponent }, //商品管理頁
-  { path: 'back_user', component: BackUserComponent }, //用戶管理
-  { path: 'report', component: ReportComponent }, //爭議處理
 
   //前台
-  { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
+  { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
 
   // 第一類：需要導覽列和側邊欄的頁面
   {
@@ -29,11 +22,23 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
-      { path: 'product-list', component: ProductListingComponent },
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
-      { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
+
+    //後台
+  {
+    path: '',
+    component: BackLayoutComponent,
+    children: [
+      { path: 'announcement', component: AnnouncementComponent }, //公告
+      { path: 'back_index', component: BackIndexComponent }, //首頁
+      { path: 'back_product', component: BackProductComponent }, //商品管理頁
+      { path: 'back_user', component: BackUserComponent }, //用戶管理
+      { path: 'report', component: ReportComponent }, //爭議處理
+    ],
+  },
+
 ];

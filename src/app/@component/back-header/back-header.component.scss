@@ -1,0 +1,104 @@
+@use '../../styles/variables' as *;
+
+h3{
+  margin: 0;
+}
+
+nav{
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+
+  padding: 0.5rem 2rem; // 給左右留一點呼吸空間
+
+  flex-wrap: nowrap; /* 強制不換行 */
+  gap: 3rem;
+  background-color: $background-white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+
+  .logo{
+    margin-right: auto;
+    width: fit-content;
+
+    &:hover{
+      cursor: pointer;
+    }
+  }
+
+}
+.user-actions-wrapper {
+  display: flex;
+  align-items: center; // 確保圖示、頭像、名字垂直置中
+  gap: 1.25rem;        // 訊息圖示與頭像區的間距
+  flex-shrink: 0;      // 確保在縮放時這一區塊不會被壓扁
+
+  lucide-icon {
+    cursor: pointer;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;       // 頭像與 select 之間的間距
+    cursor: pointer;
+
+    // ... 你原本的屬性 ...
+    padding: 0.5rem 1rem;      // 增加一點內距，讓 hover 的背景色有呼吸空間
+    margin: -0.5rem -1rem;     // 配合 padding 使用負 margin 抵銷，確保排版位置不跳動
+    border-radius: 9999px;    // 讓 hover 的背景有一點圓角感
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+
+    .user-name{
+      font-size: 0.8rem;
+    }
+
+    &:hover{
+      background-color: $background-yellow;
+
+      .user-name {
+        color: #000; // 名字稍微變深一點點
+      }
+
+      lucide-icon {
+        opacity: 0.8; // 圖示稍微變化
+      }
+    }
+
+    &.active {
+      background-color: $background-yellow;
+    }
+  }
+
+  select {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    padding-right: 4px;
+
+    // 讓 select 寬度根據內容自適應 (如果需要更精準可以改用 div + icon)
+    &:focus {
+      outline: none;
+    }
+  }
+}
+

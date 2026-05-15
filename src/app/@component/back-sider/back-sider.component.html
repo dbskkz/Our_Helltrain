@@ -1,1 +1,51 @@
-<p>back-sider works!</p>
+<div class="side-wrapper">
+  <ul class="nav-list">
+    <!-- 回總覽頁面 -->
+    <li class="nav-item">
+      <button class="nav-link" (click)="goToHome()">
+        <lucide-icon [name]="HomeIcon"></lucide-icon>
+        <span>首頁</span>
+      </button>
+    </li>
+
+    <!-- 用戶管理 -->
+    <li class="nav-item">
+      <button class="nav-link" (click)="goToUser()">
+        <lucide-icon [name]="UserIcon"></lucide-icon>
+        <span>用戶管理</span>
+      </button>
+    </li>
+
+    <!-- 商品管理 -->
+    <li class="nav-item">
+      <button class="nav-link" (click)="goToProduct()">
+        <lucide-icon [name]="HandbagIcon"></lucide-icon>
+        <span>商品管理</span>
+      </button>
+    </li>
+
+    <!-- 公告通知 -->
+    <li class="nav-item">
+      <button class="nav-link" (click)="goToAnnouncement()">
+        <lucide-icon [name]="BellIcon"></lucide-icon>
+        <span>公告通知</span>
+      </button>
+    </li>
+
+    <!-- 爭議處理 -->
+    <li class="nav-item">
+      <button class="nav-link" (click)="goToReport()">
+        <lucide-icon [name]="LibraIcon"></lucide-icon>
+        <span>爭議處理</span>
+      </button>
+    </li>
+
+  </ul>
+
+  <hr class="divider">
+
+  <div class="promo-card">
+    <p class="title">讓物品找到<br>下一個好主人</p>
+    <p class="slogan">Reuse, Reduce, Relove.</p>
+  </div>
+</div>

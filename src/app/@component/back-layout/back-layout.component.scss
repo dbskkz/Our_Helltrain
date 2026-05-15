@@ -1,0 +1,12 @@
+@use '../../styles/variables' as *;
+
+.main-content {
+  display: flex;
+  width: 100%;
+  // 移除 flex: 1，因為不再需要強制撐滿視窗剩餘空間
+  margin: auto;
+}
+
+main{
+  flex:1;
+}

@@ -1,20 +1,136 @@
-.view{
+@use '../../styles/variables' as *;
+
+.page-wrapper {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background: #f5f4ef;
+  min-height: 100vh;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: #1a1814;
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== 今日概覽 ===== */
+.overview-card {
+  background: #ffffff;
+  border: 1px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+}
+
+.card-title {
+  font-size: $font-size-h1;
+  font-weight: 700;
+  color: #1a1814;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.overview-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.overview-box {
+  flex: 1;
+  background: #faf9f5;
+  border: 1px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.overview-label {
+  font-size: 13px;
+  color: #6b6760;
+  font-weight: 500;
+}
+
+.overview-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1814;
+  line-height: 1;
+  margin: 0;
+}
+
+/* ===== 需立即處理 ===== */
+.urgent-card {
+  background: #ffffff;
+  border: 1px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.urgent-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin: 20px;
+  padding: 14px 16px;
+  border-radius: $border-radius-sm;
+  font-size: 14px;
+  font-weight: 500;
 }
-.viewbox{
-  width: 30%;
-  background-color: antiquewhite;
-  font-size: larger;
-  padding: 10px;
+
+.urgent-item.dispute {
+  background: #fff1f1;
+  color: #8b3a3a;
 }
-.viewnumber{
-  margin: 5px;
+
+.urgent-item.pending {
+  background: #fff9f0;
+  color: #8b7355;
 }
-.boxModel{
-  border: 2px solid gray;
-  border-radius: 10px;
-  margin: 20px;
+
+.btn-outline {
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover  { opacity: 0.75; transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+
+  .dispute & {
+    border: 1.5px solid #8b3a3a;
+    color: #8b3a3a;
+  }
+
+  .pending & {
+    border: 1.5px solid #8b7355;
+    color: #8b7355;
+  }
+}
+
+/* ===== 近期操作 ===== */
+.recent-card {
+  background: #ffffff;
+  border: 1px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  min-height: 120px;
+}
+
+/* ===== RWD ===== */
+@media (max-width: 640px) {
+  .overview-grid {
+    flex-direction: column;
+  }
 }

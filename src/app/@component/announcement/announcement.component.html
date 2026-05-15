@@ -1,1 +1,140 @@
-<p>announcement works!</p>
+<div class="page-wrapper">
+  <h1 class="page-title">公告通知管理</h1>
+
+  <!-- 上傳區塊 -->
+  <div class="upload-card">
+    <input
+      class="title-input"
+      type="text"
+      placeholder="請輸入公告標題..."
+      [(ngModel)]="announcementTitle"
+    />
+
+    <!-- 圖片上傳區 -->
+    <div
+      class="upload-zone"
+      [class.has-image]="previewUrl"
+      (click)="fileInput.click()"
+      (dragover)="$event.preventDefault()"
+      (drop)="onDrop($event)"
+    >
+      <input
+        #fileInput
+        type="file"
+        accept="image/jpeg,image/png,image/gif"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+      @if (previewUrl) {
+        <img class="preview-img" [src]="previewUrl" alt="預覽圖" />
+        <button class="remove-img-btn" (click)="removeImage($event)">✕</button>
+      } @else {
+        <div class="upload-hint">
+          <lucide-icon [name]="circleIcon" class="upload-arrow-icon" [size]="88"></lucide-icon>
+          <span class="upload-hint-text">請選擇圖片檔案</span>
+          <span class="upload-hint-sub">(jpeg, png, gif)</span>
+        </div>
+      }
+    </div>
+
+    <!-- 按鈕列 -->
+    <div class="upload-actions">
+      <button class="btn btn-preview" (click)="preview()">預覽</button>
+      <button
+        class="btn btn-upload"
+        (click)="upload()"
+        [disabled]="!announcementTitle || !selectedFile"
+      >
+        上傳
+      </button>
+    </div>
+  </div>
+
+  <!-- 列表區塊 -->
+  <div class="list-section">
+    <h2 class="section-title">
+      <lucide-icon [name]="newpaperIcon" class="edit-icon"></lucide-icon>
+      列表
+    </h2>
+
+    <!-- 架上的公告 -->
+    <div class="announce-group">
+      <h3 class="group-title">架上的公告</h3>
+      <div class="announce-table">
+        <div class="announce-header">
+          <span class="col-label">ID</span>
+          <span class="col-label">公告內容</span>
+          <span class="col-label">開始日期</span>
+          <span class="col-label">結束日期</span>
+          <span class="col-label">編輯</span>
+          <span class="col-label">已發布</span>
+          <span class="col-label">未發布</span>
+        </div>
+        @for (item of activeAnnouncements; track item.id) {
+          <div class="announce-row">
+            <span class="cell-text">{{ item.id }}</span>
+            <span class="cell-text">{{ item.content }}</span>
+            <span class="cell-text">{{ item.startDate }}</span>
+            <span class="cell-text">{{ item.endDate }}</span>
+            <button
+              class="btn btn-sm btn-view"
+              (click)="editAnnouncement(item)"
+            >
+              編輯
+            </button>
+            <button class="btn btn-sm btn-publish" (click)="publish(item)">
+              已發布
+            </button>
+            <button class="btn btn-sm btn-unpublish" (click)="unpublish(item)">
+              未發布
+            </button>
+          </div>
+        } @empty {
+          <div class="announce-row empty-row">
+            <span class="empty-text">目前沒有架上公告</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- 過去的公告 -->
+    <div class="announce-group">
+      <h3 class="group-title">過去的公告</h3>
+      <div class="announce-table">
+        <div class="announce-header">
+          <span class="col-label">ID</span>
+          <span class="col-label">公告內容</span>
+          <span class="col-label">開始日期</span>
+          <span class="col-label">結束日期</span>
+          <span class="col-label">編輯</span>
+          <span class="col-label">已發布</span>
+          <span class="col-label">未發布</span>
+        </div>
+        @for (item of pastAnnouncements; track item.id) {
+          <div class="announce-row">
+            <span class="cell-text">{{ item.id }}</span>
+            <span class="cell-text">{{ item.content }}</span>
+            <span class="cell-text">{{ item.startDate }}</span>
+            <span class="cell-text">{{ item.endDate }}</span>
+            <button
+              class="btn btn-sm btn-view"
+              (click)="editAnnouncement(item)"
+            >
+              編輯
+            </button>
+            <button class="btn btn-sm btn-publish" (click)="publish(item)">
+              已發布
+            </button>
+            <button class="btn btn-sm btn-unpublish" (click)="unpublish(item)">
+              未發布
+            </button>
+          </div>
+        } @empty {
+          <div class="announce-row empty-row">
+            <span class="empty-text">目前沒有過去公告</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
