@@ -15,7 +15,7 @@ import { LaunchProductComponent } from './@component/launch-product/launch-produ
 export const routes: Routes = [
 
   //前台
-  { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
+
 
   // 第一類：需要導覽列和側邊欄的頁面
   {
@@ -25,6 +25,7 @@ export const routes: Routes = [
       { path: 'home', component: HomepageComponent },
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
+      { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
