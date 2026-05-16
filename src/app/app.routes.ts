@@ -24,14 +24,13 @@ export const routes: Routes = [
   { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
   { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
 
-
-  // 第一類：需要導覽列和側邊欄的頁面
+  // 需要導覽列和側邊欄的頁面
   {
     path: '',
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
-      { path: 'product-list', component:ProductListingComponent},
+      { path: 'product-list/:category', component:ProductListingComponent},
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: '', redirectTo: 'home', pathMatch: 'full' },
