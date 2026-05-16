@@ -4,8 +4,9 @@
       <button
         type="button"
         class="nav-link"
+        (click)="goToHome()"
       >
-        <lucide-icon [name]="HomeIcon"></lucide-icon>
+        <lucide-icon [name]="HomeIcon" (click)="goToHome()"></lucide-icon>
         <span>回首頁</span>
       </button>
     </li>

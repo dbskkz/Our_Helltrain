@@ -11,18 +11,19 @@ import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
 import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
 import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
+import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 
 export const routes: Routes = [
 
   //前台
 
-
-  // 第一類：需要導覽列和側邊欄的頁面
+  // 需要導覽列和側邊欄的頁面
   {
     path: '',
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
+      { path: 'product-list/:category', component:ProductListingComponent},
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
