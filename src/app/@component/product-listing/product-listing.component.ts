@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import { LucideAngularModule, ArrowUpDown} from 'lucide-angular';
+import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 
 @Component({
   selector: 'app-product-listing',
@@ -21,7 +22,10 @@ import { LucideAngularModule, ArrowUpDown} from 'lucide-angular';
 })
 export class ProductListingComponent implements OnInit{
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private uiBehavior:UiBehaviorService
+  ) {}
 
 
   // =========================================================
@@ -57,49 +61,28 @@ export class ProductListingComponent implements OnInit{
   // FILTER PANEL OPEN/CLOSE
   // =========================================================
 
-  isPriceOpen = false;
-  isGradeOpen = false;
-  isLocationOpen = false;
-  isSchoolOpen = false;
+  panelState = {
+    price: false,
+    grade: false,
+    location: false,
+    school: false
+  }
 
   togglePanel(
     event: Event,
-    panel: 'price' | 'grade' | 'location' | 'school'
-  ): void {
-
-    event.stopPropagation();
-
-    switch(panel){
-
-      case 'price':
-        this.isPriceOpen = !this.isPriceOpen;
-        break;
-
-      case 'grade':
-        this.isGradeOpen = !this.isGradeOpen;
-        break;
-
-      case 'location':
-        this.isLocationOpen = !this.isLocationOpen;
-        break;
-
-      case 'school':
-        this.isSchoolOpen = !this.isSchoolOpen;
-        break;
-
-    }
-
+    panel: keyof typeof this.panelState
+  )
+  {
+    this.uiBehavior.togglePanel(event, this.panelState, panel)
   }
 
   @HostListener('document:click')
-  closeMenu(): void{
+  closeMenu(): void {
 
-    this.isGradeOpen = false;
-    this.isLocationOpen = false;
-    this.isPriceOpen = false;
-    this.isSchoolOpen = false;
+    this.uiBehavior.closeAll(this.panelState);
 
   }
+
 
   // =========================================================
   // PRICE FILTER
@@ -167,11 +150,6 @@ export class ProductListingComponent implements OnInit{
 
   selectedSchool = '';
 
-  schoolSwitch(event:Event){
-      event.stopPropagation();
-      this.isSchoolOpen = !this.isSchoolOpen;
-  }
-
   schools = [
     { id: 1, name: '國立臺灣大學', selected: false },
     { id: 2, name: '國立清華大學', selected: false },
@@ -227,26 +205,6 @@ export class ProductListingComponent implements OnInit{
     console.log(this.dept);
 
   }
-
-
-  priceSwitch(event:Event){
-    event.stopPropagation();
-    this.isPriceOpen = !this.isPriceOpen;
-  }
-  // 以上為【 價格篩選 】的內容
-
-  gradeSwitch(event:Event){
-    event.stopPropagation();
-    this.isGradeOpen = !this.isGradeOpen;
-  }
-
-  //地區篩選
-
-  locationSwitch(event:Event){
-    event.stopPropagation();
-    this.isLocationOpen = !this.isLocationOpen;
-  }
-
 
 
 }
