@@ -42,7 +42,7 @@ export class SideNavComponent {
   ];
 
   // 被選擇的商品種類
-  selectedCategory = 'all';
+  selectedCategory = '';
 
   // 過濾商品
   selectCategory(value: string){
@@ -64,6 +64,7 @@ export class SideNavComponent {
 
   goToHome(){
     this.router.navigate(['/home'])
+    this.selectedCategory = '';
   }
 
   // Navigate to product-list

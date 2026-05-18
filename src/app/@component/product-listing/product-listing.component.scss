@@ -9,6 +9,10 @@
   }
 }
 
+.content *{
+  outline: none;
+}
+
 // 側邊欄/篩選區塊
 .filter-panel {
   display: flex;
@@ -160,7 +164,7 @@ select{
   text-align: center;
   margin-top: 0.5rem;
   font-weight: bold;
-  color: #007bff;
+  color: $semantic-orange;
 }
 
 // 分隔線
@@ -169,9 +173,4 @@ hr {
   border-top: 1px solid #eee;
   width: 100%;
   margin: 0.5rem 0;
-}
-
-
-.range-label{
-  color: $semantic-orange;
 }

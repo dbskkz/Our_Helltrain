@@ -87,16 +87,30 @@ export class ProductListingComponent implements OnInit{
 
 
   // =========================================================
+  // FILTER VALUES
+  // =========================================================
+
+
+  private readonly DEFAULT_FILTERS = {
+    priceValue:     0,
+    priceHighValue: 10000,
+    sellerGrade:    5
+  } as const;
+
+
+  // =========================================================
   // PRICE FILTER
   // =========================================================
 
 
-  priceValue: number = 0;
-  priceHighValue: number = 100;
+  priceValue     = this.DEFAULT_FILTERS.priceValue;
+  priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
 
   priceOptions: Options = {
     floor: 0,
     ceil: 10000,
+    step: 100,        // 每格 100 元
+    translate: (value: number): string => `$${value.toLocaleString()}`
   };
 
 
@@ -105,7 +119,7 @@ export class ProductListingComponent implements OnInit{
   // =========================================================
 
 
-  sellerGrade = 5;
+  sellerGrade    = this.DEFAULT_FILTERS.sellerGrade;
 
   sellerGradeOptions: Options = {
     showTicksValues: true,
@@ -147,17 +161,21 @@ export class ProductListingComponent implements OnInit{
   // BUTTON LABEL GETTERS
   // =========================================================
 
+
+
+
   get priceLabel(): string {
-    const hasFilter = this.priceValue >= 0 || this.priceHighValue <= 10000;
-    return hasFilter
-      ? `$${this.priceValue} - $${this.priceHighValue}`
-      : '價格區間';
+    const isDefault = this.priceValue === this.DEFAULT_FILTERS.priceValue
+                  && this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue;
+    return isDefault
+      ? '價格區間'
+      : `$${this.priceValue} - $${this.priceHighValue}`;
   }
 
   get gradeLabel(): string {
-    return this.sellerGrade <= 5
-      ? `評價 ${this.sellerGrade}★ 以上`
-      : '賣家評價';
+    return this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade
+      ? '賣家評價'
+      : `評價 ${this.sellerGrade}★ 以上`;
   }
 
   get locationLabel(): string {
@@ -181,6 +199,25 @@ export class ProductListingComponent implements OnInit{
     if (selectedSchools.length > 0) parts.push(`${selectedSchools.length} 所學校`);
     if (selectedDepts.length > 0) parts.push(`${selectedDepts.length} 個科系`);
     return parts.join('、');
+  }
+
+
+  // =========================================================
+  // reset
+  // =========================================================
+
+
+  ngOnDestroy(): void {
+    this.resetFilters();
+  }
+
+  resetFilters(): void {
+    this.priceValue     = this.DEFAULT_FILTERS.priceValue;
+    this.priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
+    this.sellerGrade    = this.DEFAULT_FILTERS.sellerGrade;
+    this.cities.forEach(c => c.selected = false);
+    this.schools.forEach(s => s.selected = false);
+    this.department.forEach(d => d.selected = false);
   }
 
 
