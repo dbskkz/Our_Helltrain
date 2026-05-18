@@ -33,7 +33,7 @@
   h5 {
     font-size: 1rem;
     margin-bottom: 0.8rem;
-    color: #444;
+    color: $text-black;
   }
 
   ul {
@@ -50,10 +50,12 @@
       background: #fff;
       cursor: pointer;
       transition: all 0.2s ease;
+      color: $text-gray;
 
       &:hover {
         background-color: $background-yellow;  // 原本灰 → 淺黃，保持風格統一
-        border-color: $primary-yellow-dark;
+        border-color: transparent;
+        color: $text-black;
       }
     }
   }
