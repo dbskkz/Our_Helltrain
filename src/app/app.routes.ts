@@ -12,6 +12,8 @@ import { ForegroundTestComponent } from './@component/foreground-test/foreground
 import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
 import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
+import { ShoppingCart } from 'lucide-angular';
+import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
 
 export const routes: Routes = [
 
@@ -24,6 +26,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomepageComponent },
       { path: 'product-list/:category', component:ProductListingComponent},
+      { path: 'cart', component:ShoppingCartComponent},
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
