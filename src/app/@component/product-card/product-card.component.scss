@@ -1,0 +1,148 @@
+@use '../../styles/variables' as *;
+
+.product{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+
+  .product-list {
+    display: flex;
+    flex-wrap: wrap; // 讓卡片可以換行
+    gap: 20px;       // 卡片之間的間距
+
+    width: 100%;
+    box-sizing: border-box;
+
+    .card {
+      // 設定平滑過渡動畫
+      transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+
+      // 預設：一排 4 個 (計算扣掉間距後的寬度)
+      // 公式：(100% - (數量-1)*間距) / 數量
+      width: calc((100% - 20px * 3) / 4);
+
+      position: relative; // 1. 必加！讓偽元素能正確定位
+      overflow: hidden;    // 如果卡片有圓角，這行能確保紅色層不超出邊界
+
+
+      &::after {
+        content: '';       // 必加！沒這行偽元素不會出現
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: $primary-gray;
+        mix-blend-mode: multiply;
+        opacity: 0;        // 預設隱藏
+        transition: opacity 0.2s ease;
+        z-index: 10;       // 不用設定到 999，只要比內容高即可
+        pointer-events: none; // 確保這層不會擋住點擊事件
+      }
+
+      &:hover {
+        transform: translateY(-2px); // 滑鼠移上去的小特效
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        cursor: pointer;
+      }
+
+      &:active {
+        transform: translateY(0px);
+
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      .card-body {
+
+        .title {
+          font-size: 1.1rem;
+          font-weight: bolder;
+        }
+        .price {
+          font-weight: bold;
+          font-size: 1.6rem;
+          color: $text-price;
+        }
+
+        .meta-info {
+          display: flex;
+          justify-content: space-between; // 讓地點在左，時間在右
+          align-items: center;
+          font-size: 11px;
+          color: $text-gray;
+          margin-bottom: 0.8rem;
+
+          .location {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+          }
+        }
+
+        .divider {
+          border: 0;
+          border-top: 1px solid #eee;
+          margin: 0.8rem 0;
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 11px;
+          color: lighten($text-gray, 10%);
+
+          .picture {
+            height: 1.2rem;
+            width: 1.2rem;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            flex-shrink: 0;
+          }
+        }
+
+      }
+    }
+    // 過渡態：中等螢幕 (例如平板) 變一排 3 個
+    @media (max-width: 1024px) {
+      .card {
+        width: calc((100% - 20px * 2) / 3);
+      }
+    }
+
+    // 變一排 2 個
+    @media (max-width: 768px) {
+      .card {
+        width: calc((100% - 20px * 1) / 2);
+      }
+    }
+  }
+
+  .view-more {
+    padding: 0.8rem 1.8rem;
+
+    border: none;
+    border-radius: 999px;
+
+    background: $primary-gray;
+    color: $text-gray;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    transition: all 0.25s ease;
+
+    &:hover {
+      background:rgb(250, 250, 250);
+      box-shadow: 0 1px 10px rgba($text-black, 0.15);
+      transform: translateY(-1px);
+      cursor: pointer;
+    }
+
+    &:active {
+      color: $text-black;
+      background-color: $primary-gray;
+      transform: translateY(0px);
+    }
+  }
+}

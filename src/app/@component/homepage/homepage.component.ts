@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 
 // 素材庫
 import { LucideAngularModule, Filter, ArrowUpDown, ChevronDown, MapPin } from 'lucide-angular';
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-homepage',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, ProductCardComponent],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.scss'
 })
@@ -16,60 +17,4 @@ export class HomepageComponent {
   readonly ArrowUpDownIcon = ArrowUpDown;
   readonly ChevronDownIcon= ChevronDown;
   readonly MapPinIcon= MapPin;
-
-  products = [
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      university: '清大',
-      location: '新竹',
-      time: '2小時前',
-      category: '生科系',
-      imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      university: '清大',
-      location: '新竹',
-      time: '2小時前',
-      category: '生科系',
-      imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      university: '清大',
-      location: '新竹',
-      time: '2小時前',
-      category: '生科系',
-      imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      university: '清大',
-      location: '新竹',
-      time: '2小時前',
-      category: '生科系',
-      imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      university: '清大',
-      location: '新竹',
-      time: '2小時前',
-      category: '生科系',
-      imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    // ... 更多資料
-  ];
-
-
 }

@@ -4,6 +4,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { LucideAngularModule, Menu } from 'lucide-angular';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { UserActionsComponent } from "../user-actions/user-actions.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-nav',
@@ -12,6 +13,11 @@ import { UserActionsComponent } from "../user-actions/user-actions.component";
   styleUrl: './top-nav.component.scss'
 })
 export class TopNavComponent {
+
+  constructor(
+    private router: Router,){}
+
+
   // Declare icon
   readonly MenuIcon = Menu;
 
@@ -20,6 +26,10 @@ export class TopNavComponent {
 
   onMenuBtnClick() {
     this.menuClick.emit(); // 按下時，把訊號射出去
+  }
+
+  goToHome(){
+    this.router.navigate(['/home'])
   }
 
 }

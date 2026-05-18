@@ -1,3 +1,5 @@
+@use './app/styles/variables' as *;
+
 /* You can add global styles to this file, and also import other style files */
 /* 請確認這段是在 src/styles.scss 裡 */
 html, body {
@@ -44,3 +46,26 @@ body {
     --mat-mdc-snack-bar-button-color: #F7D175;
   }
 }
+
+
+// NGX-SLIDER 主色覆寫
+.ngx-slider {
+  .ngx-slider-selection {
+    background: $primary-yellow !important;
+  }
+
+  .ngx-slider-pointer {
+    background-color: $primary-yellow !important;
+
+    &::after {
+      background-color: white !important;
+    }
+  }
+
+  .ngx-slider-tick.ngx-slider-selected {
+    background: $primary-yellow !important;
+  }
+
+}
+
+

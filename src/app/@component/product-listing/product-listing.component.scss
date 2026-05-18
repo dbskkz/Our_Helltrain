@@ -1,0 +1,175 @@
+@use '../../styles/variables' as *;
+
+// 內容區塊的間距建議
+.content {
+  padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 1rem; // 手機版縮小內縮
+  }
+}
+
+// 側邊欄/篩選區塊
+.filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .category-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: $text-black;
+  }
+
+  .breadcrumb {
+    font-size: 0.9rem;
+    color: $text-gray;
+  }
+}
+
+// 熱門分類標籤
+.hot-categories {
+  h5 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: #444;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    list-style: none;
+    padding: 0;
+
+    .btn-tag {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: $background-yellow;  // 原本灰 → 淺黃，保持風格統一
+        border-color: $primary-yellow-dark;
+      }
+    }
+  }
+}
+
+// 篩選清單群組
+.filter-groups {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+
+  & > li {
+    position: relative; // 為了讓彈出的 panel 定位
+  }
+}
+
+.rearrange{
+  border-radius: 999rem;
+  padding: 0.5rem;
+
+  &:hover{
+    cursor: pointer;
+    transition: ease 0.3s;
+    background-color: $primary-yellow;
+
+    lucide-icon{
+      color: white;
+    }
+  }
+}
+
+// 篩選按鈕與下拉選單樣式
+.filter-btn, .filter-select, .filter-groups li > button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: #888;
+  }
+
+  &.active {
+    background-color: $background-yellow;
+    border-color: transparent;
+    color: $semantic-orange;
+    font-weight: 600;
+  }
+
+
+}
+
+select{
+    outline: none;
+}
+
+// 彈出的內容區塊 (價格、地區、校系)
+.slider-container, .checkbox-group {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 1.2rem;
+  border-radius: 8px;
+  min-width: 250px;
+}
+
+// 多選方框區塊
+.checkbox-group {
+  max-height: 300px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; // 兩欄顯示
+  gap: 0.8rem;
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+  }
+}
+
+// 價格標籤
+.range-label {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+// 分隔線
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+
+.range-label{
+  color: $semantic-orange;
+}

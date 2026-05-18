@@ -16,9 +16,19 @@ export class UiBehaviorService {
   )
   {
     event.stopPropagation();
-    panelState[panel] = !panelState[panel];
+
+    const isCurrentlyOpen = panelState[panel];
+
+    // 先關掉所有 panel
+    Object.keys(panelState).forEach(key => {
+      panelState[key] = false;
+    });
+
+    // 再 toggle 目標 panel（如果本來是關的就打開，本來是開的就維持關）
+    panelState[panel] = !isCurrentlyOpen;
   }
 
+  // 關閉視窗
   closeAll(panelState: Record<string, boolean>): void {
 
     Object.keys(panelState).forEach(key => {
