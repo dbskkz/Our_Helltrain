@@ -14,6 +14,7 @@ import { LaunchProductComponent } from './@component/launch-product/launch-produ
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 import { StoreComponent } from './@component/store/store.component';
 import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
+import { LoginRegisterComponent } from './@component/login-register/login-register.component';
 
 export const routes: Routes = [
   //前台
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
+      { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
       { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: '', redirectTo: 'home', pathMatch: 'full' },
