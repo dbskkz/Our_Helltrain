@@ -38,4 +38,16 @@ export class UserActionsComponent {
   goToCart(){
     this.router.navigate(['/cart']);
   }
+  goToStore(){
+    this.router.navigate(['/store']);
+  }
+  goToSetting(){
+    this.router.navigate(['/profile_settings']);
+  }
+  goToSell(){
+    this.router.navigate(['/launch_product']);
+  }
+  goToOrder(){
+    this.router.navigate(['/order_information']);
+  }
 }
