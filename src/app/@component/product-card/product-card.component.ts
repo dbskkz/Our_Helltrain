@@ -14,58 +14,139 @@ export class ProductCardComponent {
 
   readonly MapPinIcon= MapPin;
 
-  products = [
+  // products = [
+  //   {
+  //     title: '極簡黑後背包',
+  //     price: 300,
+  //     university: '清大',
+  //     location: '新竹',
+  //     time: '2小時前',
+  //     category: '生科系',
+  //     imgUrl: 'assets/bag.jpg',
+  //     userImg: 'assets/avatar.jpg'
+  //   },
+  //   {
+  //     title: '極簡黑後背包',
+  //     price: 300,
+  //     university: '清大',
+  //     location: '新竹',
+  //     time: '2小時前',
+  //     category: '生科系',
+  //     imgUrl: 'assets/bag.jpg',
+  //     userImg: 'assets/avatar.jpg'
+  //   },
+  //   {
+  //     title: '極簡黑後背包',
+  //     price: 300,
+  //     university: '清大',
+  //     location: '新竹',
+  //     time: '2小時前',
+  //     category: '生科系',
+  //     imgUrl: 'assets/bag.jpg',
+  //     userImg: 'assets/avatar.jpg'
+  //   },
+  //   {
+  //     title: '極簡黑後背包',
+  //     price: 300,
+  //     university: '清大',
+  //     location: '新竹',
+  //     time: '2小時前',
+  //     category: '生科系',
+  //     imgUrl: 'assets/bag.jpg',
+  //     userImg: 'assets/avatar.jpg'
+  //   },
+  //   {
+  //     title: '極簡黑後背包',
+  //     price: 300,
+  //     university: '清大',
+  //     location: '新竹',
+  //     time: '2小時前',
+  //     category: '生科系',
+  //     imgUrl: 'assets/bag.jpg',
+  //     userImg: 'assets/avatar.jpg'
+  //   },
+  //   // ... 更多資料
+  // ];
+products = [
     {
       title: '極簡黑後背包',
       price: 300,
-      university: '清大',
-      location: '新竹',
       time: '2小時前',
-      category: '生科系',
       imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
+      location: '新竹',
+      quantity: 1,
+      user:
+        {
+          userName: '生科吉娃娃甘霖',
+          userImg: 'assets/avatar.jpg',
+          university: '清大',
+          department: '生科系',
+          location: ['新竹','高雄']
+        }
     },
-    {
+   {
       title: '極簡黑後背包',
       price: 300,
-      university: '清大',
-      location: '新竹',
       time: '2小時前',
-      category: '生科系',
       imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
+      location: '新竹',
+      quantity: 1,
+      user:
+        {
+          userName: '生科吉娃娃甘霖',
+          userImg: 'assets/avatar.jpg',
+          university: '清大',
+          department: '生科系',
+          location: ['新竹','高雄']
+        }
+    },{
       title: '極簡黑後背包',
       price: 300,
-      university: '清大',
-      location: '新竹',
       time: '2小時前',
-      category: '生科系',
       imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
+      location: '新竹',
+      quantity: 1,
+      user:
+        {
+          userName: '生科吉娃娃甘霖',
+          userImg: 'assets/avatar.jpg',
+          university: '清大',
+          department: '生科系',
+          location: ['新竹','高雄']
+        }
+    },{
       title: '極簡黑後背包',
       price: 300,
-      university: '清大',
-      location: '新竹',
       time: '2小時前',
-      category: '生科系',
       imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
-    },
-    {
+      location: '新竹',
+      quantity: 1,
+      user:
+        {
+          userName: '生科吉娃娃甘霖',
+          userImg: 'assets/avatar.jpg',
+          university: '清大',
+          department: '生科系',
+          location: ['新竹','高雄']
+        }
+    },{
       title: '極簡黑後背包',
       price: 300,
-      university: '清大',
-      location: '新竹',
       time: '2小時前',
-      category: '生科系',
       imgUrl: 'assets/bag.jpg',
-      userImg: 'assets/avatar.jpg'
+      location: '新竹',
+      quantity: 1,
+      user:
+        {
+          userName: '生科吉娃娃甘霖',
+          userImg: 'assets/avatar.jpg',
+          university: '清大',
+          department: '生科系',
+          location: ['新竹','高雄']
+        }
     },
-    // ... 更多資料
   ];
+
+
 
 }

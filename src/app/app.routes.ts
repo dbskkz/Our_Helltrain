@@ -13,17 +13,18 @@ import { BackLayoutComponent } from './@component/back-layout/back-layout.compon
 import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 import { StoreComponent } from './@component/store/store.component';
+import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
 
 export const routes: Routes = [
   //前台
-
   // 第一類：需要導覽列和側邊欄的頁面
   {
     path: '',
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
-      { path: 'product-list/:category', component: ProductListingComponent },
+      { path: 'product-list/:category', component:ProductListingComponent},
+      { path: 'cart', component:ShoppingCartComponent},
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定

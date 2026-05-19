@@ -1,4 +1,6 @@
 import { Component, HostListener } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+
 // 素材庫
 import { LucideAngularModule, MessageCircleMore, ChevronDownIcon} from 'lucide-angular';
 
@@ -9,6 +11,10 @@ import { LucideAngularModule, MessageCircleMore, ChevronDownIcon} from 'lucide-a
   styleUrl: './user-actions.component.scss'
 })
 export class UserActionsComponent {
+  constructor(
+    private router: Router,
+    private actRoute:ActivatedRoute){}
+
   // Declare icon
   readonly MessageIcon = MessageCircleMore;
   readonly ChevronDownIcon = ChevronDownIcon;
@@ -27,5 +33,9 @@ export class UserActionsComponent {
   @HostListener('document:click')
   closeMenu(){
     this.isDisplayed = false;
+  }
+
+  goToCart(){
+    this.router.navigate(['/cart']);
   }
 }
