@@ -1,12 +1,19 @@
 @use '../../styles/variables' as *;
 
-.main-content {
+:host {
   display: flex;
-  width: 100%;
-  // 移除 flex: 1，因為不再需要強制撐滿視窗剩餘空間
-  margin: auto;
+  flex-direction: column;
+  height: 100vh;        // 整個 layout 佔滿視窗高度
 }
 
-main{
-  flex:1;
+.main-content {
+  display: flex;
+  flex: 1;              // 佔滿 header 以外的剩餘高度
+  overflow: hidden;     // 防止內容溢出
+}
+
+main {
+  flex: 1;              // 佔滿 sider 以外的剩餘寬度
+  overflow-y: auto;     // 內容超過時捲動
+  background: #f5f4ef;
 }

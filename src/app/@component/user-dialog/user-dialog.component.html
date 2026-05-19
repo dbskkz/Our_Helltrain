@@ -1,0 +1,22 @@
+<div mat-dialog-title class="dialog-header">
+  <img class="dialog-avatar" [src]="data.avatarUrl" [alt]="data.name"/>
+  <div class="dialog-header-info">
+    <span class="dialog-name">{{ data.name }}</span>
+    <span class="dialog-email">{{ data.email }}</span>
+  </div>
+</div>
+
+<mat-dialog-content>
+  <div class="info-row"><span class="label">ID</span><span>{{ data.id }}</span></div>
+  <div class="info-row"><span class="label">電話</span><span>{{ data.phone }}</span></div>
+  <div class="info-row"><span class="label">地區</span><span>{{ data.location }}</span></div>
+  <div class="info-row"><span class="label">學校</span><span>{{ data.department }}</span></div>
+  <div class="info-row"><span class="label">狀態</span><span>{{ data.status }}</span></div>
+  <div class="info-row"><span class="label">學生驗證</span><span>{{ data.studentVerifiedAt }}</span></div>
+  <div class="info-row"><span class="label">信用等級</span><span>{{ data.goodLevel }}</span></div>
+  <div class="info-row"><span class="label">簡介</span><span>{{ data.msg }}</span></div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>關閉</button>
+</mat-dialog-actions>

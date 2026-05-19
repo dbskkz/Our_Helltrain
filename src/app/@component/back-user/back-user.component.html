@@ -1,4 +1,4 @@
-<div class="page-wrapper user-management-page">
+<div class="page-wrapper">
   <h1 class="page-title">用戶管理</h1>
 
   <div class="toolbar">
@@ -6,14 +6,14 @@
       <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
       <input type="text" placeholder="以ID或名字搜尋" />
     </div>
-    <span class="filter-tag">
+    <div class="filter-tag">
       <lucide-icon [name]="mapIcon" class="filter-tag-icon"></lucide-icon>
-      地區：高雄
-    </span>
-    <span class="filter-tag">
+      <select><option>地區：高雄</option></select>
+    </div>
+    <div class="filter-tag">
       <lucide-icon [name]="GridIcon" class="filter-tag-icon" ></lucide-icon>
-      學校：[名稱]
-    </span>
+      <select><option>學校：[名稱]</option></select>
+    </div>
     <button class="clear-btn" onclick="clearFilters()">清除過濾條件</button>
   </div>
 
@@ -27,7 +27,7 @@
       <span class="col-label">操作</span>
     </div>
 
-    <div id="user-list">
+    <div>
       @for (user of users; track user.id) {
         <div class="user-row">
           <div class="user-cell">
@@ -38,24 +38,24 @@
             </div>
           </div>
           <div>
-            <span class="badge" [ngClass]="getAccountBadge(user.accountStatus)">
-              {{ user.accountStatus }}
+            <span class="badge" [ngClass]="getAccountBadge(user.status)">
+              {{ user.status }}
             </span>
           </div>
           <div>
-            <span class="badge" [ngClass]="getVerifyBadge(user.verifyStatus)">
-              {{ user.verifyStatus }}
+            <span class="badge" [ngClass]="getVerifyBadge(user.studentVerifiedAt)">
+              {{ user.studentVerifiedAt }}
             </span>
           </div>
-          <div class="region-text">{{ user.region }}</div>
+          <div class="region-text">{{ user.location }}</div>
           <div class="count-text">{{ user.tradeCount }}</div>
           <div class="action-cell">
-            @if (user.accountStatus === "審查中") {
+            @if (user.status === "審查中") {
               <button class="btn btn-approve">驗證通過</button>
               <button class="btn btn-danger">駁回</button>
             } @else {
-              <button class="btn btn-view">查看</button>
-              @if (user.accountStatus === "完全停權") {
+              <button class="btn btn-view" (click)="viewUser(user)">查看</button>
+              @if (user.status === "完全停權") {
                 <button class="btn btn-neutral">解除停權</button>
               } @else {
                 <button class="btn btn-danger">停權</button>
@@ -66,4 +66,32 @@
       }
     </div>
   </div>
+
+  <!-- 分頁 -->
+  <div class="pagination">
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === 1"
+      (click)="prevPage()"
+    >
+    <lucide-icon [name]="prevIcon"></lucide-icon>
+  </button>
+    @for (page of pagination.pageNumbers; track page) {
+      <button
+        class="page-btn"
+        [class.active]="page === pagination.currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    }
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === pagination.totalPages"
+      (click)="nextPage()"
+    >
+      <lucide-icon [name]="nextIcon"></lucide-icon>
+    </button>
+  </div>
+
 </div>

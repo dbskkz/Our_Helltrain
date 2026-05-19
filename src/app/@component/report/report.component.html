@@ -1,5 +1,4 @@
 <div class="page-wrapper">
-
   <h1 class="page-title">爭議處理</h1>
 
   <!-- 搜尋列 -->
@@ -16,7 +15,6 @@
 
   <!-- 待處理爭議案件概覽 -->
   <div class="table-card">
-
     <h2 class="section-title">
       <lucide-icon [name]="panelsIcon" class="section-icon"></lucide-icon>
       待處理爭議案件概覽
@@ -40,14 +38,20 @@
             <span class="product-name">{{ dispute.productName }}</span>
             <span class="product-id">(ID: {{ dispute.productId }})</span>
           </div>
-          <div class="party-text">{{ dispute.buyerName }}</div>
-          <div class="party-text">{{ dispute.sellerName }}</div>
-          <div class="time-text">{{ dispute.submittedAt }}</div>
+          <div class="party-text">{{ dispute.complainantName }}</div>
+          <div class="party-text">{{ dispute.accusedName }}</div>
+          <div class="time-text">{{ dispute.reportDate }}</div>
           <div class="status-text">{{ dispute.status }}</div>
           <div class="action-cell">
-            <button class="btn btn-reason" (click)="viewReason(dispute)">查看事由</button>
-            <button class="btn btn-reject" (click)="reject(dispute)">駁回</button>
-            <button class="btn btn-approve" (click)="approve(dispute)">驗證通過</button>
+            <button class="btn btn-reason" (click)="viewReason(dispute)">
+              查看事由
+            </button>
+            <button class="btn btn-reject" (click)="reject(dispute)">
+              強制下架
+            </button>
+            <button class="btn btn-approve" (click)="approve(dispute)">
+              駁回檢舉
+            </button>
           </div>
         </div>
       } @empty {
@@ -57,25 +61,33 @@
       }
     </div>
 
-    <div class="table-footer">
-      還有 {{ pendingCount }} 筆待處理案件
-    </div>
-
+    <div class="table-footer">還有 {{ pendingCount }} 筆待處理案件</div>
   </div>
 
   <!-- 分頁 -->
   <div class="pagination">
-    <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
-      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    @for (page of pageNumbers; track page) {
-      <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === 1"
+      (click)="prevPage()"
+    >
+    <lucide-icon [name]="prevIcon"></lucide-icon>
+  </button>
+    @for (page of pagination.pageNumbers; track page) {
+      <button
+        class="page-btn"
+        [class.active]="page === pagination.currentPage"
+        (click)="goToPage(page)"
+      >
         {{ page }}
       </button>
     }
-    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
-      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === pagination.totalPages"
+      (click)="nextPage()"
+    >
+      <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
-
 </div>

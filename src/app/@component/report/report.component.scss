@@ -1,7 +1,7 @@
 @use '../../styles/variables' as *;
 
 .page-wrapper {
-  max-width: 960px;
+  // max-width: 960px;
   margin: 0 auto;
   font-family: 'Noto Sans TC', sans-serif;
   background: #f5f4ef;
@@ -11,7 +11,7 @@
 }
 
 .page-title {
-  font-size: 22px;
+  font-size: $font-size-h1;
   font-weight: 700;
   color: #1a1814;
   margin-bottom: 20px;
@@ -59,7 +59,6 @@
 .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
 
 .btn-search { background: #4a4540; color: #ffffff; border-color: #4a4540; }
-.btn-filter { background: #c49a3a; color: #ffffff; border-color: #c49a3a; }
 
 /* Table card */
 .table-card {
@@ -221,23 +220,14 @@
   align-items: center;
   justify-content: center;
   transition: background 0.15s, border-color 0.15s;
-}
-.page-btn:hover:not(:disabled) { background: #f5f4ef; }
-.page-btn:disabled { color: #c9c6c0; cursor: default; }
-.page-btn.active {
-  background: #1a1814;
-  color: #ffffff;
-  border-color: #1a1814;
-}
 
-.page-arrow-icon {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  &:hover:not(:disabled) { background: #f5f4ef; }
+  &:disabled { color: #c9c6c0; cursor: default; }
+  &.active {
+    background: #1a1814;
+    color: #ffffff;
+    border-color: #1a1814;
+  }
 }
 
 @media (max-width: 768px) {

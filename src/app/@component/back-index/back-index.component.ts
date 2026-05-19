@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
-import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-back-index',
-  imports: [MatButtonModule, MatDividerModule, MatIconModule],
+  imports: [ MatDividerModule, MatIconModule],
   templateUrl: './back-index.component.html',
   styleUrl: './back-index.component.scss'
 })
 export class BackIndexComponent {
-newuser: number = 0;
-dispute: number = 0;
-disputeCount: number = 0;
-pendingCount: number = 0;
+newuser: number = 12;
+dispute: number = 5;
+disputeCount: number = 5;
+pendingCount: number = 3;
 }

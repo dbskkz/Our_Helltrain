@@ -7,14 +7,14 @@
       <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
       <input type="text" placeholder="以ID或名字搜尋" />
     </div>
-    <span class="filter-tag">
+    <div class="filter-tag">
       <lucide-icon [name]="mapIcon" class="filter-tag-icon"></lucide-icon>
-      地區：高雄
-    </span>
-    <span class="filter-tag">
+      <select><option>地區：高雄</option></select>
+    </div>
+    <div class="filter-tag">
       <lucide-icon [name]="GridIcon" class="filter-tag-icon" ></lucide-icon>
-      學校：[名稱]
-    </span>
+      <select><option>學校：[名稱]</option></select>
+    </div>
     <button class="clear-btn" (click)="clearFilters()">清除過濾條件</button>
   </div>
 
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Angular @for loop -->
-    <div id="product-list">
+    <div>
       @for (product of products; track product.id) {
       <div class="product-row">
         <div class="product-img-wrap">
@@ -66,16 +66,16 @@
 
   <!-- Pagination -->
   <div class="pagination">
-    <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
-      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+      <lucide-icon [name]="prevIcon"></lucide-icon>
     </button>
-    @for (page of pageNumbers; track page) {
-      <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">
+    @for (page of pagination.pageNumbers; track page) {
+      <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
         {{ page }}
       </button>
     }
-    <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
-      <svg class="page-arrow-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+      <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
 

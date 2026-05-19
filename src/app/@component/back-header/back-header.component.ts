@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { LucideAngularModule, MessageCircleMore, ChevronDownIcon } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-back-header',
@@ -8,11 +9,16 @@ import { LucideAngularModule, MessageCircleMore, ChevronDownIcon } from 'lucide-
   styleUrl: './back-header.component.scss'
 })
 export class BackHeaderComponent {
-  // Declare icon
-  readonly MessageIcon = MessageCircleMore;
-  readonly ChevronDownIcon = ChevronDownIcon;
-
+  constructor(private router:Router){}
   // Declare
   userName = "小明";
+
+  logout(){
+    this.router.navigate(['/'])//連接到登入頁面
+  }
+
+  goTohome(){
+    this.router.navigate(['/home']);
+  }
 
 }
