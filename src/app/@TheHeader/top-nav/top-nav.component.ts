@@ -5,10 +5,11 @@ import { LucideAngularModule, Menu } from 'lucide-angular';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { UserActionsComponent } from "../user-actions/user-actions.component";
 import { Router } from '@angular/router';
+import { LoginBtnComponent } from "../login-btn/login-btn.component";
 
 @Component({
   selector: 'app-top-nav',
-  imports: [LucideAngularModule, SearchBarComponent, UserActionsComponent],
+  imports: [LucideAngularModule, SearchBarComponent, UserActionsComponent, LoginBtnComponent],
   templateUrl: './top-nav.component.html',
   styleUrl: './top-nav.component.scss'
 })
@@ -20,6 +21,9 @@ export class TopNavComponent {
 
   // Declare icon
   readonly MenuIcon = Menu;
+
+  // login
+  islogin = false;
 
   // Call the side-bar
   @Output() menuClick = new EventEmitter<void>();

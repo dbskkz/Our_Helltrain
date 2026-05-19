@@ -11,7 +11,14 @@
    (click) = "goToHome()">
 
   <app-search-bar class="search"></app-search-bar>
-  <app-user-actions></app-user-actions>
+
+  @if (islogin) {
+    <app-user-actions></app-user-actions>
+  }
+  @else
+  {
+    <app-login-btn></app-login-btn>
+  }
 
 </nav>
 
