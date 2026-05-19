@@ -1,4 +1,3 @@
-import { PaginationService } from './../../@service/pageination.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
@@ -7,6 +6,7 @@ import {
   MapPin,
   LayoutGrid, ChevronRight ,ChevronLeft
 } from 'lucide-angular';
+import { PaginationService } from '../../@Services/pageination.service';
 
 @Component({
   selector: 'app-back-product',
