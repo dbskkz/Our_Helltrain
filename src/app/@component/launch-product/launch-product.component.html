@@ -1,4 +1,4 @@
-<div>
+<div class="page-wrapper">
   <p class="page-title">商品上架</p>
 
   <!-- 操作步驟 -->
@@ -80,12 +80,10 @@
           <select id="catMain">
             <option value="" disabled selected>請選擇分類</option>
             <option>書籍</option>
-            <option>服飾與配件</option>
-            <option>3C、電子產品</option>
-            <option>運動用品</option>
-            <option>美妝保養</option>
-            <option>家俱</option>
-            <option>民生用品</option>
+            <option>科系用品</option>
+            <option>生活用品</option>
+            <option>3C電子</option>
+            <option>家具家電</option>
             <option>其他</option>
           </select>
           <select id="catSub" style="margin-top:8px;">
@@ -93,50 +91,33 @@
           </select>
         </div>
 
-        <!-- Condition -->
+        <!-- 商品狀況 -->
         <div class="field">
           <div class="section-label">商品狀況 <span class="req">*</span></div>
           <select id="condition">
             <option value="" disabled selected>請選擇商品狀況</option>
             <option>全新</option>
             <option>九成新以上</option>
-            <option>七至八成新</option>
-            <option>五至六成新</option>
-            <option>五成新以下</option>
+            <option>二手</option>
           </select>
         </div>
 
-        <!-- Keywords -->
+        <!-- 關鍵字 -->
         <div class="field">
           <div class="section-label">
             關鍵字 <span class="optional">（選填）</span>
           </div>
           <div class="tags-input-wrapper" id="tagsWrapper" tabindex="-1">
-            <span class="tag" data-value="Nike">Nike <button class="tag-remove" aria-label="移除 Nike">×</button></span>
-            <span class="tag" data-value="球鞋">球鞋 <button class="tag-remove" aria-label="移除 球鞋">×</button></span>
+            <span class="tag" data-value="Nike">Nike <button class="tag-remove">×</button></span>
+            <span class="tag" data-value="球鞋">球鞋 <button class="tag-remove">×</button></span>
             <input class="tags-input" id="tagInput" placeholder="輸入標籤後按 Enter，最多 5 個" />
           </div>
         </div>
       </div>
-
-      <!-- AI Recommend -->
-      <div class="card">
-        <div class="section-label">
-          AI 推薦標題 <span class="optional">（選填）</span>
-        </div>
-        <div class="ai-box" id="aiBox">AI 推薦：XXX 商品標題建議將顯示在這裡</div>
-        <button class="btn-ai" id="btnAI" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
-          </svg>
-          <span id="aiLabel">一鍵套用推薦標題</span>
-          <div class="spinner" id="aiSpinner"></div>
-        </button>
-      </div>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- 最下排按鈕 -->
   <div class="form-footer">
     <button class="btn btn-outline" id="btnSaveDraft" type="button">儲存草稿</button>
     <button class="btn btn-primary disabled" id="btnNext" type="button">
