@@ -2,15 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {
-  LucideAngularModule,
-  CircleFadingArrowUp,
-  Newspaper,
-  ChevronRight,
-  ChevronLeft,
-} from 'lucide-angular';
+import { LucideAngularModule, CircleFadingArrowUp, Newspaper, ChevronRight, ChevronLeft,} from 'lucide-angular';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
-import { PaginationService } from '../../@service/pageination.service';
+import { PaginationService } from '../../@Services/pageination.service';
 
 @Component({
   selector: 'app-announcement',

@@ -8,9 +8,9 @@ import {
   ChevronRight,
   ChevronLeft,
 } from 'lucide-angular';
-import { PaginationService } from '../../@service/pageination.service';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PaginationService } from '../../@Services/pageination.service';
 
 @Component({
   selector: 'app-back-user',

@@ -2,8 +2,8 @@ import { ReportDialogComponent } from './../report-dialog/report-dialog.componen
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, File ,ChevronRight ,ChevronLeft} from 'lucide-angular';
-import { PaginationService } from '../../@service/pageination.service';
 import { MatDialog } from '@angular/material/dialog';
+import { PaginationService } from '../../@Services/pageination.service';
 
 @Component({
   selector: 'app-report',
