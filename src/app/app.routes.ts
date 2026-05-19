@@ -29,12 +29,12 @@ export const routes: Routes = [
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
-      { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
       { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
+  { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
 
   //後台
   {
