@@ -12,27 +12,28 @@ import { ForegroundTestComponent } from './@component/foreground-test/foreground
 import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
 import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
+import { StoreComponent } from './@component/store/store.component';
 
 export const routes: Routes = [
-
   //前台
 
-  // 需要導覽列和側邊欄的頁面
+  // 第一類：需要導覽列和側邊欄的頁面
   {
     path: '',
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
-      { path: 'product-list/:category', component:ProductListingComponent},
+      { path: 'product-list/:category', component: ProductListingComponent },
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
+      { path: 'store', component: StoreComponent }, //賣場頁面
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
 
-    //後台
+  //後台
   {
     path: '',
     component: BackLayoutComponent,
@@ -44,5 +45,4 @@ export const routes: Routes = [
       { path: 'report', component: ReportComponent }, //爭議處理
     ],
   },
-
 ];

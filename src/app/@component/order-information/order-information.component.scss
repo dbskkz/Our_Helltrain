@@ -1,7 +1,7 @@
 @use "../../styles/variables" as *;
 
 .order-card {
-  background: #fff;
+  background: $background-white;
   border: 1px solid #eee;
   border-radius: $border-radius-lg;
   margin-top: 24px;
@@ -51,6 +51,7 @@
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
   padding: 0 15px;
+  margin-bottom: 10px;
 }
 
 .status-tag {
@@ -61,7 +62,7 @@
 
 p {
   font-size: $font-size-base;
-  color: #777;
+  color: $text-gray;
 }
 
 .button-group {
@@ -82,7 +83,7 @@ p {
 
   &.primary {
     background-color: $background-yellow;
-    color: $primary-yellow;
+    color: $text-gray;
     border-color: #fff3ce;
     &:hover {
       background: $primary-yellow;
