@@ -14,6 +14,7 @@ import { LaunchProductComponent } from './@component/launch-product/launch-produ
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 import { StoreComponent } from './@component/store/store.component';
 import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
+import { LoginRegisterComponent } from './@component/login-register/login-register.component';
 
 export const routes: Routes = [
   //前台
@@ -33,6 +34,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
+  { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
 
   //後台
   {

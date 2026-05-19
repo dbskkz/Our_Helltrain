@@ -1,3 +1,4 @@
+@use 'sass:color' as c;
 @use '../../styles/variables' as *;
 
 .big-box{
@@ -189,7 +190,7 @@ h4 {
     transition: all 0.3s;
 
     &:hover {
-      background-color: darken($primary-yellow, 5%); // 稍微變深一點點
+      background-color: c.adjust($primary-yellow, $lightness: -5%); // 稍微變深一點點
       transform: translateY(-2px);
     }
 
@@ -338,7 +339,7 @@ h4 {
     cursor: pointer;
 
     &:hover {
-      background-color: darken($primary-yellow, 5%); // 稍微變深一點點
+      background-color: c.adjust($primary-yellow, $lightness: -5%); // 稍微變深一點點
     }
   }
 
@@ -363,23 +364,7 @@ h4 {
   color: $text-gray;         // 使用妳定義的灰色
 }
 
-:host ::v-deep {
-  .self-care {
-    // 這是關鍵：把輸入框下方的隱形容器叫出來
-    .mat-mdc-form-field-subscript-wrapper {
-      display: block !important;
-      position: static !important; // 讓它佔據實際高度，把卡片撐開
-      padding: 4px 0 0 4px !important; // 稍微往右移動 4px，對齊輸入框左邊邊緣
-    }
 
-    // 提示文字的樣式
-    .mat-mdc-form-field-hint {
-      color: $text-gray !important; // 妳的灰色變數
-      font-size: 12px;
-      visibility: visible !important;
-    }
-  }
-}
 
 
 mat-form-field {
