@@ -21,45 +21,60 @@
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
-/* 搜尋欄 */
-.search-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 200px;
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin:0px 10px;
+  // flex-wrap: wrap;
+  flex:1;
+  justify-content: space-between;
+}
 
-  input {
-    width: 100%;
-    padding: 9px 16px 9px 40px;
-    border: 1.5px solid #e2ded5;
-    border-radius: 50px;
-    background: #ffffff;
-    font-family: inherit;
-    font-size: 14px;
-    color: #1a1814;
-    outline: none;
-    transition: border-color 0.2s;
+.filter-group-label {
+  font-size: $font-size-base;
+  margin: 0px 10px;
+  font-weight: 600;
+  color: #6b6760;
+  white-space: nowrap;
+}
 
-    &::placeholder { color: #9e9a94; }
-    &:focus { border-color: #a8997a; }
-  }
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  // flex-wrap: wrap;
+  justify-content: space-between;
+  flex:1;
+}
 
-  /* lucide-icon 定位在 input 內左側 */
-  .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    color: #9e9a94;
-    width: 16px;
-    height: 16px;
+.filter-space{
+  flex:1.5;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border: 1.5px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: #6b6760;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  &:hover { background: #f5f4ef; border-color: #c9c6c0; }
+
+  &.active {
+    background: #1a1814;
+    border-color: #1a1814;
+    color: #ffffff;
   }
 }
 
@@ -90,20 +105,6 @@
     height: 14px;
     color: #1a1814;
   }
-}
-
-.clear-btn {
-  font-size: 13px;
-  color: #9e9a94;
-  cursor: pointer;
-  white-space: nowrap;
-  background: none;
-  border: none;
-  font-family: inherit;
-  padding: 6px 4px;
-  transition: color 0.2s;
-
-  &:hover { color: #1a1814; }
 }
 
 /* ===== Table card ===== */
@@ -182,6 +183,7 @@
   white-space: nowrap;
 
   &.badge-normal   { background: #e6f4ec; color: #2d7a4f; }
+  &.badge-expired { background: #fce9e8; color: #b5322a; }
   &.badge-review   { background: #fdf3cc; color: #8a6d00; }
   &.badge-banned   { background: #fce9e8; color: #b5322a; }
   &.badge-verified { background: #e5eef9; color: #1d5fa6; }
@@ -201,7 +203,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: $font-size-base;
   font-weight: 600;
   cursor: pointer;
   border: 1.5px solid transparent;
@@ -235,7 +237,7 @@ select {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 20px;
 }
 
 .page-btn {

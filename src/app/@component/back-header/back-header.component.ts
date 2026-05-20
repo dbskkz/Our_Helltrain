@@ -14,7 +14,7 @@ export class BackHeaderComponent {
   userName = "小明";
 
   logout(){
-    this.router.navigate(['/'])//連接到登入頁面
+    this.router.navigate(['/login_register']);//連接到登入頁面
   }
 
   goTohome(){

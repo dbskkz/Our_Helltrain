@@ -2,19 +2,31 @@
   <h1 class="page-title">用戶管理</h1>
 
   <div class="toolbar">
-    <div class="search-wrap">
-      <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
-      <input type="text" placeholder="以ID或名字搜尋" />
+    <div class="filter-group">
+      <span class="filter-group-label">帳號狀態</span>
+      <div class="filter-chips">
+        @for (s of accountStatuses; track s) {
+          <button
+            class="chip"
+            [class.active]="selectedAccountStatus === s"
+            (click)="selectAccountStatus(s)"
+          >{{ s }}</button>
+        }
+      </div>
     </div>
-    <div class="filter-tag">
-      <lucide-icon [name]="mapIcon" class="filter-tag-icon"></lucide-icon>
-      <select><option>地區：高雄</option></select>
+
+    <div class="filter-group filter-space">
+      <span class="filter-group-label">學生驗證</span>
+      <div class="filter-chips">
+        @for (s of verifyStatuses; track s) {
+          <button
+            class="chip"
+            [class.active]="selectedVerifyStatus === s"
+            (click)="selectVerifyStatus(s)"
+          >{{ s }}</button>
+        }
+      </div>
     </div>
-    <div class="filter-tag">
-      <lucide-icon [name]="GridIcon" class="filter-tag-icon" ></lucide-icon>
-      <select><option>學校：[名稱]</option></select>
-    </div>
-    <button class="clear-btn" onclick="clearFilters()">清除過濾條件</button>
   </div>
 
   <div class="table-card">
@@ -43,8 +55,8 @@
             </span>
           </div>
           <div>
-            <span class="badge" [ngClass]="getVerifyBadge(user.studentVerifiedAt)">
-              {{ user.studentVerifiedAt }}
+            <span class="badge" [ngClass]="getVerifyBadge(user.studentVerifiedAt,user.status)">
+              {{ getVerifyStatus(user.studentVerifiedAt,user.status) }}
             </span>
           </div>
           <div class="region-text">{{ user.location }}</div>
@@ -74,8 +86,8 @@
       [disabled]="pagination.currentPage === 1"
       (click)="prevPage()"
     >
-    <lucide-icon [name]="prevIcon"></lucide-icon>
-  </button>
+     <lucide-icon [name]="prevIcon"></lucide-icon>
+    </button>
     @for (page of pagination.pageNumbers; track page) {
       <button
         class="page-btn"

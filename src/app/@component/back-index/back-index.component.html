@@ -23,13 +23,13 @@
     @if (disputeCount > 0) {
       <div class="urgent-item dispute">
         <span>尚未處理的爭議事件（{{ disputeCount }} 筆）</span>
-        <button class="btn-outline">前往處理</button>
+        <button class="btn-outline" (click)="goReport()">前往處理</button>
       </div>
     }
     @if (pendingCount > 0) {
       <div class="urgent-item pending">
         <span>待審核學生身分（{{ pendingCount }} 筆）</span>
-        <button class="btn-outline">前往審核</button>
+        <button class="btn-outline" (click)="goUser()">前往審核</button>
       </div>
     }
     @if (disputeCount === 0 && pendingCount === 0) {
