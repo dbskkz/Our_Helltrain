@@ -1,0 +1,43 @@
+@use '../../styles/variables' as *;
+
+.nav-but{
+  display: flex;
+  justify-content: space-around;
+  gap: 0.3rem;
+}
+
+button{
+  width: fit-content;
+  height: fit-content;
+
+  border: transparent;
+  border-radius: 2px;
+
+  padding: 0.2rem 0.75rem;
+
+  color: $text-black;
+  font-size: 0.85rem;
+  line-height: 24px;
+}
+
+
+#signin{
+  background-color: transparent;
+  color: $text-gray;
+
+  &:hover{
+    background-color: $neutral-100;
+    color: $text-black;
+    cursor: pointer;
+  }
+}
+
+#create{
+  background-color: $primary-yellow;
+
+  &:hover{
+    background-color: $primary-yellow-light;
+    color: $text-gray;
+    cursor: pointer;
+  }
+}

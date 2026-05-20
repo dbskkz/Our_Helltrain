@@ -26,7 +26,7 @@ body {
 
 .custom-orange-snackbar {
   .mdc-snackbar__surface {
-    background-color: #775D3F !important; // 妳的棕色變數 $text-price
+    background-color: $text-price !important; // 妳的棕色變數 $text-price
     border-radius: 8px !important;
   }
 

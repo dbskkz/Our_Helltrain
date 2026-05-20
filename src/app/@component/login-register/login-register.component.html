@@ -1,0 +1,246 @@
+<!-- <p>login-register works!</p> -->
+<!-- ai寫的，還須調整 -->
+<div class="auth-page-wrapper">
+  <div class="auth-container">
+    <div class="brand-section">
+      <div class="brand-content">
+        <h1><img src="img/4f817e5b-c3ba-4195-9a32-163a979743e3 (1).png" alt="二手 Go - Campus Marketplace" class="brand-logo" /></h1>
+        <p class="subtitle">Campus Marketplace</p>
+        <p class="description">大學生專屬的二手交易平台<br>安全、快速、有保障</p>
+
+        <div class="feature-list">
+          <div class="feature-item"><mat-icon>verified_user</mat-icon> 學校信箱驗證，買賣更安心</div>
+          <div class="feature-item"><mat-icon>local_mall</mat-icon> 書籍、3C、生活用品都有</div>
+          <div class="feature-item"><mat-icon>chat</mat-icon> 私訊直接聊，輕鬆面交</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="tab-group">
+        <button type="button" class="tab-btn" [class.active]="!isRegister" (click)="isRegister = false">登入</button>
+        <button type="button" class="tab-btn" [class.active]="isRegister" (click)="isRegister = true">註冊</button>
+      </div>
+
+      <div class="auth-form">
+      @if (!isRegister) {
+
+              <h2 class="welcome-title">歡迎回來 <mat-icon class="wave-icon">waving_hand</mat-icon></h2>
+              <p class="form-desc">請使用學校 Email 登入</p>
+
+              <div class="input-group login-email-group">
+                <div class="custom-outside-label">
+                  <mat-icon class="label-icon">school</mat-icon>
+                  學校 Email <span class="required-star">*</span>
+                </div>
+
+                <div class="email-box">
+                  <input
+                    matInput
+                    type="email"
+                    placeholder="yourname@mail.school.edu.tw"
+                    class="custom-input"/>
+                    <mat-icon class="suffix-icon">mail_outline</mat-icon>
+                </div>
+              </div>
+
+            <div class="input-group">
+              <div class="custom-outside-label">
+                <mat-icon class="label-icon">lock</mat-icon>
+                密碼 <span class="required-star">*</span>
+              </div>
+
+              <div class="password-box">
+                <input
+                  matInput
+                  [type]="hide() ? 'password' : 'text'"
+                  placeholder="請輸入密碼"
+                  class="custom-input"/>
+
+                <button
+                  type="button"
+                  class="eye-btn"
+                  (click)="clickEvent($event)">
+                  <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <a class="forgot-password">忘記密碼？</a>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="terms">
+            <label for="terms">我已閱讀並同意<span class="terms-link" (click)="openTermsDialog($event)">使用說明與注意事項</span></label>
+          </div>
+
+          <button class="submit-btn">登入</button>
+
+          <p class="switch-mode">還沒有帳號？<a (click)="isRegister = true">立即註冊</a></p>
+
+      }@else {
+          <div class="register-stepper">
+
+            <div class="step"
+                [class.active]="currentStep === 1"
+                [class.completed]="currentStep > 1">
+              <span class="step-num">
+                @if (currentStep > 1) {
+                  <mat-icon class="check-icon">check</mat-icon>
+                } @else {
+                  1
+                }
+              </span>
+              <span class="step-text">基本資料</span>
+            </div>
+
+            <div class="step-line" [class.line-completed]="currentStep > 1"></div>
+
+            <div class="step"
+                [class.active]="currentStep === 2"
+                [class.disabled]="currentStep < 2">
+              <span class="step-num">2</span>
+              <span class="step-text">驗證 Email</span>
+            </div>
+
+          </div>
+
+          @if (currentStep === 1){
+               <h2 class="welcome-title">建立帳號</h2>
+                <p class="form-desc">請使用學校 Email 註冊，完成驗證後即可開始使用</p>
+
+                <div class="input-group">
+                  <div class="custom-outside-label">
+                    姓名 <span class="required-star">*</span>
+                  </div>
+                  <div class="input-box-wrapper">
+                    <input matInput type="text" placeholder="真實姓名" class="custom-input" />
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="custom-outside-label">
+                    學校 <span class="required-star">*</span>
+                    <span class="badge-secure"><mat-icon>lock</mat-icon> 用於身份驗證</span>
+                  </div>
+                  <div class="input-box-wrapper">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                      <input
+                        type="text"
+                        placeholder="請輸入並選擇學校"
+                        matInput
+                        [formControl]="schoolControl"
+                        [matAutocomplete]="autoSchool"
+                        class="custom-input"
+                      />
+                      <mat-icon matSuffix class="suffix-icon">arrow_drop_down</mat-icon>
+
+                      <mat-autocomplete #autoSchool="matAutocomplete" class="custom-autocomplete-panel">
+                        @for (option of filteredSchools | async; track option) {
+                          <mat-option [value]="option">{{ option }}</mat-option>
+                        }
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="input-group login-email-group">
+                  <div class="custom-outside-label">
+                    學校 Email <span class="required-star">*</span>
+                  </div>
+                  <div class="email-box">
+                    <input
+                      matInput
+                      type="email"
+                      placeholder="yourname@mail.school.edu.tw"
+                      class="custom-input"
+                      [(ngModel)]="userEmail"
+                    />
+                    <mat-icon class="suffix-icon">mail_outline</mat-icon>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="custom-outside-label">
+                    密碼 <span class="required-star">*</span>
+                  </div>
+                  <div class="password-box">
+                    <input matInput [type]="hide() ? 'password' : 'text'" placeholder="至少 8 個字元" class="custom-input" />
+                    <button type="button" class="eye-btn" (click)="clickEvent($event)">
+                      <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                  </div>
+                  <div class="password-strength-bar">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <p class="field-hint">請輸入密碼</p>
+                </div>
+
+                <div class="input-group">
+                  <div class="custom-outside-label">
+                    確認密碼 <span class="required-star">*</span>
+                  </div>
+                  <div class="password-box">
+                    <input matInput [type]="hide() ? 'password' : 'text'" placeholder="再次輸入密碼" class="custom-input" />
+                    <button type="button" class="eye-btn" (click)="clickEvent($event)">
+                      <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <div class="custom-outside-label">
+                    手機號碼 <span class="optional-text">選填 · 作為聯絡方式之一</span>
+                  </div>
+                  <div class="phone-box">
+                    <input
+                      matInput
+                      type="tel"
+                      placeholder="09xxxxxxxx"
+                      class="custom-input"
+                    />
+                    <mat-icon class="suffix-icon">phone</mat-icon>
+                  </div>
+                </div>
+
+                <div class="checkbox-group">
+                  <input type="checkbox" id="register-terms">
+                  <label for="register-terms">我已閱讀並同意<span class="terms-link" (click)="openTermsDialog($event)">使用說明與注意事項</span>，且確認所填資料屬實</label>
+                </div>
+
+              <button type="button" class="submit-btn" (click)="onNextStep()">
+                  下一步：發送驗證信
+                </button>
+                <p class="switch-mode">已有帳號？<a (click)="isRegister = false">直接登入</a></p>
+
+          }@else if (currentStep === 2) {
+            <div class="verify-email-section">
+              <div class="icon-wrapper">
+                <span class="mailbox-emoji">📬</span> </div>
+
+              <h2 class="welcome-title center-title">驗證你的學校 Email</h2>
+
+              <p class="verify-desc">
+                我們已發送驗證信至<br>
+                <span class="highlight-email">{{ userEmail }}</span> </p>
+
+              <p class="verify-hint">請前往信箱點擊驗證連結，<br>確認後即可完成註冊</p>
+
+              <div class="notice-box">
+                📌 沒收到信？請檢查垃圾郵件匣，或點下方重新發送
+              </div>
+
+              <button type="button" class="submit-btn login-again-btn" (click)="goToLogin()">
+                驗證完成，請重新登入
+              </button>
+
+              <div class="verify-actions">
+                <a class="action-link" (click)="resendEmail()">重新發送驗證信</a>
+                <a class="action-link back-link" (click)="currentStep = 1">← 修改 Email</a>
+              </div>
+            </div>
+          }
+       }
+      </div>
+    </div>
+  </div>
+</div>

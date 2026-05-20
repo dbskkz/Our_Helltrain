@@ -23,16 +23,14 @@
           <div class="meta-info">
             <span class="location">
               <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
-              {{ item.location }} · {{item.university}}
+              {{ item.location }} · {{ item.time }}
             </span>
-            <span class="time">{{ item.time }}</span>
           </div>
 
-          <hr class="divider">
 
           <div class="user-info">
             <div class="picture"></div>
-            <span class="department">生科吉娃娃</span>
+            <span class="userName">{{item.user.userName}}</span>
           </div>
 
         </div>
