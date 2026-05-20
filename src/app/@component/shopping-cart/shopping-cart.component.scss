@@ -90,21 +90,45 @@ ul{
     .item-content{
       flex: 1;
 
-      .item-img {
-        width: 1rem;
-        height: 1rem;
-        flex-shrink: 0;
-        border-radius: 12px;
-
-        img {
-          width: fit-content;
-          object-fit: cover;
-        }
-      }
-
       .location-info{
         display: flex;
       }
     }
    }
+}
+
+.item-title{
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.item-img {
+  width: 10rem;
+  height: 10rem;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background-color: rgb(232, 232, 232);
+
+  img {
+    width: fit-content;
+    object-fit: cover;
+  }
+}
+
+.seller-info{
+  display: flex;
+  align-items: center;
+
+  .seller-avatar{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    margin-right: 0.5rem;
+  }
+
+  .btn-chat{
+    height: fit-content;
+    background-color: transparent;
+    border: transparent;
+  }
 }
