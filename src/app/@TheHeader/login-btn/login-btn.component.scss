@@ -11,6 +11,7 @@ button{
   height: fit-content;
 
   border: transparent;
+  border-radius: 2px;
 
   padding: 0.2rem 0.75rem;
 
@@ -22,9 +23,11 @@ button{
 
 #signin{
   background-color: transparent;
+  color: $text-gray;
 
   &:hover{
-    background-color: $primary-yellow;
+    background-color: $neutral-100;
+    color: $text-black;
     cursor: pointer;
   }
 }
