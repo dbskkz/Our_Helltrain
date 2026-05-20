@@ -17,7 +17,7 @@ export class OrderInformationComponent {
   readonly MessageCircleMore = MessageCircleMore;
 
   //tabs
-  currentTab = '全部'; // 預設選中
+  currentTab = '全部訂單'; // 預設選中
   // 列表欄位
   tabsColumns: string[] = ['全部訂單', '交易中', '已完成', '已取消'];
 
