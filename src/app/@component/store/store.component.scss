@@ -1,5 +1,9 @@
 @use "../../styles/variables" as *;
 
+.container {
+  max-width: 1400px;
+}
+
 //賣家資訊區
 .information {
   background: $background-white;
@@ -30,6 +34,8 @@
 
 .profile-list {
   p {
+    display: flex;
+    align-items: center;
     margin-bottom: 8px;
     font-size: $font-size-base;
     color: $text-black;
@@ -38,7 +44,6 @@
 
 .intro-block {
   p {
-    // font-size: 14px;
     color: $text-gray;
     margin-bottom: 12px;
   }
@@ -72,23 +77,23 @@
   padding-bottom: 4px;
 }
 
-.view-all {
-  color: $text-gray;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
+// .view-all {
+//   color: $text-gray;
+//   cursor: pointer;
+//   font-weight: bold;
+//   font-size: 16px;
+//   display: flex;
+//   align-items: center;
 
-  lucide-icon {
-    margin-left: 4px;
-    margin-right: 0;
-  }
+//   lucide-icon {
+//     margin-left: 4px;
+//     margin-right: 0;
+//   }
 
-  &:hover {
-    color: $primary-yellow-darker;
-  }
-}
+//   &:hover {
+//     color: $primary-yellow-darker;
+//   }
+// }
 
 //商品卡片
 .card {
@@ -166,6 +171,8 @@
 
 // 通用按鈕封裝
 .btn-action {
+  display: flex;
+  align-items: center;
   padding: 8px 16px;
   border-radius: $border-radius-lg;
   font-size: $font-size-base;
@@ -205,9 +212,8 @@
   flex-shrink: 0;
 
   lucide-icon {
-    width: 18px;
-    height: 18px;
     color: $primary-yellow-dark;
+    margin: 0;
   }
 
   &:hover {
@@ -223,12 +229,46 @@
   }
 }
 
+// 頁碼
+.pagination {
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+.page-item {
+  &.active .page-link {
+    background-color: $primary-yellow;
+    border-color: $primary-yellow;
+    color: $background-white;
+  }
+}
+.page-link {
+  color: $text-gray;
+  border-radius: $border-radius-sm;
+  border: 1px solid #eee;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background-color: $background-yellow;
+    color: $primary-yellow;
+  }
+}
+.disabled .page-link {
+  color: #ccc;
+  background-color: #f9f9f9;
+}
+
 lucide-icon {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
   color: $primary-yellow-darker;
-  vertical-align: text-bottom;
-  margin-right: 5px;
+  margin-right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 p {

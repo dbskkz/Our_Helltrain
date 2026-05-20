@@ -1,5 +1,9 @@
 @use "../../styles/variables" as *;
 
+.container {
+  max-width: 1400px;
+}
+
 .order-card {
   background: $background-white;
   border: 1px solid $neutral-300;
