@@ -4,7 +4,7 @@
   </button>
 
   <!-- <h3 class="logo">logo</h3> -->
-   <img src="img/4f817e5b-c3ba-4195-9a32-163a979743e3 (1).png"
+   <img src="img/logo改版.png"
    alt="logo"
    class="logo"
    title="首頁"
@@ -13,11 +13,11 @@
   <app-search-bar class="search"></app-search-bar>
 
   @if (islogin) {
-    <app-user-actions></app-user-actions>
+    <app-user-actions class="cta"></app-user-actions>
   }
   @else
   {
-    <app-login-btn></app-login-btn>
+    <app-login-btn class="cta"></app-login-btn>
   }
 
 </nav>
