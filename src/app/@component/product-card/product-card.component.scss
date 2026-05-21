@@ -20,7 +20,7 @@
 
       // 預設：一排 4 個 (計算扣掉間距後的寬度)
       // 公式：(100% - (數量-1)*間距) / 數量
-      width: calc((100% - 20px * 3) / 4);
+      width: calc((100% - 20px * 4) / 5);
 
       position: relative; // 1. 必加！讓偽元素能正確定位
       overflow: hidden;    // 如果卡片有圓角，這行能確保紅色層不超出邊界
@@ -99,6 +99,7 @@
       }
     }
     // 過渡態：中等螢幕 (例如平板) 變一排 3 個
+
     @media (max-width: 1024px) {
       .card {
         width: calc((100% - 20px * 2) / 3);
@@ -119,7 +120,7 @@
     border: none;
     border-radius: 999px;
 
-    background: $primary-gray;
+    background: $neutral-300;
     color: $text-gray;
 
     font-size: 0.95rem;

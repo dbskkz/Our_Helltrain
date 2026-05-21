@@ -1,7 +1,8 @@
 @use '../../styles/variables' as *;
 
 // 內容區塊的間距建議
-.content {
+.content{
+
   padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
 
   @media (max-width: 768px) {
@@ -15,6 +16,7 @@
   margin-bottom: 2rem; // 跟下方商品列表拉開距離
 
   #carouselExample {
+    height: 20rem;
     width: 100%;
     // 1. 拿掉固定的 height: 20rem;
     // 2. 設定固定的寬高比 (例如 3:1 或 21:9，視你的 Banner 圖案而定)
@@ -44,13 +46,12 @@
 }
 
 
-
 .content-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 0;
-  margin-bottom: 1.5rem;
+
   border-bottom: 1px solid rgba($background-gray, 0.15);
 
   // 左側：正在查看標籤
@@ -73,6 +74,12 @@
       font-size: 0.85rem;
       border: 1px solid rgba($primary-yellow, 0.5);
       font-weight: 600;
+    }
+
+    padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
+
+    @media (max-width: 768px) {
+      padding: 0.5rem 1rem; // 手機版縮小內縮
     }
   }
 
