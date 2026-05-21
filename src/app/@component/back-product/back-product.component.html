@@ -2,30 +2,42 @@
 
   <h1 class="page-title">商品管理</h1>
 
-  <div class="toolbar">
-    <div class="search-wrap">
-      <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
-      <input type="text" placeholder="以ID或名字搜尋" />
-    </div>
-    <div class="filter-tag">
-      <lucide-icon [name]="mapIcon" class="filter-tag-icon"></lucide-icon>
-      <select><option>地區：高雄</option></select>
-    </div>
-    <div class="filter-tag">
-      <lucide-icon [name]="GridIcon" class="filter-tag-icon" ></lucide-icon>
-      <select><option>學校：[名稱]</option></select>
-    </div>
-    <button class="clear-btn" (click)="clearFilters()">清除過濾條件</button>
+<div class="toolbar">
+  <!-- 搜尋欄 -->
+  <div class="search-wrap">
+    <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
+    <input
+      type="text"
+      placeholder="以ID或名字搜尋"
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="search()"
+    />
   </div>
 
-  <div class="table-card">
+  <!-- 商品狀態 chip -->
+  <div class="filter-group">
+    <span class="filter-group-label">商品狀態</span>
+    <div class="filter-chips">
+      @for (s of productStatuses; track s) {
+        <button
+          class="chip"
+          [class.active]="selectedStatus === s"
+          (click)="selectStatus(s)"
+        >{{ s }}</button>
+      }
+    </div>
+  </div>
 
+  <span class="toolbar-spacer"></span>
+
+  <button class="clear-btn" (click)="clearFilters()">清除過濾條件</button>
+</div>
+  <div class="table-card">
     <div class="table-header">
       <span class="col-label">商品圖片</span>
       <span class="col-label">商品名稱/ID</span>
       <span class="col-label">類別</span>
       <span class="col-label">價格</span>
-      <span class="col-label">庫存</span>
       <span class="col-label">狀態</span>
       <span class="col-label">操作</span>
     </div>
@@ -43,7 +55,6 @@
         </div>
         <div class="category-text">{{ product.category }}</div>
         <div class="price-text">NT${{ product.price | number }}</div>
-        <div class="stock-text">{{ product.stock }}</div>
         <div>
           <span class="badge" [ngClass]="getStatusBadge(product.status)">
             {{ product.status }}
@@ -51,11 +62,7 @@
         </div>
         <div class="action-cell">
           @if (product.status === '販售中') {
-            <button class="btn btn-view">編輯</button>
-          } @else if (product.status === '審核中') {
-            <button class="btn btn-view">編輯</button>
-          } @else if (product.status === '違規下架') {
-            <button class="btn btn-danger">下架</button>
+            <button class="btn btn-view">查看</button>
           }
         </div>
       </div>

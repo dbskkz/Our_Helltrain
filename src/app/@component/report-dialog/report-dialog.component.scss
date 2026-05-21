@@ -20,15 +20,15 @@
   gap: 4px;
 }
 
-.dialog-name  { font-size: 16px; font-weight: 700; color: #1a1814; }
-.dialog-email { font-size: 13px; color: #6b6760; }
+.dialog-name  { font-size: 被檢舉人; font-weight: 700; color: #1a1814; }
+// .dialog-email { font-size: 13px; color: #6b6760; }
 
 .info-row {
   display: flex;
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid #f0eee9;
-  font-size: 14px;
+  font-size: 被檢舉人;
 
   .label {
     width: 80px;
