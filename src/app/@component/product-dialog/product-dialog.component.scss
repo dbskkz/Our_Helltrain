@@ -1,0 +1,190 @@
+@use '../../styles/variables' as *;
+
+/* ===== Header ===== */
+.dialog-title {
+  font-size: $font-size-h1;
+  font-weight: 700;
+  color: $text-black;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: $text-gray;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: $background-yellow; }
+}
+
+/* ===== Body ===== */
+.dialog-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== 上半：圖片 + meta ===== */
+.top-section {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.product-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: $border-radius-lg;
+  border: 1px solid #e2ded5;
+  flex-shrink: 0;
+  background: #f0eee9;
+}
+
+.product-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.meta-label {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-gray;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.meta-value {
+  font-size: $font-size-base;
+  color: $text-black;
+  font-weight: 500;
+}
+
+.meta-id {
+  font-size: $font-size-base;
+  color: $text-gray;
+  font-weight: 400;
+}
+
+.description-row { align-items: flex-start; }
+
+.description-text {
+  font-size: $font-size-base;
+  color: $text-gray;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.price-row { margin-top: 4px; }
+
+.price-label {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-gray;
+  min-width: 80px;
+}
+
+.price-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-black;
+}
+
+/* ===== Info rows ===== */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-label {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-gray;
+  white-space: nowrap;
+  min-width: 90px;
+}
+
+.info-value {
+  font-size: $font-size-base;
+  color: $text-black;
+}
+
+/* ===== 分類 chips ===== */
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border: 1.5px solid #e2ded5;
+  border-radius: $border-radius-lg;
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-gray;
+  background: $background-white;
+}
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: $font-size-base;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.badge-normal { background: #e6f4ec; color: #2d7a4f; }
+  &.badge-banned { background: #fce9e8; color: #b5322a; }
+}
+
+/* ===== Action section ===== */
+.btn {
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-left: 5px;
+
+  &:hover:not(:disabled)  { opacity: 0.82; transform: translateY(-1px); }
+  &:active:not(:disabled) { transform: translateY(0); }
+  &:disabled { cursor: default; opacity: 0.5; }
+}
+
+.btn-approve { background: #e4f3eb; color: #1a4d2e; border-color: #a8d5b8; }
+.btn-danger  { background: #f8e8e8; color: #7a2020; border-color: #e0b0b0; }
+.btn-neutral { background: #f0eee9; color: #6b6760; border-color: #e2ded5; }

@@ -7,10 +7,11 @@ import { SearchBarComponent } from "../../@TheHeader/search-bar/search-bar.compo
 import { UserActionsComponent } from "../../@TheHeader/user-actions/user-actions.component";
 import { TopNavComponent } from "../../@TheHeader/top-nav/top-nav.component";
 import { SideNavComponent } from "../../@TheSideBar/side-nav/side-nav.component";
+import { FooterComponent } from '../../@TheFooter/footer/footer.component';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [LucideAngularModule, RouterOutlet,TopNavComponent, SideNavComponent],
+  imports: [LucideAngularModule, RouterOutlet,TopNavComponent, SideNavComponent,FooterComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })

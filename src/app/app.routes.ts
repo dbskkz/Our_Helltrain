@@ -36,6 +36,7 @@ export const routes: Routes = [
   },
   { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
 
+
   //後台
   {
     path: '',

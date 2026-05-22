@@ -1,0 +1,105 @@
+<h2 mat-dialog-title>
+  {{ isEditMode ? '編輯公告' : '新增公告' }}
+</h2>
+
+<mat-dialog-content>
+  <div class="form-body">
+
+    <!-- 標題 -->
+    <div class="form-row">
+      <span class="form-label">標題</span>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="請輸入公告標題"
+        [(ngModel)]="form.title"
+      />
+    </div>
+
+    <!-- 開始日期 -->
+    <div class="form-row">
+      <span class="form-label">開始日期</span>
+      <input
+        class="form-input"
+        type="date"
+        placeholder="請選擇開始日期"
+        [(ngModel)]="form.shelfDate"
+        [min]="today"
+        [max]="form.removalDate"
+      />
+    </div>
+
+    <!-- 結束日期 -->
+    <div class="form-row">
+      <span class="form-label">結束日期</span>
+      <input
+        class="form-input"
+        type="date"
+        placeholder="請選擇結束日期"
+        [(ngModel)]="form.removalDate"
+        [min]="form.shelfDate"
+      />
+    </div>
+
+    <!-- 公告內容 -->
+    <div class="form-row">
+      <span class="form-label">公告內容</span>
+      <div class="textarea-wrap">
+        <textarea
+          class="form-textarea"
+          placeholder="請輸入公告內容"
+          [(ngModel)]="form.content"
+          maxlength="1000"
+        ></textarea>
+        <span class="char-count">{{ form.content.length }} / 1000</span>
+      </div>
+    </div>
+
+    <!-- 附件（圖片） -->
+    <div class="form-row">
+      <span class="form-label">附件 (圖片)</span>
+      <div
+        class="upload-zone" [class.has-image]="displayImgUrl" (click)="fileInput.click()"
+        (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+        <input
+          #fileInput type="file" accept="image/jpeg,image/png,image/gif" style="display: none"
+          (change)="onFileSelected($event)"/>
+        @if (displayImgUrl) {
+          <img class="preview-img" [src]="displayImgUrl" alt="預覽圖" />
+          <button class="remove-img-btn" (click)="removeImage($event)">✕</button>
+        } @else {
+          <div class="upload-hint">
+            <lucide-icon [name]="uploadIcon" [size]="24" class="upload-icon"></lucide-icon>
+            <span class="upload-hint-text">點擊上傳或拖曳檔案到此處</span>
+            <span class="upload-hint-sub">支援 jpg, png, gif，檔案大小不超過 5MB</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- 發布是否 -->
+    <div class="form-row">
+      <span class="form-label">公告狀態</span>
+      <div class="select-wrap">
+        <select class="form-select" [(ngModel)]="form.isPublished">
+          <option [ngValue]="null" disabled>選擇狀態</option>
+          <option [ngValue]="true">發布</option>
+          <option [ngValue]="false">存成草稿</option>
+        </select>
+        <lucide-icon [name]="chevronIcon" [size]="16" class="select-chevron"></lucide-icon>
+      </div>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="btn btn-cancel" (click)="cancel()">取消</button>
+  <button
+    class="btn btn-save"
+    (click)="submit()"
+    [disabled]="!form.title || !form.shelfDate || !form.removalDate"
+  >
+    儲存
+  </button>
+</mat-dialog-actions>

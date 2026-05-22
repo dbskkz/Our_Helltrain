@@ -27,15 +27,8 @@
     </div>
   }
 
-  <!-- 管理員備註 -->
-  <!-- <div class="info-row column">
-    <span class="label">管理員備註</span>
-    <textarea [(ngModel)]="adminNote" placeholder="輸入處理備註..."></textarea>
-  </div>
-</mat-dialog-content> -->
-
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>取消</button>
-  <button mat-button [mat-dialog-close]="{ action: 'reject', note: adminNote }">駁回</button>
-  <button mat-button [mat-dialog-close]="{ action: 'approve', note: adminNote }">驗證通過</button>
+  <button mat-button (click)="confirm('reject')">駁回</button>
+  <button mat-button (click)="confirm('approve')">驗證通過</button>
 </mat-dialog-actions>
