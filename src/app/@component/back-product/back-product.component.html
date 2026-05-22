@@ -62,7 +62,7 @@
         </div>
         <div class="action-cell">
           @if (product.status === '販售中') {
-            <button class="btn btn-view">查看</button>
+            <button class="btn btn-view" (click)="selectProduct(product)">查看</button>
           }
         </div>
       </div>

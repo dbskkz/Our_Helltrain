@@ -56,15 +56,15 @@ export class AddannounceDaialogComponent {
     return this.previewUrl ?? this.existingImgUrl;
   }
 
-    ngOnInit() {
+  ngOnInit() {
     if (this.data) {
       // 有資料就是編輯模式，把資料填入表單
-      this.form.title       = this.data.title;
-      this.form.shelfDate   = this.data.startDate;
+      this.form.title = this.data.title;
+      this.form.shelfDate = this.data.startDate;
       this.form.removalDate = this.data.endDate;
-      this.form.content=this.data.content;
+      this.form.content = this.data.content;
       this.form.publishMode = this.data.isPublished ? 'publish' : 'draft';
-      this.existingImgUrl   = this.data.imgPath;
+      this.existingImgUrl = this.data.imgPath;
       console.log('existingImgUrl:', this.existingImgUrl);
     }
   }
@@ -84,9 +84,9 @@ export class AddannounceDaialogComponent {
 
   removeImage(event: Event) {
     event.stopPropagation();
-    this.form.imgFile    = null;
-    this.previewUrl      = null;
-    this.existingImgUrl  = null; // 舊圖片也一起清掉
+    this.form.imgFile = null;
+    this.previewUrl = null;
+    this.existingImgUrl = null; // 舊圖片也一起清掉
   }
 
   onDrop(event: DragEvent) {
@@ -103,19 +103,31 @@ export class AddannounceDaialogComponent {
     }
   }
 
-   submit() {
-    const confirmRef = this.diao.open(AnnounDialogComponent);
-
-    confirmRef.afterClosed().subscribe(confirmed => {
-      if (confirmed === true) {
-        const payload = {
-          ...this.form,
-          isPublished:    this.form.publishMode === 'publish',
-          existingImgUrl: this.existingImgUrl, // 傳給後端，沒換圖就保留舊的
-        };
-        this.dialogRef.close(payload);
-      }
-    });
+  submit() {
+    //isPublished 布林值，取值依據是比對表單中的publishMode是否為publish
+    const isPublished = this.form.publishMode === 'publish';
+    //isPublished為true開啟確認用dialog
+    if (isPublished) {
+      const confirmRef = this.diao.open(AnnounDialogComponent);
+      confirmRef.afterClosed().subscribe((confirmed) => {
+        if (confirmed === true) {
+          const payload = {
+            ...this.form,
+            isPublished,
+            existingImgUrl: this.existingImgUrl, // 傳給後端，沒換圖就保留舊的
+          };
+          this.dialogRef.close(payload);
+        }
+      });
+    } //
+    //isPublished為false儲存資料並直接關閉dialog
+    else {
+      this.dialogRef.close({
+        ...this.form,
+        isPublished,
+        existingImgUrl: this.existingImgUrl,
+      });
+    }
   }
 
   cancel() {

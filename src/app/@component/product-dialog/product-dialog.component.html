@@ -1,0 +1,77 @@
+<!-- 標題列 -->
+<div mat-dialog-title>
+  <h2 class="dialog-title">商品詳情</h2>
+</div>
+
+<!-- 主體 -->
+<div mat-dialog-content class="dialog-body">
+  <!-- 上半：圖片 + 基本資訊 -->
+  <div class="top-section">
+    <img class="product-image" [src]="data.imageUrl" [alt]="data.name" />
+
+    <div class="product-meta">
+      <div class="meta-row">
+        <span class="meta-label">商品名稱</span>
+        <span class="meta-value">{{ data.name }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">商品編號</span>
+        <span class="meta-value meta-id">{{ data.id }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">賣方（名稱）</span>
+        <span class="meta-value">{{ data.sellerName }}</span>
+      </div>
+      <div class="meta-row description-row">
+        <span class="meta-label">描述</span>
+        <span class="meta-value description-text">{{ data.description }}</span>
+      </div>
+      <div class="meta-row price-row">
+        <span class="price-label">售價</span>
+        <span class="price-value">NT$ {{ data.price | number }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下半：其他資訊 -->
+  <div class="info-grid">
+    <div class="info-row">
+      <span class="info-label">分類</span>
+      <div class="category-chips">
+        <!-- @for (cat of data.category; track cat) { -->
+          <span class="category-chip">{{ data.category }}</span>
+        <!-- } -->
+      </div>
+    </div>
+    <div class="info-row">
+      <span class="info-label">上架時間</span>
+      <span class="info-value">{{ data.listedAt }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">商品狀況</span>
+      <span class="info-value">{{ data.condition }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">狀態</span>
+      <span [ngClass]="getStatusBadge(currentStatus)">
+        {{ currentStatus }}
+      </span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">商品使用年級</span>
+      <span class="info-value">{{ data.gradeUsed }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">商品在地</span>
+      <span class="info-value">{{ data.location }}</span>
+    </div>
+  </div>
+
+  <!-- 後台操作：變更販售狀態 -->
+  <mat-dialog-actions>
+    <button class="btn btn-danger" (click)="setStatus('違規下架')">
+      違規下架
+    </button>
+    <button class="btn btn-neutral" mat-dialog-close>取消</button>
+  </mat-dialog-actions>
+</div>
