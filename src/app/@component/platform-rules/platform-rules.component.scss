@@ -8,150 +8,217 @@
 }
 
 
+// 💡 外層大容器（帶入平台一貫的底色與內襯留白）
 .dialog-container {
-  font-family: 'Noto Sans TC', sans-serif;
-  color: $text-black;
-}
+  padding: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-.custom-title {
-  background-color: $primary-yellow;
-  color: $text-black;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px !important;
-  font-weight: bold;
-  margin: 0;
-
-  mat-icon { font-size: 24px; }
-}
-
-.custom-content {
-  padding: 24px !important;
-  background-color: #fff;
-  max-height: 70vh; // 控制最大高度
-
-  // 漂亮的小黃滾動條
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-thumb {
-    background: $background-yellow;
-    border-radius: 10px;
-  }
-}
-
-.welcome-box {
-  background-color: $background-yellow;
-  padding: 15px;
-  border-radius: $border-radius-sm;
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 25px;
-  color: $text-price;
-}
-
-.policy-section {
-  margin-bottom: 30px;
-
-  h3 {
-    font-size: 18px;
-    font-weight: bold;
+  // 標題區：法槌 Icon 與文字優雅對齊
+  .custom-title {
     display: flex;
     align-items: center;
-    color: $text-price;
-    border-bottom: 2px solid $primary-yellow;
-    padding-bottom: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
+    color: $text-black; // 👈 換成你的主文字黑
+    font-size: 22px;
+    font-weight: bold;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $neutral-300; // 👈 換成你的分隔線顏色
 
-    .section-num {
-      background-color: $primary-yellow;
-      color: $background-white;
-      font-size: 12px;
-      padding: 2px 8px;
+    mat-icon {
+      color: $primary-yellow-darker; // 👈 換成你需要對比時用的 Icon 深黃/橘色
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  // 中間捲動內容區
+  .custom-content {
+    margin-top: 16px;
+    line-height: 1.7;
+    color: $text-black; // 👈 換成你的主文字黑
+
+    // 歡迎引言小卡
+    .welcome-box {
+      background-color: $background-yellow; // 👈 換成你的淺黃背景
+      border-left: 4px solid $primary-yellow-dark; // 👈 換成你的深一階主色線
+      padding: 14px 18px;
+
+      // 圓角完全遵照你的標準組合
+      border-radius: $border-radius-tiny $border-radius-lg $border-radius-lg $border-radius-tiny;
+      font-size: 14px;
+      color: $neutral-700; // 👈 換成你的正文輔助色
+      margin-bottom: 28px;
+    }
+
+    // 規範小區塊
+    .policy-section {
+      margin-bottom: 28px;
+
+      h3 {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: $text-black; // 👈 換成你的主文字黑
+        margin-bottom: 12px;
+
+        // 數字編號（01, 02）
+        .section-num {
+          color: $primary-yellow-dark; // 👈 換成你的識別深黃色
+          font-family: 'Impact', 'Arial Black', sans-serif;
+          font-size: 20px;
+          margin-right: 10px;
+          opacity: 0.85;
+        }
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+          margin-bottom: 8px;
+          font-size: 14.5px;
+          color: $neutral-700; // 👈 換成你的正文輔助色
+
+          strong {
+            color: $text-black; // 👈 換成你的主文字黑
+            font-weight: 600;
+          }
+        }
+      }
+
+      // 🚫 嚴禁刊登物品警告箱（保留語意色，但微調成你專案有的變數）
+      .warning-box {
+        background-color: $background-white; // 👈 安全起見，用你的白底
+        border: 1px dashed $semantic-orange; // 👈 換成你的提醒橘色虛線
+        padding: 14px 18px;
+        border-radius: $border-radius-sm; // 👈 套用圓角標準 sm
+        margin-top: 14px;
+        font-size: 13.5px;
+
+        .warning-title {
+          color: $semantic-orange; // 👈 換成你的提醒橘
+          font-weight: bold;
+          margin-bottom: 4px;
+        }
+
+        p {
+          margin: 0;
+          color: $text-gray; // 👈 換成你的次要文字灰
+        }
+      }
+
+      // 🤝 面交誠信守則區
+      &.highlight {
+        background-color: $neutral-100; // 👈 換成你的卡片背景底色
+        border: 1px solid $neutral-300; // 👈 換成你的 border 線
+        padding: 18px;
+        border-radius: $border-radius-lg; // 👈 套用圓角標準 lg
+
+        .summary-text {
+          font-size: 14.5px;
+          margin-bottom: 14px;
+          color: $text-black;
+        }
+
+        // 面交 1 -> 2 -> 3 橫向流程小卡
+        .trading-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 14px;
+
+          @media (min-width: 576px) {
+            flex-direction: row;
+          }
+
+          .step {
+            flex: 1;
+            background-color: $background-white; // 👈 換成你的白底
+            border: 1px solid $neutral-300; // 👈 換成你的 border
+            padding: 10px 14px;
+            border-radius: $border-radius-sm; // 👈 套用圓角標準 sm
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+
+            span {
+              background-color: $accent-brown; // 👈 面交小圖章改用溫潤的強調棕色！
+              color: $background-white; // 👈 白字
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 11px;
+              font-weight: bold;
+              margin-right: 8px;
+              flex-shrink: 0;
+            }
+          }
+        }
+
+        .notice-text {
+          font-size: 12px;
+          color: $neutral-500; // 👈 換成你的次要文字灰色
+          margin: 0;
+        }
+      }
+    }
+
+    // 📑 底部免責聲明貨櫃
+    .disclaimer-container {
+      background-color: $neutral-100; // 👈 換成你的輸入框底色/卡片背景
+      padding: 16px 20px;
+      border-radius: $border-radius-lg; // 👈 套用圓角標準 lg
+      margin-top: 32px;
+      border: 1px solid $neutral-300;   // 加上邊框增加聲明嚴謹感
+
+      h4 {
+        color: $accent-brown; // 👈 免責聲明標題改用強調棕
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+      }
+
+      p {
+        font-size: 12.5px;
+        color: $text-gray; // 👈 換成你的文字灰
+        margin: 0 0 6px 0;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  // 底部按鈕區
+  .custom-actions {
+    padding-top: 16px;
+    border-top: 1px solid $neutral-300; // 👈 換成你的分隔線
+    display: flex;
+    justify-content: flex-end;
+
+    .close-btn {
+      background-color: $accent-brown; // 👈 按鈕採用高質感的主力強調棕
+      color: $background-white !important;
+      font-weight: bold;
+      padding: 8px 24px;
       border-radius: 20px;
-      margin-right: 10px;
-    }
-  }
+      font-size: 14.5px;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
 
-  ul {
-    padding-left: 20px;
-    li {
-      margin-bottom: 8px;
-      font-size: 15px;
-      color: $text-gray;
-      line-height: 1.5;
+      &:hover {
+        background-color: $accent-brown-light; // 👈 hover 時換成較淺的棕色
+        transform: translateY(-1px);
+      }
     }
   }
 }
-
-.warning-box {
-  border: 1px dashed $semantic-orange;
-  padding: 12px;
-  border-radius: $border-radius-sm;
-  background-color: rgba($semantic-orange, 0.05);
-  margin-top: 10px;
-
-  .warning-title {
-    color: $semantic-orange;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  p { font-size: 13px; margin: 0; }
-}
-
-.trading-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 15px 0;
-
-  .step {
-    background: #fdfdfd;
-    border: 1px solid $background-yellow;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-
-    span {
-      background: $text-price;
-      color: #fff;
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      font-size: 11px;
-      margin-right: 10px;
-    }
-  }
-}
-
-.disclaimer-container {
-  background-color: #f9f9f9;
-  border-left: 4px solid $text-gray;
-  padding: 15px;
-  margin-top: 40px;
-
-  h4 { margin-bottom: 10px; font-weight: bold; }
-  p { font-size: 13px; color: $text-gray; margin-bottom: 5px; line-height: 1.4; }
-}
-
-.custom-actions {
-  display: flex !important;
-  justify-content: flex-end !important; /* 這行就是靠右對齊的意思 */
-  padding: 15px 24px !important;
-  background-color: #fcfcfc;
-  border-top: 1px solid #eee;
-}
-
-.close-btn {
-  background-color: $text-price !important;
-  color: #fff !important;
-  font-weight: bold;
-  border-radius: 4px;
-  padding: 0 20px;
-}
-
-

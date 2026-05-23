@@ -32,7 +32,7 @@
   <section class="products-section">
     <header class="products-header">
       <span class="section-title">上架商品</span>
-      <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span>
+      <!-- <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span> -->
     </header>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
@@ -67,4 +67,26 @@
       }
     </div>
   </section>
+
+  <!-- 分頁 -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <span>共5筆資料</span>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      @for (p of [1, 2, 3]; track p) {
+      <li class="page-item" [class.active]="currentPage === p">
+        <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </main>

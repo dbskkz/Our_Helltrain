@@ -29,4 +29,19 @@ export class StoreComponent {
   readonly ArrowRight = ArrowRight;
 
   isOwner: boolean = false;
+
+  // 分頁變數
+  currentPage = 1;
+  pageSize = 5;
+  totalElements = 0;
+  totalPages = 3;
+
+  fetchProduct() {}
+
+  // 點擊頁碼
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.fetchProduct;
+  }
 }
