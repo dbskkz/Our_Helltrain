@@ -16,7 +16,6 @@
   margin-bottom: 2rem; // 跟下方商品列表拉開距離
 
   #carouselExample {
-    height: 20rem;
     width: 100%;
     // 1. 拿掉固定的 height: 20rem;
     // 2. 設定固定的寬高比 (例如 3:1 或 21:9，視你的 Banner 圖案而定)
@@ -45,104 +44,15 @@
   }
 }
 
-
-.content-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 0;
-
-  border-bottom: 1px solid rgba($background-gray, 0.15);
-
-  // 左側：正在查看標籤
-  .applied-filters {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    .label {
-      font-size: 0.95rem;
-      color: $text-black;
-      font-weight: 500;
-    }
-
-    .filter-tag {
-      background-color: $background-yellow;
-      color: $text-gray;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      border: 1px solid rgba($primary-yellow, 0.5);
-      font-weight: 600;
-    }
-
-    padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
-
-    @media (max-width: 768px) {
-      padding: 0.5rem 1rem; // 手機版縮小內縮
-    }
-  }
-
-  // 右側：排序下拉選單
-  .sorting-dropdown {
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-width: 180px;
-    justify-content: end;
-
-    .rearrange{
-      border-radius: 999rem;
-      padding: 0.5rem;
-
-      &:hover{
-        cursor: pointer;
-        transition: ease 0.3s;
-        background-color: $primary-yellow;
-        lucide-icon{
-          color: white;
-        }
-      }
-    }
-
-    .sort-selection{
-      display: flex;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      border-radius: $border-radius-sm;
-      gap: 0.5rem;
-
-      select {
-        width: fit-content;
-        text-align: center;
-        appearance: none; // 隱藏原生箭頭
-        background-color: transparent;
-        color: $text-black;
-        // border: 1.5px solid rgba($background-gray, 0.2);
-        border: transparent;
-
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.25s ease-in-out;
-
-        &:focus {
-          outline: none;
-        }
-      }
-
-      &:hover {
-        transition: ease 0.3s;
-        background-color: $background-yellow;
-      }
-    }
-  }
-
-  lucide-icon {
-    color: $text-gray;
-    display: flex;
-    align-items: center;
+.content-toolbar{
+  h5{
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $text-black;
+    letter-spacing: 5%;
   }
 }
+
 
 // --- RWD 響應式優化 ---
 @media (max-width: 768px) {

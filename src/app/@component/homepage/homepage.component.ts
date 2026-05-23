@@ -13,7 +13,7 @@ import { ProductCardComponent } from "../product-card/product-card.component";
 export class HomepageComponent {
 
   // Declare icon
-  readonly FilterIcon = Filter;
+  // readonly FilterIcon = Filter;
   readonly ArrowUpDownIcon = ArrowUpDown;
   readonly ChevronDownIcon= ChevronDown;
   readonly MapPinIcon= MapPin;

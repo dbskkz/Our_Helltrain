@@ -7,15 +7,18 @@
   gap: 1.25rem;        // 訊息圖示與頭像區的間距
   flex-shrink: 0;      // 確保在縮放時這一區塊不會被壓扁
 
-  lucide-icon {
+  .msg{
     cursor: pointer;
-    color: #4b5563;
+    color: $text-gray;
     display: flex;
     align-items: center;
     transition: color 0.2s;
+    padding: 0.5rem 0.5rem;
+    border-radius: 99999px;
 
     &:hover {
-      color: #000;
+      color: $neutral-700;
+      background-color: $neutral-100;
     }
   }
 
@@ -27,7 +30,7 @@
     cursor: pointer;
 
     // ... 你原本的屬性 ...
-    padding: 0.5rem 1rem;      // 增加一點內距，讓 hover 的背景色有呼吸空間
+    padding: 0.5rem 0.8rem;      // 增加一點內距，讓 hover 的背景色有呼吸空間
     margin: -0.5rem -1rem;     // 配合 padding 使用負 margin 抵銷，確保排版位置不跳動
     border-radius: 9999px;    // 讓 hover 的背景有一點圓角感
     transition: background-color 0.2s ease, opacity 0.2s ease;
@@ -56,18 +59,23 @@
           text-align: center;
 
           &:hover {
-            color: white;
-            background-color: $primary-yellow;
+            color: $text-black;
+            background-color: $background-yellow;
           }
 
           &.logout {
-            color: #ef4444;
+            color: $primary-yellow-darker;
+
+            &:hover{
+              color: white;
+              background-color: $primary-yellow-darker;
+            }
           }
         }
 
         hr {
           border: 0;
-          border-top: 1px solid #f3f4f6;
+          border-top: 1px solid $neutral-500;
           margin: 0;
         }
       }
@@ -88,7 +96,7 @@
     }
 
     &:hover{
-      background-color: $background-yellow;
+      background-color: $neutral-100;
 
       .user-name {
         color: #000; // 名字稍微變深一點點
@@ -100,7 +108,7 @@
     }
 
     &.active {
-      background-color: $background-yellow;
+      background-color: $neutral-100;
     }
   }
 
