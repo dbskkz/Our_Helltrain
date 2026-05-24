@@ -114,32 +114,5 @@
     }
   }
 
-  .view-more {
-    margin: 1rem;
-    padding: 0.8rem 1.8rem;
 
-    border: none;
-    border-radius: 999px;
-
-    background: $primary-yellow-light;
-    color: $text-gray;
-
-    font-size: 0.95rem;
-    font-weight: 600;
-
-    transition: all 0.25s ease;
-
-    &:hover {
-      background: $background-yellow-hover;
-      box-shadow: 0 1px 10px rgba($text-black, 0.15);
-      transform: translateY(-1px);
-      cursor: pointer;
-    }
-
-    &:active {
-      color: $text-black;
-      background-color: $background-yellow-active;
-      transform: translateY(0px);
-    }
-  }
 }

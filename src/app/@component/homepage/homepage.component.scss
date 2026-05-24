@@ -8,6 +8,8 @@
   @media (max-width: 768px) {
     padding: 0.5rem 1rem; // 手機版縮小內縮
   }
+
+
 }
 
 
@@ -44,13 +46,157 @@
   }
 }
 
-.content-toolbar{
+.subtitle{
+  display: flex;
+  justify-content: space-around;
+  margin: 3rem 0 1.5rem 0;
+
   h5{
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: $text-black;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-gray;
     letter-spacing: 5%;
+
+    mark {
+      display: inline-block;
+      line-height: 0em;
+      padding-bottom: 0.5em;
+      background-color: $primary-yellow-light;
+    }
   }
+
+}
+
+
+.category-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;        // ← 加這個
+  min-width: 0;      // ← flex 子元素必加，防止撐破父層
+  overflow: hidden;   // ← 防止子元素溢出
+}
+
+.nav-btn {
+  flex-shrink: 0;
+  border: none;
+  background: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+  z-index: 10;
+
+  cursor: pointer;
+}
+
+.popular-categories {
+  display: flex;
+  overflow-x: auto;      // 開啟水平捲動
+  gap: 1.5rem;           // 項目間距
+  padding: 1.5rem 0.5rem;
+  flex: 1;           // ← 加這個，讓它填滿兩個按鈕之間的空間
+  min-width: 0;      // ← 同上
+
+  scrollbar-width: none; // 隱藏 Firefox 捲軸
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;       // 隱藏 Chrome/Safari 捲軸
+  }
+
+  // 每個分類項目的容器
+  .category-item {
+    flex: 0 0 auto;      // 防止項目被壓縮
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    // Lucide Icon 樣式設定
+    lucide-icon {
+      // background-color:#f8f9fa; // 圓形底色，可依需求調整
+      padding: 1.2rem;
+      border-radius: 50%;
+
+      ::ng-deep svg {
+        fill: $primary-yellow !important;   // 強制填滿
+        stroke: $neutral-100 !important; // 框線也同步顏色，避免出現黑色邊框
+        stroke-width: 1px;
+      }
+
+      &:hover{
+        background-color:#f8f9fa;
+      }
+    }
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: $text-black;
+      margin: 0;
+      white-space: nowrap; // 避免文字斷行
+    }
+  }
+}
+
+.view-more-wrapper{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+
+  .view-more {
+      margin: 1rem;
+      padding: 0.8rem 1.8rem;
+
+      border: none;
+      border-radius: 999px;
+
+      background: $primary-yellow-light;
+      color: $text-gray;
+
+      font-size: 0.95rem;
+      font-weight: 600;
+
+      transition: all 0.25s ease;
+
+      &:hover {
+        background: $background-yellow-hover;
+        box-shadow: 0 1px 10px rgba($text-black, 0.15);
+        transform: translateY(-1px);
+        cursor: pointer;
+      }
+
+      &:active {
+        color: $text-black;
+        background-color: $background-yellow-active;
+        transform: translateY(0px);
+      }
+  }
+}
+
+.background-color-box {
+  width: 100vw;          // 寬度設為螢幕寬度
+  position: relative;
+
+  left: 50%;             // 移至畫面中點
+  right: 50%;
+  margin-left: -50vw;    // 往左拉回螢幕一半的寬度
+  margin-right: -50vw;
+
+  height: 30vh;
+  background-color: aqua;
+
+
 }
 
 
