@@ -3,7 +3,7 @@
   <!-- 賣家資訊區 -->
   <section class="row information">
 
-    <!-- 頭像 -->
+    <!-- 頭貼 -->
     <div class="col-md-2">
       <figure class="user-img">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyz9M0k9ziX8SKisx9t8So1s4Ya8bI1RyaEA&s"
@@ -13,7 +13,15 @@
 
     <!-- 基本資料 -->
     <div class="col-md-4 profile-list">
-      <p> <lucide-icon [name]="User"></lucide-icon>賣家名稱： </p>
+      <div class="userName">
+        <p><lucide-icon [name]="User"></lucide-icon>賣家名稱：</p>
+        @if (isGood) {
+        <div class="ThumbsUp">
+          <lucide-icon [name]="ThumbsUp"></lucide-icon>
+          信譽良好
+        </div>
+        }
+      </div>
       <p> <lucide-icon [name]="BookText"></lucide-icon>賣家 ID： </p>
       <p> <lucide-icon [name]="MapPin"></lucide-icon>所在地區： </p>
       <p> <lucide-icon [name]="School"></lucide-icon>學校： </p>
@@ -32,6 +40,13 @@
   <section class="products-section">
     <header class="products-header">
       <span class="section-title">上架商品</span>
+      @if (isOwner) {
+      <button class="btn-action primary" (click)="goLaunchProduct()">
+        <lucide-icon [name]="Plus"></lucide-icon>
+        新增商品
+      </button>
+      }
+
       <!-- <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span> -->
     </header>
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -53,7 +68,7 @@
             <div class="card-bottom">
               <span class="price">$180</span>
 
-              <button class="btn-icon-action" [class.is-owner]="isOwner">
+              <button class="btn-icon-action">
                 @if (!isOwner) {
                 <lucide-icon [name]="HeartPlus"></lucide-icon>
                 } @else {

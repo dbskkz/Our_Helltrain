@@ -15,6 +15,7 @@
   align-items: center;
 }
 
+// 頭貼
 .user-img {
   width: 120px;
   height: 120px;
@@ -28,10 +29,7 @@
   }
 }
 
-.introduction {
-  font-weight: bold;
-}
-
+// 基本資料
 .profile-list {
   p {
     display: flex;
@@ -42,6 +40,29 @@
   }
 }
 
+.userName {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ThumbsUp {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid $primary-yellow-dark;
+  border-radius: $border-radius-sm;
+  padding: 4px;
+  color: $primary-yellow-darker;
+  background-color: $background-yellow;
+
+  lucide-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// 簡介
 .intro-block {
   p {
     color: $text-gray;
@@ -220,13 +241,6 @@
     background-color: $background-yellow;
     border-color: $primary-yellow;
   }
-
-  &.is-owner {
-    background-color: $neutral-100;
-    &:hover {
-      background-color: $neutral-300;
-    }
-  }
 }
 
 // 頁碼
@@ -263,8 +277,8 @@
 lucide-icon {
   width: 22px;
   height: 22px;
-  min-width: 22px;
-  min-height: 22px;
+  // min-width: 22px;
+  // min-height: 22px;
   color: $primary-yellow-darker;
   margin-right: 6px;
   display: inline-flex;

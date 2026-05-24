@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   LucideAngularModule,
   User,
@@ -9,6 +10,8 @@ import {
   HeartPlus,
   Pencil,
   ArrowRight,
+  Plus,
+  ThumbsUp,
 } from 'lucide-angular';
 
 @Component({
@@ -18,6 +21,8 @@ import {
   styleUrl: './store.component.scss',
 })
 export class StoreComponent {
+  constructor(private router: Router) {}
+
   // Declare icon
   readonly User = User;
   readonly BookText = BookText;
@@ -27,8 +32,19 @@ export class StoreComponent {
   readonly HeartPlus = HeartPlus;
   readonly Pencil = Pencil;
   readonly ArrowRight = ArrowRight;
+  readonly Plus = Plus;
+  readonly ThumbsUp = ThumbsUp;
+
+  isGood: boolean = true;
 
   isOwner: boolean = false;
+  // 監聽全域鍵盤事件
+  @HostListener('window:keydown', ['$event'])
+  toggleTestMode(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === '`') {
+      this.isOwner = !this.isOwner;
+    }
+  }
 
   // 分頁變數
   currentPage = 1;
@@ -43,5 +59,10 @@ export class StoreComponent {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.fetchProduct;
+  }
+
+  // 新增商品
+  goLaunchProduct() {
+    this.router.navigate(['/launch_product']);
   }
 }
