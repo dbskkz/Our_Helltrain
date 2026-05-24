@@ -123,7 +123,7 @@ nav{
   // box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
 
   // 動態效果：從左邊滑入 + 淡入
-  animation: slideInLeft 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: slideInLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
   // 讓內部的 app-side-nav 撐滿
   app-side-nav {
