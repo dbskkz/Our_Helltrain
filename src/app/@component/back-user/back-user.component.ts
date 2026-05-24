@@ -11,6 +11,7 @@ import {
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PaginationService } from '../../@Services/pageination.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-back-user',
@@ -19,7 +20,7 @@ import { PaginationService } from '../../@Services/pageination.service';
   styleUrl: './back-user.component.scss',
 })
 export class BackUserComponent {
-  constructor(public pagination: PaginationService, private dialog:MatDialog) {}
+  constructor(public pagination: PaginationService, private dialog:MatDialog,private route: ActivatedRoute) {}
   readonly SearchIcon = Search;
   readonly mapIcon = MapPin;
   readonly GridIcon = LayoutGrid;
@@ -36,21 +37,34 @@ export class BackUserComponent {
   selectedVerifyStatus  = '';
 
   private allUsers: User[] = [
-    { id: '123456789', name: '快樂羊駝',   avatarUrl: 'https://i.pravatar.cc/40?img=1', status: '正常',    studentVerifiedAt: '2024-03-01', location: '高雄', tradeCount: 14 },
-    { id: '987654321', name: '朱韻潔',     avatarUrl: 'https://i.pravatar.cc/40?img=2', status: '審查中',  studentVerifiedAt: null,          location: '台北', tradeCount: 2  },
-    { id: '112233445', name: 'bad_seller',  avatarUrl: 'https://i.pravatar.cc/40?img=3', status: '完全停權', studentVerifiedAt: null,          location: '台中', tradeCount: 7  },
-    { id: '556677889', name: 'Jason Wang',  avatarUrl: 'https://i.pravatar.cc/40?img=4', status: '正常',    studentVerifiedAt: '2025-11-15', location: '台南', tradeCount: 31 },
-    { id: '223344556', name: '林小美',     avatarUrl: 'https://i.pravatar.cc/40?img=5', status: '正常',    studentVerifiedAt: '2026-01-20', location: '高雄', tradeCount: 8  },
-    { id: '445566778', name: '王大明',     avatarUrl: 'https://i.pravatar.cc/40?img=6', status: '審查中',  studentVerifiedAt: null,          location: '台中', tradeCount: 1  },
-    { id: '667788990', name: 'Amy Lee',    avatarUrl: 'https://i.pravatar.cc/40?img=7', status: '正常',    studentVerifiedAt: '2024-06-10', location: '台北', tradeCount: 22 },
+    { id: '123456789', name: '快樂羊駝',   avatarUrl: 'https://i.pravatar.cc/40?img=1', status: '正常',    studentVerifiedAt: '2024-03-01', location: '高雄' },
+    { id: '987654321', name: '朱韻潔',     avatarUrl: 'https://i.pravatar.cc/40?img=2', status: '審查中',  studentVerifiedAt: null,          location: '台北' },
+    { id: '112233445', name: 'bad_seller',  avatarUrl: 'https://i.pravatar.cc/40?img=3', status: '停權', studentVerifiedAt: null,          location: '台中' },
+    { id: '556677889', name: 'Jason Wang',  avatarUrl: 'https://i.pravatar.cc/40?img=4', status: '正常',    studentVerifiedAt: '2025-11-15', location: '台南' },
+    { id: '223344556', name: '林小美',     avatarUrl: 'https://i.pravatar.cc/40?img=5', status: '正常',    studentVerifiedAt: '2026-01-20', location: '高雄'  },
+    { id: '445566778', name: '王大明',     avatarUrl: 'https://i.pravatar.cc/40?img=6', status: '審查中',  studentVerifiedAt: null,          location: '台中'  },
+    { id: '667788990', name: 'Amy Lee',    avatarUrl: 'https://i.pravatar.cc/40?img=7', status: '正常',    studentVerifiedAt: '2024-06-10', location: '台北' },
   ];
 
   users: User[] = [];
 
   ngOnInit() {
-    this.applyFilter();
+    // this.loadUsers();
+    this.route.queryParams.subscribe(params=>{
+      console.log(params);
+      console.log(params['verifyStatus']);
+      if(params['verifyStatus']){
+        this.selectedVerifyStatus=params['verifyStatus'];
+      }
+      this.pagination.init(this.allUsers.length, this.pageSize);
+      this.applyFilter();
+    });
   }
 
+  loadUsers() {
+    const start = (this.pagination.currentPage - 1) * this.pageSize;
+    this.users = this.allUsers.slice(start, start + this.pageSize);
+  }
   // 驗證日期 → 驗證狀態
   getVerifyStatus(verifiedAt: string | null,accountstatuses:string): string {
     if(accountstatuses=='審查中') return'待審查';
@@ -64,7 +78,7 @@ export class BackUserComponent {
     const map: Record<string, string> = {
       正常:     'badge-normal',
       審查中:   'badge-review',
-      完全停權: 'badge-banned',
+      停權: 'badge-banned',
     };
     return map[status] ?? '';
   }
@@ -109,10 +123,6 @@ export class BackUserComponent {
     this.users = filtered.slice(start, start + this.pageSize);
   }
 
-  loadUsers() {
-    this.applyFilter();
-  }
-
   viewUser(user: User) {
     this.dialog.open(UserDialogComponent, { data: user });
   }
@@ -129,5 +139,4 @@ export interface User {
   status: string;   //狀態
   studentVerifiedAt: string | null; // 驗證日期，null 表示未驗證
   location: string;
-  tradeCount: number;
 }

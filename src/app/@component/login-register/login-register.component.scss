@@ -6,6 +6,7 @@
   justify-content: center;  /* 水平置中 */
   align-items: center;      /* 垂直置中 */
   min-height: 100vh;        /* 撐滿整個螢幕高度 */
+  background: $background-yellow;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -13,8 +14,9 @@
 /* 主卡片容器 */
 .auth-container {
   display: flex;
+  flex-direction: column;
   width: 100%;             /* 寬度盡量撐滿，但受限於 max-width */
-  max-width: 1000px;
+  max-width: 800px;
   min-height: 650px;
   background: $background-white;
 
@@ -26,86 +28,36 @@
   box-shadow: 0 10px 30px rgba($text-black, 0.05);
 }
 
-/* 左側：品牌形象區 */
-.brand-section {
-  flex: 1;   /* 左右比例調整：左邊佔 1 等分 */
-  background: $background-yellow;
-  color: $text-black;
-  padding: 60px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start; /* 讓內容在左側對齊，看起來更像精心編排的雜誌 */
 
-  h1 {
-    margin: 0;
-    padding: 0;
-    line-height: 1; /* 消除 h1 預設的行高干擾 */
-    margin-bottom: 8px; /* 控制 Logo 與下方英文 Subtitle 的距離 */
+/* 頂部品牌區塊的樣式調整 */
+.brand-top-section {
+  text-align: center;
+
+  h1{
+    margin-top: 15px;
+    margin-bottom: 0;
   }
 
   .brand-logo {
-    display: block;      /* 讓圖片變成區塊元素，比較好控制間距 */
-    height: 120px;        /* 精準控制高度，寬度會隨比例自動縮放，你可以根據畫面上下微調(如 50px~70px) */
-    width: auto;         /* 確保寬度不變形 */
-    object-fit: contain; /* 確保圖片完美適應、不被扭曲 */
-
-    // 如果想要讓 Logo 在左側區塊水平居中，可以加上這行（看你們左側是靠左還是居中）
-      margin: 0 auto;
+    max-width: 160px; /* 視你的 Logo 尺寸調整，讓它優雅地置中 */
+    height: auto;
   }
 
-  /* 英文副標題 */
-  .subtitle {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 1px; /* 稍微拉開字距，很有高級感 */
-    color: $text-price;  /* 套用你的「價格棕色」，在淺黃底上超級優雅！ */
-    margin-bottom: 32px; /* 與下方的中文介紹拉開距離 */
-  }
-
-  /* 中文核心介紹 */
   .description {
-  font-size: 16px;
-  line-height: 1.8;
-  color: $text-black;  /* 使用主文字黑，提升可讀性 */
-  margin-bottom: 48px; /* 給予列表前一段大留白 */
-  }
-
-  /* 特色列表容器 */
-  .feature-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    .feature-item {
-      display: flex;
-      align-items: center; /* 💡 關鍵：讓 icon 跟文字在同一條水平線上置中 */
-      gap: 12px;           /* 圖示與文字之間的左右距離 */
-      font-size: 15px;
-      color: $text-black;  /* 文字改用主文字黑，比較好閱讀 */
-
-      /* 專門控制這三個 icon 的長相 */
-      mat-icon {
-        font-size: 20px;   /* 調整大小，不宜過大也不宜過小 */
-        width: 22px;
-        height: 22px;
-        color: $text-price; /* 💡 套用你的價格棕色，風格立刻變得超優雅！ */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
+    font-size: 15px;
+    color:  $text-gray;
+    letter-spacing: 0.5px;
   }
 }
 
-/* 右側：表單操作區 */
+
 /* ======================================================== */
 /* 1. 表單操作區基礎佈局 (維持原本設定) */
 /* ======================================================== */
 .form-section {
   flex: 1;
   background: $background-white;
-  padding: 50px 60px;
+  padding: 20px 60px 50px 60px;
   display: flex;
   flex-direction: column;
 
@@ -336,7 +288,7 @@ mat-icon.suffix-icon {
   display: inline-flex;
   align-items: center;
   background-color: #EAF6E9;
-  color: #4CAF50;
+  color: $semantic-green;
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 12px;
@@ -434,31 +386,30 @@ mat-icon.suffix-icon {
   }
 }
 
-/* 密碼強度與欄位提示 */
-.password-strength-bar {
-  display: flex;
-  gap: 4px;
-  margin-top: 6px;
-  width: 100%;
-  span {
-    flex: 1;
-    height: 3px;
-    background: #eee;
-    border-radius: 2px;
-  }
-}
+/* 欄位提示 */
 .field-hint {
   font-size: 12px;
-  color: #9F9F9F;
+  color: $neutral-500;
   margin-top: 4px;
   margin-left: 2px;
+}
+
+/* 原本的錯誤紅字 */
+.error-text {
+  color: $semantic-orange;
+}
+
+/* 💡 新增的成功綠字 */
+.success-text {
+  color: $semantic-lightgreen;
+  font-weight: 500;
 }
 
 
 
 
 /* ======================================================== */
-/* 5. 註冊步驟進度條 (Stepper) 像素級視覺刻劃 */
+/* 5. 註冊步驟進度條 (Stepper)  */
 /* ======================================================== */
 .register-stepper {
   display: flex;
@@ -506,10 +457,10 @@ mat-icon.suffix-icon {
 
     // 2️⃣ 【狀態二：已完成】 -> 完美重現圖三的綠色打勾風格
     &.completed {
-      color: #2BAF75; /* 💡 精新優雅的綠色文字 (可換成你們的色票) */
+      color: $semantic-green; /* 💡 精新優雅的綠色文字 (可換成你們的色票) */
 
       .step-num {
-        background-color: #2BAF75; /* 💡 圓圈變成綠色底 */
+        background-color: $semantic-green; /* 💡 圓圈變成綠色底 */
         color: #fff;
       }
 
@@ -547,7 +498,7 @@ mat-icon.suffix-icon {
 
     // 💡 當步驟一完成後，連接線會優雅地亮起綠色，引導視覺延伸到下一步！
     &.line-completed {
-      background-color: #2BAF75;
+      background-color: $semantic-green;
     }
   }
 }
@@ -556,91 +507,84 @@ mat-icon.suffix-icon {
 /* ======================================================== */
 /* 6. Step 2 驗證信發送成功頁面專屬樣式 */
 /* ======================================================== */
-.verify-email-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 讓這區的所有元素全部水平居中 */
-  text-align: center;
-  width: 100%;
-  padding: 10px 0;
+.verification-container {
+  text-align: center; // 容器內元件全面居中
 
-  .icon-wrapper {
-    background-color: #FFF6E5; /* 淡淡的暖色圓圈底 */
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+  .mail-icon{
+    font-size: 48px;      // 原生 Angular Material Icon 放大需要用 font-size
+    width: 48px;          // 同步設定寬高，防止框口變形
+    height: 48px;
+    color: $neutral-500;  // 維持與標題類似的內斂顏色
+    margin-bottom: 12px;
+  }
+  .welcome-title {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 24px;
-
-    .mailbox-emoji {
-      font-size: 36px;
-    }
+    margin-bottom: 24px;//
   }
 
-  .center-title {
-    justify-content: center;
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
+  .form-desc {
+    margin-top: 30px;
+    margin-bottom: 12px;
+    line-height: 1.8; //閱讀行高
 
-  .verify-desc {
-    font-size: 16px;
-    color: $text-black;
-    line-height: 1.6;
-    margin-bottom: 16px;
 
     .highlight-email {
-      color: $semantic-orange; /* 亮眼的橘色信箱顯示 */
+      color: $semantic-orange;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .deadline-text {
+      color: $semantic-orange;
       font-weight: bold;
     }
   }
 
-  .verify-hint {
-    font-size: 14px;
-    color: #9F9F9F;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  /* 📌 沒收到信的淡黃色警告包裝盒 */
-  .notice-box {
-    background-color: #FFF6E9; /* 溫暖的淺米黃底 */
-    color: $text-price;        /* 有氣質的棕色文字 */
-    border-radius: 12px;
-    padding: 16px 20px;
+  .demo-tip {
+    color: $neutral-500;
     font-size: 13px;
-    line-height: 1.6;
-    text-align: left; /* 提示內文靠左對齊，閱讀比較舒適 */
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
   }
 
-  /* 下方的輔助操作連結鏈接 */
-  .verify-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 24px;
+  .code-group {
+    max-width: 300px;
+    margin: 0 auto 24px auto; // 置中並跟下方按鈕保持呼吸距離
 
-    .action-link {
-      font-size: 14px;
-      color: $semantic-orange;
+    .code-input {
+      text-align: center;      // 數字在框框正中間
+      font-size: 18px;
       font-weight: bold;
-      text-decoration: none;
+      letter-spacing: 4px;
+      text-indent: 4px;
+
+      &::placeholder {
+        font-size: 15px;
+        letter-spacing: 1px;
+        text-indent: 1px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .resend-box {
+    margin-top: 20px;
+
+    .resend-text {
+      color: $neutral-500;
+      font-size: 14px;
+    }
+
+    .resend-link {
+      color: $semantic-orange;
       cursor: pointer;
+      text-decoration: underline;
+      font-weight: 500;
+      transition: color 0.2s ease;
 
       &:hover {
-        text-decoration: underline;
-      }
-
-      // 修改 Email 鏈接調成淡淡的灰色
-      &.back-link {
-        color: #9F9F9F;
-        font-weight: 500;
-        &:hover { color: $text-black; }
+        color: $primary-yellow-darker; // 游標滑過去微變深
       }
     }
   }

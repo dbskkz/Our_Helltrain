@@ -2,7 +2,7 @@
 @use '../../styles/variables' as *;
 
 .big-box{
-  max-width: 800px;
+  max-width: 1000px;
   margin: 40px auto;
   padding: 0 20px;
   // 增加一點標題與卡片的間距
@@ -84,41 +84,73 @@ h4 {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 100%;
+
+    .edit-group {
+    display: flex !important;
+    flex-direction: row !important; // 👈 💡 強制輸入框、確定、取消「手拉手排成一橫排」
+    align-items: center !important; // 垂直置中
+    gap: 8px !important;            // 按鈕與輸入框之間的舒適間距
+    width: 100%;
+    }
 
     .edit-input {
-    background-color: $background-yellow;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 8px;
-    outline: none;
+      height: 40px;                    // 💡 設計師微調：名字框在標題列，高度 40px 比 50px 更精緻協調
+      width: 200px;
+      max-width: 240px;
+      background-color: $background-yellow;
+      border: 1px solid $neutral-300;
+      border-radius: $border-radius-sm;
+      padding: 0 12px;
+      outline: none;
+      font-size: 15px;
+      color: $text-black;
+      transition: all 0.2s ease;       // 讓光暈切換有 0.2 秒的溫柔淡入淡出
 
+      &:focus {
+        border-color: $primary-yellow !important; // 點擊時亮起品牌主色黃
+        box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important; // 霧面黃色微光暈
+      }
   }
 
+  // 🟡 確定修改
   .confirm-btn {
-    background: $semantic-orange;
-    color: white;
-    border: none;
-    margin-left: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.2s;
+      background-color: $primary-yellow !important;
+      color: $text-black !important;
+      border: none !important;
+      padding: 6px 16px;              // 對齊圖片中舒適的按鈕胖瘦比例
+      border-radius: 8px;             // 精緻的圓角感
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
 
-    &:hover { transform: translateY(-2px); } // 微互動
+      &:hover {
+        background-color: rgba($primary-yellow, 0.9) !important; // 💡 溫和的 hover 變色
+        transform: translateY(-1px);  // 微互動浮起
+      }
   }
 
+// ⚪ 取消修改
   .cancel-btn{
-    background: $background-gray;
-    color: white;
-    border: none;
-    margin-left: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.2s;
+      background-color: transparent !important;
+      color: $text-gray !important;
+      border: 1px solid $neutral-500 !important; // 空心細線框
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-left: 4px;
+      transition: all 0.2s ease;
 
-    &:hover { transform: translateY(-2px); } // 微互動
+      &:hover {
+        background-color: $background-yellow !important; // hover 時渲染淡淡的黃色呼吸底
+        transform: translateY(-1px);
+      }
   }
 
-    p { color: #666; font-size: 0.9rem; margin: 0; }
+    .label-text { color: #666; font-size: 0.9rem; margin: 0; white-space: nowrap}
     h4 {
     margin: 0;
     display: inline-flex; // 關鍵：讓 h4 內部的文字跟 span 對齊
@@ -270,6 +302,10 @@ h4 {
   }
 }
 
+.field_group{
+  margin-top: 15px;
+}
+
 // 修正 Material 預設背景色（讓它更清透）
 ::ng-deep .mat-mdc-text-field-wrapper {
   background-color: $background-yellow !important;
@@ -302,9 +338,9 @@ h4 {
 }
 
 .password_content {
-  .label { font-size: 14px; color:$text-gray; margin-bottom: 5px; }
+  .label { font-size: 15px; color:$text-gray; margin-bottom: 5px; }
 
-  .dots { font-size: 10px;  letter-spacing: 5px; color: $background-gray; padding: 10px 0; }
+  .dots { font-size: 8px;  letter-spacing: 5px; color: $background-gray; padding: 10px 0; }
 
   .divider { border: 0; border-top: 1px solid #f0f0f0; margin: 20px 0; }
 
@@ -324,6 +360,8 @@ h4 {
     }
   }
 }
+
+
 
 
 .button_group {
@@ -370,3 +408,170 @@ h4 {
 mat-form-field {
   width: 100%;
 }
+
+// 1. 通用外殼大箱子：負責控制 1px 預設框與點擊變黃框
+.input-box-wrapper,
+ .textarea-wrapper{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  border: 1px solid $neutral-300;
+  border-radius: $border-radius-sm;
+  background-color: $background-yellow;
+  padding: 0 ;
+  transition: all 0.2s ease;
+
+  // 💡 點擊時，外殼亮起品牌黃框與微光暈
+  &:focus-within {
+    border-color: $primary-yellow !important;
+    box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
+  }
+  &.is-readonly {
+    border-color: transparent !important; // 👈 核心：直接把外框線變成透明，達成無框效果！
+  }
+}
+
+// 2. 通用表單：強迫夾在中間的 form 也要 100% 撐滿
+.example-form {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+
+
+// 4. 💡 關鍵萬用穿透：把 ::ng-deep 提拔到最前面，並緊跟著你的通用 class
+// 這樣既能拿到最高穿透權重，又不會污染到其他頁面的 Material 元件！
+::ng-deep .autocomplete-field {
+  width: 100% !important;
+  // 剝皮術：把套件自帶的 outline 邊框和背景通通變透明
+  .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+    padding: 0 16px !important;
+  }
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: transparent !important;
+    border-width: 0 !important;
+  }
+ }
+
+
+ // 1. 因為並列了類別，我們只要把簡介外殼的高度解放，讓 rows="5" 自己撐開
+.textarea-wrapper {
+  height: auto !important;
+  display: flex !important;
+    &:focus-within {
+    border-color: $primary-yellow !important;
+    box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
+  }
+
+}
+
+// 2. 穿透進去處理簡介獨有的對齊與 padding 宇宙
+::ng-deep .self-care {
+  width: 100% !important;
+
+  textarea.mat-mdc-input-element {
+    overflow-y: hidden !important; // 👈 💡 雙重保險：強制隱藏垂直滾動條
+  }
+
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-text-field-wrapper {
+      background-color: transparent !important;
+    }
+    // 抹除 outline 原生的框
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-width: 0 !important;
+    }
+  }
+}
+
+
+/* ======================================================== */
+/* 🎯 密碼表單專屬版面樣式（從 HTML 行內移回 CSS） */
+/* ======================================================== */
+
+// 1. 控制整個密碼表單垂直排列與間距
+.password-form-container {
+  flex-direction: column !important; // 強迫三個格子由上往下排成一列
+  align-items: stretch !important;   // 讓肚子裡的 field_group 橫向撐滿 100%
+  gap: 20px;                         // 格子與格子之間的精美設計師留白
+
+  p.label {
+    margin-bottom: 4px !important; // 👈 💡 把原本太寬的 16px (1rem) 砍半成精緻的 8px！
+    color: $text-black;
+  }
+}
+
+// 2. 密碼輸入框右側的小眼睛按鈕
+.eye-btn {
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    color: #999999 !important; // 👈 💡 平時：換上優雅的極簡中灰色（可換成你選的顏色）
+    font-size: 22px !important; // 稍微收小一點點（預設24px），視覺上會更精緻
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+
+}
+
+// 3. 欄位中間優雅的淡灰色分隔線
+.form-divider {
+  width: 100%;
+  margin: 10px 0;
+  border: none;
+
+}
+
+// 4. 紅綠燈即時提示文字（統一規範字體大小與上間距）
+.field-hint {
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 0;
+
+  // 當它是錯誤文字時（紅燈）
+  &.error-text {
+    color: $primary-yellow-darker;
+  }
+
+  // 當一模一樣時（綠燈）
+  &.success-text {
+    color:$semantic-lightgreen;
+  }
+}
+
+
+::ng-deep .autocomplete-field {
+
+  input::placeholder {
+    color: $neutral-500 !important;
+
+  }
+
+  // 2. 真正夾住 input 的文字小核心
+  .mat-mdc-form-field-infix {
+    display: flex !important;           // 👈 💡 讓內層也用 flex 撐開
+    align-items: center !important;
+  }
+}
+
+
+
+
+
+
+
+

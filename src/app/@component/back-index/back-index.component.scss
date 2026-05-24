@@ -1,12 +1,13 @@
 @use '../../styles/variables' as *;
+@use '../../styles/backstage' as *;
 
 .page-wrapper {
   margin: 0 auto;
   padding: 40px 24px;
-  background: #f5f4ef;
+  background: $background-white;
   min-height: 100vh;
   font-family: 'Noto Sans TC', sans-serif;
-  color: #1a1814;
+  color: $text-gray;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -14,8 +15,8 @@
 
 /* ===== 今日概覽 ===== */
 .overview-card {
-  background: #ffffff;
-  border: 1px solid #e2ded5;
+  background: $background-white;
+  border: 1px solid $border-radius-color;
   border-radius: $border-radius-lg;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
@@ -24,7 +25,7 @@
 .card-title {
   font-size: $font-size-h1;
   font-weight: 700;
-  color: #1a1814;
+  color: $text-black;
   margin-bottom: 16px;
   letter-spacing: 0.02em;
 }
@@ -36,8 +37,8 @@
 
 .overview-box {
   flex: 1;
-  background: #faf9f5;
-  border: 1px solid #e2ded5;
+  background: #f5f2ece6;
+  border: 1px solid $border-radius-color;
   border-radius: $border-radius-lg;
   padding: 16px 20px;
   display: flex;
@@ -46,23 +47,23 @@
 }
 
 .overview-label {
-  font-size: 13px;
-  color: #6b6760;
+  font-size: $font-size-base;
+  color: $text-gray;
   font-weight: 500;
 }
 
 .overview-number {
   font-size: 32px;
   font-weight: 700;
-  color: #1a1814;
+  color: $text-black;
   line-height: 1;
   margin: 0;
 }
 
 /* ===== 需立即處理 ===== */
 .urgent-card {
-  background: #ffffff;
-  border: 1px solid #e2ded5;
+  background: $background-white;
+  border: 1px solid $border-radius-color;
   border-radius: $border-radius-lg;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;
@@ -77,25 +78,25 @@
   align-items: center;
   padding: 14px 16px;
   border-radius: $border-radius-sm;
-  font-size: 14px;
+  font-size: $font-size-base;
   font-weight: 500;
 }
 
 .urgent-item.dispute {
-  background: #fff1f1;
-  color: #8b3a3a;
+  background: #f6cbcb;
+  color: #722f2f;
 }
 
 .urgent-item.pending {
-  background: #fff9f0;
-  color: #8b7355;
+  background: #ffeed7;
+  color: #7a6347;
 }
 
 .btn-outline {
   padding: 6px 16px;
   border-radius: 50px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: $font-size-base;
   font-weight: 600;
   cursor: pointer;
   background: transparent;
@@ -108,19 +109,19 @@
 
   .dispute & {
     border: 1.5px solid #8b3a3a;
-    color: #8b3a3a;
+    color: #722f2f;
   }
 
   .pending & {
     border: 1.5px solid #8b7355;
-    color: #8b7355;
+    color: #7a6347;
   }
 }
 
 /* ===== 近期操作 ===== */
 .recent-card {
-  background: #ffffff;
-  border: 1px solid #e2ded5;
+  background: $background-white;
+  border: 1px solid $border-radius-color;
   border-radius: $border-radius-lg;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 20px 24px;

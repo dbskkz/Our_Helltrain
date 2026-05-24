@@ -19,7 +19,7 @@
 
     <div class="main_card_right">
       <div class="main_card_right_up">
-        <p>名稱 : </p>
+        <span class="label-text">名稱：</span>
        @if (!isEditingName) {
         <!-- 預覽模式 -->
         <h4>{{name}} <span (click)="startEdit()">
@@ -41,11 +41,11 @@
           <h5>{{score}}</h5>
           <p>評分</p>
         </div>
-        <div class="main_card_1">
+        <div class="main_card_1" (click)="orderInformation()">
           <h5>{{tradeNumber}}</h5>
           <p>交易數</p>
         </div>
-        <div class="main_card_1">
+        <div class="main_card_1" (click)="gotoStore()">
           <h5>{{onTheShelves}}</h5>
           <p>目前上架</p>
         </div>
@@ -67,15 +67,17 @@
 
       <div class="area">
         <p>地區</p>
+         <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
          <form class="example-form">
-          <mat-form-field class="example-full-width" [appearance]="isEditingBasic? 'outline':'fill'">
+          <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" [appearance]="isEditingBasic? 'outline':'fill'">
             <input type="text"
                   placeholder="地區"
                   aria-label="Number"
                   matInput
                   [formControl]="areaControl"
                   [matAutocomplete]="autoArea"
-                  [readonly]="!isEditingBasic">
+                  [readonly]="!isEditingBasic"
+                   class="custom-input">
               <mat-autocomplete #autoArea="matAutocomplete">
               @for (option of filteredAreas | async; track option) {
                 <mat-option [value]="option">{{option}}</mat-option>
@@ -83,40 +85,46 @@
             </mat-autocomplete>
           </mat-form-field>
         </form>
+        </div>
       </div>
 
       <div class="school_group">
         <div class="school">
           <p>學校</p>
-          <form class="example-form">
-            <mat-form-field class="example-full-width"  [appearance]="isEditingBasic? 'outline':'fill'">
-              <input type="text"
-                    placeholder="學校"
-                    aria-label="Number"
-                    matInput
-                    [formControl]="schoolControl"
-                    [matAutocomplete]="autoSchool"
-                     [readonly]="!isEditingBasic">
-                <mat-autocomplete #autoSchool="matAutocomplete">
-                @for (option of filteredSchools | async; track option) {
-                  <mat-option [value]="option">{{option}}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
+          <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
+            <form class="example-form">
+              <mat-form-field  class="autocomplete-field" subscriptSizing="dynamic"  [appearance]="isEditingBasic? 'outline':'fill'">
+                <input type="text"
+                      placeholder="學校"
+                      aria-label="Number"
+                      matInput
+                      [formControl]="schoolControl"
+                      [matAutocomplete]="autoSchool"
+                      [readonly]="!isEditingBasic"
+                      class="custom-input">
+                  <mat-autocomplete #autoSchool="matAutocomplete" >
+                  @for (option of filteredSchools | async; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            </form>
+          </div>
         </div>
 
         <div class="department">
           <p>科系</p>
+          <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
           <form class="example-form">
-            <mat-form-field class="example-full-width"  [appearance]="isEditingBasic? 'outline':'fill'">
+            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic"   [appearance]="isEditingBasic? 'outline':'fill'">
               <input type="text"
                     placeholder="科系"
                     aria-label="Number"
                     matInput
                     [formControl]="deptControl"
                     [matAutocomplete]="autoDept"
-                     [readonly]="!isEditingBasic">
+                     [readonly]="!isEditingBasic"
+                     class="custom-input">
                 <mat-autocomplete #autoDept="matAutocomplete">
                 @for (option of filteredDepts | async; track option) {
                   <mat-option [value]="option">{{option}}</mat-option>
@@ -124,6 +132,7 @@
               </mat-autocomplete>
             </mat-form-field>
           </form>
+          </div>
         </div>
       </div>
 
@@ -152,13 +161,19 @@
         <p class="display_text">{{ profile }}</p>
       } @else {
         <form class="example-form">
-          <mat-form-field class="self-care" appearance="outline">
-            <textarea matInput
-                      [formControl]="profileControl"
-                      placeholder="範例:常駐於xx大學，本人是yy科系...(限200字)"
-                      maxlength="200"
-                      rows="5"></textarea>
-          </mat-form-field>
+          <div class="input-box-wrapper textarea-wrapper" [class.is-readonly]="!isEditingBasic">
+            <mat-form-field class="self-care" appearance="outline">
+              <textarea matInput
+                        [formControl]="profileControl"
+                        placeholder="範例:常駐於xx大學，本人是yy科系...(限200字)"
+                        maxlength="200"
+                        cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize"
+                        [cdkAutosizeMinRows]="3"
+                        [cdkAutosizeMaxRows]="10"
+                       ></textarea>
+            </mat-form-field>
+          </div>
         </form>
         <div class="count-hint">
     {{ profileControl.value?.length || 0 }} / 200
@@ -180,20 +195,29 @@
          </button>
       </div>
     </div>
-        <div class="password_content">
+        <div class="password_content password-form-container example-form">
         @if (!isEditingPassword) {
           <div class="readonly_view">
             <p class="label">目前密碼</p>
             <p class="dots">● ● ● ● ● ● ● ●</p>
           </div>
         } @else {
-          <form class="password_form">
+          <form class="password_form" [formGroup]="passwordForm">
             <!-- 目前密碼 -->
             <div class="field_group">
               <p class="label">目前密碼</p>
-              <mat-form-field appearance="outline">
-                <input matInput type="password" [formControl]="oldPasswordControl" placeholder="輸入目前的密碼">
-              </mat-form-field>
+               <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput
+                  [type]="hideOldPassword() ? 'password' : 'text'"
+                  formControlName="oldPassword"
+                  placeholder="輸入目前的密碼">
+
+                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideOldPassword.set(!hideOldPassword())">
+                    <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
             </div>
 
             <hr class="divider">
@@ -201,20 +225,49 @@
             <!-- 新密碼 -->
             <div class="field_group">
               <p class="label">新密碼</p>
-              <mat-form-field appearance="outline">
-                <input matInput type="password" [formControl]="newPasswordControl" placeholder="至少 8 個字元">
-              </mat-form-field>
-              <!-- 強度條：單純用 CSS 畫出圖片中的四條橫線 -->
-              <div class="strength_bar">
-                <span></span><span></span><span></span><span></span>
+              <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput
+                  [type]="hideNewPassword() ? 'password' : 'text'"
+                  formControlName="newPassword"
+                  placeholder="至少 8 個字元">
+
+                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideNewPassword.set(!hideNewPassword())">
+                    <mat-icon>{{ hideNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
               </div>
+              @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
+                <p class="field-hint error-text">✘ 密碼長度至少需滿 8 個字元</p>
+              } @else if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
+                <p class="field-hint error-text">✘ 新密碼不能為空</p>
+              } @else if (passwordForm.get('newPassword')?.value && passwordForm.get('newPassword')?.valid) {
+                <p class="field-hint success-text">✔ 密碼格式正確</p>
+              }
             </div>
 
             <div class="field_group">
               <p class="label">確認新密碼</p>
-              <mat-form-field appearance="outline">
-                <input matInput type="password" [formControl]="confirmPasswordControl" placeholder="再次輸入新密碼">
-              </mat-form-field>
+              <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput
+                 [type]="hideConfirmPassword() ? 'password' : 'text'"
+                  formControlName="confirmPassword"
+                  placeholder="再次輸入新密碼">
+
+                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
+                    <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('mismatch')) {
+                  <p class="field-hint error-text" >✘ 兩次輸入的密碼不一致</p>
+                } @else if (passwordForm.get('confirmPassword')?.value &&
+                          passwordForm.get('newPassword')?.value &&
+                          passwordForm.get('confirmPassword')?.valid) {
+                  <p class="field-hint success-text" >✔ 密碼一致</p>
+                }
             </div>
           </form>
         }

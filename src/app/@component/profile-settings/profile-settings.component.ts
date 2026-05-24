@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AsyncPipe} from '@angular/common';
 import { map, Observable, startWith } from 'rxjs';
 import { LucideAngularModule, PencilLine, BookUser, ClipboardPenLine, LockKeyhole } from 'lucide-angular';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-settings',
@@ -22,7 +23,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class ProfileSettingsComponent {
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private fb: FormBuilder,private snackBar: MatSnackBar, private router: Router) {}
 
   readonly pencilIcon = PencilLine; //鉛筆icon
   readonly bookUser = BookUser; //個人資料icon
@@ -51,10 +52,15 @@ export class ProfileSettingsComponent {
   profileControl = new FormControl(this.profile);
 
   isEditingPassword: boolean = false;// 控制編輯狀態
+
   // 密碼相關的 Control
-  oldPasswordControl = new FormControl('');
-  newPasswordControl = new FormControl('');
-  confirmPasswordControl = new FormControl('');
+  passwordForm!: FormGroup;
+  // oldPasswordControl = new FormControl('');
+  // newPasswordControl = new FormControl('');
+  // confirmPasswordControl = new FormControl('');
+  hideOldPassword = signal(true);
+  hideNewPassword = signal(true);
+  hideConfirmPassword = signal(true);
 
   //建立 Control 負責控制輸入框與獲取目前打什麼字
   schoolControl = new FormControl(this.school);
@@ -65,7 +71,8 @@ export class ProfileSettingsComponent {
   schoolOptions: string[] = ['台灣大學', '政治大學', '清華大學', '陽明交通大學'];
   deptOptions:  string[] = ['醫學系', '室內設計系', '企業管理', '商業管理'];
   areaOptions: string[] =  ['台北', '台中', '台南', '苗栗'];
- // 2. 這是畫面顯示用的「動態過濾後的清單」 各自的動態過濾水管 (Observable)
+
+  // 2. 這是畫面顯示用的「動態過濾後的清單」 各自的動態過濾水管 (Observable)
   filteredSchools: Observable<string[]> | undefined;
   filteredDepts: Observable<string[]> | undefined;
   filteredAreas: Observable<string[]> | undefined;
@@ -78,15 +85,43 @@ export class ProfileSettingsComponent {
     this.deptControl.disable();
     this.profileControl.disable();
 
-  // 學校管線
+    this.passwordForm = this.fb.group({
+      oldPassword: [{ value: '', disabled: true }, [Validators.required]],
+      newPassword: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(8)]],
+      confirmPassword: [{ value: '', disabled: true }, [Validators.required]]
+    }, {
+      validators: this.passwordMatchValidator // 👈 自訂比對大門
+    });
+
+  // 學校、科系、地區管線
   this.filteredSchools = this.setupFilter(this.schoolControl, this.schoolOptions);
-
-  // 科系管線
   this.filteredDepts = this.setupFilter(this.deptControl, this.deptOptions);
-
-  // 地區管線
   this.filteredAreas = this.setupFilter(this.areaControl, this.areaOptions);
 
+  }
+
+  // 密碼即時比對驗證器（從註冊頁的核心邏輯完美搬遷）
+  private passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const newPassword = control.get('newPassword');
+    const confirmPassword = control.get('confirmPassword');
+
+    if (!newPassword || !confirmPassword) return null;
+
+    // 只要密碼不一致，立刻在 confirmPassword 身上打上 mismatch 標籤
+    if (newPassword.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ mismatch: true });
+      return { mismatch: true };
+    } else {
+      // 一致時，如果之前有殘留的 mismatch 錯誤就幫它解鎖
+      if (confirmPassword.hasError('mismatch')) {
+        const errors = confirmPassword.errors;
+        if (errors) {
+          delete errors['mismatch'];
+          confirmPassword.setErrors(Object.keys(errors).length ? errors : null);
+        }
+      }
+      return null;
+    }
   }
 
   private setupFilter(control: FormControl, options: string[]): Observable<string[]>{
@@ -214,15 +249,21 @@ export class ProfileSettingsComponent {
 
     if (this.isEditingPassword) {
       // 開啟編輯：啟用輸入
-    this.enablePasswordControls();
+    this.passwordForm.enable();
     } else {
       // 前端僅做「基本檢查」：確保兩次新密碼一樣
-      if (this.newPasswordControl.value !== this.confirmPasswordControl.value) {
-        alert('新密碼與確認密碼不符');
+      if (this.passwordForm.invalid) {
+        this.snackBar.open('請檢查密碼格式，或確認兩次新密碼一致', '知道了', {
+           duration: 3000,
+           horizontalPosition: 'center',
+           verticalPosition: 'bottom',
+            panelClass: ['custom-orange-snackbar']
+           });
         this.isEditingPassword = true; // 保持編輯狀態
         return;
       }
-      // 這裡未來接 API...
+      // 這裡未來接 API...this.passwordForm.value.newPassword 拿新密碼
+      console.log('送出修改密碼請求', this.passwordForm.value);
       this.finalizeEdit();
     }
   }
@@ -235,19 +276,20 @@ export class ProfileSettingsComponent {
 
   // 封裝重複的動作：禁用並清空
   private finalizeEdit() {
-    this.oldPasswordControl.disable();
-    this.newPasswordControl.disable();
-    this.confirmPasswordControl.disable();
-
-    this.oldPasswordControl.reset();
-    this.newPasswordControl.reset();
-    this.confirmPasswordControl.reset();
+    this.passwordForm.disable(); // 一鍵禁用
+    this.passwordForm.reset();   // 一鍵清空
   }
 
-  private enablePasswordControls() {
-    this.oldPasswordControl.enable();
-    this.newPasswordControl.enable();
-    this.confirmPasswordControl.enable();
+  /* 路由 */
+  gotoStore(){
+     this.router.navigate(['/store'])
   }
+
+  orderInformation(){
+     this.router.navigate(['/order_information'])
+  }
+
+
+
 
 }
