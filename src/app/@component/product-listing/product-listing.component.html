@@ -1,22 +1,45 @@
 <main class="content">
   <nav class="filter-panel">
     <div class="site-path">
-      <span class="breadcrumb">首頁 > {{ categoryName }}</span>
+      <span class="breadcrumb">
+        <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
+        首頁 > {{ categoryName }}</span>
     </div>
 
-    <h1 class="category-name">{{ categoryName }}</h1>
-    <p> | 1234 件商品</p>
+    <header class="list-header">
+      <h1 class="category-name">{{ categoryName }}</h1>
+
+      <!-- 排序方式 -->
+        <div class="sort-container">
+          <button class="sort-button"
+          (click)="togglePanel($event, 'sort')">
+            <span>排序依據</span>
+            <span class="material-symbols-outlined">
+            sort
+            </span>
+          </button>
+
+          @if (panelState.sort) {
+            <ul id="dropdown-list" class="dropdown-content" (click)="$event.stopPropagation()">
+              <li>最新上架</li>
+              <li>價格由低到高</li>
+              <li>價格由高到低</li>
+            </ul>
+          }
+        </div>
+    </header>
+
 
 
     <!-- 熱門分類 -->
-    <div class="hot-categories">
+    <!-- <div class="hot-categories">
       <h5>常用分類</h5>
       <ul>
         <li><button class="btn-tag">電腦</button></li>
         <li><button class="btn-tag">筆電</button></li>
         <li><button class="btn-tag">行充</button></li>
       </ul>
-    </div>
+    </div> -->
 
     <!-- 篩選清單 -->
     <ul class="filter-groups">
@@ -45,10 +68,12 @@
       <!-- 商品狀況 -->
       <li>
         <select class="filter-select">
-          <option value="">商品狀況 (全部)</option>
+          <option value="">商品新舊程度</option>
           <option value="new">全新</option>
-          <option value="near-new">九成新</option>
-          <option value="used">二手</option>
+          <option value="near-new">近全新</option>
+          <option value="lightly-used">輕度使用</option>
+          <option value="used">中度使用</option>
+          <option value="heavily-used">重度使用</option>
         </select>
       </li>
 
@@ -125,5 +150,6 @@
 
 
   <app-product-card></app-product-card>
+  <p>頁碼</p>
 </main>
 

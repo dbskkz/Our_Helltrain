@@ -4,10 +4,9 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ActivatedRoute } from '@angular/router';
-// import { BrowserModule } from "@angular/platform-browser";
 
 // 素材庫
-import { LucideAngularModule, ArrowUpDown} from 'lucide-angular';
+import { LucideAngularModule, ArrowUpDown,Home} from 'lucide-angular';
 import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { ProductCardComponent } from "../product-card/product-card.component";
 
@@ -34,6 +33,7 @@ export class ProductListingComponent implements OnInit{
   // =========================================================
 
   readonly ArrowUpDownIcon = ArrowUpDown;
+  readonly HomeIcon = Home;
 
   // =========================================================
   // CATEGORY
@@ -65,6 +65,7 @@ export class ProductListingComponent implements OnInit{
 
   panelState = {
     price: false,
+    sort: false,
     grade: false,
     location: false,
     school: false
