@@ -41,10 +41,16 @@
     <header class="products-header">
       <span class="section-title">上架商品</span>
       @if (isOwner) {
-      <button class="btn-action primary" (click)="goLaunchProduct()">
-        <lucide-icon [name]="Plus"></lucide-icon>
-        新增商品
-      </button>
+      <div class="edit">
+        <button class="btn-action primary" (click)="deleteProduct()">
+          <lucide-icon [name]="Trash2"></lucide-icon>
+          刪除商品
+        </button>
+        <button class="btn-action primary" (click)="goLaunchProduct()">
+          <lucide-icon [name]="Plus"></lucide-icon>
+          新增商品
+        </button>
+      </div>
       }
 
       <!-- <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span> -->
@@ -68,11 +74,12 @@
             <div class="card-bottom">
               <span class="price">$180</span>
 
-              <button class="btn-icon-action">
-                @if (!isOwner) {
-                <lucide-icon [name]="HeartPlus"></lucide-icon>
+              <button class="btn-icon-action" (click)="goUpdateProduct()">
+                @if (isOwner) {
+                @if (isDelete) {<lucide-icon [name]="Trash2"></lucide-icon>
+                } @else {<lucide-icon [name]="Pencil"></lucide-icon>}
                 } @else {
-                <lucide-icon [name]="Pencil"></lucide-icon>
+                <lucide-icon [name]="HeartPlus"></lucide-icon>
                 }
               </button>
             </div>
@@ -86,13 +93,13 @@
   <!-- 分頁 -->
   <nav aria-label="Page navigation example">
     <ul class="pagination">
-      <span>共5筆資料</span>
+      <span>共{{totalElements}}筆資料</span>
       <li class="page-item" [class.disabled]="currentPage === 1">
         <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      @for (p of [1, 2, 3]; track p) {
+      @for (p of pages; track p) {
       <li class="page-item" [class.active]="currentPage === p">
         <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
       </li>

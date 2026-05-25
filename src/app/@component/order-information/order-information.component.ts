@@ -24,7 +24,7 @@ export class OrderInformationComponent {
   // 分頁變數
   currentPage = 1;
   pageSize = 5;
-  totalElements = 0;
+  totalElements = 1;
   totalPages = 3;
 
   // 存放當前頁要顯示的資料
@@ -41,6 +41,11 @@ export class OrderInformationComponent {
   chat() {}
 
   fetchOrders() {}
+
+  // totalPages產生陣列
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
 
   // 點擊頁碼
   goToPage(page: number) {

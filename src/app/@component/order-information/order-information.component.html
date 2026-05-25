@@ -1,5 +1,5 @@
 <main class="container py-5">
-  <h1 class="page-title">訂單資料 / 交易清單</h1>
+  <h3 class="page-title">訂單資料 / 交易清單</h3>
 
   <!-- tabs -->
   <nav>
@@ -70,13 +70,13 @@
   <!-- 分頁 -->
   <nav aria-label="Page navigation example">
     <ul class="pagination">
-      <span>共5筆資料</span>
+      <span>共{{totalElements}}筆資料</span>
       <li class="page-item" [class.disabled]="currentPage === 1">
         <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      @for (p of [1, 2, 3]; track p) {
+      @for (p of pages; track p) {
       <li class="page-item" [class.active]="currentPage === p">
         <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
       </li>
