@@ -70,6 +70,8 @@ export class ProductListingComponent implements OnInit{
 
       // TODO:
       // this.loadProducts(this.category);
+
+      this.pagination.init(this.allProducts.length, this.pageSize);
       this.loadProducts();
 
     });
@@ -79,7 +81,7 @@ export class ProductListingComponent implements OnInit{
   loadProducts() {
     // 假設這裡拿到了 allProducts
     // 2. 初始化分頁 Service
-    this.pagination.init(this.allProducts.length, this.PAGE_SIZE);
+    this.pagination.init(this.allProducts.length, this.pageSize);
   }
 
   // =========================================================
@@ -216,38 +218,22 @@ export class ProductListingComponent implements OnInit{
     return parts.join('、');
   }
 
-// =========================================================
+  // =========================================================
   // PAGINATION（每頁最多 30 筆）
   // =========================================================
 
-  readonly PAGE_SIZE = 30;
-  currentPage = 1;
+  pageSize = 30;
 
-  get totalPages(): number {
-    return Math.ceil(this.allProducts.length / this.PAGE_SIZE) || 1;
-  }
 
-  /** 當頁要傳給 product-card 的商品 */
   get pagedProducts(): Product[] {
-    const start = (this.pagination.currentPage - 1) * this.PAGE_SIZE;
-    return this.allProducts.slice(start, start + this.PAGE_SIZE);
-  }
 
-  /** 顯示的頁碼陣列，最多顯示 5 個頁碼按鈕 */
-  get pageNumbers(): number[] {
-    const total  = this.totalPages;
-    const current = this.currentPage;
-    const maxBtn = 5;
+    const start =
+      (this.pagination.currentPage - 1) * this.pageSize; // 第一頁從第0個index開始，第二頁從 index = 30 開始，依此類推
 
-    let start = Math.max(1, current - Math.floor(maxBtn / 2));
-    let end   = start + maxBtn - 1;
+    const end = start + this.pageSize; // 每一頁的最後一筆
 
-    if (end > total) {
-      end   = total;
-      start = Math.max(1, end - maxBtn + 1);
-    }
+    return this.allProducts.slice(start, end); // (0, 30) --> 不包含30
 
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
   prevPage() { if (this.pagination.prevPage()) this.loadProducts(); }
@@ -270,7 +256,6 @@ export class ProductListingComponent implements OnInit{
     this.cities.forEach(c => c.selected = false);
     this.schools.forEach(s => s.selected = false);
     this.department.forEach(d => d.selected = false);
-    this.currentPage = 1;
     this.pagination.goToPage(1);
   }
 
