@@ -13,24 +13,37 @@
   outline: none;
 }
 
-// 側邊欄/篩選區塊
 .filter-panel {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
 
-  .category-name {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: $text-black;
-  }
+.category-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: $text-black;
+}
 
-  .breadcrumb {
-    font-weight: 300;
-    font-size: 0.9rem;
-    color: $text-gray;
-  }
+.site-path{
+  width: 100vw;          // 寬度設為螢幕寬度
+  position: relative;
+
+  left: 50%;             // 移至畫面中點
+  right: 50%;
+  margin-left: -50vw;    // 往左拉回螢幕一半的寬度
+  margin-right: -50vw;
+}
+
+.breadcrumb {
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: $text-gray;
+  margin: 0;
+  padding: 10px 3rem;
+  margin-bottom: 20px;
+  border-bottom: 1px solid $neutral-300;
 }
 
 // 熱門分類標籤
@@ -81,6 +94,8 @@
 }
 
 .rearrange{
+  display: flex;
+  flex-shrink: 0;
   border-radius: 999rem;
   padding: 0.5rem;
 
@@ -90,6 +105,8 @@
     background-color: $primary-yellow;
 
     lucide-icon{
+      aspect-ratio: 1;
+      height: fit-content;
       color: white;
     }
   }
@@ -166,12 +183,4 @@ select{
   margin-top: 0.5rem;
   font-weight: bold;
   color: $semantic-orange;
-}
-
-// 分隔線
-hr {
-  border: 0;
-  border-top: 1px solid #eee;
-  width: 100%;
-  margin: 0.5rem 0;
 }

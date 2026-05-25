@@ -8,10 +8,11 @@ import {
         ChevronDown, CirclePile, School, MapPin} from 'lucide-angular';
 
 import { ProductCardComponent } from "../product-card/product-card.component";
+import { ManualComponent } from "../manual/manual.component";
 
 @Component({
   selector: 'app-homepage',
-  imports: [LucideAngularModule, ProductCardComponent],
+  imports: [LucideAngularModule, ProductCardComponent, ManualComponent],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.scss'
 })

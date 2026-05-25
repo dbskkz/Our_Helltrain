@@ -40,7 +40,7 @@ export class ProductListingComponent implements OnInit{
   // =========================================================
 
   category: string | null = '';
-  categoryName = '3C 產品';
+  categoryName = '全部商品';
 
   ngOnInit(): void {
 

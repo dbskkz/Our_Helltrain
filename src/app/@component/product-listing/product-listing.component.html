@@ -1,7 +1,12 @@
 <main class="content">
   <nav class="filter-panel">
-    <span class="breadcrumb">首頁 > {{ categoryName }}</span>
+    <div class="site-path">
+      <span class="breadcrumb">首頁 > {{ categoryName }}</span>
+    </div>
+
     <h1 class="category-name">{{ categoryName }}</h1>
+    <p> | 1234 件商品</p>
+
 
     <!-- 熱門分類 -->
     <div class="hot-categories">
@@ -18,7 +23,7 @@
       <!-- 排序 -->
       <li>
         <div class="rearrange" title="排序">
-          <lucide-icon [img]="ArrowUpDownIcon" size="18"></lucide-icon>
+          <lucide-icon [img]="ArrowUpDownIcon" size="24"></lucide-icon>
         </div>
       </li>
 
@@ -117,7 +122,7 @@
     </ul>
   </nav>
 
-  <hr>
+
 
   <app-product-card></app-product-card>
 </main>

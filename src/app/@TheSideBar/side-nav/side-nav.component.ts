@@ -63,7 +63,7 @@ export class SideNavComponent {
   // }
 
   // go back to the home page
-  isHomePage = "false";
+  isHomePage = false;
 
   goToHome(){
     this.router.navigate(['/home'])
