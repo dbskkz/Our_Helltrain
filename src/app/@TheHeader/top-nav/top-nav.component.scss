@@ -15,13 +15,13 @@ nav{
   top: 0;
   z-index: 1000;
 
-  padding: 1.5rem 0;
+  padding: 0.8rem 0;
 
 
   flex-wrap: nowrap; /* 強制不換行 */
   gap: 1rem;
-  background-color: $background-white;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  box-shadow: 0px 0px 15px rgba(71, 71, 71, 0.3);
 
   .logo{
     height: 1.5rem;
@@ -33,15 +33,23 @@ nav{
   }
 
   .menu{
+    position: relative;
+
     background-color: transparent;
     border: transparent;
     border-radius: 2px;
 
-    height: fit-content;
     width: fit-content;
+    height: fit-content;
+
     padding: 3px;
     margin-right: 2.5rem;
+
     color: rgba($text-black, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover{
       background-color: $primary-yellow;
@@ -52,6 +60,21 @@ nav{
 
     &:focus {
       outline: none;
+    }
+
+
+    input[type="checkbox"] {
+      position: absolute;
+
+      width: 100%;
+      height: 100%;
+
+      margin: 0;
+
+      opacity: 0; // 隱藏 checkbox
+      cursor: pointer;
+
+      z-index: 2;
     }
 
     lucide-icon {
@@ -74,3 +97,54 @@ nav{
   }
 }
 
+
+// 1. 遮罩層：讓背景變暗
+.sidebar-backdrop {
+  position: fixed;
+  top: 66px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 66px);
+  background-color: rgba(0, 0, 0, 0.4); // 半透明黑
+  z-index: 2000; // 低於 sidebar-container 但高於 nav
+  backdrop-filter: blur(2px); // 磨砂玻璃效果（選配）
+  animation: fadeIn 0.3s ease;
+}
+
+// 2. Sidebar 容器
+.sidebar-container {
+  position: fixed;
+  top: 66px;
+  left: 0;
+  width: 16rem; // 或你的 $sidebar-width
+  height: calc(100vh - 66px);
+  background-color: white;
+  z-index: 2001; // 確保在最頂層
+  // box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+
+  // 動態效果：從左邊滑入 + 淡入
+  animation: slideInLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+
+  // 讓內部的 app-side-nav 撐滿
+  app-side-nav {
+    display: block;
+    height: 100%;
+  }
+}
+
+// --- 動動畫定義 ---
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%); // 從畫面左邊外面進來
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

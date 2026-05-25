@@ -4,7 +4,7 @@
     <input type="text" placeholder="搜尋書籍、商品、分類或學校...">
   </div>
 
-  <div class="category-filter-wrapper">
+  <!-- <div class="category-filter-wrapper">
     <div class="filter-item type-filter">
       <lucide-icon [img]="ShapesIcon" class="icon" size="16"></lucide-icon>
       <select><option>選擇分類</option></select>
@@ -14,7 +14,105 @@
       <lucide-icon [img]="MapPinIcon" class="icon" size="16"></lucide-icon>
       <select><option>選擇地區</option></select>
     </div>
+  </div> -->
+
+  <div class="filter-item" (click) = "toggleFilter()">
+    <lucide-icon [img]="FilterIcon" class="icon" size="17"></lucide-icon>
+    <p>更多篩選條件</p>
   </div>
 
+  @if(isFilterOpen) {
+  <div class="modal-overlay" (click)="isFilterOpen = false"></div>
+
+  <div class="filter-modal">
+    <div class="filter-title">
+      <h5>更多搜尋條件</h5>
+      <div class="close-btn" (click)="isFilterOpen = false">✕</div>
+    </div>
+
+    <div class="filter-body">
+      <div class="filter-section">
+        <p class="section-label">價格範圍</p>
+        <div class="price-inputs">
+          <input type="number" placeholder="最低價格" class="price-input" [(ngModel)]="filterForm.minPrice">
+          <span class="divider">-</span>
+          <input type="number" placeholder="最高價格" class="price-input" [(ngModel)]="filterForm.maxPrice">
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <p class="section-label">商品類型</p>
+
+        <div class="category-grid">
+          @for (item of filterForm.categories; track $index) {
+            <label class="chip"><input type="checkbox" [(ngModel)]="item.selected">{{item.label}}</label>
+          }
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <p class="section-label">商品新舊程度</p>
+        <select class="form-select" aria-label="Default select example">
+          <option selected>商品狀態</option>
+          <option value="1">全新</option>
+          <option value="2">近全新</option>
+          <option value="3">輕度使用</option>
+          <option value="3">中度使用</option>
+          <option value="3">重度使用</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+         <p class="section-label">年級</p>
+         <!-- TODO: 學士 ( 大一 大二 大三 大四以上 ) 碩士 博士 不分年級-->
+          <div class="category-grid">
+          @for (item of filterForm.degree; track $index) {
+            <label class="chip"><input type="checkbox" [(ngModel)]="item.selected">{{item.label}}</label>
+            @if (item.label == "學士" && item.selected) {
+              @for (banana of item.children; track $index) {
+                <label class="chip"><input type="checkbox" [(ngModel)]="banana.selected">{{banana.label}}</label>
+              }
+            }
+          }
+          </div>
+        </div>
+
+      <div class="filter-section">
+        <p class="section-label">適用學群</p>
+         <select class="form-select" aria-label="Default select example">
+          <option selected>適用學群</option>
+          @for (item of filterForm.academic; track $index) {
+            <option [(ngModel)]="item.value">{{item.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-section">
+         <p class="section-label">圖片搜尋</p>
+         <div class="upload-area">
+            <lucide-icon [img]="UploadIcon"></lucide-icon>
+            <p>選擇檔案或將檔案拖放到這裡</p>
+         </div>
+      </div>
+<!--
+      <div class="filter-section">
+         <p class="section-label">關鍵字</p>
+         <input type="text">
+      </div> -->
+
+    </div>
+
+    <div class="filter-footer">
+      <button class="btn-reset"
+      (click)="resetFilters()"
+      type="button"
+      class="btn btn-light reset">取消</button>
+      <button class="btn-submit"
+      (click)="applyFilters()"
+      type="button"
+      class="btn btn-light">套用篩選設定</button>
+    </div>
+  </div>
+}
 </div>
 

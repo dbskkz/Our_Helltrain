@@ -1,12 +1,13 @@
 <div class="father">
 
-  <app-top-nav (menuClick)="mySidenav.toggle()" class="header"></app-top-nav>
-
+  <!-- <app-top-nav (menuClick)="mySidenav.toggle()" class="header"></app-top-nav> -->
+  <app-top-nav  class="header"></app-top-nav>
+  <app-sub-bar></app-sub-bar>
   <div class="main-content" >
-    <app-side-nav #mySidenav class="variable"></app-side-nav>
+    <!-- <app-side-nav #mySidenav class="variable"></app-side-nav>
     @if (mySidenav.isOpen) {
       <app-side-nav #mySidenav></app-side-nav>
-    }
+    } -->
 
     <main>
       <router-outlet></router-outlet>

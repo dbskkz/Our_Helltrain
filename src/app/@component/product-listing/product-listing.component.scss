@@ -13,58 +13,98 @@
   outline: none;
 }
 
-// 側邊欄/篩選區塊
 .filter-panel {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
 
-  .category-name {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: $text-black;
-  }
 
-  .breadcrumb {
-    font-weight: 300;
-    font-size: 0.9rem;
-    color: $text-gray;
-  }
+
+.category-name {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: $text-black;
+}
+
+.site-path{
+  width: 100vw;          // 寬度設為螢幕寬度
+  position: relative;
+
+  // left: 50%;             // 移至畫面中點
+  // right: 50%;
+  // margin-left: -50vw;    // 往左拉回螢幕一半的寬度
+  // margin-right: -50vw;
+}
+
+.list-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breadcrumb {
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: $text-gray;
+  margin: 0;
+  padding: 10px 0;
+  gap: 0.5rem;
+  letter-spacing: 10%;
+}
+
+.sort-button {
+  display: flex;
+  justify-content: space-between; /* 讓文字在左，圖示在右 */
+  align-items: center;
+  width: 200px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  position: absolute;
+  list-style: none;
+  border: 1px solid #ccc;
+  width: 200px;
+  background: #fff;
 }
 
 // 熱門分類標籤
-.hot-categories {
-  h5 {
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-    color: $text-black;
-  }
+// .hot-categories {
+//   h5 {
+//     font-size: 1rem;
+//     margin-bottom: 0.8rem;
+//     color: $text-black;
+//   }
 
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    list-style: none;
-    padding: 0;
+//   ul {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 0.6rem;
+//     list-style: none;
+//     padding: 0;
 
-    .btn-tag {
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      border: 1px solid #ddd;
-      background: #fff;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: $text-gray;
+//     .btn-tag {
+//       padding: 0.4rem 1rem;
+//       border-radius: 20px;
+//       border: 1px solid #ddd;
+//       background: #fff;
+//       cursor: pointer;
+//       transition: all 0.2s ease;
+//       color: $text-gray;
 
-      &:hover {
-        background-color: $background-yellow;  // 原本灰 → 淺黃，保持風格統一
-        border-color: transparent;
-        color: $text-black;
-      }
-    }
-  }
-}
+//       &:hover {
+//         background-color: $background-yellow;  // 原本灰 → 淺黃，保持風格統一
+//         border-color: transparent;
+//         color: $text-black;
+//       }
+//     }
+//   }
+// }
 
 // 篩選清單群組
 .filter-groups {
@@ -81,6 +121,8 @@
 }
 
 .rearrange{
+  display: flex;
+  flex-shrink: 0;
   border-radius: 999rem;
   padding: 0.5rem;
 
@@ -90,6 +132,8 @@
     background-color: $primary-yellow;
 
     lucide-icon{
+      aspect-ratio: 1;
+      height: fit-content;
       color: white;
     }
   }
@@ -168,10 +212,7 @@ select{
   color: $semantic-orange;
 }
 
-// 分隔線
-hr {
-  border: 0;
-  border-top: 1px solid #eee;
-  width: 100%;
-  margin: 0.5rem 0;
+lucide-icon{
+  display: flex;
+  align-items: center;
 }
