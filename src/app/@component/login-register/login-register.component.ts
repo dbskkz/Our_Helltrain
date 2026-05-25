@@ -10,6 +10,8 @@ import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
 import { Router } from '@angular/router';
+import { SchoolDataService } from '../../@Services/school-data.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-register',
@@ -23,7 +25,7 @@ import { Router } from '@angular/router';
 export class LoginRegisterComponent implements OnInit{
 
   // 注入 Material 的 Dialog 服務
-  constructor(private dialog: MatDialog, private router: Router) {}
+  constructor(private dialog: MatDialog, private router: Router, private schoolService: SchoolDataService) {}
 
   isRegister: boolean = false; //是否為註冊頁面
   userEmail: string = ''; //輸入的 Email
@@ -40,18 +42,32 @@ export class LoginRegisterComponent implements OnInit{
   hidePassword = signal<boolean>(true);
   hideConfirmPassword = signal<boolean>(true);
 
-   /* 學校的下拉選單 */
-  schoolOptions: string[] = ['台灣大學', '政治大學', '清華大學', '陽明交通大學', '成功大學', '中山大學', '高雄大學'];  // 1. 學校的資料庫來源
-  filteredSchools!: Observable<string[]>| undefined;  // 2. 負責動態過濾的水管
+
+
+  // 負責動態過濾學校的水管
+  filteredSchools!: Observable<string[]>| undefined;
 
   ngOnInit(): void {
     this.initRegisterForm(); // 呼叫註冊箱子初始化
     this.initLoginForm();  // 呼叫登入箱子初始化
 
-    // 綁定學校過濾管線
-    this.filteredSchools = this.setupFilter(
-      this.registerForm.get('school') as FormControl,
-      this.schoolOptions);
+    // 🎯 核心：直接向大水庫要「全台不重複純學校管線」
+    const registerSchoolCtrl = this.registerForm.get('school') as FormControl;
+
+    if (registerSchoolCtrl) {
+      this.filteredSchools = registerSchoolCtrl.valueChanges.pipe(
+        // 確保剛進頁面時，拿目前的值（空字串）先觸發一次過濾，倒出所有學校
+        startWith(registerSchoolCtrl.value || ''),
+        map(value => {
+          // 向公車大水庫拿全台 130 多所學校名單
+          const allTaiwanSchools = this.schoolService.allFlattenedSchools();
+
+          // 拿著畫面上使用者打的字，進行【台/臺】通用模糊搜尋
+          return this._filter(value || '', allTaiwanSchools);
+        })
+      );
+    }
+
   }
 
   // (註冊箱子)把所有的欄位通通寫成變數
@@ -69,6 +85,16 @@ export class LoginRegisterComponent implements OnInit{
   });
   }
 
+  // 萬能過濾器（直接複製你寫好的繁簡通用版）
+  private _filter(value: string, options: string[]): string[] {
+    let filterValue = value.toLowerCase().replace(/台/g, '臺');
+    return options.filter(opt => {
+      const optionValue = opt.toLowerCase();
+      return optionValue.includes(filterValue) ||
+             optionValue.replace(/臺/g, '台').includes(value.toLowerCase());
+    });
+  }
+
   //登入箱子
   private initLoginForm() {
   this.loginForm = new FormGroup({
@@ -78,19 +104,7 @@ export class LoginRegisterComponent implements OnInit{
   });
   }
 
-  // 處理學校關鍵字過濾的專屬水管
-  private setupFilter(control: FormControl, options: string[]): Observable<string[]> {
-    return control.valueChanges.pipe(
-      startWith(control.value || ''),
-      map(value => this._filter(value, options))
-    );
-  }
 
-  // 負責執行比對的邏輯(學校關鍵字)
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return options.filter(opt => opt.toLowerCase().includes(filterValue));
-  }
 
   // 自訂驗證器：負責檢查兩次密碼是否一致
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null{
@@ -192,8 +206,23 @@ export class LoginRegisterComponent implements OnInit{
       // Demo 測試用：如果是 455328 就過關
       if (this.verificationCode === '455328') {
         this.currentStep = 3; // 直接進入成功畫面
+        Swal.fire({
+          title: '驗證成功！',
+          text: '歡迎加入二手GO!',
+          icon: 'success',
+          confirmButtonColor: '#ffb74d', // 配合你們按鈕的鵝黃色
+          timer: 3000,
+          showConfirmButton: false
+        });
       } else {
-        alert('驗證碼錯誤，請重新輸入！');
+        Swal.fire({
+          icon: 'error',               // 紅色驚嘆號/打叉動畫
+          title: '驗證失敗...',         // 大標題
+          text: '您輸入的驗證碼不正確，請重新確認郵件！', // 內容細節
+          confirmButtonText: '重新輸入', // 把按鈕文字變親切
+          confirmButtonColor: '#e57373',
+          // footer: '<a href="#">沒收到驗證信？點我重新發送</a>' // 💡 未來有需要也可以加底部的點選連結喔！
+        });
         this.verificationCode = ''; // 清空讓使用者重打
       }
     }
@@ -228,7 +257,12 @@ export class LoginRegisterComponent implements OnInit{
 
   // 點擊「重新發送驗證信」
   resendEmail(){
-    alert('驗證信已重新發送，請檢查您的學校信箱！');
+    Swal.fire({
+  title: "驗證信已重新發送，請檢查您的學校信箱！",
+  icon: "success",
+  confirmButtonColor: '#5E9759',
+  draggable: true
+  });
     // 這裡未來可以放呼叫後端重發信件的 API
   }
 

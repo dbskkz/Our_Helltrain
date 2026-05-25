@@ -1,7 +1,14 @@
+
 <nav>
-  <button (click) = "onMenuBtnClick()" class="menu">
+  <!-- <button (click) = "onMenuBtnClick()" class="menu"> -->
+  <button class="menu">
+    <input type="checkbox"
+    [checked]="isSidebarOpen"
+    (click)="sidebarSwitch($event)">
     <lucide-icon [img]="MenuIcon"></lucide-icon>
   </button>
+
+
 
   <!-- <h3 class="logo">logo</h3> -->
    <img src="img/logo改版.png"
@@ -21,4 +28,9 @@
   }
 
 </nav>
-
+@if (isSidebarOpen) {
+  <div class="sidebar-backdrop" (click)="sidebarSwitch($event)"></div>
+  <div class="sidebar-container">
+    <app-side-nav></app-side-nav>
+  </div>
+}

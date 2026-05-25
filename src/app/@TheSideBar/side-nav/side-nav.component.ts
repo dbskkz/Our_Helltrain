@@ -3,9 +3,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import {
-        LucideAngularModule, Home, Book, Box,
-        Smartphone, Handbag, Lamp, List,
-        ChevronDown, CirclePile} from 'lucide-angular';
+        LucideAngularModule, Home, Book, Box, MoonStar,
+        Smartphone, Handbag, Lamp, List, SmilePlus,
+        ChevronDown, CirclePile, School, MapPin} from 'lucide-angular';
 
 @Component({
   selector: 'app-side-nav',
@@ -29,6 +29,10 @@ export class SideNavComponent {
   readonly ListIcon = List;
   readonly ChevronDownIcon = ChevronDown;
   readonly CirclePileIcon = CirclePile;
+  readonly SmilePlusIcon = SmilePlus;
+  readonly SchoolIcon = School;
+  readonly MapPinIcon = MapPin;
+  readonly MoonStarIcon = MoonStar;
 
   // 宣告商品種類
   categories= [
@@ -38,7 +42,6 @@ export class SideNavComponent {
     { icon: Handbag, label: "生活用品", value: 'life' },
     { icon: Smartphone, label: "3C電子", value: 'tech' },
     { icon: Lamp, label: "家具家電", value: 'furniture' },
-    { icon: List, label: "其他", value: 'others' }
   ];
 
   // 被選擇的商品種類
@@ -52,15 +55,15 @@ export class SideNavComponent {
     // TODO: 過濾邏輯
   }
 
-  // Switch
-  isOpen = false;
+  // 側邊欄的開關
+  // isOpen = false;
 
-  toggle() {
-    this.isOpen = !this.isOpen;
-  }
+  // toggle() {
+  //   this.isOpen = !this.isOpen;
+  // }
 
   // go back to the home page
-  isHomePage = "false";
+  isHomePage = false;
 
   goToHome(){
     this.router.navigate(['/home'])

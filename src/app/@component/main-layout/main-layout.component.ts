@@ -6,12 +6,12 @@ import { LucideAngularModule, Menu } from 'lucide-angular';
 import { SearchBarComponent } from "../../@TheHeader/search-bar/search-bar.component";
 import { UserActionsComponent } from "../../@TheHeader/user-actions/user-actions.component";
 import { TopNavComponent } from "../../@TheHeader/top-nav/top-nav.component";
-import { SideNavComponent } from "../../@TheSideBar/side-nav/side-nav.component";
 import { FooterComponent } from '../../@TheFooter/footer/footer.component';
+import { SubBarComponent } from "../../@TheHeader/sub-bar/sub-bar.component";
 
 @Component({
   selector: 'app-main-layout',
-  imports: [LucideAngularModule, RouterOutlet,TopNavComponent, SideNavComponent,FooterComponent],
+  imports: [LucideAngularModule, RouterOutlet, TopNavComponent, FooterComponent, SubBarComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
