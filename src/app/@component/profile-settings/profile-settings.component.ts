@@ -10,6 +10,8 @@ import { map, Observable, startWith } from 'rxjs';
 import { LucideAngularModule, PencilLine, BookUser, ClipboardPenLine, LockKeyhole } from 'lucide-angular';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { SchoolDataService } from '../../@Services/school-data.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile-settings',
@@ -23,7 +25,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileSettingsComponent {
 
-  constructor(private fb: FormBuilder,private snackBar: MatSnackBar, private router: Router) {}
+  constructor(private fb: FormBuilder,private snackBar: MatSnackBar, private router: Router, private schoolService: SchoolDataService) {}
 
   readonly pencilIcon = PencilLine; //鉛筆icon
   readonly bookUser = BookUser; //個人資料icon
@@ -41,9 +43,9 @@ export class ProfileSettingsComponent {
   tradeNumber: number = 52;  //交易
   onTheShelves: number = 37;  //目前上架
 
-  school: string = '台灣大學'; //學校
+  school: string = '輔仁大學'; //學校
   department: string = '醫學系'; //科系
-  area: string = '台北'; //地區
+  area: string = '新北市'; //地區
   isEditingBasic: boolean = false; // 控制基本資訊是否可編輯
 
   email: string = 'apple@gmail.com';
@@ -55,9 +57,7 @@ export class ProfileSettingsComponent {
 
   // 密碼相關的 Control
   passwordForm!: FormGroup;
-  // oldPasswordControl = new FormControl('');
-  // newPasswordControl = new FormControl('');
-  // confirmPasswordControl = new FormControl('');
+
   hideOldPassword = signal(true);
   hideNewPassword = signal(true);
   hideConfirmPassword = signal(true);
@@ -67,10 +67,6 @@ export class ProfileSettingsComponent {
   deptControl = new FormControl(this.department);
   areaControl = new FormControl(this.area);
 
-  // 1. 這是你要過濾的「原始資料來源」負責存放所有大學的名字（資料庫）
-  schoolOptions: string[] = ['台灣大學', '政治大學', '清華大學', '陽明交通大學'];
-  deptOptions:  string[] = ['醫學系', '室內設計系', '企業管理', '商業管理'];
-  areaOptions: string[] =  ['台北', '台中', '台南', '苗栗'];
 
   // 2. 這是畫面顯示用的「動態過濾後的清單」 各自的動態過濾水管 (Observable)
   filteredSchools: Observable<string[]> | undefined;
@@ -93,12 +89,55 @@ export class ProfileSettingsComponent {
       validators: this.passwordMatchValidator // 👈 自訂比對大門
     });
 
-  // 學校、科系、地區管線
-  this.filteredSchools = this.setupFilter(this.schoolControl, this.schoolOptions);
-  this.filteredDepts = this.setupFilter(this.deptControl, this.deptOptions);
-  this.filteredAreas = this.setupFilter(this.areaControl, this.areaOptions);
+// 【地區】過濾水管：直接向大水庫拿最外層的所有縣市
+    this.filteredAreas = this.areaControl.valueChanges.pipe(
+      startWith(this.areaControl.value || ''),
+      map(value => {
+        const regions = this.schoolService.allRegions();
+        return this._filter(value || '', regions);
+      })
+    );
 
-  }
+    // 【學校】過濾水管：當地區改變時，動態跟 Service 要該地區的學校來過濾
+    this.filteredSchools = this.schoolControl.valueChanges.pipe(
+      startWith(this.schoolControl.value || ''),
+      map(value => {
+        // 修正點：因為被 disable 時 .value 會拿不到，改用 .getRawValue() 確保強制拿到目前的值！
+        const currentRegion = this.areaControl.getRawValue();
+        const schoolsInRegion = this.schoolService.getSchoolsByRegion(currentRegion);
+        return this._filter(value || '', schoolsInRegion);
+      })
+    );
+
+    // 【科系】過濾水管：當學校改變時，動態跟 Service 要該縣市該校的科系來過濾
+    this.filteredDepts = this.deptControl.valueChanges.pipe(
+      startWith(this.deptControl.value || ''),
+      map(value => {
+        const currentRegion = this.areaControl.getRawValue();
+        const currentSchool = this.schoolControl.getRawValue();
+        const deptsInSchool = this.schoolService.getDepartmentsBySchool(currentRegion, currentSchool);
+        return this._filter(value || '', deptsInSchool);
+      })
+    );
+
+    setTimeout(() => {
+
+      // 🔑 關鍵：暫時解除封印、強迫通水、再鎖回去！
+      this.areaControl.enable({ emitEvent: false });
+      this.schoolControl.enable({ emitEvent: false });
+      this.deptControl.enable({ emitEvent: false });
+
+      // 發射更新事件讓 Autocomplete 水管通水
+      this.areaControl.updateValueAndValidity({ emitEvent: true });
+      this.schoolControl.updateValueAndValidity({ emitEvent: true });
+      this.deptControl.updateValueAndValidity({ emitEvent: true });
+
+      // 恢復一進網頁時的預設禁用狀態
+      this.areaControl.disable({ emitEvent: false });
+      this.schoolControl.disable({ emitEvent: false });
+      this.deptControl.disable({ emitEvent: false });
+    }, 300); // 延遲 300 毫秒，等 JSON 下載完畢後自動觸發
+    }
 
   // 密碼即時比對驗證器（從註冊頁的核心邏輯完美搬遷）
   private passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -124,19 +163,21 @@ export class ProfileSettingsComponent {
     }
   }
 
-  private setupFilter(control: FormControl, options: string[]): Observable<string[]>{
-    // startWith 確保一進頁面，即使沒打字也會根據「預設值」執行一次過濾
-    return control.valueChanges.pipe(
-      startWith(control.value || ''),
-                    //_filter: 負責執行比對邏輯
-      map(value =>this._filter(value, options))
-    )
-  }
 
- // 這裡的 options 參數，接收的就是上面傳進來的 this.schoolOptions
+ // 萬能過濾器：支援【台/臺】繁簡通用模糊搜尋
   private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return options.filter(opt => opt.toLowerCase().includes(filterValue));
+    const filterValue = value.toLowerCase().replace(/台/g, '臺');
+
+    // 2. 拿著校正後的「臺」字眼去跟資料庫做比對
+    return options.filter(opt => {
+      const optionValue = opt.toLowerCase();
+
+      // 💡 雙向防呆：
+      // 條件 A: 資料庫的「國立臺灣大學」包含使用者打的「台灣大學」(轉成臺灣大學) ➔ 成功
+      // 條件 B: 萬一未來有資料庫寫簡體「台」，使用者打繁體「臺」也包含 ➔ 成功
+      return optionValue.includes(filterValue) ||
+             optionValue.replace(/臺/g, '台').includes(value.toLowerCase());
+    });
   }
 
 
@@ -152,11 +193,11 @@ export class ProfileSettingsComponent {
 
       // 1. 檢查檔案大小 (例如不能超過 2MB)
       if (file.size > 2 * 1024 * 1024) {
-        this.snackBar.open('檔案太大囉，請選擇 2MB 以下的圖片', '知道了', {
-        duration: 3000, // 3秒後自動消失
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-orange-snackbar'] // 關鍵：套用剛才寫的 CSS
+        Swal.fire({
+          title: "檔案太大囉，請選擇2MB以下的圖片!",
+          icon: "warning",
+          confirmButtonColor: '#FB831D',
+          draggable: true
         });
         console.log('檔案太大囉，請選擇');
         return;
@@ -253,12 +294,13 @@ export class ProfileSettingsComponent {
     } else {
       // 前端僅做「基本檢查」：確保兩次新密碼一樣
       if (this.passwordForm.invalid) {
-        this.snackBar.open('請檢查密碼格式，或確認兩次新密碼一致', '知道了', {
-           duration: 3000,
-           horizontalPosition: 'center',
-           verticalPosition: 'bottom',
-            panelClass: ['custom-orange-snackbar']
-           });
+        Swal.fire({
+          title: "請檢查密碼格式，或確認兩次新密碼一致!",
+          icon: "warning",
+          confirmButtonText: '知道了',
+          confirmButtonColor: '#FB831D',
+          draggable: true
+        });
         this.isEditingPassword = true; // 保持編輯狀態
         return;
       }
