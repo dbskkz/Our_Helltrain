@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PaginationService {
-  currentPage = 1;
-  totalPages = 1;
-  pageNumbers: number[] = [];
+  currentPage = 1; // 目前所在頁數，預設為第一頁
+  totalPages = 1; // 總頁數
+  pageNumbers: number[] = []; // 頁碼陣列，通常拿來話按鈕
 
   init(total: number, pageSize: number) {
     this.currentPage = 1;

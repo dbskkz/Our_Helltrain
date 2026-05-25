@@ -7,6 +7,13 @@
     </div>
 
     <header class="list-header">
+        <!-- <div class="subtitle">
+          <h5>
+            <mark>
+              {{ categoryName }}
+            </mark>
+          </h5>
+        </div> -->
       <h1 class="category-name">{{ categoryName }}</h1>
 
       <!-- 排序方式 -->
@@ -149,7 +156,21 @@
 
 
 
-  <app-product-card></app-product-card>
-  <p>頁碼</p>
+  <app-product-card ></app-product-card>
+
+   <!-- Pagination -->
+  <div class="pagination">
+    <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+      <!-- <lucide-icon [name]="prevIcon"></lucide-icon> -->
+    </button>
+    @for (page of pagination.pageNumbers; track page) {
+      <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    }
+    <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+      <!-- <lucide-icon [name]="nextIcon"></lucide-icon> -->
+    </button>
+  </div>
 </main>
 

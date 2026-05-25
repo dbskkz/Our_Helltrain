@@ -28,6 +28,27 @@
   color: $text-black;
 }
 
+// .subtitle{
+//   display: flex;
+//   justify-content: space-around;
+//   margin: 3rem 0 1.5rem 0;
+
+//   h5{
+//     font-size: 2rem;
+//     font-weight: 700;
+//     color: $text-gray;
+//     letter-spacing: 5%;
+
+//     mark {
+//       display: inline-block;
+//       line-height: 0em;
+//       padding-bottom: 0.5em;
+//       background-color: $primary-yellow-light;
+//     }
+//   }
+
+// }
+
 .site-path{
   width: 100vw;          // 寬度設為螢幕寬度
   position: relative;
@@ -58,19 +79,49 @@
   display: flex;
   justify-content: space-between; /* 讓文字在左，圖示在右 */
   align-items: center;
-  width: 200px;
+  width: 10rem;
   padding: 8px 12px;
-  border: 1px solid #ccc;
+  border: transparent;
+  border-radius: $border-radius-tiny;
   background: white;
   cursor: pointer;
+
+  &:hover{
+    background-color: $primary-yellow;
+  }
 }
 
 .dropdown-content {
   position: absolute;
-  list-style: none;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid #ccc;
-  width: 200px;
-  background: #fff;
+  border-radius: 8px;
+  min-width: 120px;
+  width: 10rem;
+  z-index: 100;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    text-align: center;
+
+    &:hover {
+      color: $text-black;
+      background-color: $background-yellow;
+    }
+  }
 }
 
 // 熱門分類標籤

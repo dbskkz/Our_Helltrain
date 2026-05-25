@@ -1,24 +1,11 @@
 <section class="product">
-
-
   <section class="product-list">
-    @for (item of products; track item.title) {
+    @for (item of displayedProducts; track item.title) {
       <div class="card">
         <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="card-img-top" alt="...">
         <div class="card-body">
           <h6 class="title">{{ item.title }}</h6>
           <h5 class="price">${{ item.price }}</h5>
-
-          <!-- <div class="meta-info">
-            <span class="location">
-              <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
-              {{ item.location }} · {{item.university}}
-            </span>
-
-            <span class="time">
-              {{ item.time }}
-            </span>
-          </div> -->
 
           <div class="meta-info">
             <span class="location">
@@ -26,7 +13,6 @@
               {{ item.location }} · {{ item.time }}
             </span>
           </div>
-
 
           <div class="user-info">
             <div class="picture"></div>

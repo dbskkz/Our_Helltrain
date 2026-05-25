@@ -1,14 +1,31 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ActivatedRoute } from '@angular/router';
+import { PaginationService } from '../../@Services/pageination.service';
 
 // 素材庫
 import { LucideAngularModule, ArrowUpDown,Home} from 'lucide-angular';
 import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { ProductCardComponent } from "../product-card/product-card.component";
+
+export interface Product {
+  title: string;
+  price: number;
+  time: string;
+  imgUrl: string;
+  location: string;
+  quantity?: number;
+  user: {
+    userName: string;
+    userImg: string;
+    university: string;
+    department: string;
+    location: string[];
+  };
+}
 
 @Component({
   selector: 'app-product-listing',
@@ -24,7 +41,8 @@ export class ProductListingComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
-    private uiBehavior:UiBehaviorService
+    private uiBehavior:UiBehaviorService,
+    public pagination:PaginationService
   ) {}
 
 
@@ -52,16 +70,21 @@ export class ProductListingComponent implements OnInit{
 
       // TODO:
       // this.loadProducts(this.category);
+      this.loadProducts();
 
     });
 
   }
 
+  loadProducts() {
+    // 假設這裡拿到了 allProducts
+    // 2. 初始化分頁 Service
+    this.pagination.init(this.allProducts.length, this.PAGE_SIZE);
+  }
 
   // =========================================================
   // FILTER PANEL OPEN/CLOSE
   // =========================================================
-
 
   panelState = {
     price: false,
@@ -88,7 +111,7 @@ export class ProductListingComponent implements OnInit{
 
 
   // =========================================================
-  // FILTER VALUES
+  // PRICE FILTER
   // =========================================================
 
 
@@ -97,12 +120,6 @@ export class ProductListingComponent implements OnInit{
     priceHighValue: 10000,
     sellerGrade:    5
   } as const;
-
-
-  // =========================================================
-  // PRICE FILTER
-  // =========================================================
-
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
   priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
@@ -159,11 +176,8 @@ export class ProductListingComponent implements OnInit{
   }
 
   // =========================================================
-  // BUTTON LABEL GETTERS
+  // SLIDER BUTTON LABEL GETTERS
   // =========================================================
-
-
-
 
   get priceLabel(): string {
     const isDefault = this.priceValue === this.DEFAULT_FILTERS.priceValue
@@ -202,6 +216,43 @@ export class ProductListingComponent implements OnInit{
     return parts.join('、');
   }
 
+// =========================================================
+  // PAGINATION（每頁最多 30 筆）
+  // =========================================================
+
+  readonly PAGE_SIZE = 30;
+  currentPage = 1;
+
+  get totalPages(): number {
+    return Math.ceil(this.allProducts.length / this.PAGE_SIZE) || 1;
+  }
+
+  /** 當頁要傳給 product-card 的商品 */
+  get pagedProducts(): Product[] {
+    const start = (this.pagination.currentPage - 1) * this.PAGE_SIZE;
+    return this.allProducts.slice(start, start + this.PAGE_SIZE);
+  }
+
+  /** 顯示的頁碼陣列，最多顯示 5 個頁碼按鈕 */
+  get pageNumbers(): number[] {
+    const total  = this.totalPages;
+    const current = this.currentPage;
+    const maxBtn = 5;
+
+    let start = Math.max(1, current - Math.floor(maxBtn / 2));
+    let end   = start + maxBtn - 1;
+
+    if (end > total) {
+      end   = total;
+      start = Math.max(1, end - maxBtn + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  prevPage() { if (this.pagination.prevPage()) this.loadProducts(); }
+  nextPage() { if (this.pagination.nextPage()) this.loadProducts(); }
+  goToPage(page: number) { if (this.pagination.goToPage(page)) this.loadProducts(); }
 
   // =========================================================
   // reset
@@ -219,8 +270,9 @@ export class ProductListingComponent implements OnInit{
     this.cities.forEach(c => c.selected = false);
     this.schools.forEach(s => s.selected = false);
     this.department.forEach(d => d.selected = false);
+    this.currentPage = 1;
+    this.pagination.goToPage(1);
   }
-
 
   // =========================================================
   // 假資料
@@ -285,77 +337,43 @@ export class ProductListingComponent implements OnInit{
 
   ];
 
+
   // products = [
   //   {
   //     title: '極簡黑後背包',
   //     price: 300,
-  //     university: '清大',
-  //     location: '新竹',
   //     time: '2小時前',
-  //     category: '生科系',
   //     imgUrl: 'assets/bag.jpg',
-  //     userImg: 'assets/avatar.jpg'
-  //   },
-  //   {
-  //     title: '極簡黑後背包',
-  //     price: 300,
-  //     university: '清大',
   //     location: '新竹',
-  //     time: '2小時前',
-  //     category: '生科系',
-  //     imgUrl: 'assets/bag.jpg',
-  //     userImg: 'assets/avatar.jpg'
+  //     user:
+  //       {
+  //         userName: '生科吉娃娃',
+  //         userImg: 'assets/avatar.jpg',
+  //         university: '清大',
+  //         department: '生科系',
+  //         location: ['新竹','高雄']
+  //       }
   //   },
-  //   {
-  //     title: '極簡黑後背包',
-  //     price: 300,
-  //     university: '清大',
-  //     location: '新竹',
-  //     time: '2小時前',
-  //     category: '生科系',
-  //     imgUrl: 'assets/bag.jpg',
-  //     userImg: 'assets/avatar.jpg'
-  //   },
-  //   {
-  //     title: '極簡黑後背包',
-  //     price: 300,
-  //     university: '清大',
-  //     location: '新竹',
-  //     time: '2小時前',
-  //     category: '生科系',
-  //     imgUrl: 'assets/bag.jpg',
-  //     userImg: 'assets/avatar.jpg'
-  //   },
-  //   {
-  //     title: '極簡黑後背包',
-  //     price: 300,
-  //     university: '清大',
-  //     location: '新竹',
-  //     time: '2小時前',
-  //     category: '生科系',
-  //     imgUrl: 'assets/bag.jpg',
-  //     userImg: 'assets/avatar.jpg'
-  //   },
-  //   // ... 更多資料
+
   // ];
 
-
-  products = [
+  /** 所有商品（未來由 API 取得）*/
+  allProducts: Product[] = [
     {
       title: '極簡黑後背包',
       price: 300,
       time: '2小時前',
       imgUrl: 'assets/bag.jpg',
       location: '新竹',
-      user:
-        {
-          userName: '生科吉娃娃',
-          userImg: 'assets/avatar.jpg',
-          university: '清大',
-          department: '生科系',
-          location: ['新竹','高雄']
-        }
+      quantity: 1,
+      user: {
+        userName: '生科吉娃娃甘霖',
+        userImg: 'assets/avatar.jpg',
+        university: '清大',
+        department: '生科系',
+        location: ['新竹', '高雄']
+      }
     },
-
+    // ... 更多商品由 API 提供
   ];
 }
