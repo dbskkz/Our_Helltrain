@@ -7,15 +7,12 @@ import { provideHttpClient } from '@angular/common/http';
 
 
 export const appConfig: ApplicationConfig = {
-<<<<<<< HEAD
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideHttpClient()]
-=======
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(),
     provideSweetAlert2({
         // Optional configuration
         fireOnInit: false,
         dismissOnDestroy: true,
       }),]
->>>>>>> 2c80a499e7a4b2d0244074669a7129579bf1d9eb
 };
