@@ -24,30 +24,6 @@ body {
 }
 
 
-.custom-orange-snackbar {
-  .mdc-snackbar__surface {
-    background-color: $text-price !important; // 妳的棕色變數 $text-price
-    border-radius: 8px !important;
-  }
-
-  .mdc-snackbar__label {
-    color: white !important;
-  }
-
-  // --- 針對「知道了」按鈕改色 ---
-  .mat-mdc-snack-bar-action {
-    // 這裡強制修改按鈕內的 label 文字顏色
-    .mdc-button__label {
-      color: #F7D175 !important; // 換成妳的主色黃，這樣在棕色背景上會很美！
-      font-weight: bold;
-    }
-
-    // 如果妳想連按鈕的 ripple (點擊水波紋) 顏色都改掉
-    --mat-mdc-snack-bar-button-color: #F7D175;
-  }
-}
-
-
 // NGX-SLIDER 主色覆寫
 .ngx-slider {
   .ngx-slider-selection {
