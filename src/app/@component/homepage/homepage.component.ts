@@ -73,7 +73,7 @@ categories = [
   @ViewChild('categoryScroll')
   categoryScroll!: ElementRef;
 
-  isLoggin = false;
+
 
   scrollLeft() {
     this.categoryScroll.nativeElement.scrollBy({

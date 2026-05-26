@@ -17,7 +17,9 @@
       <h1 class="category-name">{{ categoryName }}</h1>
 
       <div class="sort-container">
-        <button class="sort-button" (click)="togglePanel($event, 'sort')">
+        <button class="sort-button"
+        (click)="togglePanel($event, 'sort')"
+        [class.active]="panelState.sort">
           <span>排序依據</span>
           <span class="material-symbols-outlined">sort</span>
         </button>
@@ -35,8 +37,10 @@
     <!-- 篩選列：篩選按鈕 + 已選 tags 同一行 -->
     <div class="filter-row">
 
-      <button class="fab-filter" (click)="togglePanel($event, 'filter')">
-        <lucide-icon [name]="XIcon" size="16"></lucide-icon>
+      <button class="fab-filter"
+       (click)="togglePanel($event, 'filter')"
+       [class.active]="activeFilters.length > 0">
+        <span class="material-symbols-outlined">tune</span>
         篩選
       </button>
 
@@ -50,7 +54,7 @@
       }
 
       @if (activeFilters.length > 0) {
-        <button class="tag-clear-all" (click)="resetFilters()">清除全部</button>
+        <button class="tag-clear-all" (click)="clearAllFilters($event)">清除全部</button>
       }
 
     </div>
@@ -134,13 +138,16 @@
 
     <!-- 清空篩選 -->
     <div class="sidebar-footer">
-      <button class="btn-reset" (click)="resetFilters(); $event.stopPropagation()">
+      <button class="btn-reset" (click)="clearAllFilters($event)">
         <lucide-icon [name]="RotateCcwIcon" size="16"></lucide-icon>
         清空所有篩選
       </button>
     </div>
 
   </aside>
+
+
+  <section class="theContent">
 
   <!-- 商品列表 -->
   <app-product-card [products]="pagedProducts"></app-product-card>
@@ -161,5 +168,5 @@
       <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
-
+</section>
 </main>

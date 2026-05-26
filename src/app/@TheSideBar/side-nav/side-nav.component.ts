@@ -66,8 +66,8 @@ export class SideNavComponent {
   isHomePage = false;
 
   goToHome(){
+    this.router.navigate(['/home']);
     this.router.navigate(['/home'])
-    this.selectedCategory = '';
   }
 
   // Navigate to product-list

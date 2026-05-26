@@ -53,33 +53,97 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
+
 .category-name {
-  font-size: 2rem;
+  position: relative;
+  font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 700;
+  letter-spacing: -0.04em;
   color: $text-black;
+  line-height: 1.1;
+  margin: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.45rem;
+    width: 3.5rem;
+    height: 6px;
+    border-radius: 999px;
+    background: $primary-yellow;
+  }
 }
 
 // =========================================================
 // 排序下拉
 // =========================================================
 
-.sort-container { position: relative; }
+.sort-container {
+  position: relative;
+}
 
 .sort-button {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 10rem;
-  padding: 8px 12px;
-  border: transparent;
-  border-radius: $border-radius-tiny;
-  background: white;
-  cursor: pointer;
+  justify-content: space-between;
+  gap: 0.8rem;
 
-  &:hover { background-color: $primary-yellow; }
+  width: 11rem;
+  padding: 0.75rem 1rem;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-black;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  box-shadow:
+    0 0.25rem 0.5rem rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+
+  .material-symbols-outlined {
+    font-size: 1.2rem;
+    transition: transform 0.25s ease;
+  }
+
+  // &:hover {
+  //   transform: translateY(-1px);
+  //   border-color: $primary-yellow;
+  //   background: #fff;
+  //   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+
+  //   .material-symbols-outlined {
+  //     transform: rotate(90deg);
+  //   }
+  // }
+
+  &.active {
+    background-color: $background-yellow;
+    border: 1px solid $semantic-orange;
+    color: $semantic-orange;
+    .material-symbols-outlined {
+      transform: rotate(90deg);
+    }
+  }
 }
+
 
 .dropdown-content {
   position: absolute;
@@ -117,6 +181,7 @@ a {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .fab-filter {
@@ -125,13 +190,20 @@ a {
   gap: 0.4rem;
   padding: 0.45rem 1rem;
   background-color: #fff;
-  border: 1.5px solid $text-black;
+  border: 1px solid $primary-yellow-darker;
   border-radius: 999px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.2s;
+  color: $primary-yellow-darker;
+
+  &.active{
+    color: $semantic-orange;
+    border: 1px solid $semantic-orange;
+    background-color: $background-yellow;
+  }
 
   &:hover { background-color: $background-yellow; }
 }
@@ -332,27 +404,29 @@ select { outline: none; }
 }
 
 .page-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1.5px solid $neutral-300;
-  background: $background-white;
-  font-family: inherit;
-  font-size: 13px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: transparent;
+  background: transparent;
+  font-size: 0.75rem;
   font-weight: 500;
   color: $text-gray;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, border-color 0.15s;
+  transition: 0.2s;
 
-  &:hover:not(:disabled) { background: $background-yellow; }
-  &:disabled { color: #c9c6c0; cursor: default; }
+  &:hover:not(:disabled) { background: $primary-yellow }
+  &:disabled { color: $neutral-c9; cursor: no-drop; }
+
+  &:active {
+    background: $background-yellow-active;
+  }
 
   &.active {
-    background: $background-yellow-hover;
+    background: $neutral-ea;
     color: $text-gray;
-    border-color: $background-yellow-hover;
   }
 }
