@@ -1,21 +1,17 @@
 <div class="page-wrapper">
   <h1 class="page-title">公告通知管理</h1>
 
-  <button class="btn addannounce" (click)="addAnnounce()">
-    <lucide-icon [name]="addInco"></lucide-icon>
-    新增公告
-  </button>
-
   <!-- 列表區塊 -->
   <div class="list-section">
-    <h2 class="section-title">
-      <lucide-icon [name]="newpaperIcon" class="edit-icon"></lucide-icon>
-      列表
-    </h2>
-
     <!-- 編輯中的公告 -->
     <div class="announce-group">
-      <h3 class="group-title">編輯中的公告</h3>
+      <div class="group-header">
+        <h3 class="group-title">編輯中的公告</h3>
+        <button class="btn addannounce" (click)="addAnnounce()">
+          <lucide-icon [name]="addInco"></lucide-icon>
+          新增公告
+        </button>
+      </div>
       <div class="announce-table">
         <div class="announce-header">
           <span class="col-label">ID</span>

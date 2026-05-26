@@ -1,38 +1,108 @@
-.dialog-header {
+@use '../../styles/variables' as *;
+@use '../../styles/backstage' as *;
+// 沿用 addannounce-daialog 的色系與規格
+
+div[mat-dialog-title] {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding-bottom: 12px;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
   border-bottom: 1px solid #e2ded5;
+  margin: 0;
+
+  span:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1814;
+  }
+
+  span:last-child {
+    font-size: $font-size-base;
+    font-weight: 500;
+    color: #ffffff;
+    background: #c49a3a !important;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #e2ded5;
+  }
 }
 
-.dialog-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
+mat-dialog-content {
+  padding: 16px 24px !important;
+  margin: 0;
 }
-
-.dialog-header-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.dialog-name  { font-size: 被檢舉人; font-weight: 700; color: #1a1814; }
-// .dialog-email { font-size: 13px; color: #6b6760; }
 
 .info-row {
   display: flex;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0eee9;
-  font-size: 被檢舉人;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0ede8;
+  font-size: 14px;
 
-  .label {
-    width: 80px;
-    color: #6b6760;
-    flex-shrink: 0;
+  &:last-child { border-bottom: none; }
+
+  img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e2ded5;
+    margin-top: 4px;
+  }
+}
+
+.label {
+  width: 72px;
+  font-weight: 600;
+  color: #1a1814;
+  flex-shrink: 0;
+}
+
+span:not(.label) {
+  color: #6b6760;
+  line-height: 1.5;
+}
+
+mat-dialog-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px !important;
+  margin: 0;
+  justify-content: center;
+  border-top: 1px solid #e2ded5;
+
+  button {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: opacity 0.15s;
+    line-height: 1;
+
+    &:hover { opacity: 0.85; }
+
+    // 取消
+    &[mat-dialog-close] {
+      background: #ffffff;
+      color: #1a1814;
+      border-color: #e2ded5;
+    }
+
+    // 駁回
+    &:nth-child(2) {
+      background: #ffffff;
+      color: #c0392b;
+      border-color: #c0392b;
+    }
+
+    // 強制下架（主要操作）
+    &:nth-child(3) {
+      background: #c49a3a;
+      color: #ffffff;
+      border-color: #c49a3a;
+    }
   }
 }

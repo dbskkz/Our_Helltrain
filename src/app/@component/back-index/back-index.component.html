@@ -28,18 +28,12 @@
     }
     @if (pendingCount > 0) {
       <div class="urgent-item pending">
-        <span>待審核學生身分（{{ pendingCount }} 筆）</span>
-        <button class="btn-outline" (click)="goUser()">前往審核</button>
+        <span>已過期帳號（{{ pendingCount }} 筆）</span>
+        <button class="btn-outline" (click)="goUser()">前往查看</button>
       </div>
     }
     @if (disputeCount === 0 && pendingCount === 0) {
       <p class="empty-text">目前沒有需要立即處理的項目</p>
     }
   </div>
-
-  <!-- 近期操作 -->
-  <div class="recent-card">
-    <h2 class="card-title">近期操作</h2>
-  </div>
-
 </div>
