@@ -3,7 +3,7 @@ import { Options } from '@angular-slider/ngx-slider';
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PaginationService } from '../../@Services/pageination.service';
 
 // 素材庫
@@ -42,6 +42,7 @@ export interface Product {
 export class ProductListingComponent implements OnInit{
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private uiBehavior:UiBehaviorService,
     public pagination:PaginationService
@@ -54,13 +55,10 @@ export class ProductListingComponent implements OnInit{
   ngOnInit(): void {
 
     this.route.paramMap.subscribe(params => {
-
+      window.scrollTo({ top: 0, behavior: 'auto' });
       this.category = params.get('category');
-
       console.log('當前分類:', this.category);
-
       this.loadProducts();
-
     });
 
   }
@@ -218,13 +216,16 @@ export class ProductListingComponent implements OnInit{
   }
 
   get schoolLabel(): string {
-    const selectedDepts = this.department.filter(d => d.selected);
+    const selectedDepts = this.department
+    .filter(d => d.selected)
+    .map(d => d.name);
 
     if (selectedDepts.length === 0) return '科系類別';
-
-    const parts: string[] = [];
-    if (selectedDepts.length > 0) parts.push(`${selectedDepts.length} 個科系`);
-    return parts.join('、');
+    if (selectedDepts.length <= 2) return selectedDepts.join('、');
+    return `${selectedDepts[0]} 等 ${selectedDepts.length} 個學群`;
+    // const parts: string[] = [];
+    // if (selectedDepts.length > 0) parts.push(`${selectedDepts.length} 個學群`);
+    // return parts.join('、');
   }
 
   // =========================================================
@@ -245,8 +246,8 @@ export class ProductListingComponent implements OnInit{
 
   }
 
-  prevPage() { this.pagination.prevPage(); }
-  nextPage() { this.pagination.nextPage(); }
+  prevPage() { this.pagination.prevPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  nextPage() { this.pagination.nextPage(); window.scrollTo({ top: 0, behavior: 'smooth' });}
   goToPage(page: number) { this.pagination.goToPage(page); }
 
   // =========================================================

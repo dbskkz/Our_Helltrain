@@ -1,12 +1,13 @@
 @use '../../styles/variables' as *;
 
-h3{
+@use '../../styles/variables' as *;
+
+h3 {
   margin: 0;
 }
 
-nav{
+nav {
   width: 100%;
-  height: fit-content;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,53 +16,71 @@ nav{
   top: 0;
   z-index: 1000;
 
-  padding: 0.8rem 0;
+  padding: 0.85rem 1.5rem;
 
-
-  flex-wrap: nowrap; /* 強制不換行 */
   gap: 1rem;
-  background-color: white;
-  box-shadow: 0px 0px 15px rgba(71, 71, 71, 0.3);
 
-  .logo{
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.06),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+
+  .logo {
     height: 1.5rem;
-    margin-right: 0.25rem;
+    margin-right: 0.5rem;
 
-    &:hover{
+    transition: 0.2s ease;
+
+    &:hover {
       cursor: pointer;
+      transform: scale(1.03);
+      opacity: 0.9;
     }
   }
 
-  .menu{
+  .menu {
     position: relative;
 
-    background-color: transparent;
-    border: transparent;
-    border-radius: 2px;
+    width: 42px;
+    height: 42px;
 
-    width: fit-content;
-    height: fit-content;
+    border: none;
+    border-radius: 14px;
 
-    padding: 3px;
-    margin-right: 2.5rem;
+    background: rgba(0, 0, 0, 0.04);
 
-    color: rgba($text-black, 0.5);
+    color: rgba($text-black, 0.75);
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &:hover{
-      background-color: $primary-yellow;
-      color: $background-white;
-      transition: ease 0.3s;
+    transition: 0.22s ease;
+
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 2px 8px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background: $primary-yellow;
+      color: $text-black;
+
+      transform: translateY(-1px) scale(1.04);
+
       cursor: pointer;
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
 
     &:focus {
       outline: none;
     }
-
 
     input[type="checkbox"] {
       position: absolute;
@@ -71,31 +90,35 @@ nav{
 
       margin: 0;
 
-      opacity: 0; // 隱藏 checkbox
+      opacity: 0;
       cursor: pointer;
 
       z-index: 2;
     }
 
     lucide-icon {
-      width: 24px;
-      height: 24px;
-      display: block; // 確保圖示正常顯示
+      width: 20px;
+      height: 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: 0.2s ease;
     }
-
-
   }
 
   .search {
     flex: 1;
     min-width: 0;
-    max-width: 700px;
+    max-width: 720px;
   }
 
-  .cta{
-    margin-right: 3.5rem;
+  .cta {
+    margin-left: 0.5rem;
   }
 }
+
 
 
 // 1. 遮罩層：讓背景變暗
@@ -132,19 +155,53 @@ nav{
   }
 }
 
-// --- 動動畫定義 ---
+/* ===== 動畫 ===== */
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-100%); // 從畫面左邊外面進來
+    transform: translateX(-24px) scale(0.96);
   }
+
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ===== RWD ===== */
+
+@media (max-width: 768px) {
+  nav {
+    padding: 0.8rem 1rem;
+    gap: 0.6rem;
+
+    .logo {
+      height: 1.5rem;
+    }
+
+    .cta {
+      margin-left: 0;
+    }
+  }
+
+  .sidebar-container {
+    left: 0;
+    top: 66px;
+
+    width: 85vw;
+    height: calc(100vh - 66px);
+
+    border-radius: 0 24px 24px 0;
   }
 }

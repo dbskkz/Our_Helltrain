@@ -46,10 +46,11 @@ export class TopNavComponent implements OnInit, OnDestroy{
   readonly MenuIcon = Menu;
 
   // login
-  islogin = true;
+  islogin = false;
 
   goToHome(){
-    this.router.navigate(['/home'])
+    this.router.navigate(['/home']);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   // 用checkbox打開sidebar

@@ -1,43 +1,72 @@
 @use '../../styles/variables' as *;
 
-.nav-but{
+.nav-but {
   display: flex;
-  justify-content: space-around;
-  gap: 0.3rem;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-button{
+button {
   width: fit-content;
-  height: fit-content;
+  height: 40px;
 
-  border: transparent;
-  border-radius: 2px;
+  border: none;
+  border-radius: $border-radius-lg;
 
-  padding: 0.2rem 0.75rem;
+  padding: 0 1rem;
 
-  color: $text-black;
-  font-size: 0.85rem;
-  line-height: 24px;
-}
+  font-size: 0.9rem;
+  font-weight: 600;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-#signin{
-  background-color: transparent;
-  color: $text-gray;
+  transition: 0.22s ease;
 
-  &:hover{
-    background-color: $neutral-100;
-    color: $text-black;
+  letter-spacing: 0.01em;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  &:hover {
     cursor: pointer;
+  }
+
+  &:active {
+    transform: scale(0.96);
   }
 }
 
-#create{
-  background-color: $primary-yellow;
+/* ===== 登入 ===== */
 
-  &:hover{
-    background-color: $primary-yellow-light;
-    color: $text-gray;
-    cursor: pointer;
+#signin {
+  background: rgba(0, 0, 0, 0.04);
+
+  color: $text-gray;
+
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.07);
+    color: $text-black;
+  }
+}
+
+/* ===== 註冊 ===== */
+
+#create {
+  background: $primary-yellow;
+
+  color: $text-black;
+
+  &:hover {
+    background: $primary-yellow-light;
+    color: $text-black;
+
+    box-shadow:
+      0 6px 14px rgba($primary-yellow, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 }

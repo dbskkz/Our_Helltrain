@@ -1,0 +1,115 @@
+@use '../../styles/variables' as *;
+
+.wrapper {
+  position: sticky;
+  top: 68px;
+  z-index: 15;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  padding: 0.4rem 1.5rem;
+
+  background: rgba(28, 28, 30, 0.88);
+  backdrop-filter: blur(14px);
+
+  color: white;
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.18),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+
+  letter-spacing: 0.02em;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  h5,
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 8%;
+  }
+
+
+  h5 {
+    font-weight: 500;
+    letter-spacing: 8%;
+  }
+
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    padding: 0.3rem 0.7rem;
+
+    border-radius: 999px;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    &:hover {
+      transform: translateY(-1px) scale(1.03);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  div:first-child button {
+    background: $primary-yellow;
+    color: $text-black;
+  }
+
+  div:last-child button {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+  }
+}
+
+.hint{
+  color: $neutral-300;
+}
+
+/* 手機版 */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem;
+
+    div {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    h5,
+    p {
+      text-align: center;
+    }
+  }
+}

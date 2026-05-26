@@ -47,7 +47,7 @@
 
     <section class="popular-categories" #categoryScroll>
       @for (item of categories; track $index) {
-        <div class="category-item">
+        <div class="category-item" type="button" (click)="goToProductListById(item.value)">
           <lucide-icon [name]="item.icon" [size]="60"></lucide-icon> <p>{{item.label}}</p>
         </div>
       }
@@ -69,9 +69,9 @@
 
 <section class="thebody">
 
-  <app-product-card></app-product-card>
+  <app-product-card [products]="homeProducts"></app-product-card>
   <div class="view-more-wrapper">
-    <button class="view-more">查看更多</button>
+    <button class="view-more" (click)="goToProductListById('all')">查看更多</button>
   </div>
 
 </section>
@@ -92,7 +92,8 @@
       </mark>
     </h5>
   </div>
-  <app-manual></app-manual>
+
+  <app-manual ></app-manual>
 </section>
 
 </main>
