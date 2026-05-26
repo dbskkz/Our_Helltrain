@@ -1,17 +1,34 @@
 @use '../../styles/variables' as *;
 
-// 內容區塊的間距建議
+// =========================================================
+// 基礎
+// =========================================================
+
 .content {
-  padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
+  padding: 1rem 5%;
 
   @media (max-width: 768px) {
-    padding: 0.5rem 1rem; // 手機版縮小內縮
+    padding: 0.5rem 1rem;
   }
 }
 
-.content *{
-  outline: none;
+.content * { outline: none; }
+
+lucide-icon { display: flex; align-items: center; }
+
+// 去除 a 標籤預設樣式
+a {
+  color: inherit;
+  text-decoration: none;
+  display: inherit;
+  gap: inherit;
+
+  &:visited { color: inherit; }
 }
+
+// =========================================================
+// 篩選面板（nav 容器）
+// =========================================================
 
 .filter-panel {
   display: flex;
@@ -19,51 +36,8 @@
   gap: 1.5rem;
 }
 
-
-
-.category-name {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: $text-black;
-}
-
-// .subtitle{
-//   display: flex;
-//   justify-content: space-around;
-//   margin: 3rem 0 1.5rem 0;
-
-//   h5{
-//     font-size: 2rem;
-//     font-weight: 700;
-//     color: $text-gray;
-//     letter-spacing: 5%;
-
-//     mark {
-//       display: inline-block;
-//       line-height: 0em;
-//       padding-bottom: 0.5em;
-//       background-color: $primary-yellow-light;
-//     }
-//   }
-
-// }
-
-.site-path{
-  width: 100vw;          // 寬度設為螢幕寬度
-  position: relative;
-
-  // left: 50%;             // 移至畫面中點
-  // right: 50%;
-  // margin-left: -50vw;    // 往左拉回螢幕一半的寬度
-  // margin-right: -50vw;
-}
-
-.list-header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+// 麵包屑
+.site-path { width: 100vw; position: relative; }
 
 .breadcrumb {
   font-weight: 300;
@@ -72,12 +46,30 @@
   margin: 0;
   padding: 10px 0;
   gap: 0.5rem;
-  letter-spacing: 10%;
 }
+
+// 標題列
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.category-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $text-black;
+}
+
+// =========================================================
+// 排序下拉
+// =========================================================
+
+.sort-container { position: relative; }
 
 .sort-button {
   display: flex;
-  justify-content: space-between; /* 讓文字在左，圖示在右 */
+  justify-content: space-between;
   align-items: center;
   width: 10rem;
   padding: 8px 12px;
@@ -86,9 +78,7 @@
   background: white;
   cursor: pointer;
 
-  &:hover{
-    background-color: $primary-yellow;
-  }
+  &:hover { background-color: $primary-yellow; }
 }
 
 .dropdown-content {
@@ -105,12 +95,6 @@
   padding: 0;
   margin: 0;
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
   li {
     padding: 1rem;
     font-size: 0.875rem;
@@ -124,89 +108,172 @@
   }
 }
 
-// 篩選清單群組
-.filter-groups {
+// =========================================================
+// 篩選列（篩選按鈕 + tags 同一行）
+// =========================================================
+
+.filter-row {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  list-style: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fab-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  background-color: #fff;
+  border: 1.5px solid $text-black;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &:hover { background-color: $background-yellow; }
+}
+
+// 已選條件 tags
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: $background-yellow;
+  color: $semantic-orange;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  color: $semantic-orange;
+}
+
+.tag-clear-all {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: $text-gray;
+  text-decoration: underline;
   padding: 0;
 
-  & > li {
-    position: relative; // 為了讓彈出的 panel 定位
-  }
+  &:hover { color: $semantic-orange; }
 }
 
-.rearrange{
+// =========================================================
+// Overlay
+// =========================================================
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 299;
+}
+
+// =========================================================
+// 篩選側邊欄
+// =========================================================
+
+.filter-sidebar {
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 340px;
+  height: 100dvh;
+  background: #fff;
+  z-index: 300;
   display: flex;
-  flex-shrink: 0;
-  border-radius: 999rem;
-  padding: 0.5rem;
+  flex-direction: column;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+  transition: right 0.3s ease;
 
-  &:hover{
-    cursor: pointer;
-    transition: ease 0.3s;
-    background-color: $primary-yellow;
+  &.open { right: 0; }
+}
 
-    lucide-icon{
-      aspect-ratio: 1;
-      height: fit-content;
-      color: white;
-    }
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #eee;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sidebar-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 6px;
+
+  &:hover { background: #f3f3f3; }
+}
+
+.sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-section {
+  h6 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-gray;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
   }
 }
 
-// 篩選按鈕與下拉選單樣式
-.filter-btn, .filter-select, .filter-groups li > button {
+// 側邊欄內的 slider / checkbox 取消 absolute 定位
+.slider-container.static,
+.checkbox-group.static {
+  position: static;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  min-width: unset;
+}
+
+.filter-select {
   padding: 0.5rem 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #fff;
   font-size: 0.9rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: border-color 0.2s;
 
-  &:hover {
-    border-color: #888;
-  }
-
-  &.active {
-    background-color: $background-yellow;
-    border-color: transparent;
-    color: $semantic-orange;
-    font-weight: 600;
-  }
-
-
+  &:hover { border-color: #888; }
 }
 
-select{
-    outline: none;
-}
+.full-width { width: 100%; }
 
-// 彈出的內容區塊 (價格、地區、校系)
-.slider-container, .checkbox-group {
-  position: absolute;
-  top: 110%;
-  left: 0;
-  z-index: 100;
-  background: #fff;
-  border: 1px solid #eee;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 1.2rem;
-  border-radius: 8px;
-  min-width: 250px;
-}
+select { outline: none; }
 
-// 多選方框區塊
 .checkbox-group {
   max-height: 300px;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: 1fr 1fr; // 兩欄顯示
+  grid-template-columns: 1fr 1fr;
   gap: 0.8rem;
 
   .checkbox-item {
@@ -216,13 +283,10 @@ select{
     font-size: 0.9rem;
     cursor: pointer;
 
-    input[type="checkbox"] {
-      cursor: pointer;
-    }
+    input[type="checkbox"] { cursor: pointer; }
   }
 }
 
-// 價格標籤
 .range-label {
   text-align: center;
   margin-top: 0.5rem;
@@ -230,8 +294,35 @@ select{
   color: $semantic-orange;
 }
 
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+}
 
-/* ===== Pagination ===== */
+.btn-reset {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+
+  &:hover {
+    background: #fff3e0;
+    border-color: $semantic-orange;
+    color: $semantic-orange;
+  }
+}
+
+// =========================================================
+// 分頁
+// =========================================================
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -258,29 +349,10 @@ select{
 
   &:hover:not(:disabled) { background: $background-yellow; }
   &:disabled { color: #c9c6c0; cursor: default; }
+
   &.active {
     background: $background-yellow-hover;
     color: $text-gray;
     border-color: $background-yellow-hover;
   }
 }
-
-lucide-icon{
-  display: flex;
-  align-items: center;
-}
-
-
-// 去除 a 標籤的預設樣式
-a {
-  color: inherit;       /* 繼承父層文字顏色，避免變成藍色 */
-  text-decoration: none;/* 移除預設底線 */
-  display: inherit;
-  gap: inherit;
-}
-
-a:visited {
-  color: inherit;       /* 避免點擊過後變成紫色 */
-}
-
-

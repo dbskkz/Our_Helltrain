@@ -1,159 +1,165 @@
 <main class="content">
   <nav class="filter-panel">
+
+    <!-- 麵包屑 -->
     <div class="site-path">
       <span class="breadcrumb">
         <a routerLink="/home">
-        <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
-        首頁 </a> > {{ categoryName }}</span>
+          <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
+          首頁
+        </a>
+        > {{ categoryName }}
+      </span>
     </div>
 
+    <!-- 標題列 + 排序 -->
     <header class="list-header">
-
       <h1 class="category-name">{{ categoryName }}</h1>
 
-      <!-- 排序方式 -->
-        <div class="sort-container">
-          <button class="sort-button"
-          (click)="togglePanel($event, 'sort')">
-            <span>排序依據</span>
-            <span class="material-symbols-outlined">
-            sort
-            </span>
-          </button>
+      <div class="sort-container">
+        <button class="sort-button" (click)="togglePanel($event, 'sort')">
+          <span>排序依據</span>
+          <span class="material-symbols-outlined">sort</span>
+        </button>
 
-          @if (panelState.sort) {
-            <ul id="dropdown-list" class="dropdown-content" (click)="$event.stopPropagation()">
-              <li>最新上架</li>
-              <li>價格由低到高</li>
-              <li>價格由高到低</li>
-            </ul>
-          }
-        </div>
+        @if (panelState.sort) {
+          <ul class="dropdown-content" (click)="$event.stopPropagation()">
+            <li>最新上架</li>
+            <li>價格由低到高</li>
+            <li>價格由高到低</li>
+          </ul>
+        }
+      </div>
     </header>
 
+    <!-- 篩選列：篩選按鈕 + 已選 tags 同一行 -->
+    <div class="filter-row">
 
+      <button class="fab-filter" (click)="togglePanel($event, 'filter')">
+        <lucide-icon [name]="XIcon" size="16"></lucide-icon>
+        篩選
+      </button>
 
-    <!-- 熱門分類 -->
-    <!-- <div class="hot-categories">
-      <h5>常用分類</h5>
-      <ul>
-        <li><button class="btn-tag">電腦</button></li>
-        <li><button class="btn-tag">筆電</button></li>
-        <li><button class="btn-tag">行充</button></li>
-      </ul>
-    </div> -->
+      @for (tag of activeFilters; track tag.key) {
+        <span class="filter-tag">
+          {{ tag.label }}
+          <button class="tag-remove" (click)="removeFilter(tag.key)">
+            <lucide-icon [name]="XIcon" size="12"></lucide-icon>
+          </button>
+        </span>
+      }
 
-    <!-- 篩選清單 -->
-    <ul class="filter-groups">
-      <!-- 排序 -->
-      <li>
-        <div class="rearrange" title="清空篩選條件">
-          <lucide-icon [img]="RotateCcwIcon" size="24"></lucide-icon>
-        </div>
-      </li>
+      @if (activeFilters.length > 0) {
+        <button class="tag-clear-all" (click)="resetFilters()">清除全部</button>
+      }
+
+    </div>
+
+  </nav>
+
+  <!-- Overlay -->
+  @if (panelState.filter) {
+    <div class="sidebar-overlay" (click)="togglePanel($event, 'filter')"></div>
+  }
+
+  <!-- 篩選側邊欄 -->
+  <aside class="filter-sidebar" [class.open]="panelState.filter">
+
+    <div class="sidebar-header">
+      <span>篩選條件</span>
+      <button class="sidebar-close" (click)="togglePanel($event, 'filter')">
+        <lucide-icon [name]="XIcon" size="20"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="sidebar-body">
 
       <!-- 價格篩選 -->
-      <li>
-        <button class="filter-btn"
-        [class.active]="priceLabel !== '價格區間'"
-        (click)="togglePanel($event, 'price')">
-          {{ priceLabel }}
-        </button>
-        @if(panelState.price){
-        <div class="slider-container" (click)="$event.stopPropagation()">
+      <div class="sidebar-section">
+        <h6>價格區間</h6>
+        <div class="slider-container static" (click)="$event.stopPropagation()">
           <ngx-slider [(value)]="priceValue" [(highValue)]="priceHighValue" [options]="priceOptions"></ngx-slider>
-          <div class="range-label">${{priceValue}} - ${{priceHighValue}}</div>
+          <div class="range-label">${{ priceValue }} - ${{ priceHighValue }}</div>
         </div>
-        }
-      </li>
+      </div>
 
       <!-- 商品狀況 -->
-      <li>
-        <select class="filter-select">
-          <option value="">商品新舊程度</option>
+      <div class="sidebar-section">
+        <h6>商品新舊程度</h6>
+        <select class="filter-select full-width" (click)="$event.stopPropagation()">
+          <option value="">不限</option>
           <option value="new">全新</option>
           <option value="near-new">近全新</option>
           <option value="lightly-used">輕度使用</option>
           <option value="used">中度使用</option>
           <option value="heavily-used">重度使用</option>
         </select>
-      </li>
+      </div>
 
       <!-- 賣家評價 -->
-      <li>
-        <button class="filter-btn"
-        (click)="togglePanel($event, 'grade')"
-        [class.active]="gradeLabel !== '賣家評價'">
-          {{ gradeLabel }}
-        </button>
-        @if(panelState.grade == true){
-        <div class="slider-container" (click)="$event.stopPropagation()">
+      <div class="sidebar-section">
+        <h6>賣家評價</h6>
+        <div class="slider-container static" (click)="$event.stopPropagation()">
           <ngx-slider [(value)]="sellerGrade" [options]="sellerGradeOptions"></ngx-slider>
         </div>
-        }
-      </li>
+      </div>
 
-      <!-- 地區複選 -->
-      <li>
-        <button
-        (click)="togglePanel($event, 'location')"
-        [class.active]="locationLabel !== '地區'">
-        {{ locationLabel }}
-        </button>
-        @if (panelState.location) {
-
-          <div class="checkbox-group" (click)="$event.stopPropagation()">
-            @for(city of cities; track city.id){
+      <!-- 地區 -->
+      <div class="sidebar-section">
+        <h6>地區</h6>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (city of cities; track city.id) {
             <label class="checkbox-item">
               <input type="checkbox" [(ngModel)]="city.selected" (change)="onCityChange()">
               {{ city.name }}
             </label>
-            }
-          </div>
-        }
-      </li>
+          }
+        </div>
+      </div>
 
-      <!-- 校系篩選 -->
-      <li>
-        <button
-        (click)="togglePanel($event, 'school')"
-        [class.active]="schoolLabel !== '科系類別'">
-        {{ schoolLabel }}
-        </button>
-        @if (panelState.school) {
-          <!-- 科系 -->
-          <div class="checkbox-group" (click)="$event.stopPropagation()">
-            @for(depts of department; track $index){
+      <!-- 科系 -->
+      <div class="sidebar-section">
+        <h6>科系類別</h6>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (dept of department; track dept.id) {
             <label class="checkbox-item">
-              <input type="checkbox" [(ngModel)]="depts.selected" (change)="onDeptChange()">
-              {{ depts.name }}
+              <input type="checkbox" [(ngModel)]="dept.selected" (change)="onDeptChange()">
+              {{ dept.name }}
             </label>
-            }
-          </div>
-        }
+          }
+        </div>
+      </div>
 
+    </div>
 
-      </li>
-    </ul>
-  </nav>
+    <!-- 清空篩選 -->
+    <div class="sidebar-footer">
+      <button class="btn-reset" (click)="resetFilters(); $event.stopPropagation()">
+        <lucide-icon [name]="RotateCcwIcon" size="16"></lucide-icon>
+        清空所有篩選
+      </button>
+    </div>
 
+  </aside>
 
-
+  <!-- 商品列表 -->
   <app-product-card [products]="pagedProducts"></app-product-card>
 
-   <!-- Pagination -->
+  <!-- 分頁 -->
   <div class="pagination">
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
       <lucide-icon [name]="prevIcon"></lucide-icon>
     </button>
+
     @for (page of pagination.pageNumbers; track page) {
       <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
         {{ page }}
       </button>
     }
+
     <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
       <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
-</main>
 
+</main>
