@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class EduApiGovService {
 
+  // 此為實驗用 Service ， 要使用正式 API ，請左轉 school-data.service !
+  // 實驗結果於 foreground-test component
+
   constructor(
     private http :HttpClient
   ) { }

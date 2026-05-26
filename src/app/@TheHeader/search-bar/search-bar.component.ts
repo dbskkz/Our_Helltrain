@@ -28,7 +28,7 @@ export class SearchBarComponent {
     maxPrice: null,
     categories: [
       { label: "書籍", value: 'books' , selected:false},
-      { label: "科系用品", value: 'dept' , selected:false},
+      { label: "專業器材", value: 'dept' , selected:false},
       { label: "生活用品", value: 'life' , selected:false},
       { label: "3C電子", value: 'tech' , selected:false},
       { label: "家具家電", value: 'furniture' , selected:false},

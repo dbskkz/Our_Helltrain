@@ -52,8 +52,8 @@
     <ul class="filter-groups">
       <!-- 排序 -->
       <li>
-        <div class="rearrange" title="排序">
-          <lucide-icon [img]="ArrowUpDownIcon" size="24"></lucide-icon>
+        <div class="rearrange" title="清空篩選條件">
+          <lucide-icon [img]="RotateCcwIcon" size="24"></lucide-icon>
         </div>
       </li>
 
@@ -122,22 +122,10 @@
       <li>
         <button
         (click)="togglePanel($event, 'school')"
-        [class.active]="schoolLabel !== '校系'">
+        [class.active]="schoolLabel !== '科系類別'">
         {{ schoolLabel }}
         </button>
         @if (panelState.school) {
-
-          <!-- 學校 -->
-          <div class="checkbox-group" (click)="$event.stopPropagation()">
-            @for(school of schools; track school){
-            <label class="checkbox-item">
-              <input type="checkbox" [(ngModel)]="school.selected" (change)="onSchoolChange()">
-              {{ school.name }}
-            </label>
-            }
-          </div>
-
-
           <!-- 科系 -->
           <div class="checkbox-group" (click)="$event.stopPropagation()">
             @for(depts of department; track $index){
@@ -161,7 +149,7 @@
    <!-- Pagination -->
   <div class="pagination">
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
-      <!-- <lucide-icon [name]="prevIcon"></lucide-icon> -->
+      <lucide-icon [name]="prevIcon"></lucide-icon>
     </button>
     @for (page of pagination.pageNumbers; track page) {
       <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
@@ -169,7 +157,7 @@
       </button>
     }
     <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
-      <!-- <lucide-icon [name]="nextIcon"></lucide-icon> -->
+      <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
 </main>

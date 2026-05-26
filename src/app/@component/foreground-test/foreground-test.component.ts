@@ -22,5 +22,7 @@ export class ForegroundTestComponent {
       console.log(Object.keys(data[0]));
 
     });
+
+    // 實驗結論 : 政府網站沒有開 CORS ， 故無法使用 。
   }
 }

@@ -124,39 +124,6 @@
   }
 }
 
-// 熱門分類標籤
-// .hot-categories {
-//   h5 {
-//     font-size: 1rem;
-//     margin-bottom: 0.8rem;
-//     color: $text-black;
-//   }
-
-//   ul {
-//     display: flex;
-//     flex-wrap: wrap;
-//     gap: 0.6rem;
-//     list-style: none;
-//     padding: 0;
-
-//     .btn-tag {
-//       padding: 0.4rem 1rem;
-//       border-radius: 20px;
-//       border: 1px solid #ddd;
-//       background: #fff;
-//       cursor: pointer;
-//       transition: all 0.2s ease;
-//       color: $text-gray;
-
-//       &:hover {
-//         background-color: $background-yellow;  // 原本灰 → 淺黃，保持風格統一
-//         border-color: transparent;
-//         color: $text-black;
-//       }
-//     }
-//   }
-// }
-
 // 篩選清單群組
 .filter-groups {
   display: flex;
@@ -261,6 +228,41 @@ select{
   margin-top: 0.5rem;
   font-weight: bold;
   color: $semantic-orange;
+}
+
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.page-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid $neutral-300;
+  background: $background-white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-gray;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover:not(:disabled) { background: $background-yellow; }
+  &:disabled { color: #c9c6c0; cursor: default; }
+  &.active {
+    background: $background-yellow-hover;
+    color: $text-gray;
+    border-color: $background-yellow-hover;
+  }
 }
 
 lucide-icon{
