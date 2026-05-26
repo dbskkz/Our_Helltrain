@@ -60,17 +60,17 @@
           </div>
           <div class="region-text">{{ user.location }}</div>
           <div class="action-cell">
-            @if (user.status === "審查中") {
+            <!-- @if (user.status === "審查中") {
               <button class="btn btn-approve">驗證通過</button>
               <button class="btn btn-danger">駁回</button>
-            } @else {
+            } @else {-->
               <button class="btn btn-view" (click)="viewUser(user)">查看</button>
               @if (user.status === "停權") {
                 <button class="btn btn-neutral">解除停權</button>
               } @else {
                 <button class="btn btn-danger">停權</button>
               }
-            }
+            <!-- } -->
           </div>
         </div>
       }

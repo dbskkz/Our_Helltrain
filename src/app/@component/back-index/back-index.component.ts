@@ -22,6 +22,6 @@ export class BackIndexComponent {
 
   goUser(){
     this.router.navigate(['/back_user'],
-      {queryParams:{verifyStatus:"待審查"}});
+      {queryParams:{verifyStatus:"已過期"}});
   }
 }
