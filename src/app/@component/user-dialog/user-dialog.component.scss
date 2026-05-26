@@ -1,17 +1,22 @@
+@use '../../styles/variables' as *;
+@use '../../styles/backstage' as *;
+// 沿用 addannounce-daialog 的色系與規格
+
 .dialog-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding-bottom: 12px;
+  padding: 20px 24px 16px !important;
   border-bottom: 1px solid #e2ded5;
 }
 
 .dialog-avatar {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  border: 2px solid #e2ded5;
 }
 
 .dialog-header-info {
@@ -20,19 +25,67 @@
   gap: 4px;
 }
 
-.dialog-name  { font-size: 16px; font-weight: 700; color: #1a1814; }
-.dialog-email { font-size: 13px; color: #6b6760; }
+.dialog-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1814;
+}
+
+.dialog-email {
+  font-size: 13px;
+  color: #9e9a94;
+}
+
+mat-dialog-content {
+  padding: 16px 24px !important;
+  margin: 0;
+}
 
 .info-row {
   display: flex;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0eee9;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0ede8;
   font-size: 14px;
 
-  .label {
-    width: 80px;
-    color: #6b6760;
-    flex-shrink: 0;
+  &:last-child { border-bottom: none; }
+}
+
+.label {
+  width: 72px;
+  font-weight: 600;
+  color: #1a1814;
+  flex-shrink: 0;
+}
+
+span:not(.label) {
+  color: #6b6760;
+  line-height: 1.5;
+}
+
+mat-dialog-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px !important;
+  margin: 0;
+  justify-content: center;
+  border-top: 1px solid #e2ded5;
+
+  button {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid #e2ded5;
+    background: #ffffff;
+    color: #1a1814;
+    transition: opacity 0.15s;
+    line-height: 1;
+
+    &:hover { opacity: 0.85; }
   }
 }
