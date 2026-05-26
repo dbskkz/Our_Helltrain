@@ -130,7 +130,7 @@
 
       ::ng-deep svg {
         fill: $primary-yellow !important;   // 強制填滿
-        stroke: $neutral-100 !important; // 框線也同步顏色，避免出現黑色邊框
+        stroke: white !important; // 框線也同步顏色，避免出現黑色邊框
         stroke-width: 1px;
       }
 

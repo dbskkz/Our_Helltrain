@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import {
         LucideAngularModule, Home, Book, Box, MoonStar,
-        Smartphone, Handbag, Lamp, List, SmilePlus,
+        Smartphone, Handbag, Lamp, List, SmilePlus, CircleQuestionMark,
         ChevronDown, CirclePile, School, MapPin} from 'lucide-angular';
+import { UiBehaviorService } from '../../@Services/ui-behavior.service';
+import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -17,7 +19,10 @@ export class SideNavComponent {
 
   constructor(
     private router: Router,
-    private actRoute:ActivatedRoute){}
+    private uiBehavior: UiBehaviorService,
+    private actRoute:ActivatedRoute,
+    private eac:EighteenAcademyService
+  ){}
 
   // Declare icon
   readonly HomeIcon = Home;
@@ -33,6 +38,7 @@ export class SideNavComponent {
   readonly SchoolIcon = School;
   readonly MapPinIcon = MapPin;
   readonly MoonStarIcon = MoonStar;
+  readonly CircleQuestionMarkIcon = CircleQuestionMark;
 
   // 宣告商品種類
   categories= [
@@ -55,23 +61,65 @@ export class SideNavComponent {
     // TODO: 過濾邏輯
   }
 
-  // 側邊欄的開關
-  // isOpen = false;
-
-  // toggle() {
-  //   this.isOpen = !this.isOpen;
-  // }
-
-  // go back to the home page
   isHomePage = false;
 
   goToHome(){
     this.router.navigate(['/home']);
-    this.router.navigate(['/home'])
+    window.scrollTo({top: 0,
+      left: 0,
+      behavior: "smooth"});
+    }
+
+  // =========================================================
+  // PANEL OPEN / CLOSE
+  // =========================================================
+  ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+  if(this.panelState.academic)
+  {
+      console.log("Success");
+  }
+  else
+  {
+    console.log("false");
+
+  }
+}
+  panelState = {
+    academic:     false,
+  };
+
+  togglePanel(event: Event, panel: keyof typeof this.panelState) {
+    console.log('togglePanel called:', panel); // ← 加這行
+    this.uiBehavior.togglePanel(event, this.panelState, panel);
+    console.log('panelState after:', this.panelState); // ← 加這行
+  }
+
+  @HostListener('document:click')
+  closeMenu(): void {
+    this.uiBehavior.closeAll(this.panelState);
+  }
+
+
+  goToManual() {
+    // 檢查目前是否已在 home
+    if (this.router.url.includes('/home')) {
+      const element = document.getElementById('manual');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      this.router.navigate(['/home'], { fragment: 'manual' });
+    }
   }
 
   // Navigate to product-list
   goToProductList(){
     this.router.navigate(['/product-list', this.selectedCategory]);
+  }
+
+  get academics(): any[]{
+    return this.eac.academy
   }
 }

@@ -1,3 +1,4 @@
+import { ManualComponent } from './../manual/manual.component';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 
 // 素材庫
@@ -8,7 +9,6 @@ import {
         ChevronDown, CirclePile, School, MapPin} from 'lucide-angular';
 
 import { ProductCardComponent } from "../product-card/product-card.component";
-import { ManualComponent } from "../manual/manual.component";
 import { Router } from '@angular/router';
 
 export interface Product {
@@ -33,7 +33,7 @@ export interface Product {
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.scss'
 })
-export class HomepageComponent {
+export class HomepageComponent{
   constructor(
     private route: Router,
   ) {}
@@ -73,8 +73,6 @@ categories = [
   @ViewChild('categoryScroll')
   categoryScroll!: ElementRef;
 
-
-
   scrollLeft() {
     this.categoryScroll.nativeElement.scrollBy({
       left: -300,
@@ -89,8 +87,18 @@ categories = [
     });
   }
 
-  goToProductListById(type:string){
-    this.route.navigate(['/product-list', type]);
+ @ViewChild('manualSection')
+  manualSection!: ElementRef;
+
+  goToManual() {
+    this.manualSection.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+
+  goToProductListById(type: string){
+    this.route.navigate(['/product-list',type]);
   }
 
   homeProducts: Product[] = [

@@ -10,18 +10,6 @@
         <span>回首頁</span>
       </button>
     </li>
-    <!-- @for (item of categories; track $index) {
-      <li class="nav-item">
-        <button
-          type="button"
-          class="nav-link"
-          (click)="selectCategory(item.value)"
-          [class.active]="selectedCategory === item.value">
-          <lucide-icon [name]="item.icon"></lucide-icon>
-          <span>{{item.label}}</span>
-        </button>
-      </li>
-    } -->
 
     <li class="nav-item">
       <button
@@ -39,7 +27,7 @@
       <button
         type="button"
         class="nav-link"
-        (click)="goToHome()"
+        (click)="togglePanel($event, 'academic')"
       >
         <lucide-icon [name]="BoxIcon"></lucide-icon>
         <span>所有學群</span>
@@ -101,9 +89,31 @@
       </button>
     </li>
 
+    <li class="nav-item">
+      <button
+        type="button"
+        class="nav-link"
+        (click)="goToManual()"
+      >
+        <lucide-icon [name]="CircleQuestionMarkIcon"></lucide-icon>
+        <span>使用說明</span>
+      </button>
+    </li>
+
     </ul>
 
   <hr class="divider">
 
 
+  @if (panelState.academic) {
+    <div class="academics" >
+      @for (item of academics; track $index)
+      {
+        <button class="academy">
+          {{item.name}}
+        </button>
+      }
+    </div>
+  }
 </div>
+

@@ -67,10 +67,12 @@
 
       <div class="filter-section">
         <p class="section-label">適用學群</p>
-         <select class="form-select" aria-label="Default select example">
+         <select class="form-select"
+         aria-label="Default select example"
+         >
           <option selected>適用學群</option>
           @for (item of filterForm.academic; track $index) {
-            <option [(ngModel)]="item.value">{{item.label}}</option>
+            <option [(ngModel)]="item.value">{{item.name}}</option>
           }
         </select>
       </div>

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common'; // 為了 @if, @for
 import { FormsModule } from '@angular/forms';
 
 // 素材庫
 import { LucideAngularModule, Search, Shapes, MapPin, Filter, Upload } from 'lucide-angular';
+import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -12,6 +13,13 @@ import { LucideAngularModule, Search, Shapes, MapPin, Filter, Upload } from 'luc
   styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent {
+
+  constructor(private aca: EighteenAcademyService) {}
+
+  ngOnInit() {
+    this.filterForm.academic = this.aca.academy;
+  }
+
   // Declare icon
   readonly FilterIcon = Filter;
   readonly UploadIcon = Upload;
@@ -21,6 +29,8 @@ export class SearchBarComponent {
 
 
   isFilterOpen = false;
+
+
 
 // 篩選條件資料模型
   filterForm = {
@@ -61,26 +71,7 @@ export class SearchBarComponent {
       }
     ],
 
-    academic: [
-      { label: "資訊學群", value: "information", selected: false },
-      { label: "工程學群", value: "engineering", selected: false },
-      { label: "數理化學群", value: "science_math", selected: false },
-      { label: "醫藥衛生學群", value: "medical", selected: false },
-      { label: "生命科學學群", value: "life_science", selected: false },
-      { label: "生物資源學群", value: "bio_resource", selected: false },
-      { label: "地球與環境學群", value: "earth_environment", selected: false },
-      { label: "建築與設計學群", value: "design_architecture", selected: false },
-      { label: "藝術學群", value: "arts", selected: false },
-      { label: "社會與心理學群", value: "social_psychology", selected: false },
-      { label: "大眾傳播學群", value: "mass_communication", selected: false },
-      { label: "外語學群", value: "foreign_language", selected: false },
-      { label: "文史哲學群", value: "humanities", selected: false },
-      { label: "教育學群", value: "education", selected: false },
-      { label: "法政學群", value: "law_politics", selected: false },
-      { label: "管理學群", value: "management", selected: false },
-      { label: "財經學群", value: "finance", selected: false },
-      { label: "遊憩與運動學群", value: "sports_leisure", selected: false }
-  ],
+    academic: [] as any
 
 
 

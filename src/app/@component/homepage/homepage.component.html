@@ -84,7 +84,7 @@
     <div class="background-color-box"></div>
 </section>
 
-<section class="manual-wrapper">
+<section class="manual-wrapper" #manualSection (click)="goToManual()">
   <div class="subtitle">
     <h5>
       <mark>
@@ -93,7 +93,7 @@
     </h5>
   </div>
 
-  <app-manual ></app-manual>
+  <app-manual id="manual"></app-manual>
 </section>
 
 </main>
