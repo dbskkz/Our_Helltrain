@@ -119,8 +119,8 @@ export class ProductListingComponent implements OnInit{
 
   private readonly DEFAULT_FILTERS = {
     priceValue:     0,
-    priceHighValue: 10000,
-    sellerGrade:    5
+    priceHighValue: 1000,
+    sellerGrade:    0
   } as const;
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
@@ -128,7 +128,7 @@ export class ProductListingComponent implements OnInit{
 
   priceOptions: Options = {
     floor: 0,
-    ceil: 10000,
+    ceil: 1000,
     step: 100,        // 每格 100 元
   translate: (value: number): string => `$${value.toLocaleString()}`
   };
