@@ -18,5 +18,6 @@ import { SubBarComponent } from "../../@TheHeader/sub-bar/sub-bar.component";
 export class MainLayoutComponent {
 
     isLoggin = false;
+    isClose = false;
 
 }

@@ -2,18 +2,13 @@
   <nav class="filter-panel">
     <div class="site-path">
       <span class="breadcrumb">
+        <a routerLink="/home">
         <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
-        首頁 > {{ categoryName }}</span>
+        首頁 </a> > {{ categoryName }}</span>
     </div>
 
     <header class="list-header">
-        <!-- <div class="subtitle">
-          <h5>
-            <mark>
-              {{ categoryName }}
-            </mark>
-          </h5>
-        </div> -->
+
       <h1 class="category-name">{{ categoryName }}</h1>
 
       <!-- 排序方式 -->

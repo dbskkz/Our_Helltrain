@@ -8,11 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
 
   padding: 0.4rem 1.5rem;
 
-  background: rgba(28, 28, 30, 0.88);
+  background: rgba(28, 28, 30, 0.8);
   backdrop-filter: blur(14px);
 
   color: white;
@@ -23,7 +22,19 @@
 
   letter-spacing: 0.02em;
 
-  div {
+  position: sticky;
+
+  /* ===== 中間內容 ===== */
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    flex: 1;
+  }
+
+  .group {
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -34,16 +45,20 @@
     margin: 0;
     font-size: 0.8rem;
     font-weight: 300;
-    letter-spacing: 8%;
+    letter-spacing: 0.08em;
   }
-
 
   h5 {
     font-weight: 500;
-    letter-spacing: 8%;
   }
 
-  button {
+  .hint {
+    color: $neutral-300;
+  }
+
+  /* ===== 按鈕 ===== */
+
+  .cta {
     border: none;
     outline: none;
     cursor: pointer;
@@ -74,12 +89,12 @@
     }
   }
 
-  div:first-child button {
+  .reg {
     background: $primary-yellow;
     color: $text-black;
   }
 
-  div:last-child button {
+  .login {
     background: rgba(255, 255, 255, 0.08);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -88,28 +103,55 @@
       background: rgba(255, 255, 255, 0.14);
     }
   }
+
+  /* ===== 關閉按鈕 ===== */
+
+  .close-wrapper {
+    position: absolute;
+    right: 1.5rem; // 靠近螢幕右側
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-close {
+    opacity: 0.4;
+    transition: 0.2s ease;
+
+    &:hover {
+      opacity: 0.7;
+      transform: scale(1.08);
+    }
+  }
 }
 
-.hint{
-  color: $neutral-300;
-}
+/* ===== 手機版 ===== */
 
-/* 手機版 */
 @media (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
-    gap: 0.8rem;
-    padding: 1rem;
+    padding: 0.9rem 1rem;
 
-    div {
-      width: 100%;
-      justify-content: center;
+    .content {
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .group {
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     h5,
     p {
       text-align: center;
+    }
+
+    .close-wrapper {
+      top: 0.8rem;
+      right: 0.8rem;
     }
   }
 }

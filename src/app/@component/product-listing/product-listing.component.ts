@@ -3,12 +3,12 @@ import { Options } from '@angular-slider/ngx-slider';
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaginationService } from '../../@Services/pageination.service';
 
 // 素材庫
 import { LucideAngularModule, ArrowUpDown,Home
-  , ChevronRight, ChevronLeft, RotateCcw
+  , ChevronRight, ChevronLeft, RotateCcw, SlidersHorizontal, X
 } from 'lucide-angular';
 import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { ProductCardComponent } from "../product-card/product-card.component";
@@ -32,7 +32,7 @@ export interface Product {
 @Component({
   selector: 'app-product-listing',
   imports: [LucideAngularModule,
-    // BrowserModule,
+    RouterLink,
     FormsModule,
     NgxSliderModule, ProductCardComponent],
   templateUrl: './product-listing.component.html',
@@ -100,7 +100,8 @@ export class ProductListingComponent implements OnInit{
     sort: false,
     grade: false,
     location: false,
-    school: false
+    school: false,
+    filter: false
   }
 
   togglePanel(
@@ -223,11 +224,39 @@ export class ProductListingComponent implements OnInit{
     if (selectedDepts.length === 0) return '科系類別';
     if (selectedDepts.length <= 2) return selectedDepts.join('、');
     return `${selectedDepts[0]} 等 ${selectedDepts.length} 個學群`;
-    // const parts: string[] = [];
-    // if (selectedDepts.length > 0) parts.push(`${selectedDepts.length} 個學群`);
-    // return parts.join('、');
   }
 
+  // =========================================================
+  // SIDEBAR 相關
+  // =========================================================
+
+  get activeFilters(): { key: string; label: string }[] {
+    const tags: { key: string; label: string }[] = [];
+
+    if (this.priceLabel !== '價格區間')
+      tags.push({ key: 'price', label: this.priceLabel });
+
+    if (this.gradeLabel !== '賣家評價')
+      tags.push({ key: 'grade', label: this.gradeLabel });
+
+    if (this.locationLabel !== '地區')
+      tags.push({ key: 'location', label: this.locationLabel });
+
+    if (this.schoolLabel !== '科系類別')
+      tags.push({ key: 'school', label: this.schoolLabel });
+
+    return tags;
+  }
+
+  removeFilter(key: string) {
+    if (key === 'price') {
+      this.priceValue = this.DEFAULT_FILTERS.priceValue;
+      this.priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
+    }
+    if (key === 'grade')    this.sellerGrade = this.DEFAULT_FILTERS.sellerGrade;
+    if (key === 'location') this.cities.forEach(c => c.selected = false);
+    if (key === 'school')   this.department.forEach(d => d.selected = false);
+  }
   // =========================================================
   // PAGINATION（每頁最多 30 筆）
   // =========================================================

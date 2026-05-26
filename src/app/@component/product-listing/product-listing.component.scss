@@ -269,3 +269,18 @@ lucide-icon{
   display: flex;
   align-items: center;
 }
+
+
+// 去除 a 標籤的預設樣式
+a {
+  color: inherit;       /* 繼承父層文字顏色，避免變成藍色 */
+  text-decoration: none;/* 移除預設底線 */
+  display: inherit;
+  gap: inherit;
+}
+
+a:visited {
+  color: inherit;       /* 避免點擊過後變成紫色 */
+}
+
+
