@@ -4,13 +4,14 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AsyncPipe} from '@angular/common';
 import { map, Observable, startWith } from 'rxjs';
-import { LucideAngularModule, PencilLine, BookUser, ClipboardPenLine, LockKeyhole } from 'lucide-angular';
+import { LucideAngularModule, PencilLine,Box,Mail,Phone, MapPin,BookUser, School, ClipboardPenLine, LockKeyhole } from 'lucide-angular';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,6 +26,13 @@ import Swal from 'sweetalert2';
 })
 export class ProfileSettingsComponent {
 
+
+  readonly School = School;
+  readonly MapPin = MapPin;
+  readonly Phone = Phone;
+  readonly BoxIcon = Box;
+  readonly Mail = Mail;
+
   constructor(private fb: FormBuilder,private snackBar: MatSnackBar, private router: Router, private schoolService: SchoolDataService) {}
 
   readonly pencilIcon = PencilLine; //鉛筆icon
@@ -34,9 +42,10 @@ export class ProfileSettingsComponent {
 
 // 預設頭像（可以是妳專案裡的預設圖路徑）
   avatarUrl: string | ArrayBuffer | null = '/img/頭像範例.png';
+// 專門用來存放「準備送去 Java 後端的二進位 File 檔案」
+  selectedAvatarFile: File | null = null;
 
   name: string = '小明'; //名字
-  isEditingName: boolean = false; // 控制是否處於編輯模式
   tempName: string = ''; // 暫存修改中的名字，避免按下取消時原始資料被改掉
 
   score: number = 4.5; //評分
@@ -45,15 +54,17 @@ export class ProfileSettingsComponent {
 
   school: string = '輔仁大學'; //學校
   department: string = '醫學系'; //科系
-  area: string = '新北市'; //地區
+  areas: string[] = ['新北市', '', '']; //地區
+  phone: string = ''; //電話
+  phoneControl = new FormControl(this.phone); // 建立電話的控制項
   isEditingBasic: boolean = false; // 控制基本資訊是否可編輯
 
   email: string = 'apple@gmail.com';
   profile: string = '本人常駐於台灣大學，偶爾會穿越到輔仁大學'; //個人簡介
-  isEditingProfile: boolean = false; // 控制編輯狀態
   profileControl = new FormControl(this.profile);
 
   isEditingPassword: boolean = false;// 控制編輯狀態
+  private backupData: any = {}; // 按下取消時，用來跨時空倒流的記憶箱子
 
   // 密碼相關的 Control
   passwordForm!: FormGroup;
@@ -63,23 +74,53 @@ export class ProfileSettingsComponent {
   hideConfirmPassword = signal(true);
 
   //建立 Control 負責控制輸入框與獲取目前打什麼字
-  schoolControl = new FormControl(this.school);
+  schoolControl = new FormControl(this.school, [Validators.required]);
   deptControl = new FormControl(this.department);
-  areaControl = new FormControl(this.area);
+  areaFormArray = new FormArray<FormControl<string | null>>([]);
 
 
   // 2. 這是畫面顯示用的「動態過濾後的清單」 各自的動態過濾水管 (Observable)
   filteredSchools: Observable<string[]> | undefined;
   filteredDepts: Observable<string[]> | undefined;
   filteredAreas: Observable<string[]> | undefined;
-
+  filteredAreasList: Observable<string[]>[] = [];
 
   ngOnInit() {
     // 初始狀態設為禁用
-    this.areaControl.disable();
     this.schoolControl.disable();
     this.deptControl.disable();
     this.profileControl.disable();
+    this.phoneControl.disable();
+
+//  1. 根據原本的 areas 陣列長度，動態把 FormControl 塞進 FormArray 盒子裡
+    this.areas.forEach((areaValue, index) => {
+      // 如果是 index === 0 (第一格) 就加上必填驗證，其餘格則不用
+      const validators = index === 0 ? [Validators.required] : [];
+
+      const ctrl = new FormControl(
+        { value: areaValue, disabled: true },
+        validators
+      );
+      this.areaFormArray.push(ctrl);
+    });
+
+    //  2. 神級重構：用一個迴圈，自動幫陣列裡的「每一個」輸入框接上動態互斥水管！
+    this.areaFormArray.controls.forEach((control, index) => {
+      this.filteredAreasList[index] = control.valueChanges.pipe(
+        startWith(control.value || ''),
+        map(value => {
+          const allRegions = this.schoolService.allRegions();
+
+          // ❌ 剔除邏輯：找出「除了自己以外」，其他輸入框目前已經選了哪些縣市
+          const otherSelectedValues = this.areaFormArray.controls
+            .filter((_, idx) => idx !== index) // 排除自己
+            .map(c => c.value);                // 拿別人的值
+
+          const availableRegions = allRegions.filter(r => !otherSelectedValues.includes(r));
+          return this._filter(value || '', availableRegions);
+        })
+      );
+    });
 
     this.passwordForm = this.fb.group({
       oldPassword: [{ value: '', disabled: true }, [Validators.required]],
@@ -89,53 +130,62 @@ export class ProfileSettingsComponent {
       validators: this.passwordMatchValidator // 👈 自訂比對大門
     });
 
-// 【地區】過濾水管：直接向大水庫拿最外層的所有縣市
-    this.filteredAreas = this.areaControl.valueChanges.pipe(
-      startWith(this.areaControl.value || ''),
-      map(value => {
-        const regions = this.schoolService.allRegions();
-        return this._filter(value || '', regions);
-      })
-    );
 
-    // 【學校】過濾水管：當地區改變時，動態跟 Service 要該地區的學校來過濾
+    // 🏫 2. 【學校】水管：不再受地區限制，直接撈取全台灣不重複學校總名單
     this.filteredSchools = this.schoolControl.valueChanges.pipe(
       startWith(this.schoolControl.value || ''),
       map(value => {
-        // 修正點：因為被 disable 時 .value 會拿不到，改用 .getRawValue() 確保強制拿到目前的值！
-        const currentRegion = this.areaControl.getRawValue();
-        const schoolsInRegion = this.schoolService.getSchoolsByRegion(currentRegion);
-        return this._filter(value || '', schoolsInRegion);
+        // 💡 呼叫我們升級後的 Service 管道，拿到全台打散排序好的 130 多所學校名單
+        const allTaiwanSchools = this.schoolService.allFlattenedSchools();
+        return this._filter(value || '', allTaiwanSchools);
       })
     );
 
-    // 【科系】過濾水管：當學校改變時，動態跟 Service 要該縣市該校的科系來過濾
+    // 🎓 3. 【科系】水管：完全不需要管區域，直接根據目前填寫的「學校」來動態吐出科系
     this.filteredDepts = this.deptControl.valueChanges.pipe(
       startWith(this.deptControl.value || ''),
       map(value => {
-        const currentRegion = this.areaControl.getRawValue();
         const currentSchool = this.schoolControl.getRawValue();
-        const deptsInSchool = this.schoolService.getDepartmentsBySchool(currentRegion, currentSchool);
+
+        // 💡 呼叫我們在 Service 幫你加開的全新大招方法（getDepartmentsBySchoolOnly）
+        // 完全不管地區，直球對焦這間學校有哪些科系！
+        const deptsInSchool = this.schoolService.getDepartmentsBySchoolOnly(currentSchool);
         return this._filter(value || '', deptsInSchool);
       })
     );
 
+    // 4.當使用者重新選擇或改動「學校」時，自動啪一聲清空「科系」
+    this.schoolControl.valueChanges.subscribe((newValue) => {
+      // 只有在處於「編輯模式」時才觸發清空，避免初始化或切換時產生不必要的干擾
+      if (this.isEditingBasic) {
+      // 🔑 終極防呆：檢查使用者「打的新字（newValue）」跟「原本存在變數裡的舊學校（this.school）」一不一樣
+        // 只有在兩者【真正不相等】（代表使用者真的動手去擦掉、改寫、或選新學校）時，才允許清空科系！
+        if (newValue !== this.school) {
+          // 將科系重置為空字串
+          this.deptControl.setValue('', { emitEvent: true });
+        }
+       }
+    });
+
     setTimeout(() => {
 
       // 🔑 關鍵：暫時解除封印、強迫通水、再鎖回去！
-      this.areaControl.enable({ emitEvent: false });
+      this.areaFormArray.enable({ emitEvent: false });
       this.schoolControl.enable({ emitEvent: false });
       this.deptControl.enable({ emitEvent: false });
+      this.phoneControl.enable({ emitEvent: false });
 
       // 發射更新事件讓 Autocomplete 水管通水
-      this.areaControl.updateValueAndValidity({ emitEvent: true });
+      this.areaFormArray.controls.forEach(c => c.updateValueAndValidity({ emitEvent: true }));
       this.schoolControl.updateValueAndValidity({ emitEvent: true });
       this.deptControl.updateValueAndValidity({ emitEvent: true });
+      this.phoneControl.updateValueAndValidity({ emitEvent: true });
 
       // 恢復一進網頁時的預設禁用狀態
-      this.areaControl.disable({ emitEvent: false });
+      this.areaFormArray.disable({ emitEvent: false });
       this.schoolControl.disable({ emitEvent: false });
       this.deptControl.disable({ emitEvent: false });
+      this.phoneControl.disable({ emitEvent: false });
     }, 300); // 延遲 300 毫秒，等 JSON 下載完畢後自動觸發
     }
 
@@ -203,6 +253,8 @@ export class ProfileSettingsComponent {
         return;
       }
 
+      this.selectedAvatarFile = file;
+
       // 2. 讀取檔案並產生預覽圖
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -215,75 +267,141 @@ export class ProfileSettingsComponent {
     }
   }
 
+  // 🔑 新增：點擊恢復預設頭像的方法
+  resetToDefaultAvatar() {
+    // 1. 先用 Swal 來個貼心小確認，防止使用者誤觸
+    Swal.fire({
+      title: "確定要恢復預設頭像嗎？",
+      text: "恢復後將會使用系統初始的預設圖片喔！",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "確定恢復",
+      cancelButtonText: "先不要",
+      confirmButtonColor: '#FB831D', // 派出提醒橘色
+      cancelButtonColor: '#999999'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 2. 使用者按確定：將圖片路徑打回最初的起點
+        this.avatarUrl = '/img/頭像範例.png';
 
-  /* 改名字 */
-
-  // 點擊鉛筆圖示
-  startEdit() {
-    this.tempName = this.name; // 把現有的名字存進暫存
-    this.isEditingName = true;
-  }
-
-  //按下確定
-  saveName() {
-    this.name = this.tempName; // 將暫存值正式寫回
-    this.isEditingName = false;
-    // 這裡之後可以呼叫 Service 把 this.name 送去後端 API
-    console.log('已更新資料庫:', this.name);
-  }
-
-  // 按下取消
-  cancelEdit(){
-    this.isEditingName = false;
+        // 3. 傳遞暗號給後端：塞入 'RESET_DEFAULT' 字串，通知 Java 同學去把資料庫這名使用者的 avatar 欄位清空
+        this.selectedAvatarFile = 'RESET_DEFAULT' as any;
+      }
+    });
   }
 
   /* 改基本資料 */
-
   // 切換編輯模式
   toggleEditBasic(){
     this.isEditingBasic = !this.isEditingBasic
 
-    if(this.isEditingBasic){
-      // 開啟編輯：啟用控制項
-      this.areaControl.enable();
+   if (this.isEditingBasic) {
+      // 🔓 開啟編輯：啟用所有控制項
+      this.areaFormArray.enable();
       this.schoolControl.enable();
       this.deptControl.enable();
-    } else{
-      // 儲存/關閉編輯：禁用控制項
-      this.areaControl.disable();
+      this.profileControl.enable();
+      this.phoneControl.enable();
+
+      // 重要：開啟編輯的瞬間，把當前的資料存進編輯暫存區（提供 [(ngModel)] 雙向綁定）
+      this.tempName = this.name;
+      this.backupData = {
+        avatarUrl: this.avatarUrl,
+        areas: this.areaFormArray.controls.map(c => c.value),
+        school: this.schoolControl.value,
+        dept: this.deptControl.value,
+        phone: this.phoneControl.value,
+        profile: this.profileControl.value
+      };
+      // B. 【點擊確定儲存】
+    } else {
+      // 防呆安檢:檢查學校、或是地區第一格有沒有通過驗證
+      if (this.schoolControl.invalid || this.areaFormArray.controls[0].invalid) {
+        Swal.fire({
+          title: '儲存失敗',
+          text: '請填寫必填欄位（學校與地區第一格）！',
+          icon: 'warning',
+          confirmButtonColor: '#FB831D'
+        });
+        this.isEditingBasic = true; // 保持編輯狀態
+        return; // 攔截！不讓程式往下跑
+      }
+      // 🚨 防呆安檢：名字是一定要寫，且不能超過 10 個字！
+      const trimmedName = this.tempName ? this.tempName.trim() : '';
+      if (!trimmedName) {
+        Swal.fire({ title: '儲存失敗', text: '名稱為必填欄位，不能留空喔！', icon: 'warning', confirmButtonColor: '#FB831D' });
+        this.isEditingBasic = true;
+        return; // 攔截！不讓程式往下跑
+      }
+      if (trimmedName.length > 20) {
+        Swal.fire({ title: '儲存失敗', text: '名稱長度不能超過 20 個字喔！', icon: 'warning', confirmButtonColor: '#FB831D' });
+        return; // 攔截！
+      }
+      // 🔒 儲存/關閉編輯：禁用所有控制項
+      this.isEditingBasic = false;
+
+      this.areaFormArray.disable();
       this.schoolControl.disable();
       this.deptControl.disable();
-
-      // 這裡之後可以寫入呼叫後端 API 的邏輯
-      console.log('儲存基本資訊:',{
-        area: this.areaControl.value,
-        school: this.schoolControl.value,
-        dept: this.deptControl.value
-      });
-    }
-  }
-
-/* 修改自介 */
-
-  //  切換編輯模式的函式
-  toggleEditProfile() {
-    this.isEditingProfile = !this.isEditingProfile;
-
-    if (this.isEditingProfile) {
-      this.profileControl.enable();
-    } else {
-      // 儲存時把控制項的值更新回變數
-      this.profile = this.profileControl.value ?? '';
       this.profileControl.disable();
+      this.phoneControl.disable();
 
-      // 這裡可以呼叫 API 送到後端
-      console.log('儲存個人簡介:', this.profile);
+      // 🔑 同步數據：將畫面上編輯好的暫存名字與自介，正式寫回變數中
+      this.name = this.tempName;
+      this.areas = this.areaFormArray.controls.map(c => c.value ?? '');
+      this.school = this.schoolControl.value ?? '';
+      this.department = this.deptControl.value ?? '';
+      this.profile = this.profileControl.value ?? '';
+      this.phone = this.phoneControl.value ?? '';
+
+
+      // 這裡之後可以寫入呼叫後端 API 的邏輯（整包送給 Java 測試）
+      console.log('儲存基本資訊送交後端:', {
+        name: this.name,
+        areas: this.areas.filter(a => a !== ''), // 🚀 自動過濾掉沒選的空欄位！
+        school: this.schoolControl.value,
+        dept: this.deptControl.value,
+        phone: this.phone,
+        profile: this.profile,
+        avatarFile: this.selectedAvatarFile
+      });
+
+      // 💡 未來 Java 對接小筆記：因為有帶圖片檔案，建議用 FormData 來傳送：
+      // const formData = new FormData();
+      // if(this.selectedAvatarFile) formData.append('avatar', this.selectedAvatarFile);
+      // formData.append('name', this.name);
+      // this.userService.updateProfile(formData).subscribe(...);
+
+      // 儲存成功後，清空暫存檔案控制項
+      this.selectedAvatarFile = null;
     }
   }
 
+/* 點擊「取消修改」的方法 */
+  cancelEditBasic() {
+    this.isEditingBasic = false;
+
+    // 🔒 關閉編輯模式並集體禁用
+    this.areaFormArray.disable();
+    this.schoolControl.disable();
+    this.deptControl.disable();
+    this.profileControl.disable();
+    this.phoneControl.disable();
+
+    //  【時空倒流：從記憶箱子裡把舊存檔倒回去】
+    this.avatarUrl = this.backupData.avatarUrl; // 🔑 頭像完美變回預設/原圖！
+    this.selectedAvatarFile = null;             // 暫存圖片垃圾桶清空
+    this.tempName = this.name; // 名字還原
+    this.schoolControl.setValue(this.backupData.school, { emitEvent: false });
+    this.deptControl.setValue(this.backupData.dept, { emitEvent: false });
+    this.phoneControl.setValue(this.backupData.phone, { emitEvent: false });
+    this.profileControl.setValue(this.backupData.profile, { emitEvent: false });
+    this.areaFormArray.controls.forEach((control, index) => {
+      control.setValue(this.backupData.areas[index], { emitEvent: false });
+    });
+   }
 
   /* 改密碼 */
-
   //  切換編輯模式的函式
   toggleEditPassword() {
     this.isEditingPassword = !this.isEditingPassword;
@@ -330,8 +448,5 @@ export class ProfileSettingsComponent {
   orderInformation(){
      this.router.navigate(['/order_information'])
   }
-
-
-
 
 }
