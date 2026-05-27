@@ -3,7 +3,7 @@
   <div class="auth-container">
 
       <div class="brand-top-section">
-        <h1 (click)="gotoHome()"><img src="img/4f817e5b-c3ba-4195-9a32-163a979743e3 (1).png" alt="二手 Go - Campus Marketplace" class="brand-logo" /></h1>
+        <h1 (click)="gotoHome()" class="logo-link" data-tooltip="回首頁"><img src="img/4f817e5b-c3ba-4195-9a32-163a979743e3 (1).png" alt="二手 Go - Campus Marketplace" class="brand-logo" /></h1>
         <p class="description">大學生專屬的二手交易平台</p>
       </div>
 
@@ -84,7 +84,7 @@
 
           <button class="submit-btn">登入</button>
 
-          <p class="switch-mode">還沒有帳號？<a (click)="isRegister = true">立即註冊</a> 或 <a (click)="gotoHome()">訪客登入</a></p>
+          <p class="switch-mode">還沒有帳號？<a (click)="isRegister = true" style="cursor: pointer;">立即註冊</a> 或 <a (click)="gotoHome()" style="cursor: pointer;">訪客瀏覽</a></p>
         </form>
       }@else {
           <div class="register-stepper">
@@ -117,7 +117,7 @@
                       姓名 <span class="required-star">*</span>
                     </div>
                     <div class="input-box-wrapper">
-                      <input matInput type="text" placeholder="真實姓名" class="custom-input" formControlName="name"/>
+                      <input matInput type="text" placeholder="可寫匿名" class="custom-input" formControlName="name" maxlength="20"/>
                     </div>
                     @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')) {
                           <p class="field-hint error-text">✘ 姓名為必填欄位</p>
@@ -151,6 +151,36 @@
                         }
                   </div>
 
+                  <div class="input-group">
+                    <div class="custom-outside-label">
+                      常出沒地區 <span class="required-star">*</span>
+                    </div>
+                    <div class="input-box-wrapper">
+
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                          <input
+                            type="text"
+                            placeholder="選擇你常出沒的地區 (必填)"
+                            matInput
+                            formControlName="area"
+                            [matAutocomplete]="autoArea"
+                            class="custom-input"
+                          />
+                          <mat-icon matSuffix class="suffix-icon">arrow_drop_down</mat-icon>
+                          <mat-autocomplete #autoArea="matAutocomplete" class="custom-autocomplete-panel">
+                            @for (option of filteredAreas | async; track option) {
+                              <mat-option [value]="option">{{ option }}</mat-option>
+                            }
+                          </mat-autocomplete>
+                        </mat-form-field>
+
+                    </div>
+
+                    @if (registerForm.get('area')?.touched && registerForm.get('area')?.hasError('required')) {
+                      <p class="field-hint error-text">✘ 常出沒地區為必填欄位</p>
+                    }
+                  </div>
+
                   <div class="input-group login-email-group">
                     <div class="custom-outside-label">
                       學校 Email <span class="required-star">*</span>
@@ -160,7 +190,7 @@
                       <input
                         matInput
                         type="email"
-                        placeholder="yourname@mail.school.edu.tw"
+                        placeholder="yourname@school.edu.tw"
                         class="custom-input"
                         [(ngModel)]="userEmail"
                         [ngModelOptions]="{standalone: true}"
@@ -255,12 +285,12 @@
                     <label for="register-terms">我已閱讀並同意<span class="terms-link" (click)="openTermsDialog($event)">使用說明與注意事項</span>，且確認所填資料屬實</label>
                   </div>
                     @if (registerForm.get('agreeTerms')?.touched && registerForm.get('agreeTerms')?.hasError('required')) {
-                    <p class="field-hint error-text" style="margin-top: 4px;">✘ 您必須同意使用說明與注意事項才能繼續</p>
+                    <p class="field-hint error-text" style="margin-top: 0px; margin-bottom: 24px;">✘ 您必須同意使用說明與注意事項才能繼續</p>
                   }
                   <button type="button" class="submit-btn" (click)="onNextStep()">
                     下一步：發送驗證信
                   </button>
-                  <p class="switch-mode">已有帳號？<a (click)="isRegister = false">直接登入</a></p>
+                  <p class="switch-mode">已有帳號？<a (click)="isRegister = false" style="cursor: pointer;">直接登入</a></p>
 
                 </form>
           }
@@ -274,6 +304,11 @@
               已將 6 位數驗證碼寄至 <br><span class="highlight-email">{{ userEmail }}</span><br>
               請於 <span class="deadline-text">15 分鐘內</span> 完成驗證，逾期驗證碼將會失效。
             </p>
+
+            <div class="tip-capsule-box">
+              <mat-icon class="tip-icon">info</mat-icon>
+              <p class="tip-text">若沒收到驗證信，請到<strong>「垃圾信箱」</strong>翻翻看喔！</p>
+            </div>
                             <!-- 示範用，之後會刪除 -->
             <p class="demo-tip">(本次驗證碼：455328)示範用，之後會刪除</p>
 
@@ -301,7 +336,12 @@
 
             <div class="resend-box">
               <span class="resend-text">
-                沒收到信？ <a class="resend-link" (click)="resendEmail()">重新發送驗證信</a>
+                沒收到信？
+                @if (canResend) {
+                  <a class="resend-link" (click)="resendEmail()">重新發送驗證信</a>
+                } @else {
+                  <span class="resend-disabled">重新發送 ({{ countdown() }}s)</span>
+                }
               </span>
             </div>
           </div>
