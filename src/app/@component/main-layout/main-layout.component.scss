@@ -48,7 +48,7 @@ main{
   justify-content: center;
   align-items: center;
 
-  background-color: white;
+  background-color: $primary-yellow;
   border-radius: 50%;
   border: none;
 
@@ -62,7 +62,7 @@ main{
   transition: 0.3s ease;
 
   &:hover{
-    background-color: $neutral-snow;
+    background-color: $background-yellow-hover;
   }
   &:active
   {

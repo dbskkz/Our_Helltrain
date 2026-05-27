@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'; // 引入生命週期鉤子
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core'; // 引入生命週期鉤子
 import { Router, NavigationEnd } from '@angular/router'; // 引入 NavigationEnd
 import { filter, Subscription } from 'rxjs'; // 引入 RxJS 工具
 
@@ -60,7 +60,7 @@ export class TopNavComponent implements OnInit, OnDestroy{
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  closeSidebar(event:Event){
+  closeSidebar(event:Event):void{
     event.stopPropagation;
     this.isSidebarOpen = false;
   }

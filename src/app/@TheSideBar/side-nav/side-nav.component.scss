@@ -104,14 +104,65 @@
 }
 
 
-.academics{
+.academics {
+  /* 1. 定位與形狀 */
   position: fixed;
-  max-height: 100%;
-  left: 0dvh;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  background-color: red;
-  padding: 1rem;
-  overflow-y: scroll;
+  top: 66px;              /* 稍微向下偏移，不要貼頂 */
+  left: 15rem; /* 距離側邊欄一段距離 */
+  width: 280px;           /* 設定固定寬度 */
+  max-height: 80vh;       /* 限制最大高度，避免超出螢幕 */
+
+  /* 2. 背景與陰影 (關鍵：營造懸浮感) */
+  background-color: #ffffff;
+  border-radius: 20px;    /* 像圖片一樣的大圓角 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); /* 柔和深邃的陰影 */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+
+  /* 3. 佈局 */
+  display: grid;          /* 使用 grid 讓內容排列更整齊 */
+  grid-template-columns: repeat(2, 1fr); /* 兩欄佈局 */
+  gap: 0.8rem;
+  padding: 1.5rem;
+
+  /* 4. 滾動條美化 */
+  /* 關鍵修改：改變渲染方向，讓滾輪跑去左邊 */
+  direction: rtl;
+  overflow-y: auto;
+  overflow-x: hidden; /* 防止出現水平滾動條 */
+  z-index: 1000;          /* 確保在最上層 */
+
+  /* 進場動畫 */
+  animation: fadeInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+  /* 學群按鈕樣式 (內部 Item) */
+  .academy {
+    background: #f8f9fa;   /* 淺灰色底色 */
+    border: none;
+    border-radius: 12px;   /* 圓角矩形 */
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    color: #444;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $primary-yellow;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba($primary-yellow, 0.3);
+    }
+  }
+}
+
+/* 讓面板彈出的動畫 */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
