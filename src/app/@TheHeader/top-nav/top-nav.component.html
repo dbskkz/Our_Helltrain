@@ -4,7 +4,8 @@
   <button class="menu">
     <input type="checkbox"
     [checked]="isSidebarOpen"
-    (click)="sidebarSwitch($event)">
+    (click)="sidebarSwitch($event)"
+    (keyup.esc)="closeSidebar($event)">
     <lucide-icon [img]="MenuIcon"></lucide-icon>
   </button>
 

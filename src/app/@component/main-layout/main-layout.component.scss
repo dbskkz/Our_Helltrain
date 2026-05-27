@@ -38,3 +38,40 @@ main{
   position: sticky;
   z-index: 9999;
 }
+
+.scrollToTop{
+  position: fixed;
+  bottom: 5rem;
+  right: 2rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+  border-radius: 50%;
+  border: none;
+
+  width: 3rem;
+  height: 3rem;
+
+  padding: 0.25rem;
+  z-index: 999999;
+
+  box-shadow: 0 0 12px 1px rgba($color: #000000, $alpha: 0.1);
+  transition: 0.3s ease;
+
+  &:hover{
+    background-color: $neutral-snow;
+  }
+  &:active
+  {
+    background-color: $background-yellow-active;
+    transform: scale(1.1);
+  }
+}
+
+lucide-icon{
+  display: flex;
+  align-items: center;
+}

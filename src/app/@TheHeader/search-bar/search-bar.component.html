@@ -1,7 +1,10 @@
 <div class="search-bar-wrapper">
   <div class="text-search-wrapper">
-    <lucide-icon [img]="SearchIcon" class="icon"></lucide-icon>
-    <input type="text" placeholder="搜尋書籍、商品、分類或學校...">
+    <lucide-icon [img]="SearchIcon" class="icon" (click) = "onSearch()"></lucide-icon>
+    <input type="text"
+    placeholder="商品名稱、地區、商品種類等關鍵字..."
+    [(ngModel)]="keyword"
+    (keyup.enter)="onSearch()">
   </div>
 
   <div class="filter-item" (click) = "toggleFilter()">

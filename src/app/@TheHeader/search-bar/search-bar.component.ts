@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 // 素材庫
 import { LucideAngularModule, Search, Shapes, MapPin, Filter, Upload } from 'lucide-angular';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-bar',
@@ -14,7 +15,9 @@ import { EighteenAcademyService } from '../../@Services/eighteen-academy.service
 })
 export class SearchBarComponent {
 
-  constructor(private aca: EighteenAcademyService) {}
+  constructor (
+    private aca: EighteenAcademyService,
+    private router: Router ) {}
 
   ngOnInit() {
     this.filterForm.academic = this.aca.academy;
@@ -101,5 +104,12 @@ export class SearchBarComponent {
     });
 
     this.isFilterOpen = false;
+  }
+
+  // 路由設定
+  keyword = '';
+
+  onSearch(){
+    this.router.navigate(['/product-list/all'], { queryParams: {keyword:this.keyword} })
   }
 }

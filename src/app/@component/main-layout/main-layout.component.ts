@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 
 // 素材庫
-import { LucideAngularModule, Menu } from 'lucide-angular';
+import { LucideAngularModule, Menu, ArrowUp } from 'lucide-angular';
 import { SearchBarComponent } from "../../@TheHeader/search-bar/search-bar.component";
 import { UserActionsComponent } from "../../@TheHeader/user-actions/user-actions.component";
 import { TopNavComponent } from "../../@TheHeader/top-nav/top-nav.component";
@@ -16,8 +16,13 @@ import { SubBarComponent } from "../../@TheHeader/sub-bar/sub-bar.component";
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
+    readonly ArrowUpIcon = ArrowUp;
 
     isLoggin = false;
     isClose = false;
+
+    scrollToTop(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
 }

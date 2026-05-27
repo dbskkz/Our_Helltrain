@@ -8,6 +8,10 @@
   <div class="main-content" >
     <main>
       <router-outlet></router-outlet>
+      <button class="scrollToTop" (click)="scrollToTop()"
+      [class.active]>
+        <lucide-icon [name]="ArrowUpIcon" [size]="28"></lucide-icon>
+      </button>
     </main>
   </div>
 

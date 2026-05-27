@@ -150,23 +150,59 @@
   <section class="theContent">
 
   <!-- 商品列表 -->
-  <app-product-card [products]="pagedProducts"></app-product-card>
-
-  <!-- 分頁 -->
-  <div class="pagination">
-    <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
-      <lucide-icon [name]="prevIcon"></lucide-icon>
-    </button>
-
-    @for (page of pagination.pageNumbers; track page) {
-      <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
-        {{ page }}
+  @if(pagedProducts.length > 0){
+    <app-product-card [products]="pagedProducts"></app-product-card>
+    <!-- 分頁 -->
+    <div class="pagination">
+      <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+        <lucide-icon [name]="prevIcon"></lucide-icon>
       </button>
-    }
 
-    <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
-      <lucide-icon [name]="nextIcon"></lucide-icon>
-    </button>
-  </div>
+      @for (page of pagination.pageNumbers; track page) {
+        <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      }
+
+      <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+        <lucide-icon [name]="nextIcon"></lucide-icon>
+      </button>
+    </div>
+  }
+  @else {
+  <section class="empty-state">
+
+    <div class="empty-icon-wrapper">
+      <span class="material-symbols-outlined">search_off</span>
+    </div>
+
+    <div class="empty-content">
+      <h2>找不到相關商品</h2>
+      <p class="empty-description">
+        我們找不到符合 <span>"{{ keyword }}"</span> 的結果，請嘗試其他關鍵字。
+      </p>
+    </div>
+
+    <div class="empty-actions">
+      <button
+        class="text-btn secondary-link"
+        (click)="clearAllFilters($event)"
+      >
+        清除篩選
+      </button>
+
+      <span class="divider">|</span>
+
+      <button
+        class="text-btn primary-link"
+        routerLink="/home"
+      >
+        返回首頁
+      </button>
+    </div>
+
+  </section>
+}
+
 </section>
 </main>

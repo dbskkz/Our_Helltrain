@@ -10,6 +10,8 @@ import {
 
 import { ProductCardComponent } from "../product-card/product-card.component";
 import { Router } from '@angular/router';
+import { ProductCard } from '../../@Interface/product-card';
+import { ProductServiceService } from '../../@Services/product-service.service';
 
 export interface Product {
   title: string;
@@ -33,9 +35,11 @@ export interface Product {
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.scss'
 })
+
 export class HomepageComponent{
   constructor(
     private route: Router,
+    private productService:ProductServiceService
   ) {}
 
   // Declare icon
@@ -101,87 +105,9 @@ categories = [
     this.route.navigate(['/product-list',type]);
   }
 
-  homeProducts: Product[] = [
-    {
-      title: '極簡黑後背包',
-      price: 300,
-      time: '2小時前',
-      imgUrl: 'assets/bag.jpg',
-      location: '新竹',
-      quantity: 1,
-      user: {
-        userName: '生科吉娃娃甘霖',
-        userImg: 'assets/avatar.jpg',
-        university: '清大',
-        department: '生科系',
-        location: ['新竹', '高雄']
-      }
-    },
-
-    {
-      title: '二手 iPad 支架',
-      price: 150,
-      time: '5小時前',
-      imgUrl: 'assets/ipad-stand.jpg',
-      location: '台中',
-      quantity: 1,
-      user: {
-        userName: '資工小海豹',
-        userImg: 'assets/avatar2.jpg',
-        university: '逢甲',
-        department: '資工系',
-        location: ['台中']
-      }
-    },
-
-    {
-      title: '日系奶茶色帆布袋',
-      price: 220,
-      time: '1天前',
-      imgUrl: 'assets/bag2.jpg',
-      location: '台北',
-      quantity: 1,
-      user: {
-        userName: '企管水豚',
-        userImg: 'assets/avatar3.jpg',
-        university: '政大',
-        department: '企管系',
-        location: ['台北', '桃園']
-      }
-    },
-
-    {
-      title: '羅技無線滑鼠',
-      price: 450,
-      time: '3小時前',
-      imgUrl: 'assets/mouse.jpg',
-      location: '高雄',
-      quantity: 1,
-      user: {
-        userName: '電機企鵝',
-        userImg: 'assets/avatar4.jpg',
-        university: '中山',
-        department: '電機系',
-        location: ['高雄']
-      }
-    },
-
-    {
-      title: '微積分課本',
-      price: 180,
-      time: '2天前',
-      imgUrl: 'assets/book.jpg',
-      location: '台南',
-      quantity: 1,
-      user: {
-        userName: '數學狐狸',
-        userImg: 'assets/avatar5.jpg',
-        university: '成大',
-        department: '數學系',
-        location: ['台南']
-      }
-    },
-  ]
+  get homeProducts(): ProductCard[] {
+    return this.productService.allProducts.slice(0,5);
+  }
 
 
 }

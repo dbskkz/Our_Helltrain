@@ -59,4 +59,9 @@ export class TopNavComponent implements OnInit, OnDestroy{
   sidebarSwitch( event: Event){
     this.isSidebarOpen = !this.isSidebarOpen;
   }
+
+  closeSidebar(event:Event){
+    event.stopPropagation;
+    this.isSidebarOpen = false;
+  }
 }
