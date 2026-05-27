@@ -96,7 +96,7 @@
 /* Table header */
 .table-header {
   display: grid;
-  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2fr;
+  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2.5fr;
   padding: 10px 24px;
   background: $background-yellow;
   border-bottom: 1.5px solid $background-yellow;
@@ -114,7 +114,7 @@
 /* Dispute rows */
 .dispute-row {
   display: grid;
-  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2fr;
+  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2.5fr;
   padding: 16px 24px;
   border-bottom: 1px solid $border-radius-color;
   align-items: center;
