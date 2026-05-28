@@ -16,6 +16,7 @@ import { StoreComponent } from './@component/store/store.component';
 import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
 import { LoginRegisterComponent } from './@component/login-register/login-register.component';
 import { ProductPageComponent } from './@component/product-page/product-page.component';
+import { FrontReportComponent } from './@component/front-report/front-report.component';
 
 export const routes: Routes = [
   //前台
@@ -25,21 +26,19 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: 'home', component: HomepageComponent },
-      { path: 'product-list/:category', component:ProductListingComponent},
-      { path: 'cart', component:ShoppingCartComponent},
+      { path: 'product-list/:category', component: ProductListingComponent },
+      { path: 'cart', component: ShoppingCartComponent },
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
       { path: 'store', component: StoreComponent }, //賣場頁面
-      { path: 'product_page', component: ProductPageComponent}, //商品頁
+      { path: 'product_page', component: ProductPageComponent }, //商品頁
+      { path: 'front_report', component: FrontReportComponent }, //檢舉頁
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
-  { path: 'login_register', component: LoginRegisterComponent}, //登入註冊頁面
-
-
-
+  { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
 
   //後台
   {
