@@ -42,13 +42,16 @@ export class SideNavComponent {
   readonly CircleQuestionMarkIcon = CircleQuestionMark;
 
   // 宣告商品種類
-  categories= [
-    { icon: CirclePile, label: "全部", value: 'all' },
-    { icon: Book, label: "書籍", value: 'books' },
-    { icon: Box, label: "科系用品", value: 'dept' },
-    { icon: Handbag, label: "生活用品", value: 'life' },
-    { icon: Smartphone, label: "3C電子", value: 'tech' },
-    { icon: Lamp, label: "家具家電", value: 'furniture' },
+  categories = [
+    { icon: Book, label: "教科書", value: 'books' },
+    { icon: Box, label: "專業器材", value: 'equipment' },
+    { icon: Handbag, label: "生活用品", value: 'daily' },
+    { icon: Smartphone, label: "3C電子", value: 'electronics' },
+    { icon: Armchair, label: "家具家電", value: 'furniture' },
+    { icon: NotebookText, label: "筆記考古", value: 'notes' },
+    { icon: Shirt, label: "服飾配件", value: 'fashion' },
+    { icon: BicepsFlexed, label: "戶外運動", value: 'sports' },
+    { icon: GraduationCap, label: "畢業季", value: 'graduation' },
   ];
 
   // 被選擇的商品種類

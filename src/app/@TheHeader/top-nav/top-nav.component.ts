@@ -42,8 +42,6 @@ export class TopNavComponent implements OnInit, OnDestroy{
     }
   }
 
-
-
   // Declare icon
   readonly MenuIcon = Menu;
 
