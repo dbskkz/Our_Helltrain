@@ -12,7 +12,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
-
+import {  ValidatorFn } from '@angular/forms';
 @Component({
   selector: 'app-login-register',
   imports: [MatDialogModule,MatFormFieldModule, MatInputModule,
@@ -92,14 +92,21 @@ export class LoginRegisterComponent implements OnInit{
 
   // (註冊箱子)把所有的欄位通通寫成變數
   private initRegisterForm() {
+  // 1. 先從你的 Service 拿到所有的官方學校與縣市總清單陣列
+  const allSchools = this.schoolService.allFlattenedSchools();
+  const allRegions = this.schoolService.allRegions();
+
     this.registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-    area: new FormControl('', [Validators.required]),
-    school: new FormControl('', [Validators.required]),
+    area: new FormControl('', [Validators.required,this.isInListValidator(allRegions)]),
+    school: new FormControl('', [Validators.required, this.isInListValidator(allSchools)]),
      //                新盒子                 必填     ,       長度檢查
     password: new FormControl('',[Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required]),
-    phone: new FormControl(''),
+    phone: new FormControl('', {
+      validators: [Validators.pattern(/^09-\d{8}$/)],
+      updateOn: 'blur' // 游標離開這格後，才開始進行格式檢查
+    }),
     agreeTerms: new FormControl(false, [Validators.requiredTrue]) //有沒有打勾(平台說明)
   }, {
     validators: this.passwordMatchValidator // 綁定下方比對密碼的方法
@@ -333,6 +340,22 @@ export class LoginRegisterComponent implements OnInit{
     }
   }
 
+  /* 手機格式 */
+  onPhoneInput(event: any) {
+  // 1. 取得使用者目前的輸入值
+  let value = event.target.value;
+
+  // 2. 移除非數字的字元（防止使用者自己亂輸入符號）
+  value = value.replace(/\D/g, '');
+
+  // 3. 如果長度大於 2，自動在第 2 碼後面插入破折號 '-'
+  if (value.length > 2) {
+    value = value.substring(0, 2) + '-' + value.substring(2);
+  }
+
+  // 4. 將格式化後的字串塞回表單欄位中
+  this.registerForm.get('phone')?.setValue(value, { emitEvent: false });
+}
 
   /* 登入按鈕 */
   onLogin(){
@@ -356,5 +379,23 @@ export class LoginRegisterComponent implements OnInit{
   gotoHome(){
      this.router.navigate(['/home'])
   }
+
+
+
+  // 建立一個防呆驗證器：確保輸入的值必須在指定的官方清單陣列裡
+isInListValidator(validOptions: string[]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const value = control.value;
+
+    // 如果使用者還沒填（留空），讓 required 驗證器去抓，這裡先回傳 null (放行)
+    if (!value) return null;
+
+    // 檢查使用者輸入的字，有沒有在我們的官方清單陣列中（精確比對）
+    const isValid = validOptions.includes(value);
+
+    // 如果不在清單內，就打上 'notInList' 的錯誤標籤；如果在，就回傳 null (沒錯誤)
+    return isValid ? null : { 'notInList': true };
+  };
+}
 
 }
