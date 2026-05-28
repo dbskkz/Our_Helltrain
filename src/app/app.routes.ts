@@ -10,13 +10,14 @@ import { MainLayoutComponent } from './@component/main-layout/main-layout.compon
 import { HomepageComponent } from './@component/homepage/homepage.component';
 import { ForegroundTestComponent } from './@component/foreground-test/foreground-test.component';
 import { BackLayoutComponent } from './@component/back-layout/back-layout.component';
-import { LaunchProductComponent } from './@component/launch-product/launch-product.component';
+import { LaunchProductInfoComponent } from './@component/launch-product-info/launch-product-info.component';
 import { ProductListingComponent } from './@component/product-listing/product-listing.component';
 import { StoreComponent } from './@component/store/store.component';
 import { ShoppingCartComponent } from './@component/shopping-cart/shopping-cart.component';
 import { LoginRegisterComponent } from './@component/login-register/login-register.component';
 import { ProductPageComponent } from './@component/product-page/product-page.component';
 import { FrontReportComponent } from './@component/front-report/front-report.component';
+import { LaunchProductPriceComponent } from './@component/launch-product-price/launch-product-price.component';
 
 export const routes: Routes = [
   //前台
@@ -31,7 +32,8 @@ export const routes: Routes = [
       { path: 'test', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
-      { path: 'launch_product', component: LaunchProductComponent }, //上架商品頁
+      { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
+      { path: 'launch_product_price', component: LaunchProductPriceComponent },//上架商品頁-價格
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁

@@ -1,0 +1,381 @@
+@use '../../styles/variables' as *;
+
+.page-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 28px 32px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: $text-gray;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+/* ── 操作步驟 ── */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: $background-white;
+  border: 1px solid $neutral-300;
+  border-radius: 12px;
+  padding: 18px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.step + .step::before {
+  content: '';
+  display: block;
+  width: 220px;
+  height: 1px;
+  background: #d1d5db;
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.step-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: 180ms ease;
+  background: #f0f2f5;
+  color: #6b7280;
+  border: 1px solid $neutral-300;
+}
+
+.step.active .step-badge {
+  background: $primary-yellow-dark;
+  color: #fefefe;
+  box-shadow: 0 0 0 5px $background-yellow-active;
+}
+
+.step-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: $text-gray;
+  white-space: nowrap;
+}
+
+.step.active .step-label {
+  color: #5b7fff;
+  font-weight: 600;
+}
+
+/* ── Layout ── */
+/* 1. 全新的垂直大卡片容器 */
+.form-vertical-container {
+  display: flex;
+  flex-direction: column; /* 確保所有子元素一律垂直向下排列 */
+  gap: 24px;              /* 欄位與欄位之間的垂直間距 */
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  margin-top: 24px;
+  max-width: 800px;       /* 限制最大寬度，避免在寬螢幕下輸入框被拉得太長不美觀 */
+  margin-left: auto;      /* 搭配 margin-right 讓整張卡片在畫面居中 */
+  margin-right: auto;
+}
+
+/* 欄位基礎樣式 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.section-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+
+  .hint-text {
+    font-size: 13px;
+    font-weight: normal;
+    color: #64748b;
+  }
+}
+
+.req { color: #ef4444; font-size: 14px; }
+
+/* ── 新增功能元件樣式 ── */
+.select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 4. 年級複選按鈕組樣式 */
+/* 年級複選區 */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 6px 0;
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #4f46e5;
+      cursor: pointer;
+    }
+  }
+}
+
+/* 輸入框與選擇框 */
+select, input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #334155;
+  background-color: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  &.selected {
+    color: #262626;
+    border-color: #b7eb8f;
+    background-color: #f6ffed;
+  }
+
+  &:disabled {
+    background-color: #f5f5f5;
+    color: #bfbfbf;
+    cursor: not-allowed;
+  }
+}
+
+.optional { font-size: 12px; color: #6b7280; font-weight: 400; }
+
+/* ── Fields ── */
+.field { margin-bottom: 20px; }
+.field:last-child { margin-bottom: 0; }
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: #1e1e1e;
+  background: #fff;
+  border: 1px solid #e2e5ea;
+  border-radius: 6px;
+  padding: 10px 13px;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+input[type="number"]::placeholder { color: #b0b7c3; }
+
+input[type="number"]:focus,
+select:focus {
+  border-color: #5b7fff;
+  box-shadow: 0 0 0 3px rgba(91,127,255,.12);
+}
+
+/* ── Select ── */
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  color: #b0b7c3;
+}
+
+select.selected { color: #1e1e1e; }
+select option { color: #1e1e1e; }
+
+/* ── Tags ── */
+.right-panel {
+  width: 100%;
+
+  .ai-card {
+    height: auto;
+    min-height: 320px; /* 給予 AI 卡片舒適的留白視覺感 */
+  }
+}
+
+.tags-input-wrapper {
+  border: 1px solid #e2e5ea;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  cursor: text;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  min-height: 42px;
+  align-items: center;
+}
+
+.tags-input-wrapper:focus-within {
+  border-color: #5b7fff;
+  box-shadow: 0 0 0 3px rgba(91,127,255,.12);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0f2ff;
+  border: 1px solid #c7d0ff;
+  color: #4f63d6;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px 2px 10px;
+  border-radius: 20px;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ba8e8;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 1px;
+  display: flex;
+  align-items: center;
+}
+
+.tag-remove:hover { color: #ef4444; }
+
+.tags-input {
+  flex: 1;
+  min-width: 80px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: #1e1e1e;
+  background: transparent;
+  padding: 0;
+}
+
+.tags-input::placeholder { color: #b0b7c3; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Footer：右下角下一步 ── */
+.form-footer {
+  display: flex;
+  justify-content: flex-end;  /* ← 靠右 */
+  align-items: center;
+  margin-top: 20px;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background: #5b7fff;
+  color: #fff;
+  min-width: 180px;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(91,127,255,.3);
+}
+
+.btn-primary:hover {
+  background: #4266f0;
+  box-shadow: 0 4px 16px rgba(91,127,255,.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-primary.disabled {
+  background: #c7d0ff;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: #1a1d23;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+
+.toast.show { opacity: 1; }
+
+/* 響應式佈局：當螢幕太小時，自動切換回單欄上下排列 */
+@media (max-width: 640px) {
+  .form-vertical-container {
+    padding: 20px;
+    gap: 16px;
+  }
+}
