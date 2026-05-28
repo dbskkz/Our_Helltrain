@@ -85,6 +85,7 @@ export class SearchBarComponent {
     this.isFilterOpen = !this.isFilterOpen;
   }
 
+
   // 重設篩選
   resetFilters() {
     this.filterForm.minPrice = null;

@@ -38,7 +38,8 @@
       <button
         type="button"
         class="nav-link"
-        (click)="goToHome()"
+        (click)="togglePanel($event, 'category')"
+        [class.active]="panelState.category"
       >
         <lucide-icon [name]="CirclePileIcon"></lucide-icon>
         <span>常用分類</span>
@@ -115,5 +116,22 @@
       }
     </div>
   }
+
+  @if (panelState.category) {
+  <div class="categories">
+    @for (item of categories; track $index) {
+      <button
+        class="category"
+        (click)="selectCategory(item.value)"
+        [class.active]="selectedCategory === item.value"
+      >
+        <lucide-icon [name]="item.icon"></lucide-icon>
+        <span>{{ item.label }}</span>
+      </button>
+    }
+  </div>
+}
+
+
 </div>
 

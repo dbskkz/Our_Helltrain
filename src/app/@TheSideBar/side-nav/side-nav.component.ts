@@ -3,9 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import {
-        LucideAngularModule, Home, Book, Box, MoonStar,
-        Smartphone, Handbag, Lamp, List, SmilePlus, CircleQuestionMark,
-        ChevronDown, CirclePile, School, MapPin} from 'lucide-angular';
+        LucideAngularModule,Home, Book, Box, MoonStar,
+        Smartphone, Handbag, Armchair, List, GraduationCap,
+        NotebookText, Shirt, BicepsFlexed,
+        ChevronDown, CirclePile, School, MapPin,Lamp,SmilePlus,CircleQuestionMark } from 'lucide-angular';
 import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 
@@ -87,7 +88,8 @@ export class SideNavComponent {
   }
 }
   panelState = {
-    academic:     false,
+    academic: false,
+    category: false,
   };
 
   togglePanel(event: Event, panel: keyof typeof this.panelState) {
