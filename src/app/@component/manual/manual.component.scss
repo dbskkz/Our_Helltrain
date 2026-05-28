@@ -1,0 +1,88 @@
+@use '../../styles/variables' as *;
+
+.manual-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* HERO */
+
+.manual-hero {
+  position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 4rem;
+
+  padding: 6rem 8%;
+  margin-top: 3rem;
+
+  background: #fff;
+
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding: 4rem 1rem;
+  }
+}
+
+.hero-left {
+
+  img {
+    max-width: 26rem;
+    @media (max-width: 768px) {
+      max-width: 20rem;
+    }
+  }
+}
+
+.hero-right {
+  max-width: 500px;
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: $text-black;
+  }
+
+  p {
+    color: $text-gray;
+    line-height: 1.8;
+    font-size: 1.05rem;
+  }
+}
+
+/* DECORATION */
+
+.hero-decoration {
+  position: absolute;
+  z-index: 0;
+}
+
+.top-circle {
+  width: 180px;
+  height: 180px;
+
+  background: $primary-yellow-light;
+
+  border-radius: 50%;
+
+  left: -40px;
+  bottom: -40px;
+}
+
+.ring {
+  width: 120px;
+  height: 120px;
+
+  border: 18px solid $primary-yellow-light;
+  border-radius: 50%;
+
+  top: 40px;
+  left: 35%;
+}
