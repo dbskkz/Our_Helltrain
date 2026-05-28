@@ -3,6 +3,14 @@
 .manual-container {
   width: 100%;
   overflow: hidden;
+
+  width: 100vw;
+  position: relative;
+  top: -0.9rem;
+  left: 50%;
+  right: 50%;
+  margin-left: -51vw;
+  margin-right: -50vw;
 }
 
 /* HERO */
@@ -17,7 +25,7 @@
   gap: 4rem;
 
   padding: 6rem 8%;
-  margin-top: 3rem;
+  // margin-top: 3rem;
 
   background: #fff;
 
@@ -65,24 +73,65 @@
 }
 
 .top-circle {
-  width: 180px;
-  height: 180px;
+  width: 16rem;
+  height: 16rem;
 
-  background: $primary-yellow-light;
+  background: linear-gradient(
+    to bottom,
+    $primary-yellow-light 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
 
   border-radius: 50%;
 
   left: -40px;
-  bottom: -40px;
+  bottom: -100px;
+
+  filter: blur(2px);
+  opacity: 0.9;
 }
 
 .ring {
-  width: 120px;
-  height: 120px;
+  width: 7rem;
+  height: 7rem;
 
-  border: 18px solid $primary-yellow-light;
   border-radius: 50%;
 
-  top: 40px;
-  left: 35%;
+  background:
+    conic-gradient(
+      from 270deg,
+      rgba(255,255,255,0) 0deg,
+      rgba(255,255,255,0) 180deg,
+      $primary-yellow-light 180deg,
+      $primary-yellow-light 360deg
+    );
+
+  -webkit-mask:
+    radial-gradient(farthest-side,
+      transparent calc(100% - 18px),
+      black calc(100% - 18px));
+
+  mask:
+    radial-gradient(farthest-side,
+      transparent calc(100% - 18px),
+      black calc(100% - 18px));
+
+  top: 0;
+  left: 40%;
+
+  filter: blur(2px);
+  opacity: 0.9;
 }
+
+// 修正一：裝飾圖形沉到底層，不遮內容
+.hero-decoration {
+  z-index: 0;
+}
+
+.hero-left,
+.hero-right {
+  position: relative;
+  z-index: 1;  // 確保 logo 和文字在裝飾層上方
+}
+
+
