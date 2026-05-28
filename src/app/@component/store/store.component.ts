@@ -13,6 +13,7 @@ import {
   Plus,
   ThumbsUp,
   Trash2,
+  Flag,
 } from 'lucide-angular';
 
 @Component({
@@ -36,10 +37,9 @@ export class StoreComponent {
   readonly Plus = Plus;
   readonly ThumbsUp = ThumbsUp;
   readonly Trash2 = Trash2;
+  readonly Flag = Flag;
 
   isGood: boolean = true;
-  isDelete: boolean = false;
-
   isOwner: boolean = false;
   // 監聽全域鍵盤事件
   @HostListener('window:keydown', ['$event'])
@@ -54,6 +54,10 @@ export class StoreComponent {
   pageSize = 6;
   totalElements = 6;
   totalPages = 5;
+
+  goRepot() {
+    this.router.navigate(['/front_report']);
+  }
 
   fetchProduct() {}
 
@@ -74,9 +78,9 @@ export class StoreComponent {
     this.router.navigate(['/launch_product']);
   }
 
-  // 刪除商品
-  deleteProduct() {
-    this.isDelete = !this.isDelete;
+  // 商品管理
+  manageProduct() {
+    this.router.navigate(['/launch_product']);
   }
 
   // 編輯商品 || 收藏商品

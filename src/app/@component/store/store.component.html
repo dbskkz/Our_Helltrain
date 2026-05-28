@@ -25,13 +25,27 @@
       <p> <lucide-icon [name]="BookText"></lucide-icon>賣家 ID： </p>
       <p> <lucide-icon [name]="MapPin"></lucide-icon>所在地區： </p>
       <p> <lucide-icon [name]="School"></lucide-icon>學校： </p>
+      <p> <lucide-icon [name]="School"></lucide-icon>學群/科系： </p>
     </div>
 
     <!-- 簡介 + 聊聊按鈕 -->
     <div class="col-md-6 intro-block">
       <label class="introduction">簡介：</label>
       <p>這是一段簡介。</p>
-      <button class="btn-action primary"><lucide-icon [name]="MessageCircleMore"></lucide-icon>聊聊</button>
+      <div class="introBtn">
+        @if (!isOwner) {
+        <button class="btn-action primary">
+          <lucide-icon [name]="MessageCircleMore"></lucide-icon>聊聊
+        </button>
+        <button class="btn-action report" (click)="goRepot()">
+          <lucide-icon [name]="Flag"></lucide-icon>檢舉
+        </button>
+        } @else {
+        <button class="btn-action primary">
+          <lucide-icon [name]="Pencil"></lucide-icon>編輯個人資料
+        </button>
+        }
+      </div>
     </div>
 
   </section>
@@ -39,19 +53,19 @@
   <!-- 上架商品區 -->
   <section class="products-section">
     <header class="products-header">
-      <span class="section-title">上架商品</span>
       @if (isOwner) {
+      <span class="section-title">我上架的商品</span>
       <div class="edit">
-        <button class="btn-action primary" (click)="deleteProduct()">
-          <lucide-icon [name]="Trash2"></lucide-icon>
-          刪除商品
+        <button class="btn-action primary" (click)="manageProduct()">
+          <lucide-icon [name]="Pencil"></lucide-icon>
+          商品管理
         </button>
         <button class="btn-action primary" (click)="goLaunchProduct()">
           <lucide-icon [name]="Plus"></lucide-icon>
           新增商品
         </button>
       </div>
-      }
+      } @else {<span class="section-title">上架商品</span>}
 
       <!-- <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span> -->
     </header>
@@ -74,14 +88,11 @@
             <div class="card-bottom">
               <span class="price">$180</span>
 
+              @if (!isOwner) {
               <button class="btn-icon-action" (click)="goUpdateProduct()">
-                @if (isOwner) {
-                @if (isDelete) {<lucide-icon [name]="Trash2"></lucide-icon>
-                } @else {<lucide-icon [name]="Pencil"></lucide-icon>}
-                } @else {
                 <lucide-icon [name]="HeartPlus"></lucide-icon>
-                }
               </button>
+              }
             </div>
           </div>
         </div>
@@ -111,4 +122,5 @@
       </li>
     </ul>
   </nav>
+
 </main>

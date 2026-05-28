@@ -45,7 +45,7 @@ export class UserActionsComponent {
     this.router.navigate(['/profile_settings']);
   }
   goToSell(){
-    this.router.navigate(['/launch_product']);
+    this.router.navigate(['/launch_product_info']);
   }
   goToOrder(){
     this.router.navigate(['/order_information']);

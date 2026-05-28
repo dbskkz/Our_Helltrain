@@ -12,81 +12,126 @@
     </ul>
   </nav>
 
+  <!-- role 切換 -->
+  <div class="role-toggle">
+    @for (role of roleColumns; track role) {
+    <button class="role-btn" [class.active]="currentRole === role" (click)="changeRole(role)">
+      {{ role }}
+    </button>
+    }
+  </div>
+
   <!-- 資料頁 -->
+  @for (order of filteredOrders(); track order.orderId) {
   <section class="order-card">
     <header class="order-header">
       <div class="order-info">
-        <span class="order-no">訂單編號：ORD202405160001</span>
-        <span class="order-date">下單時間：2024/05/16 14:32</span>
+        <span class="order-no">訂單編號：{{ order.orderId }}</span>
+        <span class="order-date">下單時間：{{ order.orderDate }}</span>
       </div>
-      <div class="order-amount">訂單金額：<span class="price">$180</span></div>
     </header>
 
     <div class="order-body">
       <div class="row align-items-center">
+        <!-- 商品圖片 -->
         <div class="col-md-2">
           <figure class="product-img">
-            <img
-              src="https://d2lfcsub12kx0l.cloudfront.net/tw/product/img/Apple_apple_airpods_pro_2_0907194607052_640x480.jpg"
-              alt="商品" width="300" height="300" />
+            <img [src]="order.product.image" [alt]="order.product.name" />
           </figure>
         </div>
 
+        <!-- 商品資訊 -->
         <div class="col-md-3">
           <div class="product-content">
-            <h5 class="name">AirPods (第二代)</h5>
-            <p class="seller">賣家：小麗的生活選物 <lucide-icon [name]="MessageCircleMore" (click)="chat()"></lucide-icon></p>
+            <h5 class="name">{{ order.product.name }}</h5>
+            <p class="seller">{{ order.counterpart.label }}：{{ order.counterpart.name }} <lucide-icon
+                [name]="MessageCircleMore" (click)="chat()"></lucide-icon></p>
             <div class="details">
-              <p class="unit-price">$180</p>
-              <p class="qty">數量：1</p>
+              <p class="unit-price">${{ order.product.price }}</p>
             </div>
           </div>
         </div>
 
+        <!-- 訂單狀態 -->
         <div class="col-md-4 ">
           <div class="delivery-status">
-            <div class="status-tag">
-              <lucide-icon [name]="CircleCheckBig"></lucide-icon> 已完成
+            <!-- 狀態標籤 -->
+            @if (order.status === 'completed') {
+            <div class="status-tag completed">
+              <lucide-icon [name]="CircleCheckBig"></lucide-icon>交易已完成
             </div>
-            <p>交易已完成，感謝您的購買！</p>
+            <p>交易已完成，感謝您的使用！</p>
+            }
+            @if (order.status === 'in_progress') {
+            <div class="status-tag in-progress">
+              <lucide-icon [name]="CircleDollarSign"></lucide-icon>交易進行中
+            </div>
+            <p>交易進行中，請耐心等候。</p>
+            }
+            @if (order.status === 'pending') {
+            <div class="status-tag pending">
+              <lucide-icon [name]="CircleEllipsis"></lucide-icon>等待回應中
+            </div>
+            <p>等待對方回應，請稍候。</p>
+            }
+            @if (order.status === 'cancelled') {
+            <div class="status-tag cancelled">
+              <lucide-icon [name]="CircleX"></lucide-icon>已取消
+            </div>
+            <p>交易已取消。</p>
+
+            }
+
+            @if (order.status === 'completed') {
             <div class="button-group">
-              <button class="btn-action outline">查看評價</button>
+              @if (order.hasReview) {
+              <button class="btn-action outline" (click)="viewReview(order)">查看評價</button>
+              } @else {
+              <button class="btn-action outline" (click)="submitReview(order)">進行評分</button>
+              }
             </div>
+            }
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="button-group">
-            <button class="btn-action primary" (click)="buyAgain()">
-              再次購買
+            @if (order.status === 'in_progress') {
+            <button class="btn-action primary" (click)="confirmComplete(order)">完成交易</button>
+            }
+
+            @if (order.status !== 'cancelled') {
+            <button class="btn-action outline" (click)="chat()">
+              聯絡{{ order.counterpart.label }}
             </button>
-            <button class="btn-action outline">聯絡賣家</button>
+            }
           </div>
         </div>
       </div>
     </div>
   </section>
+  }
+
+  <!-- 無資料提示 -->
+  @if (filteredOrders().length === 0) {
+  <div class="empty-state">
+    <p>目前沒有符合條件的訂單。</p>
+  </div>
+  }
 
   <!-- 分頁 -->
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      <span>共{{totalElements}}筆資料</span>
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      @for (p of pages; track p) {
-      <li class="page-item" [class.active]="currentPage === p">
-        <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
-      </li>
-      }
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
+  <nav class="pagination">
+    <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+      <lucide-icon [name]="ChevronLeft"></lucide-icon>
+    </button>
+    @for (page of pagination.pageNumbers; track page) {
+    <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+      {{ page }}
+    </button>
+    }
+    <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+      <lucide-icon [name]="ChevronRight"></lucide-icon>
+    </button>
   </nav>
 
 </main>

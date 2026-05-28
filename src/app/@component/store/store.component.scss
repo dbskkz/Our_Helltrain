@@ -49,7 +49,7 @@
     margin-bottom: 0;
     font-size: $font-size-base;
     color: $text-black;
-    font-weight: 400;
+    font-weight: 500;
   }
 }
 
@@ -66,13 +66,9 @@
   border: none;
   border-radius: 20px;
   padding: 6px 14px;
-  color: $primary-yellow-darker;
-  background: linear-gradient(
-    135deg,
-    $background-yellow,
-    $primary-yellow
-  ); // 漸層
-  box-shadow: 0 2px 6px rgba($primary-yellow-dark, 0.15);
+  color: #00796b;
+  background: linear-gradient(135deg, #e0f2f1, #6bd3ca); // 漸層
+  box-shadow: 0 2px 6px rgba(#00796b, 0.15);
   transition: transform 0.3s;
   cursor: default;
 
@@ -81,6 +77,7 @@
   }
 
   lucide-icon {
+    color: #00796b;
     width: 14px;
     height: 14px;
   }
@@ -116,6 +113,16 @@
   margin-bottom: 8px;
 }
 
+.introBtn {
+  display: flex;
+  justify-content: space-between;
+}
+
+// .introBtn {
+//   display: flex;
+//   justify-content: end;
+// }
+
 //商品區域
 .products-section {
   margin-top: 32px;
@@ -132,7 +139,7 @@
   color: $text-gray;
   border-bottom: 3px solid $primary-yellow;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 24px;
   padding-bottom: 4px;
 }
 
@@ -250,6 +257,7 @@
     &:hover {
       background: $primary-yellow-dark;
       color: $background-white;
+      transform: translateY(-2px);
     }
   }
 
@@ -258,6 +266,26 @@
     color: $text-gray;
     &:hover {
       background: $neutral-300;
+      transform: translateY(-2px);
+    }
+  }
+
+  &.report {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid rgba(#c62828, 0.1);
+
+    lucide-icon {
+      color: #c62828;
+    }
+
+    &:hover {
+      background-color: #c62828;
+      color: $background-white;
+      transform: translateY(-2px);
+      lucide-icon {
+        color: $background-white;
+      }
     }
   }
 }

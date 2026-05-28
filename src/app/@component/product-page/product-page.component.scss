@@ -1,9 +1,10 @@
-/* display 預設是 inline，而非 block，預防跑版 */
+@use '../../styles/variables' as *;
+
 :host {
   display: block;
-  background: #f7f7f7;
+  background: $neutral-100; // 💡 換上統一的極淺灰背景
   min-height: 100vh;
-  color: #222;
+  color: $text-black;       // 💡 主文字黑
 }
 
 .page-wrapper {
@@ -19,37 +20,36 @@
   gap: 6px;
   padding: 14px 32px;
   font-size: 13px;
-  color: #888;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  color: $neutral-500;
+  background: $background-white;
+  border-bottom: 1px solid $neutral-300;
 
   a {
-    color: #555;
+    color: $neutral-700;
     text-decoration: none;
-    &:hover { color: #333; text-decoration: underline; }
+    &:hover { color: $text-black; text-decoration: underline; }
   }
 
-  .sep { color: #bbb; }
-
-  .current { color: #333; }
+  .sep { color: $neutral-300; }
+  .current { color: $text-black; }
 
   .back-btn {
     margin-left: auto;
-    color: #555;
+    color: $neutral-700;
     font-size: 13px;
     text-decoration: none;
-    &:hover { color: #111; }
+    &:hover { color: $text-black; }
   }
 }
 
 .product-main {
   display: flex;
   gap: 40px;
-  background: #fff;
-  border-radius: 12px;
+  background: $background-white;
+  border-radius: $border-radius-lg; // 💡 導入標準圓角
   padding: 32px;
   margin-top: 20px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 
   @media (max-width: 680px) {
     flex-direction: column;
@@ -57,7 +57,7 @@
   }
 }
 
-/* ── 左邊區塊 ── */
+/* ── 左邊區塊：圖片 ── */
 .gallery {
   flex: 0 0 240px;
   display: flex;
@@ -73,13 +73,13 @@
 .main-image-container {
   width: 240px;
   height: 320px;
-  background: #f3f3f3;
-  border-radius: 8px;
-  overflow: hidden; //固定尺寸容器，讓圖片不超出圓角
+  background: $neutral-100;
+  border-radius: $border-radius-sm;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e8e8e8;
+  border: 1px solid $neutral-300;
 
   .main-image {
     width: 100%;
@@ -88,41 +88,89 @@
   }
 }
 
+/* 💡 新增：輪播組件外框 */
+.thumbnails-slider-wrapper {
+  position: relative;
+  width: 240px; // 寬度與大圖對齊
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 💡 新增：縮圖可視視窗（隱藏超出第4張的圖） */
+.thumbnails-viewport {
+  width: 240px;
+  overflow-x: auto; // 允許背後滾動
+  scrollbar-width: none; // 隱藏原生滾動條 (Firefox)
+  &::-webkit-scrollbar { display: none; } // 隱藏原生滾動條 (Chrome/Safari)
+  scroll-behavior: smooth;
+}
+
 .thumbnails {
   display: flex;
   gap: 8px;
+  width: max-content; // 確保縮圖排成一橫排，不自動斷行
 
   .thumbnail {
-    width: 54px;
+    width: 54px; // 4張 * 54px + 3格gap * 8px = 240px (完美塞滿)
     height: 54px;
-    border-radius: 4px;
-    border: 2px solid #e0e0e0;
+    border-radius: $border-radius-tiny;
+    border: 2px solid $neutral-300;
     overflow: hidden;
     cursor: pointer;
-    background: #f5f5f5;
+    background: $neutral-100;
     transition: border-color 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0; // 💡 關鍵：防止縮圖因為空間不足被壓扁
 
-    &.active { border-color: #f5a623; }
-    &:hover { border-color: #aaa; }
+    &.active { border-color: $primary-yellow; }
+    &:hover { border-color: $neutral-500; }
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-
-    .thumb-placeholder {
-      width: 100%;
-      height: 100%;
-      background: #ececec;
-    }
   }
 }
 
-/* ── 右邊區塊 ── */
+/* 💡 新增：左右切換小箭頭按鈕樣式 */
+.arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid $neutral-300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: $neutral-700;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $primary-yellow;
+    color: $text-black;
+    border-color: $primary-yellow-dark;
+  }
+
+  &.left {
+    left: -12px; // 💡 稍微懸浮突出來在框線邊緣，就像你畫的紅箭頭一樣！
+  }
+
+  &.right {
+    right: -12px;
+  }
+}
+
+/* ── 右邊區塊：資訊 ── */
 .product-info {
   flex: 1;
   display: flex;
@@ -139,7 +187,7 @@
   .product-title {
     font-size: 22px;
     font-weight: 700;
-    color: #1E1E1E;
+    color: $text-black;
     margin: 0;
     line-height: 1.3;
   }
@@ -148,91 +196,110 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    background: #fffbf0;
-    border: 1px solid #f5a623;
+    background: $background-yellow; // 💡 採用淺黃底
+    border: 1px solid $primary-yellow-dark;
     border-radius: 20px;
     padding: 5px 14px;
     font-size: 13px;
-    color: #c88000;
+    color: $primary-yellow-darker; // 💡 文字使用高對比深橘黃
     cursor: pointer;
     white-space: nowrap;
     transition: background 0.15s;
 
-    &:hover { background: #fff3d4; }
-
-    .star-icon { color: #f5a623; }
+    &:hover { background: $background-yellow-hover; }
+    .star-icon { color: $primary-yellow-dark; }
   }
 }
 
-/* ── Info Table ─────────────────────────────────── */
+/* ── Info Table ── */
 .info-table {
   border-collapse: collapse;
   width: 100%;
 
-  tr { border-bottom: 1px solid #f0f0f0; }
+  tr { border-bottom: 1px solid $neutral-100; }
 
   th, td {
     padding: 9px 4px;
     font-size: 14px;
-    text-align: left;
     vertical-align: middle;
   }
 
   th {
-    color: #888;
+    color: $neutral-500;
     font-weight: 400;
     width: 80px;
+    text-align: left;
   }
 
-  td { color: #222; }
+  // 💡 關鍵修正：將 td 設為 flex 佈局，讓名字與圓形聊天按鈕並排在同一行
+  td {
+    color: $text-black;
+    display: flex;
+    align-items: center;
+  }
 
   .seller-link {
-    color: #4a90d9;
+    color: $accent-brown-light; // 💡 換上氣質的品牌強調棕
     text-decoration: none;
     font-weight: 500;
-    &:hover { text-decoration: underline; }
-  }
-
-  .chat-btn {
-    background: none;
-    border: 1px solid #d0d0d0;
-    border-radius: 6px;
-    padding: 3px 7px;
-    cursor: pointer;
-    color: #666;
-    margin-left: 8px;
-    vertical-align: middle;
-    transition: border-color 0.15s, color 0.15s;
-
-    &:hover { border-color: #4a90d9; color: #4a90d9; }
+    &:hover { text-decoration: underline; color: $accent-brown; }
   }
 }
 
-/* ── Condition Tags ─────────────────────────────── */
+/* ── 圓形聊天按鈕 ── */
+.btn-chat {
+  display: inline-flex; // 💡 改為 inline-flex 配合文字橫向排列
+  align-items: center;
+  justify-content: center;
+
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.75rem; // 💡 與賣家帳號拉開一點呼吸間距
+
+  border: none;
+  border-radius: 50%;
+  background-color: $neutral-100;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  lucide-icon {
+    color: $neutral-500;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+
+  &:hover {
+    background-color: $primary-yellow; // 💡 Hover 改用漂亮的品牌主色黃
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(247, 209, 117, 0.4);
+
+    lucide-icon {
+      color: $text-black; // 💡 亮色背景配黑 icon 確保對比度
+    }
+  }
+}
+
+/* ── Condition Tags 關鍵字樣式 ── */
 .condition-section {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 
-  .tag {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 3px 10px;
+  .tag-keyword {
+    background-color: $neutral-100; // 💡 使用規範的卡片底色
+    color: $neutral-700;           // 💡 正文輔助色
+    padding: 5px 14px;
+    border-radius: 20px;          // 滾邊圓角，呈現關鍵字膠囊感
     font-size: 13px;
-    color: #444;
-    background: #fafafa;
-  }
-
-  .condition-note {
-    width: 100%;
-    margin: 4px 0 0;
-    font-size: 13px;
-    color: #666;
+    font-weight: 500;
+    border: 1px solid $neutral-300;
+    display: inline-block;
   }
 }
 
-/* ── Purchase Row ───────────────────────────────── */
+/* ── Purchase Row ── */
 .purchase-row {
   display: flex;
   align-items: center;
@@ -243,7 +310,7 @@
   .price {
     font-size: 28px;
     font-weight: 700;
-    color: #111;
+    color: $text-price; // 💡 成功導入價格專用棕色
     letter-spacing: -0.5px;
   }
 
@@ -258,40 +325,51 @@
 .btn-buy {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   padding: 11px 22px;
-  border-radius: 8px;
+  border-radius: $border-radius-sm;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: all 0.15s ease;
 
   &:active { transform: scale(0.97); }
+
+  lucide-icon {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .btn-cart {
-  background: #fff;
-  border: 1.5px solid #d0d0d0;
-  color: #333;
+  background: $background-white;
+  border: 1.5px solid $accent-brown-light; // 💡 使用較淺的棕色邊框
+  color: $accent-brown;                   // 💡 文字改用強調棕
 
-  &:hover { background: #f5f5f5; border-color: #aaa; }
+  &:hover {
+    background: $background-yellow;       // 💡 Hover 時淡淡的黃底，增添呼吸感
+    border-color: $accent-brown;
+    color: $accent-brown;
+  }
 }
 
 .btn-buy {
-  background: #3a3a3a;
-  color: #fff;
+  background: $primary-yellow;            // 💡 換成亮眼的大學品牌主色黃
+  color: $text-black;                     // 💡 搭配黑色文字與圖標
 
-  &:hover { background: #222; }
-
-  .coin-icon { font-size: 16px; }
+  &:hover {
+    background: $primary-yellow-dark;     // 💡 Hover 時轉為深黃色提示
+    box-shadow: 0 4px 12px rgba(237, 169, 0, 0.25); // 增加一點精緻的發光感
+  }
 }
 
-/* ── Safety Box ─────────────────────────────────── */
+/* ── Safety Box 安全提示 ── */
 .safety-box {
-  background: #fffdf4;
-  border: 1px solid #f0e8c8;
-  border-radius: 10px;
+  background: $background-yellow; // 💡 舒服的淺黃背景
+  border: 1px solid $primary-yellow-light;
+  border-radius: $border-radius-lg;
   padding: 14px 18px;
 
   .safety-header {
@@ -299,7 +377,7 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #5a4a00;
+    color: $accent-brown; // 💡 標題換成強調棕
     margin-bottom: 10px;
 
     .shield-icon { font-size: 18px; }
@@ -315,35 +393,35 @@
 
     li {
       font-size: 13px;
-      color: #666;
+      color: $text-gray;
       display: flex;
       align-items: flex-start;
       gap: 6px;
     }
 
     .check {
-      color: #7db87d;
+      color: $semantic-green; // 💡 導入成功的綠色語意色
       font-weight: 700;
       flex-shrink: 0;
     }
   }
 }
 
-/* ── Description Section ────────────────────────── */
+/* ── Description Section 商品說明 ── */
 .description-section {
-  background: #fff;
-  border-radius: 12px;
+  background: $background-white;
+  border-radius: $border-radius-lg;
   padding: 28px 32px;
   margin-top: 16px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 
   .desc-title {
     font-size: 17px;
     font-weight: 700;
-    color: #111;
+    color: $text-black;
     margin: 0 0 16px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid $neutral-100;
   }
 
   .desc-content {
@@ -354,7 +432,7 @@
     p {
       font-size: 15px;
       line-height: 1.8;
-      color: #333;
+      color: $neutral-700;
       margin: 0;
       white-space: pre-line;
     }
