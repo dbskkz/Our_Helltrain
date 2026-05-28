@@ -71,7 +71,7 @@ export class BackProductComponent {
       category: '精品飾品',
       price: 1200,
       stock: 5,
-      status: '違規下架',
+      status: '下架',
       description: '商品描述與實物不符，已下架處理。',
       sellerName: 'bad_seller',
       listedAt: '2026-03-20',
@@ -176,7 +176,7 @@ export class BackProductComponent {
       category: '手工藝',
       price: 280,
       stock: 0,
-      status: '違規下架',
+      status: '下架',
       description: '商品照片與實物嚴重不符，已違規下架。',
       sellerName: 'bad_seller',
       listedAt: '2026-02-15',
@@ -191,7 +191,7 @@ export class BackProductComponent {
       category: '食品',
       price: 180,
       stock: 0,
-      status: '違規下架',
+      status: '下架',
       description: '食品類商品未附合格證明，已違規下架。',
       sellerName: 'bad_seller',
       listedAt: '2026-02-20',
@@ -210,7 +210,7 @@ export class BackProductComponent {
 
   searchQuery = '';
   selectedStatus = '';
-  productStatuses = ['販售中', '違規下架', '下架'];
+  productStatuses = ['販售中', '下架'];
 
   selectStatus(status: string) {
     this.selectedStatus = this.selectedStatus === status ? '' : status;

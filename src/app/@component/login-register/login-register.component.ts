@@ -12,7 +12,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
-
+import {  ValidatorFn } from '@angular/forms';
 @Component({
   selector: 'app-login-register',
   imports: [MatDialogModule,MatFormFieldModule, MatInputModule,
@@ -35,6 +35,11 @@ export class LoginRegisterComponent implements OnInit{
   verificationCode = ''; // 驗證碼欄位
   isCodeTouched = false; // 驗證碼欄位有沒有點過
 
+  // 🔑 倒數計時專用變數
+  countdown = signal<number>(0);      // 剩餘秒數
+  canResend: boolean = true;  // 是否可以重新發送（預設可以）
+  private timer: any;         // 用來存計時器的變數
+
   // 專門控制「登入分頁」的密碼眼睛
   hideLoginPassword = signal<boolean>(true);
 
@@ -42,43 +47,66 @@ export class LoginRegisterComponent implements OnInit{
   hidePassword = signal<boolean>(true);
   hideConfirmPassword = signal<boolean>(true);
 
-
-
-  // 負責動態過濾學校的水管
+// 負責動態過濾的水管
+  filteredAreas!: Observable<string[]> | undefined;
   filteredSchools!: Observable<string[]>| undefined;
 
   ngOnInit(): void {
     this.initRegisterForm(); // 呼叫註冊箱子初始化
     this.initLoginForm();  // 呼叫登入箱子初始化
 
-    // 🎯 核心：直接向大水庫要「全台不重複純學校管線」
+    // 從盒子裡把「地區」與「學校」控制項抓出來」
+    const registerAreaCtrl = this.registerForm.get('area') as FormControl;
     const registerSchoolCtrl = this.registerForm.get('school') as FormControl;
 
-    if (registerSchoolCtrl) {
-      this.filteredSchools = registerSchoolCtrl.valueChanges.pipe(
-        // 確保剛進頁面時，拿目前的值（空字串）先觸發一次過濾，倒出所有學校
-        startWith(registerSchoolCtrl.value || ''),
+    //地區動態過濾水管
+    if (registerAreaCtrl) {
+      this.filteredAreas = registerAreaCtrl.valueChanges.pipe(
+        startWith(registerAreaCtrl.value || ''),
         map(value => {
-          // 向公車大水庫拿全台 130 多所學校名單
-          const allTaiwanSchools = this.schoolService.allFlattenedSchools();
-
-          // 拿著畫面上使用者打的字，進行【台/臺】通用模糊搜尋
-          return this._filter(value || '', allTaiwanSchools);
+          // 向公車大水庫拿全台灣所有縣市名單
+          const allRegions = this.schoolService.allRegions();
+          return this._filter(value || '', allRegions);
         })
       );
     }
 
+    // 【學校】動態過濾水管（全新大改版：完全直球對決全台灣總名單，徹底抽離地區干擾）
+    if (registerSchoolCtrl) {
+      this.filteredSchools = registerSchoolCtrl.valueChanges.pipe(
+        startWith(registerSchoolCtrl.value || ''),
+        map(value => {
+          // 💡 直球呼叫你 Service 裡面的無敵全台學校名單大招
+          const allFlattenedSchools = this.schoolService.allFlattenedSchools();
+          return this._filter(value || '', allFlattenedSchools);
+        })
+      );
+    }
+
+    // 🕒 貼心初始通水：一進網頁就強迫兩個選單水管通電，點開立刻有完整選單
+    setTimeout(() => {
+      registerAreaCtrl?.updateValueAndValidity({ emitEvent: true });
+      registerSchoolCtrl?.updateValueAndValidity({ emitEvent: true });
+    }, 100);
   }
 
   // (註冊箱子)把所有的欄位通通寫成變數
   private initRegisterForm() {
+  // 1. 先從你的 Service 拿到所有的官方學校與縣市總清單陣列
+  const allSchools = this.schoolService.allFlattenedSchools();
+  const allRegions = this.schoolService.allRegions();
+
     this.registerForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    school: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+    area: new FormControl('', [Validators.required,this.isInListValidator(allRegions)]),
+    school: new FormControl('', [Validators.required, this.isInListValidator(allSchools)]),
      //                新盒子                 必填     ,       長度檢查
     password: new FormControl('',[Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required]),
-    phone: new FormControl(''),
+    phone: new FormControl('', {
+      validators: [Validators.pattern(/^09-\d{8}$/)],
+      updateOn: 'blur' // 游標離開這格後，才開始進行格式檢查
+    }),
     agreeTerms: new FormControl(false, [Validators.requiredTrue]) //有沒有打勾(平台說明)
   }, {
     validators: this.passwordMatchValidator // 綁定下方比對密碼的方法
@@ -179,6 +207,7 @@ export class LoginRegisterComponent implements OnInit{
       // 資料都填對了，切換到 Step 2 畫面！
       const finalRegisterData = {
         name: this.registerForm.get('name')?.value,
+        area: this.registerForm.get('area')?.value,
         school: this.registerForm.get('school')?.value,
         email: this.userEmail,
         password: this.registerForm.get('password')?.value,
@@ -189,6 +218,14 @@ export class LoginRegisterComponent implements OnInit{
     } else {
       // 如果沒填好，逼迫格子噴出紅字錯誤提示
       this.registerForm.markAllAsTouched();
+        Swal.fire({
+      title: "註冊失敗",
+      text: "欄位還沒填寫完整，或者 Email 格式不正確喔！",
+      icon: "warning",
+      confirmButtonText: "回到表單檢查", // 貼心的按鈕文字
+      confirmButtonColor: '#FB831D',
+      draggable: true
+      });
     }
   }
 
@@ -257,6 +294,9 @@ export class LoginRegisterComponent implements OnInit{
 
   // 點擊「重新發送驗證信」
   resendEmail(){
+    // 防呆：如果目前還在冷卻時間內，直接攔截不執行
+    if (!this.canResend) return;
+
     Swal.fire({
   title: "驗證信已重新發送，請檢查您的學校信箱！",
   icon: "success",
@@ -264,15 +304,65 @@ export class LoginRegisterComponent implements OnInit{
   draggable: true
   });
     // 這裡未來可以放呼叫後端重發信件的 API
+    // this.authService.resendEmail(this.userEmail).subscribe();
+
+    // 2. 啟動倒數冷卻機制
+    this.startCountdown(60);
   }
 
+  private startCountdown(seconds: number){
+    this.countdown.set(seconds);
+    this.canResend = false; // 進入冷卻狀態，按鈕鎖起來
+
+    // 如果原本有殘留的計時器，先清除確保安全
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+
+    // 每一秒鐘進來執行一次
+    this.timer = setInterval(() => {
+      this.countdown.update(val => val - 1);
+
+      if (this.countdown() <= 0) {
+        // 秒數歸零，解除封印
+        this.canResend = true;
+        clearInterval(this.timer); // 停止計時器
+      }
+    }, 1000);
+
+  }
+
+  // 貼心防呆：如果組件被銷毀（例如使用者切換頁面或登入成功離開）
+  // 記得把背景計時器關掉，記憶體才不會洩漏（Memory Leak）
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  /* 手機格式 */
+  onPhoneInput(event: any) {
+  // 1. 取得使用者目前的輸入值
+  let value = event.target.value;
+
+  // 2. 移除非數字的字元（防止使用者自己亂輸入符號）
+  value = value.replace(/\D/g, '');
+
+  // 3. 如果長度大於 2，自動在第 2 碼後面插入破折號 '-'
+  if (value.length > 2) {
+    value = value.substring(0, 2) + '-' + value.substring(2);
+  }
+
+  // 4. 將格式化後的字串塞回表單欄位中
+  this.registerForm.get('phone')?.setValue(value, { emitEvent: false });
+}
 
   /* 登入按鈕 */
   onLogin(){
     if(this.loginForm.valid){
       const loginData = {
         email: this.loginForm.get('email')?.value,
-        password: this.loginForm.get('paseword')?.value
+        password: this.loginForm.get('password')?.value
       };
       console.log('【登入打包】準備送給後端驗證：', loginData);
 
@@ -289,5 +379,23 @@ export class LoginRegisterComponent implements OnInit{
   gotoHome(){
      this.router.navigate(['/home'])
   }
+
+
+
+  // 建立一個防呆驗證器：確保輸入的值必須在指定的官方清單陣列裡
+isInListValidator(validOptions: string[]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const value = control.value;
+
+    // 如果使用者還沒填（留空），讓 required 驗證器去抓，這裡先回傳 null (放行)
+    if (!value) return null;
+
+    // 檢查使用者輸入的字，有沒有在我們的官方清單陣列中（精確比對）
+    const isValid = validOptions.includes(value);
+
+    // 如果不在清單內，就打上 'notInList' 的錯誤標籤；如果在，就回傳 null (沒錯誤)
+    return isValid ? null : { 'notInList': true };
+  };
+}
 
 }

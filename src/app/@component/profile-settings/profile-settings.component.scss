@@ -1,11 +1,14 @@
 @use 'sass:color' as c;
 @use '../../styles/variables' as *;
 
-.big-box{
+// ==========================================================
+// 🏢 1. 頁面最外層與頂部標題排版
+// ==========================================================
+.big-box {
   max-width: 1000px;
   margin: 40px auto;
   padding: 0 20px;
-  // 增加一點標題與卡片的間距
+
   .top {
     margin-bottom: 24px;
     h3 { font-weight: 600; color: #333; }
@@ -13,371 +16,74 @@
   }
 }
 
-.up_card{
-  display: flex;
-  align-items: center; // 確保左右垂直居中
-   background: $background-white;
-  border-radius: $border-radius-lg;
-  padding: 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 20px rgba(47, 31, 8, 0.05); /* 乾淨清透的微陰影 */
-}
-
-.main_card{
+// ==========================================================
+// 💳 2. 公開基本檔案大卡片（整合原 up_card 與 main_card 的頂級精華）
+// ==========================================================
+.consolidation-card {
   background: $background-white;
   border-radius: $border-radius-lg;
   padding: 32px;
   margin-bottom: 24px;
   box-shadow: 0 4px 20px rgba(47, 31, 8, 0.05); /* 乾淨清透的微陰影 */
-h4 {
-    display: flex;         // 讓內部元素可以對齊
-    align-items: center;   // 關鍵：強制垂直居中
-    gap: 8px;              // 圖示與文字的間距
-    color: $text-black;
-    font-size: $font-size-base * 1.25; // 比基礎字體稍大
-    margin-bottom: 24px;
-    font-weight: 600;
 
-    span {
-      display: inline-flex; // 確保容器高度與內容一致
-      align-items: center;
-    }
+  // 大標題與按鈕群
+  .card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px; // 稍微拉開與下方頭像的距離
+  }
 
-    lucide-icon {
-      margin: 0;           // 移除預設可能造成的偏移
-      vertical-align: middle;
-      color: $semantic-orange; // 標題小圖示可以用提醒色或主色
-    }
+  // 分隔線
+  .section-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 24px 0; // 舒適的卡片內部呼吸感
   }
 }
 
-// 左側頭像區
-.main_card_left {
-  text-align: center;
-  margin-right: 48px; // 與右側拉開距離
-
-  img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%; // 變圓形
-    border: 4px solid $background-yellow; // 使用妳定義的淺黃背景色當邊框
-    object-fit: cover; // 確保圖片比例不會被拉伸
-    margin-bottom: 10px;
-  }
-
-  .change_text {
-    color: $semantic-orange; // 使用妳定義的提醒橘色
-    cursor: pointer;
-    font-size: 14px;
-    &:hover {
-      text-decoration: underline; // 懸停時加底線，讓使用者知道可以點
-    }
-  }
-}
-
-// 右側內容區
-.main_card_right {
-  flex: 1;
-
-  .main_card_right_up {
-    margin-bottom: 20px;
+// 標頭文字與圖示垂直居中
+.card_header {
+  h4 {
     display: flex;
     align-items: center;
     gap: 8px;
-    width: 100%;
-
-    .edit-group {
-    display: flex !important;
-    flex-direction: row !important; // 👈 💡 強制輸入框、確定、取消「手拉手排成一橫排」
-    align-items: center !important; // 垂直置中
-    gap: 8px !important;            // 按鈕與輸入框之間的舒適間距
-    width: 100%;
-    }
-
-    .edit-input {
-      height: 40px;                    // 💡 設計師微調：名字框在標題列，高度 40px 比 50px 更精緻協調
-      width: 200px;
-      max-width: 240px;
-      background-color: $background-yellow;
-      border: 1px solid $neutral-300;
-      border-radius: $border-radius-sm;
-      padding: 0 12px;
-      outline: none;
-      font-size: 15px;
-      color: $text-black;
-      transition: all 0.2s ease;       // 讓光暈切換有 0.2 秒的溫柔淡入淡出
-
-      &:focus {
-        border-color: $primary-yellow !important; // 點擊時亮起品牌主色黃
-        box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important; // 霧面黃色微光暈
-      }
-  }
-
-  // 🟡 確定修改
-  .confirm-btn {
-      background-color: $primary-yellow !important;
-      color: $text-black !important;
-      border: none !important;
-      padding: 6px 16px;              // 對齊圖片中舒適的按鈕胖瘦比例
-      border-radius: 8px;             // 精緻的圓角感
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background-color: rgba($primary-yellow, 0.9) !important; // 💡 溫和的 hover 變色
-        transform: translateY(-1px);  // 微互動浮起
-      }
-  }
-
-// ⚪ 取消修改
-  .cancel-btn{
-      background-color: transparent !important;
-      color: $text-gray !important;
-      border: 1px solid $neutral-500 !important; // 空心細線框
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-left: 4px;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background-color: $background-yellow !important; // hover 時渲染淡淡的黃色呼吸底
-        transform: translateY(-1px);
-      }
-  }
-
-    .label-text { color: #666; font-size: 0.9rem; margin: 0; white-space: nowrap}
-    h4 {
-    margin: 0;
-    display: inline-flex; // 關鍵：讓 h4 內部的文字跟 span 對齊
-    align-items: center;  // 關鍵：讓文字跟筆的圖示垂直置中
-
+    color: $text-black;
+    font-size: $font-size-base * 1.25;
+    margin: 0; // 清除預設 margin
+    font-weight: 600;
 
     span {
       display: inline-flex;
       align-items: center;
-      margin-left: 4px;
-      cursor: pointer;
+    }
 
-      lucide-icon {
-        color: $background-gray;
-        font-size: 14px;    // 調整筆的大小
-        vertical-align: middle; // 再次保險對齊
-      }
+    lucide-icon {
+      margin: 0;
+      vertical-align: middle;
+      color: $semantic-orange;
     }
   }
-  }
 }
 
-// 三個小統計盒子的容器
-.main_card_right_dowm {
+// 按鈕群組（修改、確定、取消）
+.button_group {
   display: flex;
-  gap: 16px; // 讓三個盒子之間有呼吸空間
-}
-
-// 統計小盒子
-.main_card_1 {
-  background: $background-yellow;
-  border-radius: $border-radius-lg;
-  padding: 16px 0;
-  width: 100px; // 固定寬度
-  text-align: center;
-  margin-bottom: 0; // 取消原本的 margin-bottom
-  box-shadow: none; // 取消小盒子的陰影，整體才不會太亂
-  transition: transform 0.2s;
-
-  &:hover { transform: translateY(-2px); } // 微互動
-
-  h5 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: $semantic-orange; // 數字突出
-    margin-bottom: 4px;
-  }
-
-  p {
-    font-size: 0.8rem;
-    color: #888;
-    margin: 0;
-  }
-}
-
-.card_header {
-  display: flex;
-  justify-content: space-between; // 讓標題在左，按鈕在右
-  align-items: center;
-  margin-bottom: 15px;
+  gap: 12px;
 
   .edit_btn {
-  background-color: $primary-yellow; // 使用主色黃
+    background-color: $primary-yellow;
     color: $text-black;
     border: none;
     padding: 6px 16px;
     border-radius: $border-radius-sm;
     cursor: pointer;
     transition: all 0.3s;
+    font-weight: 500;
 
     &:hover {
-      background-color: c.adjust($primary-yellow, $lightness: -5%); // 稍微變深一點點
+      background-color: c.adjust($primary-yellow, $lightness: -5%);
       transform: translateY(-2px);
-    }
-
-  }
-}
-
-// 當不可編輯時，讓輸入框看起來像一般文字
-.mat-mdc-form-field.mat-form-field-disabled {
-  opacity: 0.8;
-  cursor: not-allowed;
-}
-
-// 讓學校與科系並排的關鍵
-.school_group {
-  display: flex;
-  gap: 20px; // 兩者間的呼吸間距
-  width: 100%;
-  margin-top: 15px;
-
-  .school, .department {
-    flex: 1; // 平分寬度
-  }
-}
-
-// 統一欄位標題樣式
-.school, .department, .area {
-  p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 8px;
-  }
-}
-
-.area{
-  margin-top: 15px;
-}
-
-// Email 區塊排版
-.email_group {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #eee; // 增加一條淺淺的分隔線
-
-  p { margin: 0; line-height: 1.8; }
-
-  // 標題與膠囊
-  p:first-child {
-    font-size: 0.9rem;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  // 膠囊色塊實作
-  .isVerify {
-    background: #e6f7ed; // 淡淡的草綠色背景
-    color: #27ae60;    // 深綠色文字
-    font-size: 0.75rem;
-    padding: 2px 12px;
-    border-radius: 50px; // 膠囊形狀
-    font-weight: 500;
-  }
-
-  // Email 地址文字
-  p:nth-child(2) {
-    font-size: 1.1rem;
-    color: #333;
-    font-weight: 500;
-    margin: 4px 0;
-  }
-
-  // 提示文字
-  p:last-child {
-    font-size: 0.8rem;
-    color: #999;
-  }
-}
-
-.field_group{
-  margin-top: 15px;
-}
-
-// 修正 Material 預設背景色（讓它更清透）
-::ng-deep .mat-mdc-text-field-wrapper {
-  background-color: $background-yellow !important;
-}
-
-// 去除 Material 底線與相關裝飾線
-::ng-deep {
-  // 1. 隱藏底下的那條線
-  .mat-mdc-form-field-focus-indicator,
-  .mat-mdc-form-field-bottom-align::before,
-  .mat-mdc-form-field-bottom-align::after {
-    display: none !important;
-  }
-
-  // 2. 徹底隱藏底線容器，消除下方多餘的空白
-  .mat-mdc-form-field-subscript-wrapper {
-    display: none !important;
-  }
-
-  // 3. 確保輸入框包裝層沒有邊框或底部線條
-  .mdc-line-ripple {
-    display: none !important;
-  }
-
-  // 4. 讓背景顏色更完整地填充圓角
-  .mat-mdc-text-field-wrapper {
-    background-color: $background-yellow !important;
-    border-radius: 8px; // 既然去掉了底線，可以自己加圓角增加質感
-  }
-}
-
-.password_content {
-  .label { font-size: 15px; color:$text-gray; margin-bottom: 5px; }
-
-  .dots { font-size: 8px;  letter-spacing: 5px; color: $background-gray; padding: 10px 0; }
-
-  .divider { border: 0; border-top: 1px solid #f0f0f0; margin: 20px 0; }
-
-  .strength_bar {
-    display: flex;
-    gap: 5px;
-    margin-top: -10px;
-    margin-bottom: 15px;
-    span {
-      flex: 1; height: 4px; border-radius: 2px;
-      background: $background-yellow; // 之後可以根據 input 長度動態變色
-
-    // 假設密碼強度夠了，可以變成語義綠
-      &.active {
-        background: $semantic-green;
-      }
-    }
-  }
-}
-
-
-
-
-.button_group {
-  display: flex;
-  gap: 8px; // 讓兩個按鈕之間有點「呼吸空間」
-
-  .edit_btn {
-    background-color: $primary-yellow; // 使用主色黃
-    color: $text-black;
-    border: none;
-    padding: 6px 16px;
-    border-radius: $border-radius-sm;
-    cursor: pointer;
-
-    &:hover {
-      background-color: c.adjust($primary-yellow, $lightness: -5%); // 稍微變深一點點
     }
   }
 
@@ -388,128 +94,344 @@ h4 {
     padding: 6px 16px;
     border-radius: $border-radius-sm;
     cursor: pointer;
+    transition: all 0.3s;
 
     &:hover {
       background-color: $background-yellow;
+      transform: translateY(-1px);
     }
   }
 }
 
-.count-hint {
+// ==========================================================
+// 🧑‍🎨 3. 大卡片上半部：頭像、名稱、三大核心數據
+// ==========================================================
+.up_card_integration {
   display: flex;
-  justify-content: flex-end; // 這會讓文字靠右對齊
-  width: 100%;               // 確保撐滿寬度才能靠右
-  color: $text-gray;         // 使用妳定義的灰色
-}
-
-
-
-
-mat-form-field {
+  align-items: center; // 確保頭像與右側名稱垂直置中
   width: 100%;
 }
 
-// 1. 通用外殼大箱子：負責控制 1px 預設框與點擊變黃框
-.input-box-wrapper,
- .textarea-wrapper{
+// 左側頭像
+.main_card_left {
+  text-align: center;
+  margin-right: 48px;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid $background-yellow;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .change_text {
+    color: $semantic-orange;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// 右側內容
+.main_card_right {
+  flex: 1;
+
+  .main_card_right_up {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+
+    .label-text { color: #666; font-size: 0.9rem; margin: 0; white-space: nowrap; }
+
+    // 名稱編輯群
+    .edit-group {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 8px !important;
+      width: 100%;
+    }
+
+    .edit-input {
+      height: 40px;
+      width: 200px;
+      max-width: 240px;
+      background-color: $background-yellow;
+      border: 1px solid $neutral-300;
+      border-radius: $border-radius-sm;
+      padding: 0 12px;
+      outline: none;
+      font-size: 15px;
+      color: $text-black;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: $primary-yellow !important;
+        box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
+      }
+    }
+
+    .word-count-hint {
+      font-size: 12px;
+      white-space: nowrap;
+    }
+  }
+}
+
+// 三個小統計盒子
+.main_card_right_dowm {
   display: flex;
-  align-items: center;
-  height: 50px;
+  gap: 16px;
+}
+
+.main_card_1 {
+  background: $background-yellow;
+  border-radius: $border-radius-lg;
+  padding: 16px 0;
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover { transform: translateY(-2px); }
+
+  h5 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $semantic-orange;
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+  }
+}
+
+// ==========================================================
+// 🗺️ 4. 大卡片中段：學校、科系、常出沒地區陣列、電話
+// ==========================================================
+.region_group {
   width: 100%;
-  border: 1px solid $neutral-300;
-  border-radius: $border-radius-sm;
-  background-color: $background-yellow;
-  padding: 0 ;
-  transition: all 0.2s ease;
+}
 
-  // 💡 點擊時，外殼亮起品牌黃框與微光暈
-  &:focus-within {
-    border-color: $primary-yellow !important;
-    box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
-  }
-  &.is-readonly {
-    border-color: transparent !important; // 👈 核心：直接把外框線變成透明，達成無框效果！
+// 學校與科系並排
+.school_group {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px; // 拉開與下方常出沒地區的距離
+
+  .school, .department {
+    flex: 1;
   }
 }
 
-// 2. 通用表單：強迫夾在中間的 form 也要 100% 撐滿
-.example-form {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  height: 100% !important;
+// 統一欄位標題樣式
+.school, .department, .multi-area-section, .phone_section, .profile_section_block {
+  .field-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 }
 
+// 🔑 亮點新增：常出沒地區陣列 Flex 橫向排版與推開
+.area-edit-grid {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-top: 5px;
 
-
-// 4. 💡 關鍵萬用穿透：把 ::ng-deep 提拔到最前面，並緊跟著你的通用 class
-// 這樣既能拿到最高穿透權重，又不會污染到其他頁面的 Material 元件！
-::ng-deep .autocomplete-field {
-  width: 100% !important;
-  // 剝皮術：把套件自帶的 outline 邊框和背景通通變透明
-  .mat-mdc-text-field-wrapper {
-    background-color: transparent !important;
-    padding: 0 16px !important;
+  // 📱 手機 RWD 自動變單列
+  @media (max-width: 576px) {
+    flex-direction: column;
+    gap: 12px;
   }
-  .mdc-notched-outline__leading,
-  .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing {
-    border-color: transparent !important;
-    border-width: 0 !important;
-  }
- }
-
-
- // 1. 因為並列了類別，我們只要把簡介外殼的高度解放，讓 rows="5" 自己撐開
-.textarea-wrapper {
-  height: auto !important;
-  display: flex !important;
-    &:focus-within {
-    border-color: $primary-yellow !important;
-    box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
-  }
-
 }
 
-// 2. 穿透進去處理簡介獨有的對齊與 padding 宇宙
-::ng-deep .self-care {
-  width: 100% !important;
+// 🔑 亮點新增：讓你的變色外殼在陣列裡能夠 1:1:1 平分寬度
+.area-box-flex-item {
+  flex: 1;
+  width: 100%;
+}
 
-  textarea.mat-mdc-input-element {
-    overflow-y: hidden !important; // 👈 💡 雙重保險：強制隱藏垂直滾動條
+// 🔑 亮點新增：唯讀狀態時，多個地區的精美頓號
+.area-split-dash {
+  color: #ffb74d;
+  font-weight: bold;
+  padding: 0 2px;
+}
+
+// 電話區塊間距
+.phone_section {
+  margin-top: 20px;
+}
+
+// 🔑 亮點新增：設計師純文字唯讀模式（名字、學校、科系、地區、電話通用）
+.pure-text-display {
+  font-size: 16px;
+  color: #333333;
+  font-weight: 500;
+  padding: 8px 0; // 舒適的上下留白，切換輸入框時畫面絕不抖動
+  margin: 0;
+  display: inline-block;
+}
+
+// ==========================================================
+// 📝 5. 大卡片下半部：個人簡介、Email 唯讀區
+// ==========================================================
+.profile_section_block {
+  margin-top: 10px;
+
+  .profile_content {
+    width: 100%;
+  }
+  .count-hint {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    color: $text-gray;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+}
+
+// Email 區塊整合
+.email_group_integration {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+
+  p { margin: 0; line-height: 1.8; }
+
+  .email-title {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
-  &.mat-form-field-appearance-outline {
-    .mat-mdc-text-field-wrapper {
-      background-color: transparent !important;
+  .isVerify {
+    background: #e6f7ed;
+    color: #27ae60;
+    font-size: 0.75rem;
+    padding: 2px 12px;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+
+  .email-value {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 500;
+    margin: 4px 0;
+  }
+
+  .email-hint {
+    font-size: 0.8rem;
+    color: #999;
+  }
+}
+
+.optional-text {
+  font-size: 13px;          // 稍微縮小字體，讓它看起來像附註
+  color: $text-gray;        // 直接套用你專案中的灰色文字變數 (#666)
+  font-weight: normal;      // 確保它是細體字，跟前面的粗體標題產生對比
+  letter-spacing: 0.5px;    // 微調字距，提升閱讀質感
+  display: inline-block;    // 確保 margin-left 能完美發揮作用
+}
+
+// ==========================================================
+// 🔒 6. 獨立密碼安全卡片（維持乾淨獨立，無內聯樣式）
+// ==========================================================
+// 🔒 密碼卡片內部元件（終極穿透拉滿版）
+.password-independent-card {
+  .card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .password_form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100% !important; // 🔑 強制表單本體拉滿
+  }
+
+  .field_group {
+    width: 100% !important; // 🔑 強制欄位群組拉滿
+
+    .label {
+      font-size: 15px;
+      color: $text-black;
+      margin-bottom: 8px;
+      display: block;
     }
-    // 抹除 outline 原生的框
-    .mdc-notched-outline__leading,
-    .mdc-notched-outline__notch,
-    .mdc-notched-outline__trailing {
-      border-width: 0 !important;
+
+    // ==========================================================
+    // 🚀 核心修改：使用 ::ng-deep 深度穿透，把 Material 肚子裡隱藏的寬度限制全數捏碎！
+    // ==========================================================
+    &,
+    .input-box-wrapper,
+    .autocomplete-field,
+    ::ng-deep .mat-mdc-form-field,
+    ::ng-deep .mat-mdc-text-field-wrapper,
+    ::ng-deep .mdc-text-field {
+      width: 100% !important;
+      max-width: 100% !important; // 破除 Material 隱藏的 200px 或 320px 寬度上限限制
+    }
+  }
+
+  .divider {
+    border: 0;
+    border-top: 1px solid #f0f0f0;
+    margin: 10px 0;
+    width: 100% !important;
+  }
+
+  // 🔑 唯讀狀態下的安全綠色盾牌提示樣式
+  .password-shield-hint {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+
+    p {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 16px;
+      color: #333333;
+      padding: 8px 0;
+    }
+
+    .shield-lock-icon {
+      color: #27ae60;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
     }
   }
 }
 
-
-/* ======================================================== */
-/* 🎯 密碼表單專屬版面樣式（從 HTML 行內移回 CSS） */
-/* ======================================================== */
-
-// 1. 控制整個密碼表單垂直排列與間距
-.password-form-container {
-  flex-direction: column !important; // 強迫三個格子由上往下排成一列
-  align-items: stretch !important;   // 讓肚子裡的 field_group 橫向撐滿 100%
-  gap: 20px;                         // 格子與格子之間的精美設計師留白
-
-  p.label {
-    margin-bottom: 4px !important; // 👈 💡 把原本太寬的 16px (1rem) 砍半成精緻的 8px！
-    color: $text-black;
-  }
-}
-
-// 2. 密碼輸入框右側的小眼睛按鈕
+// 小眼睛按鈕
 .eye-btn {
   border: none !important;
   background: transparent !important;
@@ -519,59 +441,123 @@ mat-form-field {
   justify-content: center;
 
   mat-icon {
-    color: #999999 !important; // 👈 💡 平時：換上優雅的極簡中灰色（可換成你選的顏色）
-    font-size: 22px !important; // 稍微收小一點點（預設24px），視覺上會更精緻
+    color: #999999 !important;
+    font-size: 22px !important;
     width: 22px !important;
     height: 22px !important;
   }
-
-
 }
 
-// 3. 欄位中間優雅的淡灰色分隔線
-.form-divider {
-  width: 100%;
-  margin: 10px 0;
-  border: none;
 
-}
-
-// 4. 紅綠燈即時提示文字（統一規範字體大小與上間距）
+// 紅綠燈提示文字
 .field-hint {
-  font-size: 13px;
-  margin-top: 6px;
+font-size: 13px;
+  margin-top: 10px; // 與上方黃色大箱子拉開舒適的呼吸間距
   margin-bottom: 0;
+  display: inline-flex; // 🔑 關鍵：讓底色寬度剛好包裹住文字，不會變成滿版大長條
+  align-items: center;
+  gap: 6px;             // 叉叉圖示與文字的黃金間距
+  padding: 4px 14px;    // 🔑 關鍵：上下 4px 左右 14px 撐出完美的胖乎乎膠囊感
+  border-radius: 50px;  // 🔑 關鍵：極致圓角，打造跟你截圖一模一樣的流線圓弧底
 
-  // 當它是錯誤文字時（紅燈）
   &.error-text {
-    color: $primary-yellow-darker;
+    background-color:#ffebee;
+    color: #e53935; // 自動生成超溫柔的同系淡淡粉橘底
+    font-weight: 500;
+   }
+
+  &.success-text {
+     background-color: rgba($semantic-green, 0.1);       // 自動生成超清透的淡淡草綠底
+    color: $semantic-green;                             // 交易狀況成功綠
+    font-weight: 500;
+   }
+}
+
+// ==========================================================
+// 🛠️ 7. 你的專屬萬用框線變色外殼宇宙（input-box-wrapper）
+// ==========================================================
+.input-box-wrapper,
+.textarea-wrapper {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  border: 1px solid $neutral-300;
+  border-radius: $border-radius-sm;
+  background-color: $background-yellow;
+  padding: 0;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: $primary-yellow !important;
+    box-shadow: 0 0 0 2px rgba(247, 209, 117, 0.2) !important;
   }
 
-  // 當一模一樣時（綠燈）
-  &.success-text {
-    color:$semantic-lightgreen;
+  &.is-readonly {
+    border-color: transparent !important; /* 👈 無框核心：唯讀時框線變透明 */
   }
 }
 
+.textarea-wrapper {
+  height: auto !important;
+}
 
+.example-form {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+// ==========================================================
+// 🎯 8. Material 核心元件極致剝皮穿透（::ng-deep）
+// ==========================================================
 ::ng-deep .autocomplete-field {
+  width: 100% !important;
+
+  .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+    padding: 0 16px !important;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: transparent !important;
+    border-width: 0 !important;
+  }
 
   input::placeholder {
     color: $neutral-500 !important;
-
   }
 
-  // 2. 真正夾住 input 的文字小核心
   .mat-mdc-form-field-infix {
-    display: flex !important;           // 👈 💡 讓內層也用 flex 撐開
+    display: flex !important;
     align-items: center !important;
   }
 }
 
+// 穿透處理個人簡介 textarea
+::ng-deep .self-care {
+  width: 100% !important;
 
+  textarea.mat-mdc-input-element {
+    overflow-y: hidden !important;
+    padding: 8px 16px !important; // 簡介內襯留白
+  }
 
-
-
-
-
-
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-text-field-wrapper {
+      background-color: transparent !important;
+    }
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-width: 0 !important;
+    }
+  }
+}

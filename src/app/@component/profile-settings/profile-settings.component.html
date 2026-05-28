@@ -1,282 +1,298 @@
 
-
 <div class="big-box">
-    <div class="top">
+  <div class="top">
     <h3>個人資料</h3>
     <p>管理你在二手GO的公開資訊</p>
   </div>
 
-  <div class="up_card">
-    <div class="main_card_left">
-      <img [src]="avatarUrl" alt="頭像預覽">
-      <p class="change_text" (click)="fileInput.click()">更換頭像</p>
-      <input
-        type="file"
-        #fileInput
-        style="display: none"
-        accept="image/*"
-        (change)="onFileSelected($event)">
-    </div>
-
-
-    <div class="main_card_right">
-      <div class="main_card_right_up">
-        <span class="label-text">名稱：</span>
-       @if (!isEditingName) {
-        <!-- 預覽模式 -->
-        <h4>{{name}} <span (click)="startEdit()">
-          <lucide-icon [name]="pencilIcon"></lucide-icon>
-        </span></h4>
-
-    } @else {
-      <!-- 編輯模式 -->
-       <div class="edit-group">
-        <input type="text" [(ngModel)]="tempName" class="edit-input">
-        <button (click)="saveName()" class="confirm-btn">確定</button>
-        <button (click)="cancelEdit()" class="cancel-btn">取消</button>
-      </div>
-    }
-      </div>
-
-      <div class="main_card_right_dowm">
-        <div class="main_card_1">
-          <h5>{{score}}</h5>
-          <p>評分</p>
-        </div>
-        <div class="main_card_1" (click)="orderInformation()">
-          <h5>{{tradeNumber}}</h5>
-          <p>交易數</p>
-        </div>
-        <div class="main_card_1" (click)="gotoStore()">
-          <h5>{{onTheShelves}}</h5>
-          <p>目前上架</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="main_card">
+  <div class="main_card consolidation-card">
 
     <div class="card_header">
-      <h4><span><lucide-icon [name]=" bookUser"></lucide-icon></span> 基本資訊</h4>
-      <button class="edit_btn" (click)="toggleEditBasic()">
-        {{isEditingBasic? '確定修改':'修改資料'}}
-      </button>
+      <h4><span><lucide-icon [name]="bookUser"></lucide-icon></span> 公開基本檔案</h4>
+      <div class="button_group">
+        @if (isEditingBasic) {
+          <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
+        }
+        <button class="edit_btn" (click)="toggleEditBasic()">
+          {{ isEditingBasic ? '確定儲存' : '修改資料' }}
+        </button>
+      </div>
     </div>
+
+    <div class="up_card_integration">
+      <div class="main_card_left">
+        <img [src]="avatarUrl" alt="頭像預覽">
+        @if (isEditingBasic) {
+          <p class="change_text" (click)="fileInput.click()">更換頭像</p>
+        <p class="change_text" (click)="resetToDefaultAvatar()">恢復預設</p>
+        }
+        <input type="file" #fileInput style="display: none" accept="image/*" (change)="onFileSelected($event)">
+      </div>
+
+      <div class="main_card_right">
+        <div class="main_card_right_up">
+          <span class="label-text">名稱：</span>
+          @if (!isEditingBasic) {
+            <h4 class="pure-text-display">{{name}}</h4>
+          } @else {
+            <div class="edit-group">
+              <input type="text" [(ngModel)]="tempName" class="edit-input" placeholder="請輸入姓名 (必填)" maxlength="20">
+              <small class="word-count-hint" [style.color]="tempName.length >= 20 ? 'red' : '#999'">
+                {{ tempName?.length || 0 }} / 20
+              </small>
+            </div>
+          }
+        </div>
+
+        <div class="main_card_right_dowm">
+          <div class="main_card_1">
+            <h5>{{score}}</h5>
+            <p>評分</p>
+          </div>
+          <div class="main_card_1" (click)="orderInformation()">
+            <h5>{{tradeNumber}}</h5>
+            <p>交易數</p>
+          </div>
+          <div class="main_card_1" (click)="gotoStore()">
+            <h5>{{onTheShelves}}</h5>
+            <p>目前上架</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
 
     <div class="region_group">
 
-      <div class="area">
-        <p>地區</p>
-         <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
-         <form class="example-form">
-          <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" [appearance]="isEditingBasic? 'outline':'fill'">
-            <input type="text"
-                  placeholder="地區"
-                  aria-label="Number"
-                  matInput
-                  [formControl]="areaControl"
-                  [matAutocomplete]="autoArea"
-                  [readonly]="!isEditingBasic"
-                   class="custom-input">
-              <mat-autocomplete #autoArea="matAutocomplete">
-              @for (option of filteredAreas | async; track option) {
-                <mat-option [value]="option">{{option}}</mat-option>
-              }
-            </mat-autocomplete>
-          </mat-form-field>
-        </form>
-        </div>
-      </div>
-
       <div class="school_group">
         <div class="school">
-          <p>學校</p>
-          <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
-            <form class="example-form">
-              <mat-form-field  class="autocomplete-field" subscriptSizing="dynamic"  [appearance]="isEditingBasic? 'outline':'fill'">
-                <input type="text"
-                      placeholder="學校"
-                      aria-label="Number"
-                      matInput
-                      [formControl]="schoolControl"
-                      [matAutocomplete]="autoSchool"
-                      [readonly]="!isEditingBasic"
-                      class="custom-input">
-                  <mat-autocomplete #autoSchool="matAutocomplete" >
-                  @for (option of filteredSchools | async; track option) {
-                    <mat-option [value]="option">{{option}}</mat-option>
-                  }
-                </mat-autocomplete>
-              </mat-form-field>
-            </form>
-          </div>
+          <p class="field-title"><lucide-icon [name]="School"></lucide-icon>就讀學校</p>
+          @if (!isEditingBasic) {
+            <p class="pure-text-display">{{ school }}</p>
+          } @else {
+            <div class="input-box-wrapper">
+              <form class="example-form">
+                <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+                  <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required>
+                  <mat-autocomplete #autoSchool="matAutocomplete">
+                    @for (option of filteredSchools | async; track option) {
+                      <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+            </div>
+
+            @if (schoolControl.touched) {
+              @if (schoolControl.hasError('required')) {
+                <p class="field-hint error-text">✘ 學校是必填喔!</p>
+              } @else if (schoolControl.hasError('notInList')) {
+                <p class="field-hint error-text">⚠ 找不到這間學校，請務必從選單中點選喔！</p>
+              }
+            }
+          }
         </div>
 
         <div class="department">
-          <p>科系</p>
-          <div class="input-box-wrapper" [class.is-readonly]="!isEditingBasic">
-          <form class="example-form">
-            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic"   [appearance]="isEditingBasic? 'outline':'fill'">
-              <input type="text"
-                    placeholder="科系"
-                    aria-label="Number"
-                    matInput
-                    [formControl]="deptControl"
-                    [matAutocomplete]="autoDept"
-                     [readonly]="!isEditingBasic"
-                     class="custom-input">
-                <mat-autocomplete #autoDept="matAutocomplete">
-                @for (option of filteredDepts | async; track option) {
-                  <mat-option [value]="option">{{option}}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-          </div>
+          <p class="field-title"><lucide-icon [name]="BoxIcon"></lucide-icon>就讀科系</p>
+          @if (!isEditingBasic) {
+            <p class="pure-text-display">{{ department ? department : '未填寫'}}</p>
+          } @else {
+            <div class="input-box-wrapper">
+              <form class="example-form">
+                <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+                  <input type="text" placeholder="請選擇你的科系" matInput [formControl]="deptControl" [matAutocomplete]="autoDept" class="custom-input">
+                  <mat-autocomplete #autoDept="matAutocomplete">
+                    @for (option of filteredDepts | async; track option) {
+                      <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+            </div>
+          }
         </div>
       </div>
 
+      <div class="multi-area-section">
+        <p class="field-title"><lucide-icon [name]="MapPin"></lucide-icon>常出沒地區
+          @if (isEditingBasic) {<span class="optional-text">(最多填三個)</span>}
+        </p>
+
+        @if (!isEditingBasic) {
+          <div class="area-tags-display">
+            @for (areaValue of areas; track $index) {
+              @if (areaValue) {
+                @if (!$first) { <span class="area-split-dash">、</span> }
+                <span class="pure-text-display">{{ areaValue }}</span>
+              }
+            }
+          </div>
+        } @else {
+          <div class="area-edit-grid">
+            @for (control of areaFormArray.controls; track $index) {
+
+              <div class="area-column-item">
+                <div class="input-box-wrapper area-box-flex-item" [class.is-readonly]="!isEditingBasic">
+                  <form class="example-form">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                      <input type="text"
+                             [placeholder]="'常出沒地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
+                             matInput
+                             [formControl]="control"
+                             [matAutocomplete]="autoArea"
+                             class="custom-input"
+                             [required]="$index === 0">
+
+                      <mat-autocomplete #autoArea="matAutocomplete">
+                        @for (opt of filteredAreasList[$index] | async; track opt) {
+                          <mat-option [value]="opt">{{opt}}</mat-option>
+                        }
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </form>
+                </div>
+
+                  @if ($index === 0 && control.touched) {
+                    @if (control.hasError('required')) {
+                      <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
+                    } @else if (control.hasError('notInList')) {
+                      <p class="field-hint error-text">⚠ 請點選選單中出現的合法縣市地區！</p>
+                    }
+                  }
+              </div>
+
+            }
+          </div>
+        }
+      </div>
+
+      <div class="phone_section">
+        <p class="field-title"><lucide-icon [name]="Phone"></lucide-icon>聯絡電話
+          @if (isEditingBasic) {
+            <span class="optional-text">(選填 作為聯絡方式之一)</span>
+          }</p>
+        @if (!isEditingBasic) {
+          <p class="pure-text-display">{{ phone ? phone : '未填寫' }}</p>
+        } @else {
+          <div class="input-box-wrapper">
+            <form class="example-form">
+              <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+                <input type="tel" placeholder="09-xxxxxxxx" matInput [formControl]="phoneControl" class="custom-input" maxlength="11" (input)="onPhoneInput($event)">
+              </mat-form-field>
+            </form>
+          </div>
+
+            @if (phoneControl.touched && phoneControl.errors?.['pattern']) {
+              <div class="field-hint error-text">
+                ✘ 手機格式錯誤，請輸入正確的格式（如：09-12345678）
+              </div>
+            }
+        }
+      </div>
     </div>
 
-    <div class="email_group">
-      <p>E-mail <span class="isVerify">已驗證</span></p>
-      <p>{{email}}</p>
-      <p>學校信箱已驗證，無法更改</p>
+    <hr class="section-divider">
+
+    <div class="profile_section_block">
+      <p class="field-title"><span><lucide-icon [name]="clipboardPenLine"></lucide-icon></span> 個人簡介</p>
+      <div class="profile_content">
+        @if (!isEditingBasic) {
+          <p class="display_text pure-text-display">{{ profile }}</p>
+        } @else {
+          <form class="example-form">
+            <div class="input-box-wrapper textarea-wrapper">
+              <mat-form-field class="self-care" appearance="outline">
+                <textarea matInput [formControl]="profileControl" placeholder="分享一下你的二手心得守則吧！(限200字)" maxlength="200" cdkTextareaAutosize #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="3" [cdkAutosizeMaxRows]="6"></textarea>
+              </mat-form-field>
+            </div>
+          </form>
+          <div class="count-hint">
+            {{ profileControl.value?.length || 0 }} / 200
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="email_group_integration">
+      <p class="email-title"><lucide-icon [name]="Mail"></lucide-icon>驗證信箱 <span class="isVerify">官方已驗證</span></p>
+      <p class="email-value">{{email}}</p>
+      <p class="email-hint">學校教育信箱一經認證，即無法修改，如需修改請聯繫客服</p>
     </div>
   </div>
 
-
-  <div class="main_card">
+  <div class="main_card consolidation-card password-independent-card">
     <div class="card_header">
-    <h4>
-      <span><lucide-icon [name]="clipboardPenLine"></lucide-icon></span> 個人簡介
-    </h4>
-    <button class="edit_btn" (click)="toggleEditProfile()">
-      {{ isEditingProfile ? '確定修改' : '修改簡介' }}
-    </button>
-  </div>
+      <h4><span><lucide-icon [name]="lockKeyhole"></lucide-icon></span> 帳號密碼安全</h4>
+      <div class="button_group">
+        @if (isEditingPassword) {
+          <button class="cancel_btn" (click)="cancelEditPassword()">取消修改</button>
+        }
+        <button class="edit_btn" (click)="toggleEditPassword()">
+          {{ isEditingPassword ? '確定修改' : '修改密碼' }}
+        </button>
+      </div>
+    </div>
 
-    <div class="profile_content">
-      @if (!isEditingProfile) {
-        <p class="display_text">{{ profile }}</p>
-      } @else {
-        <form class="example-form">
-          <div class="input-box-wrapper textarea-wrapper" [class.is-readonly]="!isEditingBasic">
-            <mat-form-field class="self-care" appearance="outline">
-              <textarea matInput
-                        [formControl]="profileControl"
-                        placeholder="範例:常駐於xx大學，本人是yy科系...(限200字)"
-                        maxlength="200"
-                        cdkTextareaAutosize
-                        #autosize="cdkTextareaAutosize"
-                        [cdkAutosizeMinRows]="3"
-                        [cdkAutosizeMaxRows]="10"
-                       ></textarea>
-            </mat-form-field>
+    <div class="password_content password-form-container example-form">
+      @if (isEditingPassword) {
+        <form class="password_form" [formGroup]="passwordForm">
+          <div class="field_group">
+            <p class="label">請輸入舊密碼</p>
+            <div class="input-box-wrapper">
+              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                <input matInput [type]="hideOldPassword() ? 'password' : 'text'" formControlName="oldPassword" placeholder="輸入目前的舊密碼進行身分確認">
+                <button type="button" class="eye-btn" (click)="hideOldPassword.set(!hideOldPassword())">
+                  <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="field_group">
+            <p class="label">設定新密碼</p>
+            <div class="input-box-wrapper">
+              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                <input matInput [type]="hideNewPassword() ? 'password' : 'text'" formControlName="newPassword" placeholder="新密碼長度至少需滿 8 個字元">
+                <button type="button" class="eye-btn" (click)="hideNewPassword.set(!hideNewPassword())">
+                  <mat-icon>{{ hideNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
+              <p class="field-hint error-text">✘ 密碼長度至少需滿 8 個字元</p>
+            } @else if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
+              <p class="field-hint error-text">✘ 新密碼不能為空</p>
+            } @else if (passwordForm.get('newPassword')?.value && passwordForm.get('newPassword')?.valid) {
+              <p class="field-hint success-text">✔ 密碼格式正確</p>
+            }
+          </div>
+
+          <div class="field_group">
+            <p class="label">確認新密碼</p>
+            <div class="input-box-wrapper">
+              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword" placeholder="再次輸入新密碼以供系統覆核">
+                <button type="button" class="eye-btn" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
+                  <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('mismatch')) {
+              <p class="field-hint error-text">✘ 兩次輸入的密碼不一致</p>
+            } @else if (passwordForm.get('confirmPassword')?.value && passwordForm.get('newPassword')?.value && passwordForm.get('confirmPassword')?.valid) {
+              <p class="field-hint success-text">✔ 密碼一致</p>
+            }
           </div>
         </form>
-        <div class="count-hint">
-    {{ profileControl.value?.length || 0 }} / 200
-  </div>
+      } @else {
+        <div class="password-shield-hint">
+          <p><mat-icon class="shield-lock-icon">verified_user</mat-icon>您的帳號密碼受到安全加密保護，如欲變更請點擊右上角「修改密碼」按鈕</p>
+        </div>
       }
     </div>
   </div>
-
-   <div class="main_card">
-    <div class="card_header">
-     <h4><span><lucide-icon [name]="lockKeyhole"></lucide-icon></span>密碼</h4>
-
-      <div class="button_group">
-        @if (isEditingPassword) {
-            <button class="cancel_btn" (click)="cancelEditPassword()">取消修改</button>
-          }
-        <button class="edit_btn" (click)="toggleEditPassword()">
-            {{ isEditingPassword ? '確定修改' : '修改密碼' }}
-         </button>
-      </div>
-    </div>
-        <div class="password_content password-form-container example-form">
-        @if (!isEditingPassword) {
-          <div class="readonly_view">
-            <p class="label">目前密碼</p>
-            <p class="dots">● ● ● ● ● ● ● ●</p>
-          </div>
-        } @else {
-          <form class="password_form" [formGroup]="passwordForm">
-            <!-- 目前密碼 -->
-            <div class="field_group">
-              <p class="label">目前密碼</p>
-               <div class="input-box-wrapper">
-                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                  <input matInput
-                  [type]="hideOldPassword() ? 'password' : 'text'"
-                  formControlName="oldPassword"
-                  placeholder="輸入目前的密碼">
-
-                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideOldPassword.set(!hideOldPassword())">
-                    <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                  </button>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <hr class="divider">
-
-            <!-- 新密碼 -->
-            <div class="field_group">
-              <p class="label">新密碼</p>
-              <div class="input-box-wrapper">
-                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                  <input matInput
-                  [type]="hideNewPassword() ? 'password' : 'text'"
-                  formControlName="newPassword"
-                  placeholder="至少 8 個字元">
-
-                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideNewPassword.set(!hideNewPassword())">
-                    <mat-icon>{{ hideNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                  </button>
-                </mat-form-field>
-              </div>
-              @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
-                <p class="field-hint error-text">✘ 密碼長度至少需滿 8 個字元</p>
-              } @else if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
-                <p class="field-hint error-text">✘ 新密碼不能為空</p>
-              } @else if (passwordForm.get('newPassword')?.value && passwordForm.get('newPassword')?.valid) {
-                <p class="field-hint success-text">✔ 密碼格式正確</p>
-              }
-            </div>
-
-            <div class="field_group">
-              <p class="label">確認新密碼</p>
-              <div class="input-box-wrapper">
-                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                  <input matInput
-                 [type]="hideConfirmPassword() ? 'password' : 'text'"
-                  formControlName="confirmPassword"
-                  placeholder="再次輸入新密碼">
-
-                  <button type="button" class="eye-btn" style="border:none; background:transparent; cursor:pointer;" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
-                    <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                  </button>
-                </mat-form-field>
-              </div>
-
-              @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('mismatch')) {
-                  <p class="field-hint error-text" >✘ 兩次輸入的密碼不一致</p>
-                } @else if (passwordForm.get('confirmPassword')?.value &&
-                          passwordForm.get('newPassword')?.value &&
-                          passwordForm.get('confirmPassword')?.valid) {
-                  <p class="field-hint success-text" >✔ 密碼一致</p>
-                }
-            </div>
-          </form>
-        }
-      </div>
-   </div>
-
 </div>
-
-
-

@@ -51,6 +51,7 @@
 }
 
 
+
 /* ======================================================== */
 /* 1. 表單操作區基礎佈局 (維持原本設定) */
 /* ======================================================== */
@@ -240,6 +241,14 @@
   }
 }
 
+.optional-text {
+  font-size: 13px;          // 稍微縮小字體，讓它看起來像附註
+  color: $text-gray;        // 直接套用你專案中的灰色文字變數 (#666)
+  font-weight: normal;      // 確保它是細體字，跟前面的粗體標題產生對比
+  letter-spacing: 0.5px;    // 微調字距，提升閱讀質感
+  display: inline-block;    // 確保 margin-left 能完美發揮作用
+}
+
 /* ======================================================== */
 /* 4. 圖示、按鈕與其餘輔助元件 (精準絕對定位) */
 /* ======================================================== */
@@ -283,6 +292,14 @@ mat-icon.suffix-icon {
   padding: 0;
 }
 
+// 針對現代瀏覽器與標準 Material 結構
+::placeholder {
+  color: #999999 !important; // 套用你的灰色變數，或者與姓名相同的淺灰色
+  opacity: 1 !important;     // 確保 Firefox 瀏覽器下顏色正確
+}
+
+
+
 /* 💡 第四步：安全小標籤維持你原本完美的設定 */
 .badge-secure {
   display: inline-flex;
@@ -324,7 +341,7 @@ mat-icon.suffix-icon {
   display: flex;
   align-items: center;
   margin-top: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 5px;
 
   input[type="checkbox"] {
     width: 18px;
@@ -358,6 +375,7 @@ mat-icon.suffix-icon {
   border: 1px solid $background-gray;
   border-radius: $border-radius-lg;
   cursor: pointer;
+  margin-top: 20px;
   transition: all 0.2s;
   letter-spacing: 2px;
 
@@ -366,6 +384,7 @@ mat-icon.suffix-icon {
     border-color: $text-gray;
   }
 }
+
 
 /* 底部註冊切換提示 */
 .switch-mode {
@@ -388,21 +407,27 @@ mat-icon.suffix-icon {
 
 /* 欄位提示 */
 .field-hint {
-  font-size: 12px;
-  color: $neutral-500;
-  margin-top: 4px;
-  margin-left: 2px;
-}
+  font-size: 13px;
+  color: $text-gray;
+  margin: 6px 0 0 4px;
+  display: inline-flex ; // 讓底色寬度剛好包裹住文字，不會變成滿版大長條
+  align-items: center;
+  padding: 2px 14px;
+  border-radius: 50px !important;
+  align-self: flex-start !important;
 
-/* 原本的錯誤紅字 */
-.error-text {
-  color: $semantic-orange;
-}
 
-/* 💡 新增的成功綠字 */
-.success-text {
-  color: $semantic-lightgreen;
-  font-weight: 500;
+  &.error-text {
+    background-color:#ffebee;
+    color: #e53935;
+    font-weight: 500;
+   }
+
+  &.success-text {
+     background-color: rgba($semantic-green, 0.1);
+    color: $semantic-green;
+    font-weight: 500;
+   }
 }
 
 
@@ -508,32 +533,40 @@ mat-icon.suffix-icon {
 /* 6. Step 2 驗證信發送成功頁面專屬樣式 */
 /* ======================================================== */
 .verification-container {
-  text-align: center; // 容器內元件全面居中
+  text-align: center;
+  max-width: 520px;     // 🚀 新增：限制整張驗證卡片的最大內襯寬度
+  margin: 0 auto;       // 確保整張卡片完全水平置中
+  padding: 20px 0;      // 給予上下舒適的呼吸留白
 
-  .mail-icon{
-    font-size: 48px;      // 原生 Angular Material Icon 放大需要用 font-size
-    width: 48px;          // 同步設定寬高，防止框口變形
-    height: 48px;
-    color: $neutral-500;  // 維持與標題類似的內斂顏色
-    margin-bottom: 12px;
+  .mail-icon {
+    font-size: 56px;    // 稍微放大一點點，分量感才撐得起大標題
+    width: 56px;
+    height: 56px;
+    color: $neutral-500;
+    margin: 0 auto 16px auto; // 置中並頂開標題
   }
+
   .welcome-title {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 24px;//
+    margin-bottom: 24px; // 🚀 關鍵：確實頂開下方正文
+    font-weight: 600;
   }
 
   .form-desc {
-    margin-top: 30px;
-    margin-bottom: 12px;
-    line-height: 1.8; //閱讀行高
-
+    margin-top: 0;       // 🚀 修正：清除混亂的 margin-top
+    margin-bottom: 28px; // 🚀 修正：優雅頂開下方的提示膠囊
+    line-height: 1.8;
+    font-size: 16px;     // 💡 修正：18px 對於正文來說有點太粗獷，16px 比例最精緻高雅
+    color: $neutral-700; // 使用正文輔助色，視覺更溫和
 
     .highlight-email {
       color: $semantic-orange;
-      font-size: 18px;
+      font-size: 20px;   // 同步微調，精緻感拉滿
       font-weight: bold;
+      display: inline-block;
+      margin: 4px 0;     // 讓 Email 獨立一行時有舒適的微間距
     }
 
     .deadline-text {
@@ -542,18 +575,28 @@ mat-icon.suffix-icon {
     }
   }
 
+  // 🚀 修正：將示範用文字移到輸入框「正下方」，或者給它縮小、降低干擾
   .demo-tip {
     color: $neutral-500;
-    font-size: 13px;
-    margin-bottom: 32px;
+    font-size: 12px;
+    margin-top: -8px;    // 貼緊輸入框
+    margin-bottom: 24px;
+    font-style: italic;  // 變成斜體，提示感更明確
   }
 
+  // 🚀 終極修正：將輸入框、大按鈕的寬度規範「整齊劃一」！
   .code-group {
-    max-width: 300px;
-    margin: 0 auto 24px auto; // 置中並跟下方按鈕保持呼吸距離
+    width: 100%;
+    max-width: 440px;    // 🔑 關鍵：對齊提示膠囊的黃金寬度
+    margin: 0 auto 16px auto;
+
+    // 萬用 input-box-wrapper 穿透
+    ::ng-deep .input-box-wrapper {
+      height: 50px !important;
+    }
 
     .code-input {
-      text-align: center;      // 數字在框框正中間
+      text-align: center;
       font-size: 18px;
       font-weight: bold;
       letter-spacing: 4px;
@@ -568,8 +611,18 @@ mat-icon.suffix-icon {
     }
   }
 
+  // 🚀 修正：按鈕再也不是傻傻的滿版，而是跟輸入框一樣精緻的 440px 寬！
+  .submit-btn {
+    width: 100%;
+    max-width: 440px;    // 🔑 關鍵：與輸入框、膠囊死死對齊！
+    height: 50px;        // 讓按鈕高度跟輸入框 50px 一致，比例最完美
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
   .resend-box {
-    margin-top: 20px;
+    margin-top: 24px; // 頂開上方大按鈕
 
     .resend-text {
       color: $neutral-500;
@@ -584,10 +637,63 @@ mat-icon.suffix-icon {
       transition: color 0.2s ease;
 
       &:hover {
-        color: $primary-yellow-darker; // 游標滑過去微變深
+        color: $primary-yellow-darker;
       }
+    }
+
+    // 🔑 新增：倒數中、被禁用的灰色文字樣式
+    .resend-disabled {
+      color: $neutral-500;       // 換上輕盈的淺灰色
+      font-weight: 500;
+      cursor: not-allowed;       // 滑鼠移過去時會變成「禁止點擊」的符號，UX 細節拉滿！
+      text-decoration: none;     // 拔掉底線
+    }
+
+    .mail-notice-hint {
+      font-size: 13px;
+      color: $neutral-500;
+      margin: 0;
+      text-align: center;
     }
   }
 }
 
+// 💛 二手GO特製貼心提示大膠囊
+.tip-capsule-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: $background-yellow;
+  border: 1px solid rgba($primary-yellow-dark, 0.2); // 邊框柔化，不要太深
+  padding: 12px 18px;
+  border-radius: $border-radius-sm;
 
+  width: 100%;
+  max-width: 440px;         // 🔑 關鍵：統一定格在 440px 黃金寬度
+  margin: 0 auto 28px auto; // 置中並優雅頂開下方控制項
+
+  text-align: center;
+
+  .tip-icon {
+    color: $semantic-orange;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tip-text {
+    font-size: 14px;
+    color: $accent-brown;
+    margin: 0;
+    line-height: 1.5;
+    flex: initial;
+
+    strong {
+      color: $primary-yellow-darker;
+      font-weight: 600;
+    }
+  }
+}

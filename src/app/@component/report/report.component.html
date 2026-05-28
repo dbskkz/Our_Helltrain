@@ -46,9 +46,19 @@
             <button class="btn btn-reason" (click)="viewReason(dispute)">
               查看事由
             </button>
-            <button class="btn btn-reject" (click)="reject(dispute)">
-              強制下架
-            </button>
+            <!-- type = 商品 → 顯示強制下架 -->
+            @if (dispute.type === "商品") {
+              <button class="btn btn-reject" (click)="reject(dispute)">
+                強制下架
+              </button>
+            }
+
+            <!-- type = 交易 → 顯示封鎖使用者 -->
+            @if (dispute.type === "交易") {
+              <button class="btn btn-reject" (click)="reject(dispute)">
+                停權被檢舉人
+              </button>
+            }
             <button class="btn btn-approve" (click)="approve(dispute)">
               駁回檢舉
             </button>
@@ -71,8 +81,8 @@
       [disabled]="pagination.currentPage === 1"
       (click)="prevPage()"
     >
-    <lucide-icon [name]="prevIcon"></lucide-icon>
-  </button>
+      <lucide-icon [name]="prevIcon"></lucide-icon>
+    </button>
     @for (page of pagination.pageNumbers; track page) {
       <button
         class="page-btn"
