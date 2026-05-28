@@ -7,21 +7,22 @@
 }
 
 .page-title {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
-  color: #6b7280;
+  color: $text-gray;
   letter-spacing: 0.06em;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-/* ── Stepper ── */
+/* ── 操作步驟 ── */
 .stepper {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border: 1px solid #e2e5ea;
-  border-radius: 10px;
+  gap: 0;
+  background: $background-white;
+  border: 1px solid $neutral-300;
+  border-radius: 12px;
   padding: 18px 28px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
@@ -45,49 +46,49 @@
 }
 
 .step-badge {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   flex-shrink: 0;
   transition: 180ms ease;
   background: #f0f2f5;
   color: #6b7280;
-  border: 1px solid #e2e5ea;
+  border: 1px solid $neutral-ea;
 }
 
 /* 當前步驟：藍色 */
 .step.active .step-badge {
-  background: #5b7fff;
-  color: #fff;
-  box-shadow: 0 0 0 5px #eef1ff;
+  background: #fadf3c;
+  color: #fefefe;
+  box-shadow: 0 0 0 5px #fffcb4;
 }
 
 /* 已完成步驟：打勾綠色 */
 .step.done .step-badge {
-  background: #10b981;
+  background: #0eeea4;
   color: #fff;
-  border-color: #10b981;
+  border-color: #37eeb1;
 }
 
 .step-label {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
-  color: #6b7280;
+  color: $text-gray;
   white-space: nowrap;
 }
 
 .step.active .step-label {
-  color: #5b7fff;
+  color: #fadf3c;
   font-weight: 600;
 }
 
 .step.done .step-label {
-  color: #10b981;
+  color: #0eeea4;
 }
 
 /* ── Layout ── */
@@ -157,6 +158,18 @@
 .slot-hint { font-size: 10px; color: #a8b4e8; }
 .img-slot .plus { font-size: 20px; color: #bdc3cf; line-height: 1; }
 .img-slot:hover .plus { color: #5b7fff; }
+
+.img-slot[draggable="true"] {
+  cursor: grab;
+  &:active { cursor: grabbing; }
+}
+
+.img-slot.drag-over {
+  border-color: #5b7fff;
+  background: #eef1ff;
+  transform: scale(1.03);
+  transition: transform 150ms ease;
+}
 
 .img-delete {
   position: absolute;

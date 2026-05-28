@@ -25,7 +25,9 @@
       <div class="section-label">商品圖片 <span class="req">*</span></div>
       <div class="image-grid" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
         <!-- 主圖 -->
-        <div class="img-slot main" tabindex="0" (click)="onSlotClick(0)">
+        <div class="img-slot main" data-index="0" tabindex="0" [draggable]="!!imageSlotUrls[0]" (dragstart)="onDragStart($event, 0)"
+        (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onSortDrop($event, 0)"
+        [class.drag-over]="dragOverIndex === 0" (click)="onSlotClick(0)">  <!--drag拖曳功能-->
           <ng-container *ngIf="imageSlotUrls[0]; else mainPlaceholder">
             <img [src]="imageSlotUrls[0]" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
             <button class="img-delete" (click)="deleteImage($event, 0)">
@@ -48,7 +50,9 @@
         </div>
 
         <!-- 副圖 1~6 -->
-        <div class="img-slot" tabindex="0" *ngFor="let i of subSlotIndices" (click)="onSlotClick(i)">
+        <div class="img-slot" tabindex="0" *ngFor="let i of subSlotIndices" [attr.data-index]="i" [draggable]="!!imageSlotUrls[i]"
+        (dragstart)="onDragStart($event, i)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+        (drop)="onSortDrop($event, i)" [class.drag-over]="dragOverIndex === i" (click)="onSlotClick(i)">
           <ng-container *ngIf="imageSlotUrls[i]; else subPlaceholder">
           <img [src]="imageSlotUrls[i]"
             style="width:100%;height:100%;object-fit:cover;border-radius:5px;" />
@@ -64,7 +68,7 @@
           </ng-template>
         </div>
       </div>
-      <p class="img-hint">最多 7 張，支援 JPG/PNG，單張限 10MB</p>
+      <p class="img-hint">最多 7 張，支援 JPG/PNG，單張限 2MB</p>
       <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple style="display:none"
         (change)="onFileChange($event)"/>
 

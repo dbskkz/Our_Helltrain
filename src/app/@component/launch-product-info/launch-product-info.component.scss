@@ -1,7 +1,7 @@
 @use '../../styles/variables' as *;
 
 .page-wrapper {
-  max-width: 1300px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 28px 32px;
 }
@@ -58,13 +58,13 @@
   transition: 180ms ease;
   background: #f0f2f5;
   color: #6b7280;
-  border: 1px solid $neutral-300;
+  border: 1px solid $neutral-ea;
 }
 
 .step.active .step-badge {
-  background: $primary-yellow-dark;
+  background: #fadf3c;
   color: #fefefe;
-  box-shadow: 0 0 0 5px $background-yellow-active;
+  box-shadow: 0 0 0 5px #fffcb4;
 }
 
 .step-label {
@@ -75,7 +75,7 @@
 }
 
 .step.active .step-label {
-  color: #5b7fff;
+  color: #fadf3c;
   font-weight: 600;
 }
 
@@ -91,7 +91,7 @@
   padding: 32px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   margin-top: 24px;
-  max-width: 800px;       /* 限制最大寬度，避免在寬螢幕下輸入框被拉得太長不美觀 */
+  max-width: 1400px;       /* 限制最大寬度，避免在寬螢幕下輸入框被拉得太長不美觀 */
   margin-left: auto;      /* 搭配 margin-right 讓整張卡片在畫面居中 */
   margin-right: auto;
 }
@@ -123,6 +123,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+
 }
 
 /* 4. 年級複選按鈕組樣式 */
@@ -163,15 +164,16 @@ select, input[type="text"], input[type="number"] {
   outline: none;
   transition: all 0.2s;
 
+
   &:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    border-color: $primary-yellow-lighter;
+    box-shadow: 0 0 0 3px rgb(245, 232, 164);
   }
 
   &.selected {
     color: #262626;
-    border-color: #b7eb8f;
-    background-color: #f6ffed;
+    border-color: $primary-yellow-lighter;
+    background-color: #fff;
   }
 
   &:disabled {
@@ -217,8 +219,8 @@ input[type="number"]::placeholder { color: #b0b7c3; }
 
 input[type="number"]:focus,
 select:focus {
-  border-color: #5b7fff;
-  box-shadow: 0 0 0 3px rgba(91,127,255,.12);
+  border-color: $primary-yellow-lighter;
+  box-shadow: 0 0 0 3px rgb(245, 232, 164);
 }
 
 /* ── Select ── */
