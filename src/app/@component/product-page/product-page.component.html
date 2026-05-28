@@ -16,37 +16,59 @@
     <div class="gallery">
       <div class="main-image-container">
         <img
-          [src]="selectedImage"
-          [alt]="product.title"
+          [src]="selectedImage || 'assets/images/default-placeholder.png'"
+          [alt]="product.productName"
           class="main-image"
         />
       </div>
-      <div class="thumbnails">
-        <div
-          *ngFor="let img of product.images; let i = index"
-          class="thumbnail"
-          [class.active]="selectedImageIndex === i"
-          (click)="selectImage(i)"
-        >
-          <img *ngIf="img" [src]="img" [alt]="'圖片 ' + (i + 1)" />
-          <div *ngIf="!img" class="thumb-placeholder"></div>
+
+      <div class="thumbnails-slider-wrapper">
+
+        @if (validImages.length > 4) {
+          <button class="arrow-btn left" (click)="scrollThumbnails('left')">
+            <lucide-icon [img]="ChevronLeftIcon" size="18"></lucide-icon>
+          </button>
+        }
+
+        <div class="thumbnails-viewport" #thumbViewport>
+          <div class="thumbnails">
+            @for (img of validImages; track img; let i = $index) {
+              <div
+                class="thumbnail"
+                [class.active]="selectedImageIndex === i"
+                (click)="selectImage(i)"
+              >
+                <img [src]="img" [alt]="'圖片 ' + (i + 1)" />
+              </div>
+            } @empty {
+              <div class="thumb-placeholder">暫無圖片</div>
+            }
+          </div>
         </div>
+
+        @if (validImages.length > 4) {
+          <button class="arrow-btn right" (click)="scrollThumbnails('right')">
+            <lucide-icon [img]="ChevronRightIcon" size="18"></lucide-icon>
+          </button>
+        }
+
       </div>
     </div>
+
 
     <!-- 右邊區塊 -->
     <div class="product-info">
       <div class="title-row">
-        <h1 class="product-title">{{ product.title }}</h1>
+        <h1 class="product-title">{{ product.productName }}</h1>
         <button class="seller-btn star">
-          <span class="star-icon">★</span> 賣家帳號
+          <span class="star-icon">★</span> 信用等級
         </button>
       </div>
 
       <table class="info-table">
         <tr>
           <th>地區</th>
-          <td>{{ product.region }}</td>
+          <td>{{ product.location }}</td>
         </tr>
         <tr>
           <th>學校</th>
@@ -55,37 +77,35 @@
         <tr>
           <th>賣家</th>
           <td>
-            <a href="#" class="seller-link">{{ product.seller }}</a>
-            <button class="chat-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-            </button>
+            <a href="#" class="seller-link">{{ product.sellerName }}</a>
+              <button class="btn-chat" title="和同學聊聊!">
+                <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
+              </button>
           </td>
         </tr>
       </table>
 
       <!-- Condition Tags -->
       <div class="condition-section">
-        <span class="tag">二手書</span>
-        <span class="tag">{{ product.condition }}</span>
-        <p class="condition-note">{{ product.conditionNote }}</p>
+        @for (tag of product.tags; track tag) {
+          <span class="tag-keyword">{{ tag }}</span>
+        }
       </div>
 
       <!-- Price & Buttons -->
       <div class="purchase-row">
         <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
         <div class="purchase-actions">
+
           <button class="btn-cart" (click)="addToCart()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            加入購物車
+            <lucide-icon [img]="HeartIcon"></lucide-icon>
+            加入收藏
           </button>
-          <button class="btn-buy" (click)="buyNow()">
-            <span class="coin-icon">🪙</span> 直接購買
+
+          <button class="btn-buy" (click)="sendRequest()">
+            <span class="coin-icon"><lucide-icon [img]="SendIcon"></lucide-icon></span> 發送請求
           </button>
+
         </div>
       </div>
 
@@ -96,9 +116,9 @@
           <strong>交易安全有保障</strong>
         </div>
         <ul class="safety-list">
-          <li *ngFor="let item of product.safetyFeatures">
-            <span class="check">✓</span> {{ item }}
-          </li>
+          @for (item of product.safetyFeatures; track item) {
+            <li><span class="check">✓</span> {{ item }}</li>
+          }
         </ul>
       </div>
     </div>
@@ -108,7 +128,9 @@
   <div class="description-section">
     <h2 class="desc-title">商品說明</h2>
     <div class="desc-content">
-      <p *ngFor="let para of product.description">{{ para }}</p>
+      @for (para of product.description; track para) {
+        <p>{{ para }}</p>
+      }
     </div>
   </div>
 
