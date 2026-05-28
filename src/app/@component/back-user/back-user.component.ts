@@ -86,8 +86,6 @@ export class BackUserComponent {
     const map: Record<string, string> = {
       已驗證: 'badge-verified',
       已過期: 'badge-expired',
-      待審查: 'badge-pending',
-      未驗證: 'badge-none',
     };
     return map[status] ?? '';
   }

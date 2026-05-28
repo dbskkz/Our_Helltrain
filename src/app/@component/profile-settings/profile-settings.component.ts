@@ -11,7 +11,7 @@ import { LucideAngularModule, PencilLine,Box,Mail,Phone, MapPin,BookUser, School
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
-
+import { ValidatorFn } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -56,7 +56,10 @@ export class ProfileSettingsComponent {
   department: string = '醫學系'; //科系
   areas: string[] = ['新北市', '', '']; //地區
   phone: string = ''; //電話
-  phoneControl = new FormControl(this.phone); // 建立電話的控制項
+  phoneControl = new FormControl('', {
+      validators: [Validators.pattern(/^09-\d{8}$/)],
+      updateOn: 'blur' // 游標離開這格後，才開始進行格式檢查
+    }) // 建立電話的控制項
   isEditingBasic: boolean = false; // 控制基本資訊是否可編輯
 
   email: string = 'apple@gmail.com';
@@ -86,6 +89,11 @@ export class ProfileSettingsComponent {
   filteredAreasList: Observable<string[]>[] = [];
 
   ngOnInit() {
+
+    // 此時 schoolService 已經安全注入，可以放心呼叫了！
+  const allSchools = this.schoolService.allFlattenedSchools();
+  this.schoolControl.addValidators([this.isInListValidator(allSchools)]);
+
     // 初始狀態設為禁用
     this.schoolControl.disable();
     this.deptControl.disable();
@@ -94,8 +102,12 @@ export class ProfileSettingsComponent {
 
 //  1. 根據原本的 areas 陣列長度，動態把 FormControl 塞進 FormArray 盒子裡
     this.areas.forEach((areaValue, index) => {
+      const allRegions = this.schoolService.allRegions(); // 拿到官方地區清單
       // 如果是 index === 0 (第一格) 就加上必填驗證，其餘格則不用
-      const validators = index === 0 ? [Validators.required] : [];
+      const validators = index === 0 ? [
+        Validators.required,
+        this.isInListValidator(allRegions)
+      ] : [];
 
       const ctrl = new FormControl(
         { value: areaValue, disabled: true },
@@ -230,6 +242,21 @@ export class ProfileSettingsComponent {
     });
   }
 
+  // 🎯 驗證器：確保輸入的值必須存在於 Service 的官方清單中
+isInListValidator(validOptions: string[]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const value = control.value;
+    if (!value) return null; // 留空讓 required 去抓
+
+    const normalizedValue = value.toLowerCase().replace(/台/g, '臺');
+    const isValid = validOptions.some(opt =>
+      opt.toLowerCase().replace(/台/g, '臺') === normalizedValue
+    );
+
+    return isValid ? null : { 'notInList': true };
+  };
+}
+
 
 
 /* 改頭像 */
@@ -326,6 +353,32 @@ export class ProfileSettingsComponent {
         this.isEditingBasic = true; // 保持編輯狀態
         return; // 攔截！不讓程式往下跑
       }
+
+      // 💥 優化防呆安檢：全面檢查學校、地區第一格、或是手機格式是否有任何一項 invalid
+  if (this.schoolControl.invalid || this.areaFormArray.controls[0].invalid || this.phoneControl.invalid) {
+
+    // 🎯 核心防呆：哪個欄位亂填，就當場強制 markAsTouched() 催生 HTML 錯誤紅字！
+    if (this.schoolControl.invalid) {
+      this.schoolControl.markAsTouched();
+    }
+    if (this.areaFormArray.controls[0].invalid) {
+      this.areaFormArray.controls[0].markAsTouched();
+    }
+    if (this.phoneControl.invalid) {
+      this.phoneControl.markAsTouched();
+    }
+
+    Swal.fire({
+      title: '儲存失敗',
+      text: '欄位填寫有誤！請檢查必填項，並務必從選單內選擇正確的學校與地區喔！',
+      icon: 'warning',
+      confirmButtonColor: '#FB831D'
+    });
+
+    this.isEditingBasic = true; // 🚨 強制保持在編輯狀態，不讓框框鎖起來
+    return; // 攔截！不讓程式往下跑
+  }
+
       // 🚨 防呆安檢：名字是一定要寫，且不能超過 10 個字！
       const trimmedName = this.tempName ? this.tempName.trim() : '';
       if (!trimmedName) {
@@ -337,6 +390,26 @@ export class ProfileSettingsComponent {
         Swal.fire({ title: '儲存失敗', text: '名稱長度不能超過 20 個字喔！', icon: 'warning', confirmButtonColor: '#FB831D' });
         return; // 攔截！
       }
+
+      // 補上電話格式安檢：檢查學校、地區第一格，以及「電話格式」有沒有通過驗證！
+      if (this.schoolControl.invalid || this.areaFormArray.controls[0].invalid || this.phoneControl.invalid) {
+
+        // 如果是因為電話錯了，我們主動幫它打上 touched 標籤，讓 HTML 的紅字立刻噴出來
+        if (this.phoneControl.invalid) {
+          this.phoneControl.markAsTouched();
+        }
+
+        Swal.fire({
+          title: '儲存失敗',
+          text: '請確認手機格式是否正確（09-xxxxxxxx）！',
+          icon: 'warning',
+          confirmButtonColor: '#FB831D'
+        });
+
+        this.isEditingBasic = true; // 🚨 強制保持在編輯狀態，不讓框框鎖起來
+        return; // 攔截！不讓程式往下跑
+      }
+
       // 🔒 儲存/關閉編輯：禁用所有控制項
       this.isEditingBasic = false;
 
@@ -376,6 +449,24 @@ export class ProfileSettingsComponent {
       this.selectedAvatarFile = null;
     }
   }
+
+  /* 處理個人設定的手機輸入與自動填入 '-' */
+onPhoneInput(event: any) {
+  let value = event.target.value;
+
+  // 1. 移除非數字的字元
+  value = value.replace(/\D/g, '');
+
+  // 2. 自動在 09 後面補上 '-'
+  if (value.length > 2) {
+    value = value.substring(0, 2) + '-' + value.substring(2);
+  }
+
+  // 3. 將格式化後的字串塞回這個獨立的 phoneControl
+  this.phoneControl.setValue(value, { emitEvent: false });
+}
+
+
 
 /* 點擊「取消修改」的方法 */
   cancelEditBasic() {

@@ -30,5 +30,17 @@
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>取消</button>
   <button mat-button (click)="confirm('reject')">駁回檢舉</button>
-  <button mat-button (click)="confirm('approve')">強制下架</button>
+      <!-- type = 商品 → 顯示強制下架 -->
+    @if (data.type === '商品') {
+        <button mat-button (click)="confirm('approve')">
+            強制下架
+        </button>
+    }
+
+    <!-- type = 交易 → 顯示封鎖使用者 -->
+    @else if (data.type === '交易') {
+        <button mat-button (click)="confirm('approve')">
+            停權被檢舉人
+        </button>
+    }
 </mat-dialog-actions>

@@ -1,37 +1,38 @@
 <div class="page-wrapper">
-
   <h1 class="page-title">商品管理</h1>
 
-<div class="toolbar">
-  <!-- 搜尋欄 -->
-  <div class="search-wrap">
-    <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
-    <input
-      type="text"
-      placeholder="以ID或名字搜尋"
-      [(ngModel)]="searchQuery"
-      (keyup.enter)="search()"
-    />
-  </div>
-
-  <!-- 商品狀態 chip -->
-  <div class="filter-group">
-    <span class="filter-group-label">商品狀態</span>
-    <div class="filter-chips">
-      @for (s of productStatuses; track s) {
-        <button
-          class="chip"
-          [class.active]="selectedStatus === s"
-          (click)="selectStatus(s)"
-        >{{ s }}</button>
-      }
+  <div class="toolbar">
+    <!-- 搜尋欄 -->
+    <div class="search-wrap">
+      <lucide-icon [name]="SearchIcon" class="search-icon"></lucide-icon>
+      <input
+        type="text"
+        placeholder="以ID或名字搜尋"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="search()"
+      />
     </div>
+
+    <!-- 商品狀態 chip -->
+    <div class="filter-group">
+      <span class="filter-group-label">商品狀態</span>
+      <div class="filter-chips">
+        @for (s of productStatuses; track s) {
+          <button
+            class="chip"
+            [class.active]="selectedStatus === s"
+            (click)="selectStatus(s)"
+          >
+            {{ s }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <span class="toolbar-spacer"></span>
+
+    <button class="clear-btn" (click)="clearFilters()">清除過濾條件</button>
   </div>
-
-  <span class="toolbar-spacer"></span>
-
-  <button class="clear-btn" (click)="clearFilters()">清除過濾條件</button>
-</div>
   <div class="table-card">
     <div class="table-header">
       <span class="col-label">商品圖片</span>
@@ -45,45 +46,58 @@
     <!-- Angular @for loop -->
     <div>
       @for (product of products; track product.id) {
-      <div class="product-row">
-        <div class="product-img-wrap">
-          <img class="product-img" [src]="product.imageUrl" [alt]="product.name"/>
+        <div class="product-row">
+          <div class="product-img-wrap">
+            <img
+              class="product-img"
+              [src]="product.imageUrl"
+              [alt]="product.name"
+            />
+          </div>
+          <div class="product-info">
+            <span class="product-name">{{ product.name }}</span>
+            <span class="product-id">ID: {{ product.id }}</span>
+          </div>
+          <div class="category-text">{{ product.category }}</div>
+          <div class="price-text">NT${{ product.price | number }}</div>
+          <div>
+            <span class="badge" [ngClass]="getStatusBadge(product.status)">
+              {{ product.status }}
+            </span>
+          </div>
+
+          <button class="btn btn-view" (click)="selectProduct(product)">
+            查看
+          </button>
         </div>
-        <div class="product-info">
-          <span class="product-name">{{ product.name }}</span>
-          <span class="product-id">ID: {{ product.id }}</span>
-        </div>
-        <div class="category-text">{{ product.category }}</div>
-        <div class="price-text">NT${{ product.price | number }}</div>
-        <div>
-          <span class="badge" [ngClass]="getStatusBadge(product.status)">
-            {{ product.status }}
-          </span>
-        </div>
-        <div class="action-cell">
-          @if (product.status === '販售中') {
-            <button class="btn btn-view" (click)="selectProduct(product)">查看</button>
-          }
-        </div>
-      </div>
       }
     </div>
-
   </div>
 
   <!-- Pagination -->
   <div class="pagination">
-    <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === 1"
+      (click)="prevPage()"
+    >
       <lucide-icon [name]="prevIcon"></lucide-icon>
     </button>
     @for (page of pagination.pageNumbers; track page) {
-      <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+      <button
+        class="page-btn"
+        [class.active]="page === pagination.currentPage"
+        (click)="goToPage(page)"
+      >
         {{ page }}
       </button>
     }
-    <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+    <button
+      class="page-btn"
+      [disabled]="pagination.currentPage === pagination.totalPages"
+      (click)="nextPage()"
+    >
       <lucide-icon [name]="nextIcon"></lucide-icon>
     </button>
   </div>
-
 </div>

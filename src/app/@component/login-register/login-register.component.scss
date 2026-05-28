@@ -33,37 +33,6 @@
 .brand-top-section {
   text-align: center;
 
-  .logo-link {
-    cursor: pointer;
-    position: relative; // 🔑 讓氣泡可以定位在 Logo 正上方
-    display: inline-block;
-
-    // 💛 當滑鼠懸停時，利用偽元素生出完美的二手GO規格小氣泡
-    &:hover {
-      &::after {
-        content: attr(data-tooltip); // 讀取 HTML 裡寫的 "回首頁"
-        position: absolute;
-        bottom: -1px;               // 顯示在 Logo 的正下方（高度可自由微調）
-        left: 51%;
-        transform: translateX(-50%);
-
-        // 氣泡包裝硬體：吃你專案的高質感主字黑或強調棕
-        background-color: $text-black;   // 也可以換成 $text-black 或 $accent-brown
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 4px;          // 微圓角
-        white-space: nowrap;         // 強迫不換行
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-
-        // 優雅淡入小動畫
-        animation: fadeInTooltip 0.2s ease forwards;
-      }
-    }
-  }
-
   h1{
     margin-top: 15px;
     margin-bottom: 0;
@@ -81,11 +50,6 @@
   }
 }
 
-// 🚀 特製淡入小動畫
-@keyframes fadeInTooltip {
-  from { opacity: 0; transform: translate(-50%, -5px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
 
 
 /* ======================================================== */
@@ -277,6 +241,14 @@
   }
 }
 
+.optional-text {
+  font-size: 13px;          // 稍微縮小字體，讓它看起來像附註
+  color: $text-gray;        // 直接套用你專案中的灰色文字變數 (#666)
+  font-weight: normal;      // 確保它是細體字，跟前面的粗體標題產生對比
+  letter-spacing: 0.5px;    // 微調字距，提升閱讀質感
+  display: inline-block;    // 確保 margin-left 能完美發揮作用
+}
+
 /* ======================================================== */
 /* 4. 圖示、按鈕與其餘輔助元件 (精準絕對定位) */
 /* ======================================================== */
@@ -319,6 +291,14 @@ mat-icon.suffix-icon {
   cursor: pointer;
   padding: 0;
 }
+
+// 針對現代瀏覽器與標準 Material 結構
+::placeholder {
+  color: #999999 !important; // 套用你的灰色變數，或者與姓名相同的淺灰色
+  opacity: 1 !important;     // 確保 Firefox 瀏覽器下顏色正確
+}
+
+
 
 /* 💡 第四步：安全小標籤維持你原本完美的設定 */
 .badge-secure {
@@ -428,14 +408,14 @@ mat-icon.suffix-icon {
 /* 欄位提示 */
 .field-hint {
   font-size: 13px;
-  margin-top: 10px; // 與上方黃色大箱子拉開舒適的呼吸間距
-  margin-bottom: 0;
+  color: $text-gray;
+  margin: 6px 0 0 4px;
   display: inline-flex ; // 讓底色寬度剛好包裹住文字，不會變成滿版大長條
   align-items: center;
-  padding: 4px 14px;
+  padding: 2px 14px;
   border-radius: 50px !important;
   align-self: flex-start !important;
-  line-height: 1.2 !important;    // 穩定垂直行高
+
 
   &.error-text {
     background-color:#ffebee;
