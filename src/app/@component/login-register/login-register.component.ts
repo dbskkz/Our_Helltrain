@@ -13,6 +13,11 @@ import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
 import {  ValidatorFn } from '@angular/forms';
+
+//佩霖寫的
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../../@Services/user.service';
+
 @Component({
   selector: 'app-login-register',
   imports: [MatDialogModule,MatFormFieldModule, MatInputModule,
@@ -25,7 +30,12 @@ import {  ValidatorFn } from '@angular/forms';
 export class LoginRegisterComponent implements OnInit{
 
   // 注入 Material 的 Dialog 服務
-  constructor(private dialog: MatDialog, private router: Router, private schoolService: SchoolDataService) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private schoolService: SchoolDataService,
+    private route: ActivatedRoute,
+    private userService: UserService) {}
 
   isRegister: boolean = false; //是否為註冊頁面
   userEmail: string = ''; //輸入的 Email
@@ -51,7 +61,17 @@ export class LoginRegisterComponent implements OnInit{
   filteredAreas!: Observable<string[]> | undefined;
   filteredSchools!: Observable<string[]>| undefined;
 
+//TODO:判斷登入狀態
+
+
+
+
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params => {
+      this.isRegister = params['mode'] === 'register';
+    }); // 佩霖寫的
+
     this.initRegisterForm(); // 呼叫註冊箱子初始化
     this.initLoginForm();  // 呼叫登入箱子初始化
 
@@ -359,19 +379,45 @@ export class LoginRegisterComponent implements OnInit{
 
   /* 登入按鈕 */
   onLogin(){
-    if(this.loginForm.valid){
+    if(this.loginForm.valid)
+    {
       const loginData = {
         email: this.loginForm.get('email')?.value,
         password: this.loginForm.get('password')?.value
       };
       console.log('【登入打包】準備送給後端驗證：', loginData);
 
-    // 接下來就是呼叫後端 API 驗證登入...
+      // 接下來就是呼叫後端 API 驗證登入...
+      this.userService.login(loginData.email, loginData.password).subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            this.router.navigate(['/home']);
+          } else {
+            Swal.fire({
+              title: '登入失敗',
+              text: res.message,
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
+          }
+        },
+        error: () => {
+          Swal.fire({
+            title: '連線錯誤',
+            text: '請稍後再試',
+            icon: 'error',
+            confirmButtonColor: '#e57373'
+          });
+        }
+      });
 
-       this.router.navigate(['/home'])
-    }else{
+
+
+    }
+    else
+    {
       // 沒填對就集體炸開紅字紅框！
-    this.loginForm.markAllAsTouched();
+      this.loginForm.markAllAsTouched();
     }
   }
 

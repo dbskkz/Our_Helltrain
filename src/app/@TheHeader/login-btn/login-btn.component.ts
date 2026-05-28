@@ -12,12 +12,11 @@ export class LoginBtnComponent {
       private router: Router
     ){}
 
-  goToSigninPage(){
-    this.router.navigate(['/login_register'])
+  goToSigninPage() {
+    this.router.navigate(['/login_register'], { queryParams: { mode: 'login' } });
   }
 
-  goToRegister(){
-    this.router.navigate(['/register'])
+  goToRegister() {
+    this.router.navigate(['/login_register'], { queryParams: { mode: 'register' } });
   }
-
 }

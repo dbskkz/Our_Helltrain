@@ -8,6 +8,7 @@ import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { UserActionsComponent } from "../user-actions/user-actions.component";
 import { LoginBtnComponent } from "../login-btn/login-btn.component";
 import { SideNavComponent } from "../../@TheSideBar/side-nav/side-nav.component";
+import { UserService } from '../../@Services/user.service';
 
 @Component({
   selector: 'app-top-nav',
@@ -18,7 +19,8 @@ import { SideNavComponent } from "../../@TheSideBar/side-nav/side-nav.component"
 export class TopNavComponent implements OnInit, OnDestroy{
 
   constructor(
-    private router: Router,){}
+    private router: Router,
+  private userService:UserService){}
 
   private routerSubscription?: Subscription; // 用於存放訂閱，避免記憶體洩漏
 
@@ -46,7 +48,9 @@ export class TopNavComponent implements OnInit, OnDestroy{
   readonly MenuIcon = Menu;
 
   // login
-  islogin = false;
+  isLogIn(): boolean{
+    return this.userService.isLoggedIn();
+  }
 
   goToHome(){
     this.router.navigate(['/home']);
