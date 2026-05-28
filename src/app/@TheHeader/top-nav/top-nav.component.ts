@@ -20,7 +20,7 @@ export class TopNavComponent implements OnInit, OnDestroy{
 
   constructor(
     private router: Router,
-  private userService:UserService){}
+    private userService:UserService ){}
 
   private routerSubscription?: Subscription; // 用於存放訂閱，避免記憶體洩漏
 
@@ -45,10 +45,14 @@ export class TopNavComponent implements OnInit, OnDestroy{
   // Declare icon
   readonly MenuIcon = Menu;
 
-  // login
-  isLogIn(): boolean{
-    return this.userService.isLoggedIn();
+
+  // 這是 Angular 的初始化順序問題，isLogIn = this.userService.isLoggedIn
+  // 這行在 constructor 執行之前就跑了，所以 userService 還是 undefined。
+  // 改成 getter 就好：
+  get isLogIn() {
+    return this.userService.isLoggedIn;
   }
+
 
   goToHome(){
     this.router.navigate(['/home']);

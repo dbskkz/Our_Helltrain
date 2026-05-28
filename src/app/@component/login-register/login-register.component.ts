@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -61,16 +61,12 @@ export class LoginRegisterComponent implements OnInit{
   filteredAreas!: Observable<string[]> | undefined;
   filteredSchools!: Observable<string[]>| undefined;
 
-//TODO:判斷登入狀態
-
-
-
 
   ngOnInit(): void {
 
     this.route.queryParams.subscribe(params => {
       this.isRegister = params['mode'] === 'register';
-    }); // 佩霖寫的
+    }); // 佩霖寫的，處理路由
 
     this.initRegisterForm(); // 呼叫註冊箱子初始化
     this.initLoginForm();  // 呼叫登入箱子初始化
@@ -378,14 +374,20 @@ export class LoginRegisterComponent implements OnInit{
 }
 
   /* 登入按鈕 */
+  userInputLogin = ''
+  isAgree = false;
+
   onLogin(){
-    if(this.loginForm.valid)
+    // if(this.loginForm.valid)
+    const hasAgreed = this.loginForm.get('agreeTerms')?.value;
+
+    if(this.isValidLoginEmail() && hasAgreed) // 先隨便寫的，只要email格式正確就能登入 By.佩霖
     {
-      const loginData = {
-        email: this.loginForm.get('email')?.value,
-        password: this.loginForm.get('password')?.value
-      };
-      console.log('【登入打包】準備送給後端驗證：', loginData);
+      // const loginData = {
+      //   email: this.loginForm.get('email')?.value,
+      //   password: this.loginForm.get('password')?.value
+      // };
+      // console.log('【登入打包】準備送給後端驗證：', loginData);
 
       // 接下來就是呼叫後端 API 驗證登入...
       // this.userService.login(loginData.email, loginData.password).subscribe({
@@ -410,15 +412,25 @@ export class LoginRegisterComponent implements OnInit{
       //     });
       //   }
       // });
-      this.router.navigate(['/home']);
 
+      this.userService.isLoggedIn.set(true);
+      this.gotoHome();
 
     }
     else
     {
       // 沒填對就集體炸開紅字紅框！
-      // this.loginForm.markAllAsTouched();
+      console.log("帳密錯誤或未同意條款");
+
+      this.loginForm.markAllAsTouched();
     }
+  }
+
+  // 先隨便寫的，只要使用者input的email格式正確就能登入 By.佩霖
+  isValidLoginEmail(): boolean {
+    if (!this.userInputLogin) return false;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.tw$/;
+    return emailRegex.test(this.userInputLogin);
   }
 
   /* 回首頁 */

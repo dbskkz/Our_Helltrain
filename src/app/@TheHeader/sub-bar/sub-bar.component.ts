@@ -22,7 +22,11 @@ export class SubBarComponent {
     this.outputClose.emit(this.isClose = true);
   }
 
-  goToSigninPage(){
-    this.router.navigate(['/login_register'])
+  goToSigninPage() {
+    this.router.navigate(['/login_register'], { queryParams: { mode: 'login' } });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/login_register'], { queryParams: { mode: 'register' } });
   }
 }

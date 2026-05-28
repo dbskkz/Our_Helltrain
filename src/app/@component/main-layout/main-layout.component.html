@@ -1,7 +1,7 @@
 <div class="father">
 
   <app-top-nav  class="header"></app-top-nav>
-  @if(!isLoggin && !isClose){
+  @if(!isLogIn() && !isClose){
     <app-sub-bar (outputClose)="isClose = $event"></app-sub-bar>
   }
 

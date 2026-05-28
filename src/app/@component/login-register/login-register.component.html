@@ -32,6 +32,7 @@
                     placeholder="yourname@mail.school.edu.tw"
                     class="custom-input"
                     formControlName="email"
+                    [(ngModel)]="userInputLogin"
                     />
                     <mat-icon class="suffix-icon">mail_outline</mat-icon>
                 </div>
@@ -82,7 +83,7 @@
             <p class="field-hint error-text" style="margin-top: 4px;">✘ 您必須同意使用說明才能登入</p>
           }
 
-          <button class="submit-btn">登入</button>
+          <button class="submit-btn" (click)="onLogin()">登入</button>
 
           <p class="switch-mode">還沒有帳號？<a (click)="isRegister = true" style="cursor: pointer;">立即註冊</a> 或 <a (click)="gotoHome()" style="cursor: pointer;">訪客瀏覽</a></p>
         </form>
