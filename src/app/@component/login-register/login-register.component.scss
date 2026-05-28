@@ -33,37 +33,6 @@
 .brand-top-section {
   text-align: center;
 
-  .logo-link {
-    cursor: pointer;
-    position: relative; // 🔑 讓氣泡可以定位在 Logo 正上方
-    display: inline-block;
-
-    // 💛 當滑鼠懸停時，利用偽元素生出完美的二手GO規格小氣泡
-    &:hover {
-      &::after {
-        content: attr(data-tooltip); // 讀取 HTML 裡寫的 "回首頁"
-        position: absolute;
-        bottom: -1px;               // 顯示在 Logo 的正下方（高度可自由微調）
-        left: 51%;
-        transform: translateX(-50%);
-
-        // 氣泡包裝硬體：吃你專案的高質感主字黑或強調棕
-        background-color: $text-black;   // 也可以換成 $text-black 或 $accent-brown
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 4px;          // 微圓角
-        white-space: nowrap;         // 強迫不換行
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-
-        // 優雅淡入小動畫
-        animation: fadeInTooltip 0.2s ease forwards;
-      }
-    }
-  }
-
   h1{
     margin-top: 15px;
     margin-bottom: 0;
@@ -81,11 +50,6 @@
   }
 }
 
-// 🚀 特製淡入小動畫
-@keyframes fadeInTooltip {
-  from { opacity: 0; transform: translate(-50%, -5px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
 
 
 /* ======================================================== */
