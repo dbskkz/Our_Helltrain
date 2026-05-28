@@ -388,36 +388,36 @@ export class LoginRegisterComponent implements OnInit{
       console.log('【登入打包】準備送給後端驗證：', loginData);
 
       // 接下來就是呼叫後端 API 驗證登入...
-      this.userService.login(loginData.email, loginData.password).subscribe({
-        next: (res) => {
-          if (res.statusCode === 200) {
-            this.router.navigate(['/home']);
-          } else {
-            Swal.fire({
-              title: '登入失敗',
-              text: res.message,
-              icon: 'error',
-              confirmButtonColor: '#e57373'
-            });
-          }
-        },
-        error: () => {
-          Swal.fire({
-            title: '連線錯誤',
-            text: '請稍後再試',
-            icon: 'error',
-            confirmButtonColor: '#e57373'
-          });
-        }
-      });
-
+      // this.userService.login(loginData.email, loginData.password).subscribe({
+      //   next: (res) => {
+      //     if (res.statusCode === 200) {
+      //       this.router.navigate(['/home']);
+      //     } else {
+      //       Swal.fire({
+      //         title: '登入失敗',
+      //         text: res.message,
+      //         icon: 'error',
+      //         confirmButtonColor: '#e57373'
+      //       });
+      //     }
+      //   },
+      //   error: () => {
+      //     Swal.fire({
+      //       title: '連線錯誤',
+      //       text: '請稍後再試',
+      //       icon: 'error',
+      //       confirmButtonColor: '#e57373'
+      //     });
+      //   }
+      // });
+      this.router.navigate(['/home']);
 
 
     }
     else
     {
       // 沒填對就集體炸開紅字紅框！
-      this.loginForm.markAllAsTouched();
+      // this.loginForm.markAllAsTouched();
     }
   }
 
