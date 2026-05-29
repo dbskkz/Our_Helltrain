@@ -5,6 +5,7 @@ import { LaunchProductFormService } from '../../@Services/launch-product-form.se
 
 // const MAX_TAGS = 5;
 
+
 @Component({
   selector: 'app-launch-product-price',
   imports: [NgFor, NgIf],
@@ -23,6 +24,10 @@ export class LaunchProductPriceComponent implements OnInit{
   private currentActiveSlotIndex = 0;
   // 副圖槽位索引（給 *ngFor 用）
   subSlotIndices = [1, 2, 3, 4, 5, 6];
+
+  //隨意拖曳
+  dragFromIndex = -1;
+  dragOverIndex = -1;
 
   // 按鈕狀態驗證
   isNextDisabled = true;
@@ -82,9 +87,59 @@ private readonly API_MODEL = 'claude-sonnet-4-20250514';
   }
 
   // 拖曳上傳支援
-  onDragOver(event: DragEvent): void {
+ onDragStart(event: DragEvent, index: number): void {
+  // 只有有圖片的槽才能拖曳
+  if (!this.imageSlotUrls[index]) {
     event.preventDefault();
+    return;
   }
+  this.dragFromIndex = index;
+  event.dataTransfer?.setData('text', String(index));
+}
+
+onDragOver(event: DragEvent): void {
+  event.preventDefault(); // 允許 drop
+  const slot = (event.currentTarget as HTMLElement);
+  const index = this.getSlotIndex(slot);
+  this.dragOverIndex = index;
+}
+
+onDragLeave(event: DragEvent): void {
+  this.dragOverIndex = -1;
+}
+
+onSortDrop(event: DragEvent, toIndex: number): void {
+  event.preventDefault();
+  event.stopPropagation(); // 避免觸發外層的檔案上傳 drop
+  this.dragOverIndex = -1;
+
+  const fromIndex = this.dragFromIndex;
+  if (fromIndex === -1 || fromIndex === toIndex) return;
+
+  // 交換兩個槽位的圖片
+  const temp = this.imageSlotUrls[fromIndex];
+  this.imageSlotUrls[fromIndex] = this.imageSlotUrls[toIndex];
+  this.imageSlotUrls[toIndex] = temp;
+
+  // 交換後確保空格仍在後方（遞補邏輯）
+  this.compactSlots();
+
+  this.dragFromIndex = -1;
+  this.updateNextButtonStatus();
+}
+
+// 交換後重新整理，確保有圖的槽位永遠靠前
+private compactSlots(): void {
+  const filled = this.imageSlotUrls.filter(url => url !== '');
+  const empty = this.imageSlotUrls.filter(url => url === '');
+  this.imageSlotUrls = [...filled, ...empty];
+}
+
+// 從 DOM 元素取得槽位 index（輔助方法）
+private getSlotIndex(el: HTMLElement): number {
+  const indexAttr = el.getAttribute('data-index');
+  return indexAttr !== null ? Number(indexAttr) : -1;
+}
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
@@ -175,8 +230,11 @@ onPriceInput(event: Event): void {
 }
 
 private buildProductContext(): string {
-  return `分類：${this.state.catMain || '未定'}\n子分類：${this.state.catSub || '未定'}\n狀況：${this.state.condition || '未定'}`;
+  return `分類：${this.state.catMain || '未定'}\n狀況：${this.state.condition || '未定'}`;
 }
+// private buildProductContext(): string {
+//   return `分類：${this.state.catMain || '未定'}\n子分類：${this.state.catSub || '未定'}\n狀況：${this.state.condition || '未定'}`;
+// }
 
 async handleAIGenerate(): Promise<void> {
   if (this.aiPendingPrice > 0) {

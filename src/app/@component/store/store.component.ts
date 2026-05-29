@@ -75,7 +75,7 @@ export class StoreComponent {
 
   // 新增商品
   goLaunchProduct() {
-    this.router.navigate(['/launch_product']);
+    this.router.navigate(['/launch_product_info']);
   }
 
   // 商品管理

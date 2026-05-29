@@ -4,11 +4,11 @@
   <div class="stepper">
     <div class="step active">
       <div class="step-badge">1</div>
-      <span class="step-label">價格與分類</span>
+      <span class="step-label">地點與分類</span>
     </div>
     <div class="step">
       <div class="step-badge">2</div>
-      <span class="step-label">商品資訊</span>
+      <span class="step-label">資訊與價格</span>
     </div>
     <div class="step">
       <div class="step-badge">3</div>
@@ -19,28 +19,18 @@
   <div class="form-vertical-container">
 
     <div class="field">
-      <div class="section-label">交貨地點與學籍 <span class="req">*</span></div>
+      <div class="section-label">商品所在地點 <span class="req">*</span></div>
       <div class="select-group">
         <select (change)="onRegionChange($event)" [class.selected]="state.region !== ''">
-          <option value="" disabled selected>請選擇地區</option>
+          <option value="" disabled selected>請選擇縣市</option>
           <option *ngFor="let region of regionOptions" [value]="region">{{ region }}</option>
-        </select>
-
-        <select (change)="onSchoolChange($event)" [value]="state.school" [disabled]="!state.region" [class.selected]="state.school !== ''">
-          <option value="" disabled selected>請選擇學校</option>
-          <option *ngFor="let sch of schoolOptions" [value]="sch">{{ sch }}</option>
-        </select>
-
-        <select (change)="onDeptChange($event)" [value]="state.department" [disabled]="!state.school" [class.selected]="state.department !== ''">
-          <option value="" disabled selected>請選擇科系</option>
-          <option *ngFor="let dept of deptOptions" [value]="dept">{{ dept }}</option>
         </select>
       </div>
     </div>
 
     <div class="field">
-      <div class="section-label">常出沒地區 <span class="optional">（選填）</span></div>
-      <input type="text" placeholder="例：高雄、台北" [value]="state.location" (input)="onLocationInput($event)"/>
+      <div class="section-label">額外可面交地區 <span class="optional">（選填）</span></div>
+      <input type="text" placeholder="例：高雄、台北(除了上述商品所在地點)" [value]="state.location" (input)="onLocationInput($event)"/>
     </div>
 
     <div class="field">
@@ -55,18 +45,16 @@
       </div>
     </div>
 
-    <hr class="field-divider" />
-
     <div class="field">
       <div class="section-label">分類 <span class="req">*</span></div>
       <select (change)="onCatMainChange($event)" [class.selected]="state.catMain !== ''">
         <option value="" disabled selected>請選擇分類</option>
         <option *ngFor="let cat of catOptions" [value]="cat">{{ cat }}</option>
       </select>
-      <select (change)="onCatSubChange($event)" [value]="state.catSub" [class.selected]="state.catSub !== ''" style="margin-top:8px;">
+      <!-- <select (change)="onCatSubChange($event)" [value]="state.catSub" [class.selected]="state.catSub !== ''" style="margin-top:8px;">
         <option value="" disabled selected>請選擇</option>
         <option *ngFor="let sub of subCats" [value]="sub">{{ sub }}</option>
-      </select>
+      </select> -->
     </div>
 
     <div class="field">
@@ -74,8 +62,10 @@
       <select (change)="onConditionChange($event)" [class.selected]="state.condition !== ''">
         <option value="" disabled selected>請選擇商品狀況</option>
         <option>全新</option>
-        <option>九成新以上</option>
-        <option>二手</option>
+        <option>近全新</option>
+        <option>輕度使用</option>
+        <option>中度使用</option>
+        <option>重度使用</option>
       </select>
     </div>
   </div>
