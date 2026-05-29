@@ -374,6 +374,7 @@ export class LoginRegisterComponent implements OnInit{
 }
 
   /* 登入按鈕 */
+  // 韻潔先別動拜託
   userInputLogin = ''
   isAgree = false;
 
@@ -414,6 +415,7 @@ export class LoginRegisterComponent implements OnInit{
       // });
 
       this.userService.isLoggedIn.set(true);
+      localStorage.setItem('isLoggedIn', 'true');
       this.gotoHome();
 
     }

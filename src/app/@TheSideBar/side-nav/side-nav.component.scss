@@ -11,7 +11,7 @@
   padding: 1rem;         // 原本 1.5rem
   // box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);  // 右側陰影
 
-  overflow-y: scroll;        // ← 加這行，內容超出時出現滾輪
+  // overflow-y: scroll;        // ← 加這行，內容超出時出現滾輪
   overflow-x: hidden;      // ← 加這行，防止水平滾動
 
 
