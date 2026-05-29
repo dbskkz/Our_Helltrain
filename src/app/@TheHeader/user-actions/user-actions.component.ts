@@ -55,8 +55,6 @@ export class UserActionsComponent {
   }
 
   logout(){
-
-
     Swal.fire({
       title: "您確定要登出嗎",
       text: "",
@@ -67,13 +65,16 @@ export class UserActionsComponent {
       confirmButtonText: "登出",
       cancelButtonText: "取消"
     }).then((result) => {
-      if (result.isConfirmed) Swal.fire({
+      if (result.isConfirmed){
+
+      Swal.fire({
         title: "您已登出",
         text: "歡迎再次使用",
         icon: "success"
       });
       this.userService.logout();
       this.router.navigate(['/home']);
+      }
     });
 
   }
