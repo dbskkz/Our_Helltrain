@@ -87,3 +87,14 @@ export interface Dispute {
   violationType: string;   // 違規類型
   orderId: string;         // 訂單 ID
 }
+
+
+/*// 把字串分割成陣列
+const files = dispute.filePath ? dispute.filePath.split(',') : [];
+
+// 顯示每個檔案
+files.forEach(file => {
+    const url = `http://localhost:8080/uploads/${file}`;
+    // 圖片就顯示 <img>
+    // PDF 就顯示連結
+})*/

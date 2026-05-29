@@ -93,8 +93,8 @@ export class AddannounceDaialogComponent {
     event.preventDefault();
     const file = event.dataTransfer?.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('檔案大小不能超過 5MB');
+      if (file.size > 2 * 1024 * 1024) {
+        alert('檔案大小不能超過 2MB');
         return;
       }
       this.selectedFile = file;
