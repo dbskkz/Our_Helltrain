@@ -38,7 +38,7 @@
             <div class="edit-group">
               <input type="text" [(ngModel)]="tempName" class="edit-input" placeholder="請輸入姓名 (必填)" maxlength="20">
               <small class="word-count-hint" [style.color]="tempName.length >= 20 ? 'red' : '#999'">
-                {{ tempName?.length || 0 }} / 20
+                {{ tempName.length || 0 }} / 20
               </small>
             </div>
           }
@@ -75,7 +75,7 @@
         <div class="input-box-wrapper">
           <form class="example-form">
             <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-              <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required>
+              <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required maxlength="30">
               <mat-autocomplete #autoSchool="matAutocomplete">
                 @for (option of filteredSchools | async; track option) {
                   <mat-option [value]="option">{{option}}</mat-option>
@@ -106,7 +106,7 @@
         <div class="input-box-wrapper">
           <form class="example-form">
             <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-              <input type="text" placeholder="請輸入並選擇你的科系" matInput [formControl]="deptControl" [matAutocomplete]="autoDept" class="custom-input">
+              <input type="text" placeholder="請輸入並選擇你的科系" matInput [formControl]="deptControl" [matAutocomplete]="autoDept" class="custom-input" maxlength="30">
               <mat-autocomplete #autoDept="matAutocomplete">
                 @for (option of filteredDepts | async; track option) {
                   <mat-option [value]="option">{{option}}</mat-option>
@@ -141,14 +141,15 @@
               <div class="input-box-wrapper">
                 <form class="example-form">
                   <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                    <input type="text" [placeholder]="'常出沒地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
+                    <input type="text" [placeholder]="'地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
                      matInput [formControl]="control"
                      [matAutocomplete]="autoArea"
                      class="custom-input"
                      [required]="$index === 0"
                      (blur)="validateOnBlur(control, 'area')"
+                     maxlength="5"
                      >
-                    <mat-autocomplete #autoArea="matAutocomplete">
+                    <mat-autocomplete #autoArea="matAutocomplete" (optionSelected)="onAreaSelected()">
                       @for (opt of filteredAreasList[$index] | async; track opt) {
                         <mat-option [value]="opt">{{opt}}</mat-option>
                       }
@@ -167,6 +168,7 @@
             <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
           }
         }
+
       }
     </div>
   </div>
@@ -241,59 +243,82 @@
     <div class="password_content password-form-container example-form">
       @if (isEditingPassword) {
         <form class="password_form" [formGroup]="passwordForm">
-          <div class="field_group">
-            <p class="label">請輸入舊密碼</p>
-            <div class="input-box-wrapper">
-              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                <input matInput [type]="hideOldPassword() ? 'password' : 'text'" formControlName="oldPassword" placeholder="輸入目前的舊密碼進行身分確認">
-                <button type="button" class="eye-btn" (click)="hideOldPassword.set(!hideOldPassword())">
-                  <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
-            </div>
-          </div>
 
-          <hr class="divider">
+          <div class="password-three-column-grid">
 
-          <div class="field_group">
-            <p class="label">設定新密碼</p>
-            <div class="input-box-wrapper">
-              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                <input matInput [type]="hideNewPassword() ? 'password' : 'text'" formControlName="newPassword" placeholder="新密碼長度至少需滿 8 個字元">
-                <button type="button" class="eye-btn" (click)="hideNewPassword.set(!hideNewPassword())">
-                  <mat-icon>{{ hideNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
-            </div>
-            @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
-              <p class="field-hint error-text">✘ 密碼長度至少需滿 8 個字元</p>
-            } @else if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
-              <p class="field-hint error-text">✘ 新密碼不能為空</p>
-            } @else if (passwordForm.get('newPassword')?.value && passwordForm.get('newPassword')?.valid) {
-              <p class="field-hint success-text">✔ 密碼格式正確</p>
-            }
-          </div>
+            <div class="field_group">
+              <p class="label">請輸入舊密碼</p>
+              <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput [type]="hideOldPassword() ? 'password' : 'text'" formControlName="oldPassword" placeholder="輸入目前的舊密碼進行身分確認" maxlength="20">
+                  <button type="button" class="eye-btn" (click)="hideOldPassword.set(!hideOldPassword())">
+                    <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              @if (passwordForm.get('oldPassword')?.touched) {
 
-          <div class="field_group">
-            <p class="label">確認新密碼</p>
-            <div class="input-box-wrapper">
-              <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword" placeholder="再次輸入新密碼以供系統覆核">
-                <button type="button" class="eye-btn" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
-                  <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
+                @if (passwordForm.get('oldPassword')?.invalid) {
+                  @if (passwordForm.get('oldPassword')?.hasError('required')) {
+                    <p class="field-hint error-text">✘ 舊密碼為必填欄位喔！</p>
+                  }
+                } @else {
+                  <p class="field-hint success-text">✔ 已輸入舊密碼</p>
+                }
+
+              } @else {
+                <p class="field-hint">請輸入舊密碼進行身份確認</p>
+              }
             </div>
-            @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('mismatch')) {
-              <p class="field-hint error-text">✘ 兩次輸入的密碼不一致</p>
-            } @else if (passwordForm.get('confirmPassword')?.value && passwordForm.get('newPassword')?.value && passwordForm.get('confirmPassword')?.valid) {
-              <p class="field-hint success-text">✔ 密碼一致</p>
-            }
-          </div>
-        </form>
+
+            <hr class="divider grid-hidden">
+
+            <div class="field_group">
+              <p class="label">設定新密碼</p>
+              <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput [type]="hideNewPassword() ? 'password' : 'text'" formControlName="newPassword" placeholder="新密碼長度至少需滿 8 個字元" maxlength="20">
+                  <button type="button" class="eye-btn" (click)="hideNewPassword.set(!hideNewPassword())">
+                    <mat-icon>{{ hideNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              @if (passwordForm.get('newPassword')?.touched) {
+                @if (passwordForm.get('newPassword')?.invalid) {
+                  @if (passwordForm.get('newPassword')?.hasError('required')) {
+                    <p class="field-hint error-text">✘ 新密碼為必填欄位</p>
+                  } @else if (passwordForm.get('newPassword')?.hasError('minlength')) {
+                    <p class="field-hint error-text">✘ 密碼長度至少需要 8 個字元</p>
+                  } @else if (passwordForm.get('newPassword')?.hasError('pattern')) {
+                    <p class="field-hint error-text">⚠ 密碼必須同時包含英文字母與數字喔！</p>
+                  }
+                } @else {
+                  <p class="field-hint success-text">✔ 新密碼格式與長度符合規定</p>
+                }
+              }
+            </div>
+
+            <div class="field_group">
+              <p class="label">確認新密碼</p>
+              <div class="input-box-wrapper">
+                <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
+                  <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword" placeholder="再次輸入新密碼以供系統覆核" maxlength="20">
+                  <button type="button" class="eye-btn" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
+                    <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('mismatch')) {
+                <p class="field-hint error-text">✘ 兩次輸入的密碼不一致</p>
+              } @else if (passwordForm.get('confirmPassword')?.value && passwordForm.get('newPassword')?.value && passwordForm.get('confirmPassword')?.valid) {
+                <p class="field-hint success-text">✔ 密碼一致</p>
+              }
+            </div>
+
+          </div> </form>
       } @else {
         <div class="password-shield-hint">
-          <p><mat-icon class="shield-lock-icon">verified_user</mat-icon>您的帳號密碼受到安全加密保護，如欲變更請點擊右上角「修改密碼」按鈕</p>
+          <p><mat-icon class="shield-lock-icon">verified_user</mat-icon>您的帳號密碼受到安全加密保護，如欲變更請點擊「修改密碼」按鈕</p>
         </div>
       }
     </div>

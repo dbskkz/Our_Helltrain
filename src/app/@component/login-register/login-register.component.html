@@ -75,13 +75,16 @@
 
             <a class="forgot-password">忘記密碼？</a>
 
-          <div class="checkbox-group">
-            <input type="checkbox" id="terms" formControlName="agreeTerms">
-            <label for="terms">我已閱讀並同意<span class="terms-link" (click)="openTermsDialog($event)">使用說明與注意事項</span></label>
-          </div>
-          @if (loginForm.get('agreeTerms')?.touched && loginForm.get('agreeTerms')?.hasError('required')) {
-            <p class="field-hint error-text" style="margin-top: 4px;">✘ 您必須同意使用說明才能登入</p>
-          }
+              <div class="checkbox-group">
+                <input type="checkbox" id="terms" formControlName="agreeTerms"
+                      (click)="openLoginTermsDialog($event)" readonly>
+
+                <label for="terms">我已閱讀並同意<span class="terms-link" (click)="openLoginTermsDialog($event)">使用說明與注意事項</span></label>
+              </div>
+
+              @if (loginForm.get('agreeTerms')?.touched && loginForm.get('agreeTerms')?.hasError('required')) {
+                <p class="field-hint error-text" style="margin-top: 4px;">✘ 您必須同意使用說明才能登入</p>
+              }
 
           <button class="submit-btn" (click)="onLogin()">登入</button>
 
@@ -138,6 +141,7 @@
                           formControlName="school"
                           [matAutocomplete]="autoSchool"
                           class="custom-input"
+                          maxlength="30"
                         />
                         <mat-icon matSuffix class="suffix-icon">arrow_drop_down</mat-icon>
                         <mat-autocomplete #autoSchool="matAutocomplete" class="custom-autocomplete-panel">
@@ -170,6 +174,7 @@
                             formControlName="area"
                             [matAutocomplete]="autoArea"
                             class="custom-input"
+                            maxlength="30"
                           />
                           <mat-icon matSuffix class="suffix-icon">arrow_drop_down</mat-icon>
                           <mat-autocomplete #autoArea="matAutocomplete" class="custom-autocomplete-panel">
@@ -204,6 +209,7 @@
                         [(ngModel)]="userEmail"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onEmailChange()"
+                        maxlength="40"
                       />
                       <mat-icon class="suffix-icon">mail_outline</mat-icon>
                     </div>
@@ -229,6 +235,7 @@
                         placeholder="至少 8 個字元"
                         class="custom-input"
                         formControlName="password"
+                        maxlength="20"
                       />
                       <button type="button" class="eye-btn" (click)="hidePassword.set(!hidePassword())">
                         <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
@@ -243,9 +250,12 @@
                           } @else if (registerForm.get('password')?.hasError('minlength')) {
                             <p class="field-hint error-text">✘ 密碼長度至少需要 8 個字元</p>
                           }
-                        } @else {
-                          <p class="field-hint success-text">✔ 密碼長度符合規定</p>
+                          @else if (registerForm.get('password')?.hasError('pattern')) {
+                            <p class="field-hint error-text">⚠ 密碼必須同時包含英文字母與數字喔！</p>
                           }
+                        } @else {
+                          <p class="field-hint success-text">✔ 密碼格式與長度符合規定</p>
+                        }
 
                       } @else {
                         <p class="field-hint">請輸入密碼</p>
@@ -263,6 +273,7 @@
                         placeholder="再次輸入密碼"
                         class="custom-input"
                         formControlName="confirmPassword"
+                        maxlength="20"
                       />
                       <button type="button" class="eye-btn" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
                         <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
@@ -294,11 +305,14 @@
                     }
                   </div>
 
-                  <div class="checkbox-group">
-                    <input type="checkbox" id="register-terms" formControlName="agreeTerms">
+                 <div class="checkbox-group">
+                    <input type="checkbox" id="register-terms" formControlName="agreeTerms"
+                          (click)="openTermsDialog($event)" readonly>
+
                     <label for="register-terms">我已閱讀並同意<span class="terms-link" (click)="openTermsDialog($event)">使用說明與注意事項</span>，且確認所填資料屬實</label>
                   </div>
-                    @if (registerForm.get('agreeTerms')?.touched && registerForm.get('agreeTerms')?.hasError('required')) {
+
+                  @if (registerForm.get('agreeTerms')?.touched && registerForm.get('agreeTerms')?.hasError('required')) {
                     <p class="field-hint error-text" style="margin-top: 0px; margin-bottom: 24px;">✘ 您必須同意使用說明與注意事項才能繼續</p>
                   }
                   <button type="button" class="submit-btn" (click)="onNextStep()">

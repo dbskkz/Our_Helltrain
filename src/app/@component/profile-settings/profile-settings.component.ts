@@ -142,7 +142,7 @@ export class ProfileSettingsComponent {
         oldPassword: [{ value: '', disabled: true }, [Validators.required]],
         newPassword: [
           { value: '', disabled: true },
-          [Validators.required, Validators.minLength(8)],
+          [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)],
         ],
         confirmPassword: [{ value: '', disabled: true }, [Validators.required]],
       },
@@ -301,16 +301,22 @@ export class ProfileSettingsComponent {
  validateOnBlur(control: any, type: 'school' | 'area') {
   control.markAsTouched();
 
-  const value = (control.value || '').trim().toLowerCase().replace(/台/g, '臺');
+  let value = (control.value || '').trim().toLowerCase().replace(/台/g, '臺');
 
   // 🔑 如果使用者把字擦掉變空字串，清空所有自訂錯誤，回歸 required 判斷
   if (!value) {
-    control.setErrors(null);
     return;
   }
 
   if (type === 'area') {
     const allRegions = this.schoolService.allRegions();
+
+    //  精準加在這：如果他打「高雄」，幫他模糊搜尋出全名「高雄市」
+  const matched = allRegions.find(opt => opt.includes(value));
+  if (matched) {
+    control.setValue(matched);
+    value = matched.toLowerCase().replace(/台/g, '臺');
+  }
 
     // 🔍 安檢 A：檢查是否在合法縣市選單內
     const isInList = allRegions.some(
@@ -373,7 +379,8 @@ export class ProfileSettingsComponent {
           const allRegions = this.schoolService.allRegions();
           const otherSelected = this.areaFormArray.controls
             .filter((_, idx) => idx !== index)
-            .map((c) => c.value);
+            .map((c) => c.value)
+            .filter(val => val !== null && val !== '');
           const available = allRegions.filter(
             (r) => !otherSelected.includes(r),
           );
@@ -450,6 +457,17 @@ export class ProfileSettingsComponent {
     }
   }
 
+  // 當任何一格地區選好時，強迫三格水管集體通電重新整理
+onAreaSelected() {
+  // 用一個小小的延遲，確保 Angular 已經把選好的值塞進 FormControl 裡了
+  setTimeout(() => {
+    this.areaFormArray.controls.forEach(control => {
+      // ⚡ 強迫每一格都對外發射一次「值已更新」的訊號，但【不要】觸發表單被修改的狀態
+      control.updateValueAndValidity({ emitEvent: true, onlySelf: true });
+    });
+  }, 50);
+}
+
   private showWarningAlert(text: string) {
     Swal.fire({
       title: '儲存失敗',
@@ -480,6 +498,7 @@ export class ProfileSettingsComponent {
       reader.readAsDataURL(file);
     }
   }
+
   resetToDefaultAvatar() {
     Swal.fire({
       title: '確定要恢復預設頭像嗎？',
@@ -497,6 +516,8 @@ export class ProfileSettingsComponent {
       }
     });
   }
+
+
   toggleEditPassword() {
     this.isEditingPassword = !this.isEditingPassword;
     if (this.isEditingPassword) {
