@@ -31,7 +31,7 @@
 
       <div class="main_card_right">
         <div class="main_card_right_up">
-          <span class="label-text">名稱：</span>
+          <span class="label-text">姓名：</span>
           @if (!isEditingBasic) {
             <h4 class="pure-text-display">{{name}}</h4>
           } @else {
@@ -61,139 +61,142 @@
       </div>
     </div>
 
-    <hr class="section-divider">
+<hr class="section-divider">
 
-    <div class="region_group">
+<div class="region_group_grid">
 
-      <div class="school_group">
-        <div class="school">
-          <p class="field-title"><lucide-icon [name]="School"></lucide-icon>就讀學校</p>
-          @if (!isEditingBasic) {
-            <p class="pure-text-display">{{ school }}</p>
-          } @else {
-            <div class="input-box-wrapper">
-              <form class="example-form">
-                <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-                  <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required>
-                  <mat-autocomplete #autoSchool="matAutocomplete">
-                    @for (option of filteredSchools | async; track option) {
-                      <mat-option [value]="option">{{option}}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              </form>
-            </div>
+  <div class="grid-field-item school">
+    <p class="field-title"><lucide-icon [name]="School"></lucide-icon>就讀學校</p>
 
-            @if (schoolControl.touched) {
-              @if (schoolControl.hasError('required')) {
-                <p class="field-hint error-text">✘ 學校是必填喔!</p>
-              } @else if (schoolControl.hasError('notInList')) {
-                <p class="field-hint error-text">⚠ 找不到這間學校，請務必從選單中點選喔！</p>
-              }
-            }
-          }
+    <div class="field-content-block">
+      @if (!isEditingBasic) {
+        <p class="pure-text-display">{{ school }}</p>
+      } @else {
+        <div class="input-box-wrapper">
+          <form class="example-form">
+            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+              <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required>
+              <mat-autocomplete #autoSchool="matAutocomplete">
+                @for (option of filteredSchools | async; track option) {
+                  <mat-option [value]="option">{{option}}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
 
-        <div class="department">
-          <p class="field-title"><lucide-icon [name]="BoxIcon"></lucide-icon>就讀科系</p>
-          @if (!isEditingBasic) {
-            <p class="pure-text-display">{{ department ? department : '未填寫'}}</p>
-          } @else {
-            <div class="input-box-wrapper">
-              <form class="example-form">
-                <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-                  <input type="text" placeholder="請選擇你的科系" matInput [formControl]="deptControl" [matAutocomplete]="autoDept" class="custom-input">
-                  <mat-autocomplete #autoDept="matAutocomplete">
-                    @for (option of filteredDepts | async; track option) {
-                      <mat-option [value]="option">{{option}}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              </form>
-            </div>
+        @if (schoolControl.touched) {
+          @if (schoolControl.hasError('required')) {
+            <p class="field-hint error-text">✘ 學校是必填喔!</p>
+          } @else if (schoolControl.hasError('notInList')) {
+            <p class="field-hint error-text">⚠ 找不到這間學校，請務必從選單中點選喔！</p>
           }
-        </div>
-      </div>
-
-      <div class="multi-area-section">
-        <p class="field-title"><lucide-icon [name]="MapPin"></lucide-icon>常出沒地區
-          @if (isEditingBasic) {<span class="optional-text">(最多填三個)</span>}
-        </p>
-
-        @if (!isEditingBasic) {
-          <div class="area-tags-display">
-            @for (areaValue of areas; track $index) {
-              @if (areaValue) {
-                @if (!$first) { <span class="area-split-dash">、</span> }
-                <span class="pure-text-display">{{ areaValue }}</span>
-              }
-            }
-          </div>
-        } @else {
-          <div class="area-edit-grid">
-            @for (control of areaFormArray.controls; track $index) {
-
-              <div class="area-column-item">
-                <div class="input-box-wrapper area-box-flex-item" [class.is-readonly]="!isEditingBasic">
-                  <form class="example-form">
-                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                      <input type="text"
-                             [placeholder]="'常出沒地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
-                             matInput
-                             [formControl]="control"
-                             [matAutocomplete]="autoArea"
-                             class="custom-input"
-                             [required]="$index === 0">
-
-                      <mat-autocomplete #autoArea="matAutocomplete">
-                        @for (opt of filteredAreasList[$index] | async; track opt) {
-                          <mat-option [value]="opt">{{opt}}</mat-option>
-                        }
-                      </mat-autocomplete>
-                    </mat-form-field>
-                  </form>
-                </div>
-
-                  @if ($index === 0 && control.touched) {
-                    @if (control.hasError('required')) {
-                      <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
-                    } @else if (control.hasError('notInList')) {
-                      <p class="field-hint error-text">⚠ 請點選選單中出現的合法縣市地區！</p>
-                    }
-                  }
-              </div>
-
-            }
-          </div>
         }
-      </div>
-
-      <div class="phone_section">
-        <p class="field-title"><lucide-icon [name]="Phone"></lucide-icon>聯絡電話
-          @if (isEditingBasic) {
-            <span class="optional-text">(選填 作為聯絡方式之一)</span>
-          }</p>
-        @if (!isEditingBasic) {
-          <p class="pure-text-display">{{ phone ? phone : '未填寫' }}</p>
-        } @else {
-          <div class="input-box-wrapper">
-            <form class="example-form">
-              <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-                <input type="tel" placeholder="09-xxxxxxxx" matInput [formControl]="phoneControl" class="custom-input" maxlength="11" (input)="onPhoneInput($event)">
-              </mat-form-field>
-            </form>
-          </div>
-
-            @if (phoneControl.touched && phoneControl.errors?.['pattern']) {
-              <div class="field-hint error-text">
-                ✘ 手機格式錯誤，請輸入正確的格式（如：09-12345678）
-              </div>
-            }
-        }
-      </div>
+      }
     </div>
+  </div>
 
-    <hr class="section-divider">
+  <div class="grid-field-item department">
+    <p class="field-title"><lucide-icon [name]="BoxIcon"></lucide-icon>就讀科系</p>
+
+    <div class="field-content-block">
+      @if (!isEditingBasic) {
+        <p class="pure-text-display">{{ department ? department : '未填寫'}}</p>
+      } @else {
+        <div class="input-box-wrapper">
+          <form class="example-form">
+            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+              <input type="text" placeholder="請輸入並選擇你的科系" matInput [formControl]="deptControl" [matAutocomplete]="autoDept" class="custom-input">
+              <mat-autocomplete #autoDept="matAutocomplete">
+                @for (option of filteredDepts | async; track option) {
+                  <mat-option [value]="option">{{option}}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="grid-field-item multi-area-section">
+    <p class="field-title"><lucide-icon [name]="MapPin"></lucide-icon>常出沒地區
+      @if (isEditingBasic) {<span class="optional-text">(最多填三個)</span>}
+    </p>
+
+    <div class="field-content-block">
+      @if (!isEditingBasic) {
+        <div class="area-tags-display">
+          @for (areaValue of areas; track $index) {
+            @if (areaValue) {
+              @if (!$first) { <span class="area-split-dash">、</span> }
+              <span class="pure-text-display">{{ areaValue }}</span>
+            }
+          }
+        </div>
+      } @else {
+        <div class="area-edit-grid">
+          @for (control of areaFormArray.controls; track $index) {
+            <div class="area-column-item">
+              <div class="input-box-wrapper">
+                <form class="example-form">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                    <input type="text" [placeholder]="'常出沒地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
+                     matInput [formControl]="control"
+                     [matAutocomplete]="autoArea"
+                     class="custom-input"
+                     [required]="$index === 0"
+                     (blur)="validateOnBlur(control, 'area')"
+                     >
+                    <mat-autocomplete #autoArea="matAutocomplete">
+                      @for (opt of filteredAreasList[$index] | async; track opt) {
+                        <mat-option [value]="opt">{{opt}}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </form>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (areaFormArray.controls[0].touched) {
+          @if (areaFormArray.controls[0].hasError('required')) {
+            <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
+          } @else if (areaFormArray.controls[0].hasError('notInList')) {
+            <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
+          }
+        }
+      }
+    </div>
+  </div>
+
+  <div class="grid-field-item phone_section">
+    <p class="field-title"><lucide-icon [name]="Phone"></lucide-icon>聯絡電話
+      @if (isEditingBasic) {<span class="optional-text">(選填 作為聯絡方式之一)</span>}
+    </p>
+
+    <div class="field-content-block">
+      @if (!isEditingBasic) {
+        <p class="pure-text-display">{{ phone ? phone : '未填寫' }}</p>
+      } @else {
+        <div class="input-box-wrapper">
+          <form class="example-form">
+            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
+              <input type="tel" placeholder="09-xxxxxxxx" matInput [formControl]="phoneControl" class="custom-input" maxlength="11" (input)="onPhoneInput($event)">
+            </mat-form-field>
+          </form>
+        </div>
+
+        @if (phoneControl.touched && phoneControl.hasError('pattern')) {
+          <p class="field-hint error-text">✘ 手機格式錯誤，請輸入正確的格式（如：09-12345678）</p>
+        }
+      }
+    </div>
+  </div>
+
+</div>
+  <hr class="section-divider">
 
     <div class="profile_section_block">
       <p class="field-title"><span><lucide-icon [name]="clipboardPenLine"></lucide-icon></span> 個人簡介</p>
