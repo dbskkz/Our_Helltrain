@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // 1. Import FormsModule
+
 
 import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin} from 'lucide-angular';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-shopping-cart',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, FormsModule],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.scss'
 })
@@ -22,53 +25,56 @@ export class ShoppingCartComponent {
 
 
   // =========================================================
-
-
   // PURCHASE QUANTITY
   // =========================================================
 
+  productAmount = 2;
+  alert ="";
+
+  deleteList() {
+    for (const item of this.products){
+      if(this.products.filter(p => p.selected).length > 0)
+      {
 
 
-  // increasePQ(item: any){
+      Swal.fire({
+            title: "確定要刪除這些商品嗎",
+            text: "",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "確定刪除",
+            cancelButtonText: "取消"
+          }).then((result) => {
+            if (result.isConfirmed){
 
-  //   if(item.quantity < item.stock)
-  //   {
-  //     item.quantity++;
-  //   }
+            Swal.fire({
+              title: "已刪除 "　+ this.products.filter(p => p.selected).length + " 筆商品！" ,
+              text: "",
+              icon: "success"
+            });
+            this.products = this.products.filter(p => !p.selected);
+            this.productAmount = this.products.length;
+            }
+      });
 
-  //   else
-  //   {
-  //     // TODO: Dialog「商品數量不足!」
-  //     console.log("商品數量不足!");
-  //   }
+      }
+      else
+      {
+        this.alert = "請選擇您要刪除的商品！"
+      }
+    }
+  }
 
+
+  // get filteredProduct(){
+  //   return this.products.filter((p) => {
+  //     return p.selected == false;
+  //   })
   // }
 
-  // decreasePQ(item: any){
 
-  //   if(item.quantity > 1)
-  //   {
-  //     item.quantity--;
-  //   }
-
-  //   else
-  //   {
-  //     const sure = confirm('確定要移除商品嗎？');
-
-  //     if(sure)
-  //     {
-  //       this.products = this.products.filter(
-  //         product => product.listId !== item.listId
-  //       );
-  //     }
-  //   }
-
-  // }
-
-  // 假資料
-
-
-  productAmount = 3;
 
   products = [
     {
@@ -86,7 +92,8 @@ export class ShoppingCartComponent {
 
       sellerName: '生科吉娃娃甘霖',
       university: '清大',
-      location: '新竹'
+      location: '新竹',
+      selected: false
     },
 
     {
@@ -104,7 +111,8 @@ export class ShoppingCartComponent {
 
       sellerName: '不吉掰娃娃',
       university: '清大',
-      location: '花蓮'
+      location: '花蓮',
+      selected: false
     }
   ];
 }

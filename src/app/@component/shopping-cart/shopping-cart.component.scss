@@ -66,6 +66,20 @@ lucide-icon {
       }
     }
   }
+
+  .btn-clear-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;  // 靠右對齊，和按鈕同側
+    gap: 0.35rem;
+  }
+
+  .alert-msg {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #ef4444;  // 紅字
+    font-weight: 500;
+  }
 }
 
 .favorites-subtitle {

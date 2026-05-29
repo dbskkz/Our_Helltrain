@@ -1,17 +1,26 @@
 <main class="content">
   <header class="favorites-header">
     <h3 class="favorites-title">收藏的商品 ({{productAmount}})</h3>
-    <button class="btn-clear-all" type="button">
-      <lucide-icon [img]="Trash2Icon" size="18"></lucide-icon>
-      <span>清空收藏</span>
-    </button>
+    <div class ="btn-clear-wrapper">
+
+      <button class="btn-clear-all" type="button" (click)="deleteList()">
+        <lucide-icon [img]="Trash2Icon" size="18"></lucide-icon>
+        <span>刪除商品</span>
+      </button>
+      @if(alert != '')
+      {
+        <p class="alert-msg">
+          {{alert}}
+        </p>
+      }
+    </div>
   </header>
 
   <ul class="favorites-list">
     @for (item of products; track $index) {
     <li class="favorite-item">
       <div class="item-prefix">
-        <input type="checkbox" class="item-checkbox">
+        <input type="checkbox" class="item-checkbox" [(ngModel)]="item.selected">
       </div>
 
       <div class="item-img">
