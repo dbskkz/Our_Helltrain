@@ -1,5 +1,5 @@
-import { NgFor, NgIf} from '@angular/common';
-import { Component } from '@angular/core';
+import { NgFor} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
@@ -35,11 +35,11 @@ const API_MODEL = 'claude-sonnet-4-20250514';
 
 @Component({
   selector: 'app-launch-product-info',
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, FormsModule],
   templateUrl: './launch-product-info.component.html',
   styleUrl: './launch-product-info.component.scss'
 })
-export class LaunchProductInfoComponent{
+export class LaunchProductInfoComponent implements OnInit{
 
   // 從 Service 取得共用 state
   get state() { return this.formService.state; }
@@ -47,9 +47,9 @@ export class LaunchProductInfoComponent{
   // 屬性：下拉選單選取項陣列
   catOptions = ['教科書', '專業器材', '生活用品', '3C電子', '家具家電', '筆記考古', '服飾配件', '戶外運動', '畢業季'];
   // catOptions = Object.keys(SUB_CATS);
-  regionOptions = ['01 基隆市','02 台北市','03 新北市','04 桃園縣','05 新竹市','06 新竹縣','07 苗栗縣',
-                   '08 台中市','09 彰化縣','10 南投縣','11 雲林縣','12 嘉義市','13 嘉義縣','14 台南市',
-                   '15 高雄市','16 屏東縣','17 台東縣','18 花蓮縣','19 宜蘭縣','20 澎湖縣','21 金門縣','22 連江縣'];
+  regionOptions = ['基隆市','台北市','新北市','桃園縣','新竹市','新竹縣','苗栗縣',
+                   '台中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','台南市',
+                   '高雄市','屏東縣','台東縣','花蓮縣','宜蘭縣','澎湖縣','金門縣','連江縣'];
   // schoolOptions: string[] = [];
   // deptOptions: string[] = [];
   // subCats: string[] = [];
@@ -58,6 +58,14 @@ export class LaunchProductInfoComponent{
   gradeList: string[] = ['不拘','大一', '大二', '大三', '大四', '碩士', '博士'];
 
   isNextDisabled = true;
+
+  //點選沒填會亮紅邊
+  touched = {
+    region: false,
+    grades: false,
+    catMain: false,
+    condition: false,
+  };
 
   // ── Toast ──
   toastText = '';
@@ -69,13 +77,13 @@ export class LaunchProductInfoComponent{
     private formService: LaunchProductFormService,
   ) {}
 
-  // ngOnInit(): void {
-  //   // 還原主分類對應的子分類
-  //   if (this.state.region) this.schoolOptions = SCHOOL_DATA[this.state.region] ?? [];
-  //   if (this.state.school) this.deptOptions = DEPT_DATA[this.state.school] ?? ['一般科系', '其他學系'];
-  //   // if (this.state.catMain) this.subCats = SUB_CATS[this.state.catMain] ?? [];
-  //   this.updateNextButton();
-  // }
+  ngOnInit(): void {
+    // // 還原主分類對應的子分類
+    // if (this.state.region) this.schoolOptions = SCHOOL_DATA[this.state.region] ?? [];
+    // if (this.state.school) this.deptOptions = DEPT_DATA[this.state.school] ?? ['一般科系', '其他學系'];
+    // if (this.state.catMain) this.subCats = SUB_CATS[this.state.catMain] ?? [];
+    this.updateNextButton();
+  }
 
   // ── 核心驗證：加入地區、學校、科系判定 ──
   isStep1Valid(): boolean {
@@ -95,6 +103,7 @@ export class LaunchProductInfoComponent{
   onRegionChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     this.state.region = value;
+    this.touched.region = true;
     this.updateNextButton();
   }
 
@@ -133,6 +142,7 @@ export class LaunchProductInfoComponent{
     } else {
       this.state.grades = this.state.grades.filter(g => g !== grade);
     }
+    this.touched.grades = true;
     this.updateNextButton();
   }
 
@@ -142,6 +152,7 @@ export class LaunchProductInfoComponent{
     this.state.catMain = value;
     // this.subCats = SUB_CATS[value] ?? [];
     // this.state.catSub = '';
+    this.touched.catMain = true;
     this.updateNextButton();
   }
 
@@ -151,6 +162,7 @@ export class LaunchProductInfoComponent{
 
   onConditionChange(event: Event): void {
     this.state.condition = (event.target as HTMLSelectElement).value;
+    this.touched.condition = true;
     this.updateNextButton();
   }
 

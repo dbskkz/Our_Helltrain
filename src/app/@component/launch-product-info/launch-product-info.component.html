@@ -21,7 +21,8 @@
     <div class="field">
       <div class="section-label">商品所在地點 <span class="req">*</span></div>
       <div class="select-group">
-        <select (change)="onRegionChange($event)" [class.selected]="state.region !== ''">
+        <select (change)="onRegionChange($event)" [class.selected]="state.region !== ''"
+          [class.error]="touched.region && state.region === ''">
           <option value="" disabled selected>請選擇縣市</option>
           <option *ngFor="let region of regionOptions" [value]="region">{{ region }}</option>
         </select>
@@ -35,7 +36,7 @@
 
     <div class="field">
       <div class="section-label">建議面交年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></div>
-      <div class="checkbox-group">
+      <div class="checkbox-group" [class.error]="touched.grades && state.grades.length === 0">
         <label class="checkbox-label" *ngFor="let grade of gradeList">
           <input type="checkbox"
                  [checked]="state.grades.includes(grade)"
@@ -47,7 +48,8 @@
 
     <div class="field">
       <div class="section-label">分類 <span class="req">*</span></div>
-      <select (change)="onCatMainChange($event)" [class.selected]="state.catMain !== ''">
+      <select (change)="onCatMainChange($event)" [class.selected]="state.catMain !== ''"
+        [class.error]="touched.catMain && state.catMain === ''">
         <option value="" disabled selected>請選擇分類</option>
         <option *ngFor="let cat of catOptions" [value]="cat">{{ cat }}</option>
       </select>
@@ -59,7 +61,8 @@
 
     <div class="field">
       <div class="section-label">商品狀況 <span class="req">*</span></div>
-      <select (change)="onConditionChange($event)" [class.selected]="state.condition !== ''">
+      <select (change)="onConditionChange($event)" [class.selected]="state.condition !== ''"
+        [class.error]="touched.condition && state.condition === ''">
         <option value="" disabled selected>請選擇商品狀況</option>
         <option>全新</option>
         <option>近全新</option>
