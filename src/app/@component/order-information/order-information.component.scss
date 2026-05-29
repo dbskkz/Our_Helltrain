@@ -133,6 +133,25 @@ p {
       background: $neutral-300;
     }
   }
+
+  &.report {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid rgba(#c62828, 0.1);
+
+    lucide-icon {
+      color: #c62828;
+    }
+
+    &:hover {
+      background-color: #c62828;
+      color: $background-white;
+      transform: translateY(-2px);
+      lucide-icon {
+        color: $background-white;
+      }
+    }
+  }
 }
 
 // 自訂 Tabs

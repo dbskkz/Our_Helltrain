@@ -55,6 +55,7 @@ export class StoreComponent {
   totalElements = 6;
   totalPages = 5;
 
+  // 檢舉
   goRepot() {
     this.router.navigate(['/front_report']);
   }
