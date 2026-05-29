@@ -11,4 +11,35 @@
       }
     </ul>
   </nav>
+
+  <section class="report-body">
+    <!-- 檢舉對象 -->
+    <div class="report-target">
+      <label>檢舉對象名稱：</label>
+      <input type="text" placeholder="檢舉對象名稱" class="report-input">
+      <label>檢舉對象ID：</label>
+      <input type="text" placeholder="檢舉對象ID" class="report-input">
+    </div>
+
+    <!-- 檢舉原因 -->
+    <div class="filter-section">
+      <p class="section-label">檢舉原因</p>
+      <select class="form-select" aria-label=" select example">
+        <option value="1">面交未依約定時間到指定地點</option>
+        <option value="2">惡意刷評價（假好評／惡意差評）</option>
+        <option value="3">詐騙（釣魚連結、假客服）</option>
+        <option value="4">騷擾／威脅其他用戶</option>
+        <option value="5">盜用他人帳號</option>
+        <option value="6">其他</option>
+      </select>
+    </div>
+
+    <!-- 問題描述 -->
+    <div class="report-description">
+      <label>問題描述：</label>
+      <textarea placeholder="問題描述" class="report-input"></textarea>
+    </div>
+
+  </section>
+
 </main>

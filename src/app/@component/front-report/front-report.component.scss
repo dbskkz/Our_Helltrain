@@ -16,3 +16,23 @@
     border-bottom: 3px solid $primary-yellow;
   }
 }
+
+// 檢舉對象
+.report-target {
+  display: flex;
+  flex-direction: column;
+}
+
+// input框
+.report-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid $neutral-300;
+  border-radius: 8px;
+}
+
+// 問題描述
+.report-description {
+  display: flex;
+  flex-direction: column;
+}
