@@ -168,6 +168,12 @@ a {
     &:hover {
       color: $text-black;
       background-color: $background-yellow;
+      cursor: pointer;
+    }
+
+    &.selected {
+      font-weight: 600;
+      color: $primary-yellow-dark;
     }
   }
 }

@@ -97,7 +97,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   }
 
   loadProducts() {
-    this.pagination.init(this.filteredProducts.length, this.pageSize);
+    this.pagination.init(this.sortedProducts.length, this.pageSize);
   }
 
   // =========================================================
@@ -225,6 +225,40 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     if (key === 'school')   this.department.forEach(d => d.selected = false);
   }
 
+
+// =========================================================
+// SORT
+// =========================================================
+
+sortOption: 'newest' | 'price-asc' | 'price-desc' = 'newest';
+
+setSort(option: typeof this.sortOption, event: Event): void {
+  event.stopPropagation();
+  this.sortOption = option;
+  this.panelState.sort = false;
+  this.pagination.goToPage(1);
+}
+
+get sortLabel(): string {
+  const map = {
+    'newest':     '最新上架',
+    'price-asc':  '價格由低到高',
+    'price-desc': '價格由高到低',
+  };
+  return map[this.sortOption];
+}
+
+get sortedProducts(): ProductCard[] {
+  const list = [...this.filteredProducts];
+  switch (this.sortOption) {
+    case 'price-asc':  return list.sort((a, b) => a.price - b.price);
+    case 'price-desc': return list.sort((a, b) => b.price - a.price);
+    case 'newest':
+    default:           return list; // 假設原始資料已是最新排序
+  }
+}
+
+
   // =========================================================
   // PAGINATION（每頁最多 30 筆）
   // =========================================================
@@ -233,7 +267,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   get pagedProducts(): ProductCard[] {
     const start = (this.pagination.currentPage - 1) * this.pageSize;
-    return this.filteredProducts.slice(start, start + this.pageSize);
+    return this.sortedProducts.slice(start, start + this.pageSize);
   }
 
   prevPage()              { this.pagination.prevPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }

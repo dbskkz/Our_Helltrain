@@ -25,10 +25,13 @@
         </button>
 
         @if (panelState.sort) {
-          <ul class="dropdown-content" (click)="$event.stopPropagation()">
-            <li>最新上架</li>
-            <li>價格由低到高</li>
-            <li>價格由高到低</li>
+           <ul class="dropdown-content" (click)="$event.stopPropagation()">
+            <li [class.selected]="sortOption === 'newest'"
+                (click)="setSort('newest', $event)">最新上架</li>
+            <li [class.selected]="sortOption === 'price-asc'"
+                (click)="setSort('price-asc', $event)">價格由低到高</li>
+            <li [class.selected]="sortOption === 'price-desc'"
+                (click)="setSort('price-desc', $event)">價格由高到低</li>
           </ul>
         }
       </div>
