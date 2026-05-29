@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import { LucideAngularModule, MessageCircleMore, ChevronDownIcon} from 'lucide-angular';
+import { UserService } from '../../@Services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-actions',
@@ -13,7 +15,8 @@ import { LucideAngularModule, MessageCircleMore, ChevronDownIcon} from 'lucide-a
 export class UserActionsComponent {
   constructor(
     private router: Router,
-    private actRoute:ActivatedRoute){}
+    private actRoute:ActivatedRoute,
+    private userService:UserService){}
 
   // Declare icon
   readonly MessageIcon = MessageCircleMore;
@@ -49,5 +52,29 @@ export class UserActionsComponent {
   }
   goToOrder(){
     this.router.navigate(['/order_information']);
+  }
+
+  logout(){
+
+
+    Swal.fire({
+      title: "您確定要登出嗎",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "登出",
+      cancelButtonText: "取消"
+    }).then((result) => {
+      if (result.isConfirmed) Swal.fire({
+        title: "您已登出",
+        text: "歡迎再次使用",
+        icon: "success"
+      });
+      this.userService.logout();
+      this.router.navigate(['/home']);
+    });
+
   }
 }
