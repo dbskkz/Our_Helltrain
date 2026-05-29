@@ -36,3 +36,57 @@
   display: flex;
   flex-direction: column;
 }
+
+.btn-group {
+  display: flex;
+  justify-content: end;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+// 通用按鈕封裝
+.btn-action {
+  width: 20%;
+  padding: 8px 16px;
+  border-radius: $border-radius-lg;
+  font-size: $font-size-base;
+  border: 1px solid $neutral-300;
+  transition: all 0.3s;
+
+  &.primary {
+    background-color: $background-yellow;
+    color: $primary-yellow-darker;
+    border-color: $primary-yellow;
+    &:hover {
+      background: $primary-yellow-dark;
+      color: $background-white;
+    }
+  }
+
+  &.outline {
+    background: $background-white;
+    color: $text-gray;
+    &:hover {
+      background: $neutral-300;
+    }
+  }
+
+  &.report {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid rgba(#c62828, 0.1);
+
+    lucide-icon {
+      color: #c62828;
+    }
+
+    &:hover {
+      background-color: #c62828;
+      color: $background-white;
+      transform: translateY(-2px);
+      lucide-icon {
+        color: $background-white;
+      }
+    }
+  }
+}

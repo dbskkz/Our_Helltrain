@@ -105,6 +105,10 @@
               聯絡{{ order.counterpart.label }}
             </button>
             }
+
+            @if (order.status != 'pending') {
+            <button class="btn-action report" (click)="goRepot()">檢舉</button>
+            }
           </div>
         </div>
       </div>

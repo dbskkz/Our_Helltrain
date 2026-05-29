@@ -11,6 +11,7 @@ import {
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { PaginationService } from '../../@Services/pageination.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-information',
@@ -19,7 +20,10 @@ import { PaginationService } from '../../@Services/pageination.service';
   styleUrl: './order-information.component.scss',
 })
 export class OrderInformationComponent {
-  constructor(public pagination: PaginationService) {}
+  constructor(
+    public pagination: PaginationService,
+    private router: Router,
+  ) {}
 
   // Declare icon
   readonly CircleCheckBig = CircleCheckBig;
@@ -205,6 +209,11 @@ export class OrderInformationComponent {
       <p>評分：${order.review?.score ?? '-'} 分</p>`,
       confirmButtonText: '關閉',
     });
+  }
+
+  // 檢舉
+  goRepot() {
+    this.router.navigate(['/front_report']);
   }
 
   // 假資料
