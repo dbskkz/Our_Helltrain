@@ -41,7 +41,7 @@
           <lucide-icon [name]="Flag"></lucide-icon>檢舉
         </button>
         } @else {
-        <button class="btn-action primary">
+        <button class="btn-action primary" (click)="goSettings()">
           <lucide-icon [name]="Pencil"></lucide-icon>編輯個人資料
         </button>
         }
@@ -67,12 +67,11 @@
       </div>
       } @else {<span class="section-title">上架商品</span>}
 
-      <!-- <span class="view-all">查看全部<lucide-icon [name]="ArrowRight"></lucide-icon></span> -->
     </header>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
       <div class="col">
-        <div class="card">
+        <div class="card" (click)="goProductPage()">
           <!-- 左側圖片 -->
           <figure class="img-wrapper">
             <img
@@ -89,7 +88,7 @@
               <span class="price">$180</span>
 
               @if (!isOwner) {
-              <button class="btn-icon-action" (click)="goUpdateProduct()">
+              <button class="btn-icon-action" (click)="goCollectProduct()">
                 <lucide-icon [name]="HeartPlus"></lucide-icon>
               </button>
               }
