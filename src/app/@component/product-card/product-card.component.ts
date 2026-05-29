@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 // 素材庫
 import { LucideAngularModule, Filter, ArrowUpDown, ChevronDown, MapPin } from 'lucide-angular';
 import { ProductCard } from '../../@Interface/product-card';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,6 +15,10 @@ import { ProductCard } from '../../@Interface/product-card';
 
 
 export class ProductCardComponent {
+
+  constructor(
+    private router: Router,
+    ){}
 
 readonly MapPinIcon= MapPin;
 
@@ -29,6 +34,10 @@ readonly MapPinIcon= MapPin;
       return this.products.slice(0, this.maxItems);
     }
     return this.products;
+  }
+
+  goToProductDetail(){
+    this.router.navigate(['/product_page']);
   }
 
 }
