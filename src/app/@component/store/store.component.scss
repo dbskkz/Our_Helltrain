@@ -14,6 +14,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 24px;
   align-items: center;
+  user-select: text;
 }
 
 // 頭貼
@@ -71,6 +72,7 @@
   box-shadow: 0 2px 6px rgba(#00796b, 0.15);
   transition: transform 0.3s;
   cursor: default;
+  user-select: none;
 
   &:hover {
     transform: scale(1.05) rotate(3deg);
@@ -249,6 +251,7 @@
   font-size: $font-size-base;
   border: 1px solid $neutral-300;
   transition: all 0.3s;
+  user-select: none;
 
   &.primary {
     background-color: $background-yellow;
