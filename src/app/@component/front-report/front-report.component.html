@@ -1,3 +1,14 @@
 <main class="container py-5">
-  <p>front-report</p>
+  <h3 class="page-title">檢舉</h3>
+
+  <!-- tabs -->
+  <nav>
+    <ul class="nav nav-tabs custom-tabs">
+      @for (tab of tabsColumns; track tab){
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
+      </li>
+      }
+    </ul>
+  </nav>
 </main>

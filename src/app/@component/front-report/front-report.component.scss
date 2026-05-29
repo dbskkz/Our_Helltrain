@@ -1,4 +1,18 @@
+@use "../../styles/variables" as *;
+
 .container {
   max-width: 1400px;
   user-select: none;
+}
+
+// tabs
+.nav-link {
+  border: none;
+  font-weight: bold;
+  color: $text-gray;
+  padding: 10px 20px;
+  &.active {
+    color: $primary-yellow;
+    border-bottom: 3px solid $primary-yellow;
+  }
 }

@@ -80,14 +80,21 @@ export class StoreComponent {
 
   // 商品管理
   manageProduct() {
-    this.router.navigate(['/launch_product']);
+    this.router.navigate(['/launch_product_info']);
   }
 
-  // 編輯商品 || 收藏商品
-  goUpdateProduct() {
-    if (this.isOwner) {
-      this.router.navigate(['/launch_product']);
-    } else {
-    }
+  // 收藏商品
+  goCollectProduct() {
+    this.router.navigate(['/cart']);
+  }
+
+  // 前往商品詳情頁
+  goProductPage() {
+    this.router.navigate(['/product_page']);
+  }
+
+  // 編輯個人資料
+  goSettings() {
+    this.router.navigate(['/profile_settings']);
   }
 }
