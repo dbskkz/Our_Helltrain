@@ -1,78 +1,102 @@
 @use '../../styles/variables' as *;
 
+/* ── 頂層背景與基本設定 ── */
 :host {
   display: block;
-  background: $neutral-100; // 💡 換上統一的極淺灰背景
+  background: $neutral-100; // 統一的極淺灰背景
   min-height: 100vh;
-  color: $text-black;       // 💡 主文字黑
+  color: $text-black;       // 主文字黑
 }
 
 .page-wrapper {
-  max-width: 960px;
+  max-width: 1400px;        // 💡 放大到 1400px 黃金寬螢幕
   margin: 0 auto;
-  padding: 0 16px 48px;
+  padding: 24px 24px 48px;  // 稍微拉寬左右內距，讓大螢幕更有呼吸感
 }
 
-/* ── Breadcrumb ─────────────────────────────────── */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 14px 32px;
-  font-size: 13px;
-  color: $neutral-500;
-  background: $background-white;
-  border-bottom: 1px solid $neutral-300;
-
-  a {
-    color: $neutral-700;
-    text-decoration: none;
-    &:hover { color: $text-black; text-decoration: underline; }
-  }
-
-  .sep { color: $neutral-300; }
-  .current { color: $text-black; }
-
-  .back-btn {
-    margin-left: auto;
-    color: $neutral-700;
-    font-size: 13px;
-    text-decoration: none;
-    &:hover { color: $text-black; }
-  }
-}
-
+/* ── 商品主卡片（垂直佈局） ── */
 .product-main {
   display: flex;
-  gap: 40px;
+  flex-direction: column;   // 讓麵包屑路徑排在最上面
   background: $background-white;
-  border-radius: $border-radius-lg; // 💡 導入標準圓角
-  padding: 32px;
-  margin-top: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  border-radius: $border-radius-lg;
+  padding: 32px;            // 放大內距，讓大卡片更氣派
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); // 更細緻的優雅陰影
+}
 
-  @media (max-width: 680px) {
-    flex-direction: column;
-    padding: 20px;
+/* ── 頂部精緻路徑樣式（仿右圖設計） ── */
+.site-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $neutral-500;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid $neutral-100; // 隔開下方內容的細線
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    a.home-link {
+      color: $neutral-700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+
+      &:hover {
+        color: $text-black;
+      }
+    }
+
+    &.current {
+      color: $neutral-500;
+      max-width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; // 商品名稱太長時自動截斷變 ...
+    }
+  }
+
+  .sep {
+    color: $neutral-300;
+    font-family: sans-serif;
   }
 }
 
-/* ── 左邊區塊：圖片 ── */
+/* ── 下方圖片與資料佈局區（修正偏左，完美置中） ── */
+.product-content-row {
+  display: flex;
+  gap: 56px;                // 左右兩欄的舒適黃金間距
+  justify-content: center;  // 💡 關鍵修正：左右剩餘空間自動均分，畫面不再偏左！
+  width: 100%;
+
+  /* 📱 手機版斷點切換 (平板以下裝置) */
+  @media (max-width: 768px) {
+    flex-direction: column; // 變成單欄垂直堆疊
+    gap: 32px;
+  }
+}
+
+/* ── 左邊區塊：圖片與輪播 ── */
 .gallery {
-  flex: 0 0 240px;
+  flex: 0 0 320px;          // 配合 1400px 大寬度，商品圖片放大到 320px 更有質感
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 
-  @media (max-width: 680px) {
+  @media (max-width: 768px) {
     flex: unset;
-    align-items: center;
+    align-items: center;    // 📱 手機版自動水平置中
   }
 }
 
 .main-image-container {
-  width: 240px;
-  height: 320px;
+  width: 320px;
+  height: 420px;            // 高度同步拉高維持完美書籍比例
   background: $neutral-100;
   border-radius: $border-radius-sm;
   overflow: hidden;
@@ -88,32 +112,30 @@
   }
 }
 
-/* 💡 新增：輪播組件外框 */
 .thumbnails-slider-wrapper {
   position: relative;
-  width: 240px; // 寬度與大圖對齊
+  width: 320px;             // 同步大圖寬度
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 💡 新增：縮圖可視視窗（隱藏超出第4張的圖） */
 .thumbnails-viewport {
-  width: 240px;
-  overflow-x: auto; // 允許背後滾動
-  scrollbar-width: none; // 隱藏原生滾動條 (Firefox)
-  &::-webkit-scrollbar { display: none; } // 隱藏原生滾動條 (Chrome/Safari)
+  width: 320px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
   scroll-behavior: smooth;
 }
 
 .thumbnails {
   display: flex;
-  gap: 8px;
-  width: max-content; // 確保縮圖排成一橫排，不自動斷行
+  gap: 12px;                // 拉開縮圖之間的呼吸空間
+  width: max-content;
 
   .thumbnail {
-    width: 54px; // 4張 * 54px + 3格gap * 8px = 240px (完美塞滿)
-    height: 54px;
+    width: 71px;            // 💡 精算尺寸：4張*71px + 3格*12px gap = 320px 完美塞滿
+    height: 71px;
     border-radius: $border-radius-tiny;
     border: 2px solid $neutral-300;
     overflow: hidden;
@@ -123,7 +145,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0; // 💡 關鍵：防止縮圖因為空間不足被壓扁
+    flex-shrink: 0;         // 防止縮圖在非同步狀態下變形
 
     &.active { border-color: $primary-yellow; }
     &:hover { border-color: $neutral-500; }
@@ -136,22 +158,21 @@
   }
 }
 
-/* 💡 新增：左右切換小箭頭按鈕樣式 */
 .arrow-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid $neutral-300;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   color: $neutral-700;
   transition: all 0.2s ease;
 
@@ -161,21 +182,17 @@
     border-color: $primary-yellow-dark;
   }
 
-  &.left {
-    left: -12px; // 💡 稍微懸浮突出來在框線邊緣，就像你畫的紅箭頭一樣！
-  }
-
-  &.right {
-    right: -12px;
-  }
+  &.left { left: -14px; }
+  &.right { right: -14px; }
 }
 
-/* ── 右邊區塊：資訊 ── */
+/* ── 右邊區塊：詳細資料 ── */
 .product-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
+  max-width: 800px;         // 防止大螢幕下文字被拉得太長，保持舒適的包覆感
 }
 
 .title-row {
@@ -185,7 +202,7 @@
   gap: 12px;
 
   .product-title {
-    font-size: 22px;
+    font-size: 26px;        // 微調放大，強化書名標題的存在感
     font-weight: 700;
     color: $text-black;
     margin: 0;
@@ -196,22 +213,21 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    background: $background-yellow; // 💡 採用淺黃底
+    background: $background-yellow;
     border: 1px solid $primary-yellow-dark;
     border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 13px;
-    color: $primary-yellow-darker; // 💡 文字使用高對比深橘黃
+    padding: 6px 16px;
+    font-size: 14px;
+    color: $primary-yellow-darker;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.15s;
+    transition: background-color 0.15s; // 💡 修正為 background-color 防止紅字
 
     &:hover { background: $background-yellow-hover; }
     .star-icon { color: $primary-yellow-dark; }
   }
 }
 
-/* ── Info Table ── */
 .info-table {
   border-collapse: collapse;
   width: 100%;
@@ -219,43 +235,45 @@
   tr { border-bottom: 1px solid $neutral-100; }
 
   th, td {
-    padding: 9px 4px;
-    font-size: 14px;
+    padding: 12px 4px;      // 稍微加寬上下間距，配合放大後的字體
+    font-size: 15px;        // 內文字體全面放大到 15px，看字更舒服
     vertical-align: middle;
   }
 
   th {
     color: $neutral-500;
     font-weight: 400;
-    width: 80px;
+    width: 90px;            // 字體變大，欄位標籤寬度預留到 90px 防止擠壓
     text-align: left;
   }
 
-  // 💡 關鍵修正：將 td 設為 flex 佈局，讓名字與圓形聊天按鈕並排在同一行
   td {
     color: $text-black;
     display: flex;
     align-items: center;
   }
 
+  /* 💡 修正：移除 Courier New，讓商品 ID 恢復全站標準字體 */
+  .product-id-text {
+    color: $neutral-500;
+    font-weight: 600;
+  }
+
   .seller-link {
-    color: $accent-brown-light; // 💡 換上氣質的品牌強調棕
+    color: $accent-brown-light;
     text-decoration: none;
     font-weight: 500;
     &:hover { text-decoration: underline; color: $accent-brown; }
   }
 }
 
-/* ── 圓形聊天按鈕 ── */
 .btn-chat {
-  display: inline-flex; // 💡 改為 inline-flex 配合文字橫向排列
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 2rem;
   height: 2rem;
-  margin-left: 0.75rem; // 💡 與賣家帳號拉開一點呼吸間距
-
+  margin-left: 0.75rem;
   border: none;
   border-radius: 50%;
   background-color: $neutral-100;
@@ -270,17 +288,14 @@
   }
 
   &:hover {
-    background-color: $primary-yellow; // 💡 Hover 改用漂亮的品牌主色黃
+    background-color: $primary-yellow;
     transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(247, 209, 117, 0.4);
-
-    lucide-icon {
-      color: $text-black; // 💡 亮色背景配黑 icon 確保對比度
-    }
+    lucide-icon { color: $text-black; }
   }
 }
 
-/* ── Condition Tags 關鍵字樣式 ── */
+/* ── 膠囊關鍵字標籤 ── */
 .condition-section {
   display: flex;
   flex-wrap: wrap;
@@ -288,36 +303,42 @@
   gap: 8px;
 
   .tag-keyword {
-    background-color: $neutral-100; // 💡 使用規範的卡片底色
-    color: $neutral-700;           // 💡 正文輔助色
-    padding: 5px 14px;
-    border-radius: 20px;          // 滾邊圓角，呈現關鍵字膠囊感
-    font-size: 13px;
+    background-color: $neutral-100;
+    color: $neutral-700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;        // 微放大至 14px
     font-weight: 500;
     border: 1px solid $neutral-300;
     display: inline-block;
   }
 }
 
-/* ── Purchase Row ── */
+/* ── 價格與操作按鈕列 ── */
 .purchase-row {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 28px;
   flex-wrap: wrap;
-  padding: 8px 0;
+  padding: 12px 0;
 
   .price {
-    font-size: 28px;
+    font-size: 32px;        // 放大價格尺寸，在大卡片中更醒目
     font-weight: 700;
-    color: $text-price; // 💡 成功導入價格專用棕色
+    color: $text-price;     // 專用典雅深棕色
     letter-spacing: -0.5px;
   }
 
   .purchase-actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
+
+    /* 📱 手機版按鈕：從小於 500px 開始自動切換成上下垂直排列 */
+    @media (max-width: 500px) {
+      flex-direction: column;
+      width: 100%;
+    }
   }
 }
 
@@ -326,10 +347,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 11px 22px;
+  gap: 8px;
+  padding: 12px 28px;
   border-radius: $border-radius-sm;
-  font-size: 15px;
+  font-size: 16px;        // 保持原本的高級按鈕比例
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -340,47 +361,53 @@
   lucide-icon {
     display: flex;
     align-items: center;
+    color: inherit;
+  }
+
+  /* 📱 手機版按鈕 100% 滿版 */
+  @media (max-width: 500px) {
+    width: 100%;
   }
 }
 
 .btn-cart {
   background: $background-white;
-  border: 1.5px solid $accent-brown-light; // 💡 使用較淺的棕色邊框
-  color: $accent-brown;                   // 💡 文字改用強調棕
+  border: 1.5px solid $accent-brown-light;
+  color: $accent-brown;
+  transition: background-color 0.15s; // 💡 修正為 background-color 防止紅字
 
   &:hover {
-    background: $background-yellow;       // 💡 Hover 時淡淡的黃底，增添呼吸感
+    background-color: $background-yellow;
     border-color: $accent-brown;
-    color: $accent-brown;
   }
 }
 
 .btn-buy {
-  background: $primary-yellow;            // 💡 換成亮眼的大學品牌主色黃
-  color: $text-black;                     // 💡 搭配黑色文字與圖標
+  background: $primary-yellow;
+  color: $text-black;
+  transition: background-color 0.15s; // 💡 修正為 background-color 防止紅字
 
   &:hover {
-    background: $primary-yellow-dark;     // 💡 Hover 時轉為深黃色提示
-    box-shadow: 0 4px 12px rgba(237, 169, 0, 0.25); // 增加一點精緻的發光感
+    background-color: $primary-yellow-dark;
+    box-shadow: 0 4px 14px rgba(237, 169, 0, 0.3);
   }
 }
 
-/* ── Safety Box 安全提示 ── */
+/* ── 安全提醒 Box ── */
 .safety-box {
-  background: $background-yellow; // 💡 舒服的淺黃背景
+  background: $background-yellow;
   border: 1px solid $primary-yellow-light;
   border-radius: $border-radius-lg;
-  padding: 14px 18px;
+  padding: 16px 20px;
 
   .safety-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    color: $accent-brown; // 💡 標題換成強調棕
+    font-size: 15px;        // 微放大至 15px
+    color: $accent-brown;
     margin-bottom: 10px;
-
-    .shield-icon { font-size: 18px; }
+    font-weight: 700;
   }
 
   .safety-list {
@@ -389,38 +416,33 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
 
     li {
-      font-size: 13px;
+      font-size: 14px;      // 微放大至 14px
       color: $text-gray;
       display: flex;
       align-items: flex-start;
       gap: 6px;
     }
-
-    .check {
-      color: $semantic-green; // 💡 導入成功的綠色語意色
-      font-weight: 700;
-      flex-shrink: 0;
-    }
+    .check { color: $semantic-green; font-weight: 700; flex-shrink: 0; }
   }
 }
 
-/* ── Description Section 商品說明 ── */
+/* ── 商品說明（置底獨立大卡片） ── */
 .description-section {
   background: $background-white;
   border-radius: $border-radius-lg;
-  padding: 28px 32px;
-  margin-top: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  padding: 32px;
+  margin-top: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 
   .desc-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
     color: $text-black;
-    margin: 0 0 16px;
-    padding-bottom: 10px;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
     border-bottom: 2px solid $neutral-100;
   }
 
@@ -436,5 +458,13 @@
       margin: 0;
       white-space: pre-line;
     }
+  }
+}
+
+/* ── 全域 SweetAlert2 覆寫 ── */
+:global {
+  .swal2-styled.swal2-confirm {
+    color: #1E1E1E !important;
+    font-weight: 600;
   }
 }

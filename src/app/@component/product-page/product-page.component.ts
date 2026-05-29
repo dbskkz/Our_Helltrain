@@ -1,32 +1,40 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { LucideAngularModule, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight } from 'lucide-angular';
-
+import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight } from 'lucide-angular';
+import Swal from 'sweetalert2';
+import { RouterLink } from '@angular/router';
 
 
 // 模擬未來後端回傳的 DTO 結構
 export interface ProductDetailDTO {
   productId: number;
+  userId: number;
   productName: string;
-  description: string[];
+  description: string;
   price: number;
-  tags: string[];          // 後端 type、grade、condition 整合過後的標籤陣列
-  location: string;        // 模擬從賣家/商品表整合出的地區
-  school: string;          // 模擬從賣家（使用者）抓取的學校
-  sellerName: string;      // 模擬從賣家抓取的帳號
-  images: (string | null)[]; // 最高限制 7 張圖片
-  safetyFeatures: string[];
-  status: string;
+  imgPath: string;          // 存用逗號隔開的多圖網址
+  type: string;             // 商品分類（如：書籍、材料）
+  shelfDate: string;        // 上架日期
+  productCondition: string; // 商品狀況（如：全新、狀況良好）
+  status: string;           // 商品狀態（如：AVAILABLE）
+  grade: string;            // 💡 這裡回歸正軌：對應後端 grade 欄位（年級：如大一）
+  location: string;         // 地區
+  deptGroup: string;        // 💡 這裡回歸正軌：對應後端 dept_group 欄位（學群：如資訊學群）
+
+  // ── 輔助欄位 ──
+  sellerName?: string;
+  sellerGrade?: string;     // 賣家的信用等級（如 A+，原畫面右上角使用）
 }
 
 @Component({
   selector: 'app-product-page',
-  imports: [CommonModule, CurrencyPipe, LucideAngularModule],
+  imports: [CommonModule,RouterLink, CurrencyPipe, LucideAngularModule],
   templateUrl: './product-page.component.html',
   styleUrl: './product-page.component.scss'
 })
 export class ProductPageComponent {
 
+  readonly HomeIcon     = Home;
   readonly HeartIcon = HeartIcon;
   readonly SendIcon = Send;
   readonly MessageCircleIcon = MessageCircleMore;
@@ -37,40 +45,23 @@ export class ProductPageComponent {
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
 
 
-    // 模擬從 API 撈出來的商品詳細資料
-  product: ProductDetailDTO = {
-    productId: 101,
+  // 模擬未來後端回傳的真實 JSON 資料
+ product: ProductDetailDTO = {
+    productId: 10123, // 💡 新增測試商品ID
+    userId: 99,
     productName: '葬送的芙莉蓮 1',
+    description: '魔王被勇者一行人打倒後的世界。勇者欣梅爾與僧侶海塔爾、戰士艾森與魔法使芙莉蓮，為了再次體驗各地的人們帶來的感動，踏上了各處旅行的旅途。這是關於某個魔法使的後日談——',
     price: 180,
-    // 學校與地區：模擬從賣家 User 資料串過來的結果
-    school: '國立臺灣大學',
+    imgPath: 'https://picsum.photos/id/1025/400/500,https://picsum.photos/id/103/400/500,https://picsum.photos/id/1062/400/500,https://picsum.photos/id/106/400/500,https://picsum.photos/id/62/400/500',
+    type: '書籍',
+    shelfDate: '2026-05-28',
+    productCondition: '狀況良好',
+    status: 'AVAILABLE',
+    grade: '大一',     // 💡 使用者有填寫就會顯示
+    deptGroup: '資訊學群', // 💡 新增學群模擬資料，有填寫就會顯示
     location: '台北市',
     sellerName: '賣家帳號',
-    // 整合後的關鍵字標籤：包含種類（二手書）、商品狀況（狀況良好）
-    tags: ['二手書', '狀況良好'],
-    // 圖片上限 7 張，這邊放 3 張有網址、4 張 null 測試過濾邏輯
-    images: [
-      'https://picsum.photos/id/1025/400/500',
-      'https://picsum.photos/id/103/400/500',
-      'https://picsum.photos/id/1062/400/500',
-      'https://picsum.photos/id/1026/400/500', // 增加測試圖，讓總數超過4張
-      'https://picsum.photos/id/1029/400/500',
-      null,
-      null,
-      null,
-      null
-    ],
-    safetyFeatures: [
-      '不點擊不明連結，不離開平台交易',
-      '轉帳前請先確認賣家信用評價',
-      '若有任何交易爭議，請立即向平台客服回報',
-    ],
-    description: [
-      '魔王被勇者一行人打倒後的世界。',
-      '勇者欣梅爾與僧侶海塔爾、戰士艾森與魔法使芙莉蓮，\n為了再次體驗各地的人們帶來的感動，\n踏上了各處旅行的旅途。',
-      '這是關於某個魔法使的後日談——',
-    ],
-    status: 'AVAILABLE'
+    sellerGrade: '5'     // 賣家信用等級
   };
 
   selectedImageIndex = 0;
@@ -79,7 +70,9 @@ export class ProductPageComponent {
 
   //圖片篩選邏輯 即使後端開了 7 個欄位或陣列長度是 7，我們只把「有圖片」的網址抓出來
   get validImages(): string[] {
-    return this.product.images.filter((img): img is string => img !== null);
+    if (!this.product.imgPath) return [];
+    // 用逗號切開，並順便濾掉可能不小心產生的空白字元
+    return this.product.imgPath.split(',').map(url => url.trim()).filter(url => url !== '');
   }
 
   // 取得當前選中的主圖
@@ -89,7 +82,7 @@ export class ProductPageComponent {
 
   // 切換縮圖
   selectImage(index: number): void {
-    if (this.product.images[index]) {
+if (index >= 0 && index < this.validImages.length) {
       this.selectedImageIndex = index;
     }
   }
@@ -113,11 +106,36 @@ export class ProductPageComponent {
 
 /* 按鈕 */
   addToCart(): void {
-    alert(`已將「${this.product.productName}」加入購物車！`);
+   Swal.fire({
+      title: '已加入收藏！',
+      text: `商品「${this.product.productName}」已成功收藏。`,
+      icon: 'success',
+      confirmButtonText: '好的',
+      confirmButtonColor: '#EDA900'
+    });
   }
 
   sendRequest(): void {
-    alert(`已成功向賣家發送「${this.product.productName}」的購買請求！`);
+    Swal.fire({
+      title: '確定要發送購買請求嗎？',
+      text: `系統將會發送「${this.product.productName}」的購買意願給賣家。`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '確定發送',
+      cancelButtonText: '先不要',
+      confirmButtonColor: '#EDA900',
+      cancelButtonColor: '#999999',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '發送成功！',
+          text: '已成功向賣家發送購買請求，請靜待同學的回覆！',
+          icon: 'success',
+          confirmButtonText: '好的',
+          confirmButtonColor: '#EDA900'
+        });
+      }
+    });
   }
-
-}
+ }

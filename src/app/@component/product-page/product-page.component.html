@@ -1,136 +1,141 @@
 <div class="page-wrapper">
 
-  <!-- Breadcrumb -->
-  <div class="breadcrumb">
-    <a href="#">首頁</a>
-    <span class="sep">›</span>
-    <a href="#">書籍</a>
-    <span class="sep">›</span>
-    <span class="current">小說</span>
-    <a href="#" class="back-btn">← 回上一頁</a>
-  </div>
-
   <div class="product-main">
 
-    <!--左邊區塊 -->
-    <div class="gallery">
-      <div class="main-image-container">
-        <img
-          [src]="selectedImage || 'assets/images/default-placeholder.png'"
-          [alt]="product.productName"
-          class="main-image"
-        />
-      </div>
-
-      <div class="thumbnails-slider-wrapper">
-
-        @if (validImages.length > 4) {
-          <button class="arrow-btn left" (click)="scrollThumbnails('left')">
-            <lucide-icon [img]="ChevronLeftIcon" size="18"></lucide-icon>
-          </button>
-        }
-
-        <div class="thumbnails-viewport" #thumbViewport>
-          <div class="thumbnails">
-            @for (img of validImages; track img; let i = $index) {
-              <div
-                class="thumbnail"
-                [class.active]="selectedImageIndex === i"
-                (click)="selectImage(i)"
-              >
-                <img [src]="img" [alt]="'圖片 ' + (i + 1)" />
-              </div>
-            } @empty {
-              <div class="thumb-placeholder">暫無圖片</div>
-            }
-          </div>
-        </div>
-
-        @if (validImages.length > 4) {
-          <button class="arrow-btn right" (click)="scrollThumbnails('right')">
-            <lucide-icon [img]="ChevronRightIcon" size="18"></lucide-icon>
-          </button>
-        }
-
-      </div>
+    <div class="site-path">
+      <span class="breadcrumb-item">
+        <a routerLink="/home" class="home-link">
+          <lucide-icon [img]="HomeIcon" size="15"></lucide-icon>
+          首頁
+        </a>
+      </span>
+      <span class="sep">></span>
+      <span class="breadcrumb-item">{{ product.type }}</span>
+      <span class="sep">></span>
+      <span class="breadcrumb-item current">{{ product.productName }}</span>
     </div>
 
+    <div class="product-content-row">
 
-    <!-- 右邊區塊 -->
-    <div class="product-info">
-      <div class="title-row">
-        <h1 class="product-title">{{ product.productName }}</h1>
-        <button class="seller-btn star">
-          <span class="star-icon">★</span> 信用等級
-        </button>
+      <div class="gallery">
+        <div class="main-image-container">
+          <img
+            [src]="selectedImage || 'assets/images/default-placeholder.png'"
+            [alt]="product.productName"
+            class="main-image"
+          />
+        </div>
+
+        <div class="thumbnails-slider-wrapper">
+          @if (validImages.length > 4) {
+            <button class="arrow-btn left" (click)="scrollThumbnails('left')">
+              <lucide-icon [img]="ChevronLeftIcon" size="18"></lucide-icon>
+            </button>
+          }
+
+          <div class="thumbnails-viewport" #thumbViewport>
+            <div class="thumbnails">
+              @for (img of validImages; track img; let i = $index) {
+                <div
+                  class="thumbnail"
+                  [class.active]="selectedImageIndex === i"
+                  (click)="selectImage(i)"
+                >
+                  <img [src]="img" [alt]="'圖片 ' + (i + 1)" />
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (validImages.length > 4) {
+            <button class="arrow-btn right" (click)="scrollThumbnails('right')">
+              <lucide-icon [img]="ChevronRightIcon" size="18"></lucide-icon>
+            </button>
+          }
+        </div>
       </div>
 
-      <table class="info-table">
-        <tr>
-          <th>地區</th>
-          <td>{{ product.location }}</td>
-        </tr>
-        <tr>
-          <th>學校</th>
-          <td>{{ product.school }}</td>
-        </tr>
-        <tr>
-          <th>賣家</th>
-          <td>
-            <a href="#" class="seller-link">{{ product.sellerName }}</a>
+      <div class="product-info">
+        <div class="title-row">
+          <h1 class="product-title">{{ product.productName }}</h1>
+          <button class="seller-btn star">
+            <span class="star-icon">★</span> 信用 {{ product.sellerGrade }}
+          </button>
+        </div>
+
+        <table class="info-table">
+          <tr>
+            <th>商品 ID</th>
+            <td class="product-id-text">#{{ product.productId }}</td>
+          </tr>
+          <tr>
+            <th>地區</th>
+            <td>{{ product.location }}</td>
+          </tr>
+
+          @if (product.grade) {
+            <tr>
+              <th>適用年級</th>
+              <td>{{ product.grade }}</td>
+            </tr>
+          }
+
+          @if (product.deptGroup) {
+            <tr>
+              <th>適用學群</th>
+              <td>{{ product.deptGroup }}</td>
+            </tr>
+          }
+
+          <tr>
+            <th>商品狀況</th>
+            <td>{{ product.productCondition }}</td>
+          </tr>
+          <tr>
+            <th>賣家</th>
+            <td>
+              <a href="#" class="seller-link">{{ product.sellerName }}</a>
               <button class="btn-chat" title="和同學聊聊!">
                 <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
               </button>
-          </td>
-        </tr>
-      </table>
+            </td>
+          </tr>
+        </table>
 
-      <!-- Condition Tags -->
-      <div class="condition-section">
-        @for (tag of product.tags; track tag) {
-          <span class="tag-keyword">{{ tag }}</span>
-        }
-      </div>
 
-      <!-- Price & Buttons -->
-      <div class="purchase-row">
-        <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
-        <div class="purchase-actions">
+        <div class="purchase-row">
+          <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <div class="purchase-actions">
+            <button class="btn-cart" (click)="addToCart()">
+              <lucide-icon [img]="HeartIcon"></lucide-icon>
+              加入收藏
+            </button>
+            <button class="btn-buy" (click)="sendRequest()">
+              <lucide-icon [img]="SendIcon"></lucide-icon> 發送請求
+            </button>
+          </div>
+        </div>
 
-          <button class="btn-cart" (click)="addToCart()">
-            <lucide-icon [img]="HeartIcon"></lucide-icon>
-            加入收藏
-          </button>
-
-          <button class="btn-buy" (click)="sendRequest()">
-            <span class="coin-icon"><lucide-icon [img]="SendIcon"></lucide-icon></span> 發送請求
-          </button>
-
+        <div class="safety-box">
+          <div class="safety-header">
+            <span class="shield-icon">🛡️</span>
+            <strong>交易安全有保障</strong>
+          </div>
+          <ul class="safety-list">
+            <li><span class="check">✓</span> 不點擊不明連結，不離開平台交易</li>
+            <li><span class="check">✓</span> 轉帳前請先確認賣家信用評價</li>
+            <li><span class="check">✓</span> 若有任何交易爭議，請立即向平台客服回報</li>
+          </ul>
         </div>
       </div>
 
-      <!-- Safety Notice -->
-      <div class="safety-box">
-        <div class="safety-header">
-          <span class="shield-icon">🛡️</span>
-          <strong>交易安全有保障</strong>
-        </div>
-        <ul class="safety-list">
-          @for (item of product.safetyFeatures; track item) {
-            <li><span class="check">✓</span> {{ item }}</li>
-          }
-        </ul>
-      </div>
     </div>
   </div>
 
-  <!-- Product Description -->
   <div class="description-section">
     <h2 class="desc-title">商品說明</h2>
     <div class="desc-content">
-      @for (para of product.description; track para) {
-        <p>{{ para }}</p>
-      }
+      <p>{{ product.description }}</p>
     </div>
   </div>
 
