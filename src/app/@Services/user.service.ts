@@ -5,6 +5,9 @@ import { tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class UserService {
 
+  //預設頭像
+  avatarUrl = signal<string>('/img/頭像範例.png');
+
   private apiUrl = 'http://localhost:8080/user';
   isLoggedIn = signal<boolean>(localStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
@@ -32,4 +35,15 @@ export class UserService {
     this.isLoggedIn.set(false);
     localStorage.removeItem('isLoggedIn'); // Demo 暫用
   }
+
+/** 頭像同步變更
+ * 使用方法
+ * TS 注入: constructor(public userService: UserService) {}
+ * HTML 綁定: <img [src]="userService.avatarUrl()" alt="使用者大頭貼">
+ */
+  updateAvatar(newUrl: string) {
+    this.avatarUrl.set(newUrl);
+  }
+
+
 }
