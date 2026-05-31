@@ -80,10 +80,17 @@
 }
 
 /* Announce group */
-.announce-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.group-header {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;  // 左邊標題、右邊對齊編輯欄
+  align-items: center;
+  margin-bottom: 10px;  // 讓標題列和表頭緊貼
+  .group-title { padding-left: 20px; }  // 對齊表格左邊的 padding
+
+  .addannounce {
+    justify-self: end;
+    margin-right: 20px;  // 對齊表格右邊的 padding
+  }
 }
 
 .group-title {
@@ -103,7 +110,7 @@
 
 .announce-header {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 0.6fr 0.7fr;
+grid-template-columns: 0.5fr 2fr 1fr 1fr 0.8fr;
   padding: 10px 20px;
   background: $background-yellow;
   border-bottom: 1.5px solid $background-yellow-hover;
@@ -120,7 +127,7 @@
 
 .announce-row {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 0.6fr 0.7fr;
+grid-template-columns: 0.5fr 2fr 1fr 1fr 0.8fr;
   padding: 12px 20px;
   border-bottom: 1px solid $border-radius-color;
   align-items: center;

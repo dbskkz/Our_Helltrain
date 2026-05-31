@@ -148,11 +148,10 @@
 
   &.badge-normal   { background: #e6f4ec; color: #2d7a4f; }
   &.badge-expired { background: #fce9e8; color: #b5322a; }
-  &.badge-review   { background: #fdf3cc; color: #8a6d00; }
   &.badge-banned   { background: #fce9e8; color: #b5322a; }
   &.badge-verified { background: #e5eef9; color: #1d5fa6; }
   &.badge-pending  { background: #fdeee0; color: #c25c1a; }
-  &.badge-none     { background: #f0eee9; color: #9e9a94; }
+  &.badge-unverified { background: #f0eee9; color: #9e9a94; }
 }
 
 /* ===== Action buttons ===== */
