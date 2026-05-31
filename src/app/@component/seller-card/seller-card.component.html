@@ -1,0 +1,35 @@
+<!-- 點擊整張卡片導向賣場 -->
+<div class="seller-explore-card" (click)="gotoStore()">
+
+  <!-- 左側：大頭貼 -->
+  <div class="card-avatar-left">
+    <img [src]="sellerData.userImg" alt="賣家頭像">
+  </div>
+
+  <!-- 中間：資訊區 -->
+  <div class="card-info-middle">
+    <div class="seller-main-name">{{ sellerData.userName }}</div>
+
+    <div class="seller-meta-tags">
+      <span class="meta-tag">
+        <lucide-icon [img]="School" size="14"></lucide-icon>
+        {{ sellerData.university }}
+      </span>
+
+      @if (sellerData.location && sellerData.location.length > 0) {
+        <span class="meta-tag">
+          <lucide-icon [img]="MapPin" size="14"></lucide-icon>
+          {{ sellerData.location[0] }} <!-- 只顯示第一個常出沒地區 -->
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- 右側：按鈕區 -->
+  <div class="card-actions-right">
+    <button class="action-chat-btn" title="和同學聊聊!" (click)="openChatWithSeller($event)">
+      <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
+      <span>聊聊</span>
+    </button>
+  </div>
+</div>

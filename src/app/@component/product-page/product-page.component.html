@@ -94,7 +94,8 @@
           <tr>
             <th>賣家</th>
             <td>
-              <a href="#" class="seller-link">{{ product.sellerName }}</a>
+              <img class="user_img" [src]="userService.avatarUrl()" alt="使用者大頭貼">
+              <a href="store" class="seller-link">{{ product.sellerName }}</a>
               <button class="btn-chat" title="和同學聊聊!">
                 <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
               </button>
