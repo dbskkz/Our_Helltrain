@@ -47,15 +47,26 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   ngOnInit(): void {
+
+    // 1. 常見分類
     this.route.paramMap.subscribe(params => {
       window.scrollTo({ top: 0, behavior: 'instant' });
       this.category = params.get('category') || 'all';
       this.loadProducts();
     });
 
+    // 2. 自由篩選
     this.route.queryParamMap.subscribe(query => {
       window.scrollTo({ top: 0, behavior: 'instant' });
-      this.keyword = query.get('keyword') || '';
+      this.keyword = query.get('keyword') || ''; // 文字搜尋
+
+      // 接收來自 side-nav 的學群
+      const deptsParam = query.get('depts');
+      const selectedNames = deptsParam ? deptsParam.split(',') : [];
+      this.department.forEach(d => {
+        d.selected = selectedNames.includes(d.name); // .includes 回傳 boolean，所以這一行的意思就是 d.selected = true 或 false
+      });
+
       this.loadProducts(); // ← 加這行，keyword 變了要重新計算分頁
     });
 
@@ -258,7 +269,6 @@ get sortedProducts(): ProductCard[] {
   }
 }
 
-
   // =========================================================
   // PAGINATION（每頁最多 30 筆）
   // =========================================================
@@ -315,20 +325,19 @@ get sortedProducts(): ProductCard[] {
       const matchPrice =
         product.price > this.priceValue && product.price < this.priceHighValue
 
-      // const selectedCity = []
-      //   for (const element of this.cities) {
-      //     if(element.selected == true)
-      //     {
-      //       selectedCity.push(element.name);
-      //     }
-      //   }
-
       const selectedCity = this.cities
         .filter(c => c.selected)
         .map(c => c.name);
 
       const matchCity = selectedCity.length === 0
-      || selectedCity.some(city => product.location.includes(city))
+        || selectedCity.some(city => product.location.includes(city))
+
+      const selectedSchool = this.department
+        .filter(d => d.selected)
+        .map(d => d.name);
+
+      const matchSchool = selectedSchool.length === 0
+        || selectedSchool.some(s => product.type.includes(s));
 
       return matchCategory && matchKeyword && matchPrice && matchCity;
     })

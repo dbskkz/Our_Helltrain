@@ -2,7 +2,7 @@
 
   <!-- 輪播公告 -->
   <section class="Carousel-Notification">
-    <div id="carouselExample" class="carousel slide">
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="img/banner.jpg" class="d-block w-100" alt="...">
@@ -10,35 +10,18 @@
         <div class="carousel-item">
           <img src="img/banner2.png" class="d-block w-100" alt="...">
         </div>
-        <!-- <div class="carousel-item">
-          <img src="https://i.ytimg.com/vi/ujyJRxAKpVE/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBebG7kjhJPKm6HDvNGRI-isk7CBg" class="d-block w-100" alt="...">
-        </div> -->
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
     </div>
   </section>
 
-  <!-- <nav class="category-list">
-    <ul>
-      @for (item of categories; track item.value) {
-      <li>
-        <button type="button"
-        (click)="selectCategory(item.value)"
-        [class.active] = "selectedCategory === item.value">
-          <lucide-icon [name]="item.icon" [size]="18"></lucide-icon>
-          <span>{{ item.label }}</span>
-        </button>
-      </li>
-    }
-    </ul>
-  </nav> -->
   <section class="category-wrapper" >
 
     <button class="nav-btn left" (click)="scrollLeft()">

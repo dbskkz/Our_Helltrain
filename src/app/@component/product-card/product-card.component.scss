@@ -58,11 +58,25 @@
           font-size: 1.1rem;
           font-weight: bolder;
         }
-        .price {
-          font-weight: bold;
-          font-size: 1.6rem;
-          color: $text-price;
-        }
+
+      .price-container {
+        display: flex;
+        align-items: baseline; // 關鍵：確保文字底部對齊
+        gap: 2px;             // 符號與數字間的微小間距
+        color: $text-price;
+        margin: 0;            // 清除標題預設 margin
+      }
+
+      .currency-symbol {
+        font-size: 1rem;      // 符號稍微縮小，視覺重心會更平衡
+        font-weight: 500;
+      }
+
+      .amount {
+        font-size: 1.8rem;    // 數字放大，突顯重點
+        font-weight: 700;
+        line-height: 1;       // 避免行高影響對齊
+      }
 
         .meta-info {
           display: flex;
