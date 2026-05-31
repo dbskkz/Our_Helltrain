@@ -108,16 +108,12 @@ export class LoginRegisterComponent implements OnInit{
 
   // (註冊箱子)把所有的欄位通通寫成變數
   private initRegisterForm() {
-  // 1. 先從你的 Service 拿到所有的官方學校與縣市總清單陣列
-  const allSchools = this.schoolService.allFlattenedSchools();
-  const allRegions = this.schoolService.allRegions();
-
     this.registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-    area: new FormControl('', [Validators.required,this.isInListValidator(allRegions)]),
-    school: new FormControl('', [Validators.required, this.isInListValidator(allSchools)]),
+    area: new FormControl('', [Validators.required,this.isInListValidator('area')]),
+    school: new FormControl('', [Validators.required, this.isInListValidator('school')]),
      //                新盒子                 必填     ,       長度檢查
-    password: new FormControl('',[Validators.required, Validators.minLength(8)]),
+    password: new FormControl('',[Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)]),
     confirmPassword: new FormControl('', [Validators.required]),
     phone: new FormControl('', {
       validators: [Validators.pattern(/^09-\d{8}$/)],
@@ -175,22 +171,55 @@ export class LoginRegisterComponent implements OnInit{
     event.preventDefault();  // 阻止原生行為（防止干擾 checkbox 的勾選狀態）
     event.stopPropagation(); // 阻止事件冒泡
 
-    // 打開對話框，並可以透過 width 設定視窗寬度
-    this.dialog.open(PlatformRulesComponent, {
-      width: '500px',
-      disableClose: false // 允許點擊空白處關閉視窗
-    });
+   // 打開對話框
+  const dialogRef = this.dialog.open(PlatformRulesComponent, {
+    width: '550px',            // 稍微放大一點點，閱讀體驗更好
+    disableClose: true,        // 關鍵防護：不允許點擊旁邊空白處關閉，強迫他看完按按鈕！
+    autoFocus: false           // 防止進去直接滾動到按鈕
+  });
+
+  // 靈魂監聽：當使用者關閉這個彈出視窗時
+  dialogRef.afterClosed().subscribe((result: boolean) => {
+    if (result === true) {
+      // 🎯 使用者真的讀完了！自動幫表單的 agreeTerms 控制項打勾
+      this.registerForm.get('agreeTerms')?.setValue(true);
+      this.registerForm.get('agreeTerms')?.markAsDirty(); // 讓表單知道被改過了
+    } else {
+      // 如果他是點叉叉或沒看完就離開，確保維持不打勾
+      this.registerForm.get('agreeTerms')?.setValue(false);
+    }
+  });
+
   }
+
+  /* 專門控制「登入分頁」注意事項的彈出視窗方法 */
+openLoginTermsDialog(event: MouseEvent): void {
+  event.preventDefault();  // 阻止原生直接勾選的行為
+  event.stopPropagation();
+
+  // 打開一模一樣的平台規範視窗
+  const dialogRef = this.dialog.open(PlatformRulesComponent, {
+    width: '500px',
+    disableClose: true,    // 強制不能點旁邊關閉，一定要滑到最下面按確定
+    autoFocus: false
+  });
+
+  // 監聽視窗關閉的結果
+  dialogRef.afterClosed().subscribe((result: boolean) => {
+    if (result === true) {
+      // 🎯 核心差別：讀完之後，自動打勾的對象換成【登入箱子（loginForm）】的 agreeTerms！
+      this.loginForm.get('agreeTerms')?.setValue(true);
+      this.loginForm.get('agreeTerms')?.markAsDirty();
+    } else {
+      // 沒看完或點取消，維持不打勾
+      this.loginForm.get('agreeTerms')?.setValue(false);
+    }
+  });
+}
 
   /* 檢查 Email 的方法（回傳 true 或 false） */
   isValidSchoolEmail(): boolean {
   if (!this.userEmail) return false;
-
-  // 正規表達式說明：
-  // ^[^@]+ ➔ 開頭必須有使用者名稱，且不能是 @ 符號
-  // @      ➔ 中間必須有一個 @
-  // .+     ➔ 學校的域名（例如 mail.ntu）
-  // \.edu\.tw$ ➔ 結尾必須雷打不動是 .edu.tw
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.tw$/;
 
   return emailRegex.test(this.userEmail);
@@ -443,17 +472,31 @@ export class LoginRegisterComponent implements OnInit{
 
 
   // 建立一個防呆驗證器：確保輸入的值必須在指定的官方清單陣列裡
-isInListValidator(validOptions: string[]): ValidatorFn {
+isInListValidator(type: 'school' | 'area'): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const value = control.value;
 
-    // 如果使用者還沒填（留空），讓 required 驗證器去抓，這裡先回傳 null (放行)
+    // 如果使用者還沒填（留空），讓 required 驗證器去抓，這裡先放行
     if (!value) return null;
 
-    // 檢查使用者輸入的字，有沒有在我們的官方清單陣列中（精確比對）
-    const isValid = validOptions.includes(value);
+    // 💥 核心修正：每一次比對的當下，才即時跟 Service 拿名單，絕不在初始化時定死
+    let validOptions: string[] = [];
+    if (type === 'school') {
+      validOptions = this.schoolService.allFlattenedSchools() || [];
+    } else if (type === 'area') {
+      validOptions = this.schoolService.allRegions() || [];
+    }
 
-    // 如果不在清單內，就打上 'notInList' 的錯誤標籤；如果在，就回傳 null (沒錯誤)
+    // 防呆機制：如果 Service 剛好在重新加載、名單暫時為空，先寬容放行，避免前端直接卡死
+    if (validOptions.length === 0) return null;
+
+    // 🧑‍🎨 設計師精細比對：順手把台轉臺、去空白、轉小寫做進去，確保使用者體驗完美
+    const cleanValue = value.trim().toLowerCase().replace(/台/g, '臺');
+    const isValid = validOptions.some(
+      (opt) => opt.toLowerCase().replace(/台/g, '臺') === cleanValue
+    );
+
+    // 如果不在清單內，就打上 'notInList' 錯誤標籤
     return isValid ? null : { 'notInList': true };
   };
 }

@@ -211,7 +211,7 @@ select {
   padding: 10px 13px;
   outline: none;
   transition: border-color 180ms ease, box-shadow 180ms ease;
-  -webkit-appearance: none;
+  appearance: none;
   box-sizing: border-box;
 }
 
@@ -317,7 +317,7 @@ select option { color: #1e1e1e; }
 
 .btn {
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   border-radius: 6px;
   padding: 11px 24px;
@@ -330,15 +330,15 @@ select option { color: #1e1e1e; }
 }
 
 .btn-primary {
-  background: #5b7fff;
-  color: #fff;
+  background: $primary-yellow;
+  color: $text-black;
   min-width: 180px;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(91,127,255,.3);
 }
 
 .btn-primary:hover {
-  background: #4266f0;
+  background: $primary-yellow;
   box-shadow: 0 4px 16px rgba(91,127,255,.35);
   transform: translateY(-1px);
 }
@@ -346,10 +346,24 @@ select option { color: #1e1e1e; }
 .btn-primary:active { transform: translateY(0); }
 
 .btn-primary.disabled {
-  background: #c7d0ff;
+  background: #fff6c7;
   box-shadow: none;
   cursor: not-allowed;
   transform: none;
+}
+
+/* 紅框：點過但未填寫的必填欄位 */
+select.error,
+input.error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.checkbox-group.error {
+  outline: 1px solid #ef4444;
+  outline-offset: 4px;
+  border-radius: 1px;
+  padding: 4px 6px;
 }
 
 /* ── Toast ── */

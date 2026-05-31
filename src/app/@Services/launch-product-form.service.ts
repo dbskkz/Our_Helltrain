@@ -13,7 +13,8 @@ export interface ProductState {
   // school: string,
   // department: string,
   location: string,
-  grades: string[]
+  grades: string[],
+  imageSlotUrls:string[],
 }
 
 @Injectable({
@@ -34,7 +35,8 @@ export class LaunchProductFormService {
     // school: '',
     // department: '',
     location: '',
-    grades: [] as string[] // 用於存放勾選的年級陣列
+    grades: [] as string[], // 用於存放勾選的年級陣列
+    imageSlotUrls: new Array(7).fill('') as string[],
   };
 
   constructor() { }
@@ -53,7 +55,8 @@ export class LaunchProductFormService {
       // school: '',
       // department: '',
       location: '',
-      grades: [] as string[]
+      grades: [] as string[],
+      imageSlotUrls: new Array(7).fill(''),
     };
   }
 }

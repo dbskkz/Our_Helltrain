@@ -1,7 +1,7 @@
 <div class="page-wrapper">
   <p class="page-title">商品上架</p>
 
-  <!-- 操作步驟：第二步亮燈 -->
+  <!-- 操作步驟 -->
   <div class="stepper">
     <div class="step done">
       <div class="step-badge">✓</div>
@@ -27,7 +27,7 @@
         <!-- 主圖 -->
         <div class="img-slot main" data-index="0" tabindex="0" [draggable]="!!imageSlotUrls[0]" (dragstart)="onDragStart($event, 0)"
         (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onSortDrop($event, 0)"
-        [class.drag-over]="dragOverIndex === 0" (click)="onSlotClick(0)">  <!--drag拖曳功能-->
+        [class.drag-over]="dragOverIndex === 0" [class.error]="touched.mainImage && !imageSlotUrls[0]" (click)="onSlotClick(0)">  <!--drag拖曳功能-->
           <ng-container *ngIf="imageSlotUrls[0]; else mainPlaceholder">
             <img [src]="imageSlotUrls[0]" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
             <button class="img-delete" (click)="deleteImage($event, 0)">
@@ -79,8 +79,8 @@
           <span class="char-count">{{ nameCount }}</span>
         </div>
         <input type="text" id="productName" maxlength="60"
-          placeholder="例：Nike Air Max 90 US9 白灰配色，九成新"
-          [value]="state.name"
+          placeholder="例：Nike Air Max 90 US9 白灰配色"
+          [value]="state.name" [class.error]="touched.name && nameMissing"
           (input)="onNameInput($event)"/>
         <p class="field-hint">更精準的名稱：顏色・尺寸・型號</p>
       </div>
@@ -93,20 +93,19 @@
         </div>
         <textarea id="productDesc" maxlength="500"
           placeholder="請詳細描述商品狀況、購入時間、附帶配件、不議價原因等…"
-          [value]="state.desc"
+          [value]="state.desc" [class.error]="touched.desc && descTooShort"
           (input)="onDescInput($event)"></textarea>
-        <p class="field-hint">至少填寫 30 字</p>
+        <p class="field-hint">至少填寫 1 字</p>
       </div>
 
       <!-- 價格 -->
-<hr class="field-divider" />
 
 <div class="field price-field">
   <div class="field-header">
     <label class="section-label">價格 <span class="req">*</span></label>
   </div>
   <input type="number" min="0" placeholder="請輸入價格"
-    [value]="state.price || ''"
+    [value]="state.price || ''" [class.error]="touched.price && !(state.price > 0)"
     (input)="onPriceInput($event)"/>
   <p class="field-hint">單位：新台幣（元）</p>
 </div>

@@ -673,3 +673,36 @@ mat-form-field { width: 100%; }
     .mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing { border-width: 0 !important; }
   }
 }
+
+// ==========================================================
+// 🔒 密碼獨立卡片專屬：三欄橫向黃金網格佈局
+// ==========================================================
+.password-three-column-grid {
+  display: grid;
+  // 🎯 核心防線：平分三等份，寬度會全自動縮小到最完美的單格 320px 左右！
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;       // 給三個格子橫向留出高質感的呼吸留白
+  width: 100%;
+  margin-top: 16px;
+  align-items: start; // 確保三格頂端絕對對齊，不會因為紅字高低而被強行拉長
+
+  // 🛠️ 沒收分隔線：讓原本垂直排列時的分隔線在三欄網格中徹底隱形
+  .grid-hidden {
+    display: none !important;
+  }
+
+  // 貼心響應式設計：如果使用者用平板或手機看，三欄放不下，會全自動溫柔降維回垂直一整列
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    // 回到手機垂直版時，讓分隔線復活，層次感依舊在
+    .grid-hidden {
+      display: block !important;
+      margin: 8px 0;
+    }
+  }
+  input::placeholder {
+    font-size: 14px;
+  }
+}

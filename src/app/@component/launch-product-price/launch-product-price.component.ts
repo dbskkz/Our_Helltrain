@@ -8,19 +8,32 @@ import { LaunchProductFormService } from '../../@Services/launch-product-form.se
 
 @Component({
   selector: 'app-launch-product-price',
-  imports: [NgFor, NgIf],
+  imports: [NgFor,NgIf],
   templateUrl: './launch-product-price.component.html',
   styleUrl: './launch-product-price.component.scss'
 })
 export class LaunchProductPriceComponent implements OnInit{
+
+  touched = {
+    mainImage: false,
+    name: false,
+    desc: false,
+    price: false,
+  };
 
   // 透過 Getter 取得 Service 中的共用資料狀態
   get state() {
     return this.formService.state;
   }
 
-  // 畫面圖片預覽容器（共 7 個槽位，0為主圖，1~6為副圖）
-  imageSlotUrls: string[] = new Array(7).fill('');
+  // 畫面圖片預覽容器（共 7 個槽位，0為主圖，1~6為副圖），直接用 Service 的
+get imageSlotUrls(): string[] {
+  return this.state.imageSlotUrls;
+}
+
+set imageSlotUrls(val: string[]) {
+  this.state.imageSlotUrls = val;
+}
   private currentActiveSlotIndex = 0;
   // 副圖槽位索引（給 *ngFor 用）
   subSlotIndices = [1, 2, 3, 4, 5, 6];
@@ -56,6 +69,15 @@ private readonly API_MODEL = 'claude-sonnet-4-20250514';
     this.updateNextButtonStatus();
   }
 
+  //html的trim 移到 ts
+  get nameMissing(): boolean {
+  return !this.state.name || this.state.name.trim().length === 0;
+  }
+
+  get descTooShort(): boolean {
+  return !this.state.desc || this.state.desc.trim().length < 1;
+  }
+
   // ── 字數統計控制項 ──
   get nameCount(): string {
     return `${this.state.name?.length || 0}/60`;
@@ -66,12 +88,13 @@ private readonly API_MODEL = 'claude-sonnet-4-20250514';
   }
 
   get descCountColor(): string {
-    return (this.state.desc?.length || 0) < 30 ? '#ff4d4f' : 'var(--text-muted, #8c8c8c)';
+    return (this.state.desc?.length || 0) < 1 ? '#ff4d4f' : 'var(--text-muted, #8c8c8c)';
   }
 
   // ── 圖片上傳邏輯 ──
   onSlotClick(index: number): void {
     this.currentActiveSlotIndex = index;
+    this.touched.mainImage = true;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
@@ -198,12 +221,14 @@ private getSlotIndex(el: HTMLElement): number {
   onNameInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.state.name = value;
+    this.touched.name = true;
     this.updateNextButtonStatus();
   }
 
   onDescInput(event: Event): void {
     const value = (event.target as HTMLTextAreaElement).value;
     this.state.desc = value;
+    this.touched.desc = true;
     this.updateNextButtonStatus();
   }
 
@@ -211,7 +236,7 @@ private getSlotIndex(el: HTMLElement): number {
   isStep2Valid(): boolean {
     const hasMainImage = !!this.imageSlotUrls[0]; // 檢查第 0 個槽位是否有圖片
     const hasName = !!this.state.name && this.state.name.trim().length > 0;
-    const hasDescValid = !!this.state.desc && this.state.desc.trim().length >= 30;
+    const hasDescValid = !!this.state.desc && this.state.desc.trim().length >= 1;
     const hasPrice = this.state.price > 0;
 
     return hasMainImage && hasName && hasDescValid && hasPrice;
@@ -226,6 +251,7 @@ private getSlotIndex(el: HTMLElement): number {
 onPriceInput(event: Event): void {
   const value = (event.target as HTMLInputElement).value;
   this.state.price = value ? Number(value) : 0;
+  this.touched.price = true;
   this.updateNextButtonStatus();
 }
 
@@ -308,7 +334,7 @@ private applyPrice(price: number): void {
       const missing: string[] = [];
       if (!this.imageSlotUrls[0]) missing.push('商品主圖');
       if (!this.state.name) missing.push('商品名稱');
-      if ((this.state.desc?.length || 0) < 30) missing.push('描述滿 30 字');
+      if ((this.state.desc?.length || 0) < 1) missing.push('描述滿 1 字');
       this.showToast(`請檢查：${missing.join('、')}`);
       return;
     }
