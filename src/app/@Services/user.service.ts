@@ -6,7 +6,7 @@ import { tap } from 'rxjs';
 export class UserService {
 
   private apiUrl = 'http://localhost:8080/user';
-  isLoggedIn = signal<boolean>(localStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
+  isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +22,7 @@ export class UserService {
       tap(res => {
         if (res.statusCode === 200) {
           this.isLoggedIn.set(true);
-          localStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
+          sessionStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
         }
       })
     );
@@ -30,6 +30,6 @@ export class UserService {
 
   logout() {
     this.isLoggedIn.set(false);
-    localStorage.removeItem('isLoggedIn'); // Demo 暫用
+    sessionStorage.removeItem('isLoggedIn'); // Demo 暫用
   }
 }

@@ -480,6 +480,7 @@ export class ProfileSettingsComponent {
       reader.readAsDataURL(file);
     }
   }
+
   resetToDefaultAvatar() {
     Swal.fire({
       title: '確定要恢復預設頭像嗎？',
@@ -497,6 +498,7 @@ export class ProfileSettingsComponent {
       }
     });
   }
+
   toggleEditPassword() {
     this.isEditingPassword = !this.isEditingPassword;
     if (this.isEditingPassword) {

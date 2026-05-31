@@ -415,7 +415,7 @@ export class LoginRegisterComponent implements OnInit{
       // });
 
       this.userService.isLoggedIn.set(true);
-      localStorage.setItem('isLoggedIn', 'true');
+      sessionStorage.setItem('isLoggedIn', 'true');
       this.gotoHome();
 
     }
