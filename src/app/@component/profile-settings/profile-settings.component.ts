@@ -224,7 +224,7 @@ export class ProfileSettingsComponent {
 
     // 從記憶箱子倒回去
     this.avatarUrl = this.backupData.avatarUrl;
-    this.userService.updateAvatarPreview(this.backupData.avatarUrl);
+    this.userService.updateAvatar(this.backupData.avatarUrl);
     this.selectedAvatarFile = null;
     this.tempName = this.name;
     this.schoolControl.setValue(this.backupData.school, { emitEvent: false });
@@ -498,7 +498,7 @@ onAreaSelected() {
       reader.onload = (e) => {
         this.avatarUrl = reader.result;
         if (reader.result) {
-        this.userService.updateAvatarPreview(reader.result as string);
+        this.userService.updateAvatar(reader.result as string);
       }
       };
       reader.readAsDataURL(file);
@@ -520,7 +520,7 @@ onAreaSelected() {
       if (result.isConfirmed) {
         this.avatarUrl = '/img/頭像範例.png';
         this.selectedAvatarFile = 'RESET_DEFAULT' as any;
-        this.userService.updateAvatarPreview('/img/頭像範例.png');
+        this.userService.updateAvatar('/img/頭像範例.png');
       }
     });
   }

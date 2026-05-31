@@ -36,7 +36,7 @@ export class UserService {
     localStorage.removeItem('isLoggedIn'); // Demo 暫用
   }
 
-/** 頭像同步變更
+/** 頭像同步變更廣播
  * 使用方法
  * TS 注入: constructor(public userService: UserService) {}
  * HTML 綁定: <img [src]="userService.avatarUrl()" alt="使用者大頭貼">
