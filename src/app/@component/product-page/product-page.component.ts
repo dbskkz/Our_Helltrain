@@ -1,8 +1,8 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight } from 'lucide-angular';
+import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag } from 'lucide-angular';
 import Swal from 'sweetalert2';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
 import { SellerCardComponent } from '../seller-card/seller-card.component';
 
@@ -23,15 +23,16 @@ export interface ProductDetailDTO {
   deptGroup?: string;
   location: string;
 
-  // 關鍵新增：把賣家資訊全部打包在這個巢狀物件裡！
-  seller: {
+  // 💥 關鍵新增：把賣家資訊全部打包在這個巢狀物件裡！
+  user: {
     userName: string;
     userImg: string;     // 大頭貼
     university: string;  // 學校
     department: string;  // 科系
     location: string[];  // 常出沒地區陣列
     grade: string;       // 信用等級
-    tradeCount?: number;  // 交易次數 (如果有的話)
+    tradeCount: number;  // 交易次數 (如果有的話)
+    productCount: number; //上架商品數
   };
 }
 
@@ -49,11 +50,12 @@ export class ProductPageComponent {
   readonly MessageCircleIcon = MessageCircleMore;
   readonly ChevronLeftIcon = ChevronLeft;
   readonly ChevronRightIcon = ChevronRight;
+  readonly Flag = Flag;
 
   // 💡 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
 
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   // 模擬未來後端回傳的真實 JSON 資料
  product: ProductDetailDTO = {
@@ -62,7 +64,7 @@ export class ProductPageComponent {
   productName: '葬送的芙莉蓮 1',
   description: '魔王被勇者一行人打倒後的世界...',
   price: 180,
-  imgPath: 'https://picsum.photos/id/1025/400/500,...',
+  imgPath: 'https://picsum.photos/id/1025/400/500,https://picsum.photos/id/103/400/500,https://picsum.photos/id/1062/400/500,https://picsum.photos/id/106/400/500,https://picsum.photos/id/62/400/500',
   type: '書籍',
   shelfDate: '2026-05-28',
   productCondition: '狀況良好',
@@ -71,15 +73,16 @@ export class ProductPageComponent {
   deptGroup: '資訊學群',
   location: '台北市',
 
-  // 💥 替換掉原本散落的 sellerName 和 sellerGrade，改成這個完美的物件
-  seller: {
+  // 替換掉原本散落的 sellerName 和 sellerGrade，改成這個完美的物件
+  user: {
     userName: '企管水豚',
-    userImg: 'assets/images/capybara.jpg', // 隨便塞個圖片路徑測試
+    userImg: 'https://picsum.photos/id/1025/400/500', // 隨便塞個圖片路徑測試
     university: '輔仁大學',
     department: '企管系',
     location: ['新北市', '台北市'],
     grade: '4.9',
-    tradeCount: 52
+    tradeCount: 52,
+    productCount: 7
   }
 };
 
@@ -154,6 +157,33 @@ if (index >= 0 && index < this.validImages.length) {
           confirmButtonText: '好的',
           confirmButtonColor: '#EDA900'
         });
+      }
+    });
+  }
+
+  /*3. 實作檢舉商品的功能*/
+  reportProduct() {
+    console.log('準備檢舉商品，商品 ID:', this.product.productId);
+
+    // 使用你熟悉的 Swal 來做確認視窗
+    Swal.fire({
+      title: '檢舉商品',
+      text: '確定要檢舉這項商品嗎？請確認商品是否有違規情形。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#c62828', // 配合同學的 .report 紅色樣式
+      cancelButtonColor: '#999999',
+      confirmButtonText: '確定檢舉',
+      cancelButtonText: '先不要'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/front_report'], {
+          queryParams: {
+            productId: this.product.productId,
+            productName: this.product.productName // 也可以順便把名稱帶過去
+          }
+        });
+
       }
     });
   }

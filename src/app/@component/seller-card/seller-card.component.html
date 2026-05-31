@@ -1,35 +1,48 @@
-<!-- 點擊整張卡片導向賣場 -->
-<div class="seller-explore-card" (click)="gotoStore()">
+<div class="shopee-style-card">
 
-  <!-- 左側：大頭貼 -->
-  <div class="card-avatar-left">
-    <img [src]="sellerData.userImg" alt="賣家頭像">
-  </div>
+  <div class="profile-section">
+    <img [src]="sellerData.userImg" alt="賣家頭像" class="avatar-img">
 
-  <!-- 中間：資訊區 -->
-  <div class="card-info-middle">
-    <div class="seller-main-name">{{ sellerData.userName }}</div>
+    <div class="info-and-actions">
+      <div class="seller-name">{{ sellerData.userName }}</div>
 
-    <div class="seller-meta-tags">
-      <span class="meta-tag">
-        <lucide-icon [img]="School" size="14"></lucide-icon>
-        {{ sellerData.university }}
-      </span>
+      <div class="action-buttons">
+        <button class="btn-action primary" (click)="openChatWithSeller($event)">
+          <lucide-icon [img]="MessageCircleMore" size="16"></lucide-icon>
+          <span>聊聊</span>
+        </button>
 
-      @if (sellerData.location && sellerData.location.length > 0) {
-        <span class="meta-tag">
-          <lucide-icon [img]="MapPin" size="14"></lucide-icon>
-          {{ sellerData.location[0] }} <!-- 只顯示第一個常出沒地區 -->
-        </span>
-      }
+        <button class="btn-action outline" (click)="gotoStore($event)">
+          <lucide-icon [img]="StoreIcon" size="16"></lucide-icon>
+          <span>查看賣場</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- 右側：按鈕區 -->
-  <div class="card-actions-right">
-    <button class="action-chat-btn" title="和同學聊聊!" (click)="openChatWithSeller($event)">
-      <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
-      <span>聊聊</span>
-    </button>
+  <div class="vertical-divider"></div>
+
+  <div class="stats-section">
+
+    <div class="stat-item">
+      <span class="stat-label">學校</span>
+      <span class="stat-value">{{ sellerData.university }} {{ sellerData.department }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">信用評分</span>
+      <span class="stat-value highlight">★ {{ sellerData.grade || '5.0' }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">常出沒地區</span>
+      <span class="stat-value">{{ sellerData.location.join('、') }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">目前上架</span>
+      <span class="stat-value highlight">{{ sellerData.productCount || 0 }} 件</span>
+    </div>
+
   </div>
 </div>

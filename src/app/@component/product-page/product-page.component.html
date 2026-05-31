@@ -56,10 +56,13 @@
       </div>
 
       <div class="product-info">
+
         <div class="title-row">
           <h1 class="product-title">{{ product.productName }}</h1>
-          <button class="seller-btn star">
-            <span class="star-icon">★</span> 信用 {{ product.sellerGrade }}
+
+          <button class="btn-action report" (click)="reportProduct()">
+            <lucide-icon [img]="Flag" size="16"></lucide-icon>
+            <span>檢舉商品</span>
           </button>
         </div>
 
@@ -91,18 +94,7 @@
             <th>商品狀況</th>
             <td>{{ product.productCondition }}</td>
           </tr>
-          <tr>
-            <th>賣家</th>
-            <td>
-              <img class="user_img" [src]="userService.avatarUrl()" alt="使用者大頭貼">
-              <a href="store" class="seller-link">{{ product.sellerName }}</a>
-              <button class="btn-chat" title="和同學聊聊!">
-                <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
-              </button>
-            </td>
-          </tr>
         </table>
-
 
         <div class="purchase-row">
           <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
@@ -132,6 +124,10 @@
 
     </div>
   </div>
+
+  @if (product && product.user) {
+    <app-seller-card [sellerData]="product.user"></app-seller-card>
+  }
 
   <div class="description-section">
     <h2 class="desc-title">商品說明</h2>
