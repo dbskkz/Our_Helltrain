@@ -251,6 +251,8 @@
     color: $text-black;
     display: flex;
     align-items: center;
+    gap: 8px;
+    min-height: 48px;
   }
 
   /* 💡 修正：移除 Courier New，讓商品 ID 恢復全站標準字體 */
@@ -264,6 +266,13 @@
     text-decoration: none;
     font-weight: 500;
     &:hover { text-decoration: underline; color: $accent-brown; }
+  }
+
+  .user_img{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 }
 
@@ -461,10 +470,54 @@
   }
 }
 
-/* ── 全域 SweetAlert2 覆寫 ── */
-:global {
-  .swal2-styled.swal2-confirm {
-    color: #1E1E1E !important;
-    font-weight: 600;
+
+// ==========================================
+// 1. 標題列排版：讓商品名稱在左，檢舉按鈕在右
+// ==========================================
+.title-row {
+  display: flex;
+  justify-content: space-between; // 🎯 關鍵：把名稱跟按鈕分別推向最左與最右
+  align-items: center;            // 🎯 讓標題文字與按鈕在垂直方向完美對齊
+  margin-bottom: 24px;            // 與下方的表格拉開呼吸空間
+  gap: 16px;                      // 避免標題太長時直接撞到按鈕
+}
+
+// ==========================================
+// 2. 完美融合同學寫的通用按鈕與檢舉樣式
+// ==========================================
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;                        // 🎯 貼心微調：讓 Lucide 圖標與「檢舉商品」文字保持舒適間距
+  padding: 8px 16px;
+  border-radius: $border-radius-lg; // 沿用同學設計的圓角變數
+  font-size: $font-size-base;       // 沿用同學設計的字體大小變數
+  border: 1px solid $neutral-300;   // 沿用同學設計的邊框變數
+  transition: all 0.3s;
+  user-select: none;
+  cursor: pointer;
+
+  // 💥 同學寫的紅字檢舉樣式
+  &.report {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid rgba(#c62828, 0.1);
+
+    lucide-icon {
+      color: #c62828;
+      display: flex;               // 確保圖標上下垂直置中
+      align-items: center;
+    }
+
+    // 懸浮時的精緻微凸起與變色效果
+    &:hover {
+      background-color: #c62828;
+      color: $background-white;     // 沿用同學的白色底色變數
+      transform: translateY(-2px);  // 產生向上漂浮的高級感
+
+      lucide-icon {
+        color: $background-white;   // 懸浮時圖標跟著一起變白
+      }
+    }
   }
 }

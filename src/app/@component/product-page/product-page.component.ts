@@ -1,8 +1,10 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight } from 'lucide-angular';
+import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag } from 'lucide-angular';
 import Swal from 'sweetalert2';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../@Services/user.service';
+import { SellerCardComponent } from '../seller-card/seller-card.component';
 
 
 // 模擬未來後端回傳的 DTO 結構
@@ -12,23 +14,31 @@ export interface ProductDetailDTO {
   productName: string;
   description: string;
   price: number;
-  imgPath: string;          // 存用逗號隔開的多圖網址
-  type: string;             // 商品分類（如：書籍、材料）
-  shelfDate: string;        // 上架日期
-  productCondition: string; // 商品狀況（如：全新、狀況良好）
-  status: string;           // 商品狀態（如：AVAILABLE）
-  grade: string;            // 💡 這裡回歸正軌：對應後端 grade 欄位（年級：如大一）
-  location: string;         // 地區
-  deptGroup: string;        // 💡 這裡回歸正軌：對應後端 dept_group 欄位（學群：如資訊學群）
+  imgPath: string;
+  type: string;
+  shelfDate: string;
+  productCondition: string;
+  status: string;
+  grade?: string;
+  deptGroup?: string;
+  location: string;
 
-  // ── 輔助欄位 ──
-  sellerName?: string;
-  sellerGrade?: string;     // 賣家的信用等級（如 A+，原畫面右上角使用）
+  // 💥 關鍵新增：把賣家資訊全部打包在這個巢狀物件裡！
+  user: {
+    userName: string;
+    userImg: string;     // 大頭貼
+    university: string;  // 學校
+    department: string;  // 科系
+    location: string[];  // 常出沒地區陣列
+    grade: string;       // 信用等級
+    tradeCount: number;  // 交易次數 (如果有的話)
+    productCount: number; //上架商品數
+  };
 }
 
 @Component({
   selector: 'app-product-page',
-  imports: [CommonModule,RouterLink, CurrencyPipe, LucideAngularModule],
+  imports: [SellerCardComponent,CommonModule,RouterLink, CurrencyPipe, LucideAngularModule],
   templateUrl: './product-page.component.html',
   styleUrl: './product-page.component.scss'
 })
@@ -40,29 +50,41 @@ export class ProductPageComponent {
   readonly MessageCircleIcon = MessageCircleMore;
   readonly ChevronLeftIcon = ChevronLeft;
   readonly ChevronRightIcon = ChevronRight;
+  readonly Flag = Flag;
 
   // 💡 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
 
+  constructor(public userService: UserService, private router: Router) {}
 
   // 模擬未來後端回傳的真實 JSON 資料
  product: ProductDetailDTO = {
-    productId: 10123, // 💡 新增測試商品ID
-    userId: 99,
-    productName: '葬送的芙莉蓮 1',
-    description: '魔王被勇者一行人打倒後的世界。勇者欣梅爾與僧侶海塔爾、戰士艾森與魔法使芙莉蓮，為了再次體驗各地的人們帶來的感動，踏上了各處旅行的旅途。這是關於某個魔法使的後日談——',
-    price: 180,
-    imgPath: 'https://picsum.photos/id/1025/400/500,https://picsum.photos/id/103/400/500,https://picsum.photos/id/1062/400/500,https://picsum.photos/id/106/400/500,https://picsum.photos/id/62/400/500',
-    type: '書籍',
-    shelfDate: '2026-05-28',
-    productCondition: '狀況良好',
-    status: 'AVAILABLE',
-    grade: '大一',     // 💡 使用者有填寫就會顯示
-    deptGroup: '資訊學群', // 💡 新增學群模擬資料，有填寫就會顯示
-    location: '台北市',
-    sellerName: '賣家帳號',
-    sellerGrade: '5'     // 賣家信用等級
-  };
+  productId: 10123,
+  userId: 99,
+  productName: '葬送的芙莉蓮 1',
+  description: '魔王被勇者一行人打倒後的世界...',
+  price: 180,
+  imgPath: 'https://picsum.photos/id/1025/400/500,https://picsum.photos/id/103/400/500,https://picsum.photos/id/1062/400/500,https://picsum.photos/id/106/400/500,https://picsum.photos/id/62/400/500',
+  type: '書籍',
+  shelfDate: '2026-05-28',
+  productCondition: '狀況良好',
+  status: 'AVAILABLE',
+  grade: '大一',
+  deptGroup: '資訊學群',
+  location: '台北市',
+
+  // 替換掉原本散落的 sellerName 和 sellerGrade，改成這個完美的物件
+  user: {
+    userName: '企管水豚',
+    userImg: 'https://picsum.photos/id/1025/400/500', // 隨便塞個圖片路徑測試
+    university: '輔仁大學',
+    department: '企管系',
+    location: ['新北市', '台北市'],
+    grade: '4.9',
+    tradeCount: 52,
+    productCount: 7
+  }
+};
 
   selectedImageIndex = 0;
 
@@ -135,6 +157,33 @@ if (index >= 0 && index < this.validImages.length) {
           confirmButtonText: '好的',
           confirmButtonColor: '#EDA900'
         });
+      }
+    });
+  }
+
+  /*3. 實作檢舉商品的功能*/
+  reportProduct() {
+    console.log('準備檢舉商品，商品 ID:', this.product.productId);
+
+    // 使用你熟悉的 Swal 來做確認視窗
+    Swal.fire({
+      title: '檢舉商品',
+      text: '確定要檢舉這項商品嗎？請確認商品是否有違規情形。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#c62828', // 配合同學的 .report 紅色樣式
+      cancelButtonColor: '#999999',
+      confirmButtonText: '確定檢舉',
+      cancelButtonText: '先不要'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/front_report'], {
+          queryParams: {
+            productId: this.product.productId,
+            productName: this.product.productName // 也可以順便把名稱帶過去
+          }
+        });
+
       }
     });
   }

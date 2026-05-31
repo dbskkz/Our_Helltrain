@@ -1,0 +1,48 @@
+<div class="shopee-style-card">
+
+  <div class="profile-section">
+    <img [src]="sellerData.userImg" alt="賣家頭像" class="avatar-img">
+
+    <div class="info-and-actions">
+      <div class="seller-name">{{ sellerData.userName }}</div>
+
+      <div class="action-buttons">
+        <button class="btn-action primary" (click)="openChatWithSeller($event)">
+          <lucide-icon [img]="MessageCircleMore" size="16"></lucide-icon>
+          <span>聊聊</span>
+        </button>
+
+        <button class="btn-action outline" (click)="gotoStore($event)">
+          <lucide-icon [img]="StoreIcon" size="16"></lucide-icon>
+          <span>查看賣場</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="vertical-divider"></div>
+
+  <div class="stats-section">
+
+    <div class="stat-item">
+      <span class="stat-label">學校</span>
+      <span class="stat-value">{{ sellerData.university }} {{ sellerData.department }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">信用評分</span>
+      <span class="stat-value highlight">★ {{ sellerData.grade || '5.0' }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">常出沒地區</span>
+      <span class="stat-value">{{ sellerData.location.join('、') }}</span>
+    </div>
+
+    <div class="stat-item">
+      <span class="stat-label">目前上架</span>
+      <span class="stat-value highlight">{{ sellerData.productCount || 0 }} 件</span>
+    </div>
+
+  </div>
+</div>

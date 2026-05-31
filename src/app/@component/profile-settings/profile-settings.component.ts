@@ -31,7 +31,6 @@ import {
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
-import { ValidatorFn } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
 
@@ -54,15 +53,7 @@ import { UserService } from '../../@Services/user.service';
 })
 export class ProfileSettingsComponent {
   // --- 唯讀常數與圖標 ---
-  readonly School = School;
-  readonly MapPin = MapPin;
-  readonly Phone = Phone;
-  readonly BoxIcon = Box;
-  readonly Mail = Mail;
-  readonly pencilIcon = PencilLine;
-  readonly bookUser = BookUser;
-  readonly clipboardPenLine = ClipboardPenLine;
-  readonly lockKeyhole = LockKeyhole;
+readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, ClipboardPenLine, LockKeyhole };
 
   // --- 狀態變數 ---
   isEditingBasic = false;
@@ -82,7 +73,6 @@ export class ProfileSettingsComponent {
   avatarUrl: string | ArrayBuffer | null = '/img/頭像範例.png';
 
   score: number = 4.5; //評分
-  tradeNumber: number = 52;  //交易
   onTheShelves: number = 37;  //目前上架
 
   // --- 暫存與記憶箱子 ---
@@ -117,7 +107,6 @@ export class ProfileSettingsComponent {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
     private router: Router,
     private schoolService: SchoolDataService,
     private userService: UserService
@@ -308,6 +297,7 @@ export class ProfileSettingsComponent {
 
   // 🔑 如果使用者把字擦掉變空字串，清空所有自訂錯誤，回歸 required 判斷
   if (!value) {
+    control.setErrors(null);
     return;
   }
 
