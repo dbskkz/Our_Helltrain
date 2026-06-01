@@ -1,6 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { BasicResponse, UserReq } from '../@Interface/user';
+
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -44,6 +46,11 @@ export class UserService {
   updateAvatar(newUrl: string) {
     this.avatarUrl.set(newUrl);
   }
+
+  //註冊
+  register(data: UserReq): Observable<BasicResponse> {
+  return this.http.post<BasicResponse>(`${this.apiUrl}/insert`, data);
+}
 
 
 }

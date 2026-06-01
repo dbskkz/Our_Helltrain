@@ -17,6 +17,7 @@ import {  ValidatorFn } from '@angular/forms';
 //佩霖寫的
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
+import { UserReq } from '../../@Interface/user';
 
 @Component({
   selector: 'app-login-register',
@@ -250,13 +251,14 @@ openLoginTermsDialog(event: MouseEvent): void {
 
    if (this.registerForm.valid && this.isValidSchoolEmail()) {
       // 資料都填對了，切換到 Step 2 畫面！
-      const finalRegisterData = {
+      const finalRegisterData: UserReq = {
         name: this.registerForm.get('name')?.value,
-        area: this.registerForm.get('area')?.value,
-        school: this.registerForm.get('school')?.value,
         email: this.userEmail,
         password: this.registerForm.get('password')?.value,
-        phone: this.registerForm.get('phone')?.value
+        location: this.registerForm.get('area')?.value,
+        school: this.registerForm.get('school')?.value,
+        phone: this.registerForm.get('phone')?.value,
+        status: 'PENDING'  // 剛註冊還沒驗證，狀態給 PENDING
       };
       console.log('【精準打包】格式全面通關：', finalRegisterData);
       this.currentStep = 2;
@@ -342,7 +344,7 @@ openLoginTermsDialog(event: MouseEvent): void {
     // 防呆：如果目前還在冷卻時間內，直接攔截不執行
     if (!this.canResend) return;
 
-    Swal.fire({
+  Swal.fire({
   title: "驗證信已重新發送，請檢查您的學校信箱！",
   icon: "success",
   confirmButtonColor: '#5E9759',
