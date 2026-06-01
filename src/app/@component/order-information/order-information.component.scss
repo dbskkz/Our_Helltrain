@@ -1,11 +1,81 @@
 @use "../../styles/variables" as *;
 
+
+$buyer-theme-light: #fdf7e7;
+
+$seller-theme-color: #00695c;
+$seller-theme-light: #e0f2f1;
+
+$semantic-red-light: #ffebee;
+$semantic-red-dark: #c62828;
+
 .container {
   max-width: 1400px;
 }
 
-.role-btn {
-  border: none;
+.page-title {
+  font-weight: bold;
+  color: $neutral-700;
+  font-size: 24px;
+  margin: 12px 0;
+  position: relative;
+}
+
+// 購買販售篩選按鈕
+.role-toggle {
+  display: inline-flex;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 30px;
+  gap: 4px;
+  margin: 6px 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+
+  .role-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 25px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    lucide-icon {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+
+    &:hover:not(.active) {
+      color: $text-black;
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    // 🔘 當選中「全部」時（給它一個好看的深藍灰色膠囊）
+    &.active {
+      background-color: #475569;
+      color: $background-white;
+      box-shadow: 0 4px 12px rgba(#475569, 0.2);
+
+      // 🟠 如果同時是「我購買的」，就覆蓋成咖啡橘
+      &.btn-buyer {
+        background-color: $primary-yellow;
+        box-shadow: 0 4px 12px rgba($primary-yellow, 0.3);
+      }
+
+      // 🟢 如果同時是「我販售的」，就覆蓋成墨綠色
+      &.btn-seller {
+        background-color: $seller-theme-color;
+        box-shadow: 0 4px 12px rgba($seller-theme-color, 0.3);
+      }
+    }
+  }
 }
 
 .order-card {
@@ -15,6 +85,46 @@
   margin-top: 24px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  // 🟠 買家外框與精緻懸浮
+  &.card-buyer {
+    border-color: rgba($background-yellow, 0.15);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba($background-yellow, 0.06);
+      border: 1px solid $primary-yellow;
+    }
+
+    .order-header {
+      background-color: $buyer-theme-light;
+    }
+
+    .order-body {
+      background-color: #fffefb;
+    }
+
+  }
+
+  // 🟢 賣家外框與精緻懸浮
+  &.card-seller {
+    border-color: rgba($seller-theme-color, 0.15);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba($seller-theme-color, 0.06);
+      border-color: rgba($seller-theme-color, 0.3);
+    }
+
+    .order-header {
+      background-color: $seller-theme-light;
+    }
+
+    .order-body {
+      background-color: #faffff;
+    }
+  }
 }
 
 .order-header {
@@ -55,8 +165,6 @@
   }
 }
 
-// .name {
-// }
 
 .unit-price {
   color: $text-price;
@@ -162,15 +270,44 @@ p {
 }
 
 // 自訂 Tabs
-.nav-link {
-  border: none;
-  font-weight: bold;
-  color: $text-gray;
-  padding: 10px 20px;
+.tabs-container {
+  margin-bottom: 5px;
+  border-bottom: 2px solid $neutral-300;
+}
 
-  &.active {
-    color: $primary-yellow;
-    border-bottom: 3px solid $primary-yellow;
+.custom-tabs {
+  border: none;
+  gap: 8px;
+
+  .nav-link {
+    border: none;
+    font-weight: 600;
+    color: $neutral-500;
+    padding: 12px 24px;
+    background: transparent;
+    font-size: 15px;
+    transition: all 0.2s;
+    position: relative;
+
+    &:hover {
+      color: $text-black;
+    }
+
+    &.active {
+      color: $primary-yellow;
+      font-weight: bold;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: $primary-yellow;
+        border-radius: 2px;
+      }
+    }
   }
 }
 
@@ -180,7 +317,7 @@ p {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .page-btn {

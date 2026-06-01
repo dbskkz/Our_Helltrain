@@ -1,8 +1,8 @@
-<main class="container py-5">
+<main class="container ">
   <h3 class="page-title">訂單資料 / 交易清單</h3>
 
   <!-- tabs -->
-  <nav>
+  <nav class="tabs-container">
     <ul class="nav nav-tabs custom-tabs">
       @for (tab of tabsColumns; track tab){
       <li class="nav-item">
@@ -24,7 +24,8 @@
 
   <!-- 資料頁 -->
   @for (order of filteredOrders(); track order.orderId) {
-  <section class="order-card">
+  <section class="order-card" [class.card-buyer]="order.counterpart.label === '賣家'"
+    [class.card-seller]="order.counterpart.label === '買家'">
     <header class="order-header">
       <div class="order-info">
         <span class="order-no">訂單編號：{{ order.orderId }}</span>

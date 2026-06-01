@@ -1,4 +1,4 @@
-<main [class.container]="!isDialogMode" [class.py-5]="!isDialogMode">
+<main [class.container]="!isDialogMode">
 
   <div class="dialog-header">
     <h3 class="page-title">檢舉</h3>
@@ -22,22 +22,29 @@
   </nav>
 
   <form class="report-body" [class.in-dialog]="isDialogMode" [formGroup]="reportForm" (ngSubmit)="confirmSend()">
-
     <!-- 檢舉對象（Dialog 模式自動帶入，唯讀） -->
     <div class="report-target">
-      <label>檢舉對象名稱：</label>
-      <input type="text" formControlName="accusedName" placeholder="檢舉對象名稱" class="report-input"
-        [readonly]="isDialogMode">
+      <label>{{ config.nameLable }}：</label>
+      <input type="text" formControlName="accusedName" [placeholder]="config.nameLable" class="report-input">
       @if (reportForm.get('accusedName')?.invalid && reportForm.get('accusedName')?.touched) {
-      <small class="error-msg">請填寫檢舉對象名稱！</small>
+      <small class="error-msg">請填寫{{ config.nameLable }}！</small>
       }
 
-      <label>檢舉對象ID：</label>
-      <input type="text" formControlName="accusedId" placeholder="檢舉對象ID" class="report-input"
-        [readonly]="isDialogMode">
-      @if (reportForm.get('accusedId')?.invalid && reportForm.get('accusedId')?.touched) {
-      <small class="error-msg">請填寫檢舉對象ID！</small>
+      @if (currentTab === '檢舉商品') {
+      <label>檢舉商品ID：</label>
+      <input type="text" formControlName="productId" [placeholder]="config.idLabel" class="report-input">
+      @if (reportForm.get('productId')?.invalid && reportForm.get('productId')?.touched) {
+      <small class="error-msg">請填寫{{ config.idLabel }}！</small>
       }
+      } @else {
+      <label>{{ config.idLabel }}：</label>
+      <input type="text" formControlName="accusedId" [placeholder]="config.idLabel" class="report-input">
+      @if (reportForm.get('accusedId')?.invalid && reportForm.get('accusedId')?.touched) {
+      <small class="error-msg">請填寫{{ config.idLabel }}！</small>
+      }
+      }
+
+
     </div>
 
     <!-- 檢舉原因 -->
@@ -45,7 +52,7 @@
       <p class="section-label">檢舉原因：</p>
       <select formControlName="violationType" class="form-select">
         <option value="" disabled>-- 請選擇 --</option>
-        @for (reportType of reportColumns; track reportType) {
+        @for (reportType of config.reportColumns; track reportType) {
         <option [value]="reportType">{{ reportType }}</option>
         }
       </select>
@@ -60,14 +67,14 @@
       <textarea formControlName="description" placeholder="問題描述（至少10個字，選其他則需20字）" class="report-input"></textarea>
       @if (reportForm.get('description')?.invalid && reportForm.get('description')?.touched) {
       @if (reportForm.get('description')?.errors?.['required']) {
-      <small class="error-msg">請填寫問題描述！</small>
-      }
+      <small class="error-msg">請填寫問題描述！</small>}
       @if (reportForm.get('description')?.errors?.['minlength']) {
       <small class="error-msg">
         描述至少需要
         {{ reportForm.get('description')?.errors?.['minlength'].requiredLength }} 個字！
-      </small>
-      }
+      </small>}
+      @if (reportForm.get('description')?.errors?.['maxlength']) {
+      <small class="error-msg">描述最多只能填寫200字！</small>}
       }
     </div>
 
@@ -115,7 +122,5 @@
     </div>
 
   </form>
-
-
 
 </main>

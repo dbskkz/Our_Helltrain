@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 3rem;
+  padding: 12px 12px 24px 12px;
 }
 
 // 頂部標題區區塊
@@ -17,18 +17,15 @@
   align-items: center;
   width: 100%;
   max-width: 650px;
-  margin-bottom: 1.5rem;
-  padding: 0 4px;
 
   :host-context([class*="mat-mdc-dialog"]) & {
-    padding: 15px 20px;
+    padding: 20px 25px 0 25px;
   }
 
   .page-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: $neutral-700; // 假設你系統內部的深灰/黑文字變數
-    margin: 0;
+    color: $neutral-700;
   }
 
   .btn-close-dialog {
@@ -87,13 +84,12 @@ nav {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem 4px;
+  gap: 10px;
 
   &.in-dialog {
     max-height: 60vh;
     overflow-y: auto;
-    padding: 20px 16px 4px 20px;
+    padding: 0 16px 8px 20px;
 
     // 美化捲軸（非必要，但可以讓網頁更精緻，適用 Chrome / Edge / Safari）
     &::-webkit-scrollbar {
@@ -150,7 +146,7 @@ nav {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid $neutral-300;
-  border-radius: 10px; // 現代感大圓角
+  border-radius: 10px;
   font-size: 0.95rem;
   background-color: $background-white;
   box-sizing: border-box;
@@ -162,11 +158,9 @@ nav {
     box-shadow: 0 0 0 3px rgba($primary-yellow, 0.15); // 黃色系呼吸燈聚焦效果
   }
 
-  &[readonly] {
-    background-color: #f8fafc;
-    color: #64748b;
+  &:disabled {
+    background-color: #f1f5f9;
     cursor: not-allowed;
-    border-color: #e2e8f0;
   }
 }
 
@@ -200,7 +194,7 @@ textarea.report-input {
 // 上傳點擊框框
 .upload-area {
   border: 2px dashed $neutral-300;
-  border-radius: 12px;
+  border-radius: $border-radius-lg;
   aspect-ratio: 1 / 1; // 強制做成正方形
   display: flex;
   flex-direction: column;
@@ -264,7 +258,7 @@ textarea.report-input {
     padding: 0;
     border-radius: 50%;
     justify-content: center;
-    background-color: rgba(#ffffff, 0.9);
+    background-color: rgba($background-white, 0.9);
     border: 1px solid rgba(#ef4444, 0.2);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -280,7 +274,7 @@ textarea.report-input {
       transform: scale(1.05);
 
       lucide-icon {
-        color: #ffffff;
+        color: $background-white;
       }
     }
   }
@@ -291,7 +285,6 @@ textarea.report-input {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin: 1.5rem;
   gap: 16px;
   width: 100%;
 
