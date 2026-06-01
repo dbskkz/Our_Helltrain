@@ -4,6 +4,7 @@ import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLe
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
+import { ReportService } from '../../@Services/report.service';
 
   const CATEGORY_MAP: Record<string, string> = {
   'books':       '教科書',
@@ -69,7 +70,7 @@ export class ProductPageComponent {
   // 💡 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
 
-  constructor(public userService: UserService, private router: Router) {}
+  constructor(public userService: UserService, private router: Router, private reportService: ReportService) {}
 
 
 
@@ -227,28 +228,12 @@ if (index >= 0 && index < this.validImages.length) {
   /*檢舉商品的功能*/
   reportProduct() {
     console.log('準備檢舉商品，商品 ID:', this.product.productId);
-
-    // 使用你熟悉的 Swal 來做確認視窗
-    Swal.fire({
-      title: '檢舉商品',
-      text: '確定要檢舉這項商品嗎？請確認商品是否有違規情形。',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#c62828', // 配合同學的 .report 紅色樣式
-      cancelButtonColor: '#999999',
-      confirmButtonText: '確定檢舉',
-      cancelButtonText: '先不要'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/front_report'], {
-          queryParams: {
-            productId: this.product.productId,
-            productName: this.product.productName // 也可以順便把名稱帶過去
-          }
-        });
-
-      }
-    });
+    this.reportService.openReportDialog(
+      'product',
+      this.product.productName,
+      this.product.userId.toString(),
+      this.product.productId.toString()
+    );
   }
 
    // --- 賣家操作 ---
