@@ -12,12 +12,14 @@ import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 import { ProductCard } from '../../@Interface/product-card';
+import { CategoriesService } from '../../@Services/categories.service';
+import { SearchProductReq } from '../../@Services/product-service.service';
 
 // 網址用的 slug → type 中文名稱
 const CATEGORY_MAP: Record<string, string> = {
   'books':       '教科書',
   'equipment':   '專業器材',
-  'daily':       '生活用品',
+  'daily':       '日用品',
   'electronics': '3C電子',
   'furniture':   '家具家電',
   'notes':       '筆記考古',
@@ -39,7 +41,8 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     private uiBehavior: UiBehaviorService,
     private aca: EighteenAcademyService,
     public pagination: PaginationService,
-    private productservice:ProductServiceService
+    private productservice:ProductServiceService,
+    private ctgService:CategoriesService
   ) {}
 
   // =========================================================
@@ -98,6 +101,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // CATEGORY
   // =========================================================
 
+  allProducts:ProductCard[] = [];
   keyword: string | null = '';
   category: string | null = '';
 
@@ -107,9 +111,68 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return CATEGORY_MAP[this.category!] || '全部商品';
   }
 
-  loadProducts() {
-    this.pagination.init(this.sortedProducts.length, this.pageSize);
+  loadProducts(){
+    this.isLoading = true;
+
+    // 有 keyword → 用 search API
+    if (this.keyword) {
+      const req: SearchProductReq = {
+        keyword: this.keyword,
+      };
+
+      this.productservice.search(req).subscribe({
+        next: (res) => {
+          console.log(res.message);
+
+          this.products = res.productList ?? [];
+          this.updatePagination();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+        }
+      });
+
+    }
+    else if (this.category && this.category !== 'all')
+    {
+
+      const chineseCat = CATEGORY_MAP[this.category] ?? this.category;
+
+      this.productservice.searchByType(chineseCat).subscribe({
+        next: (res) => {
+          console.log(res.message);
+
+          this.products = res.productList ?? [];
+          this.updatePagination();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('類別載入失敗', err);
+          this.isLoading = false;
+        }
+      });
+
+    }
+    else
+    {
+      // 沒有 keyword → 用 getAll，category 在前端過濾
+      this.productservice.getAll().subscribe({
+        next: (res) => {
+          this.products = res.productList ?? [];
+          this.updatePagination();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('載入失敗', err);
+          this.isLoading = false;
+        }
+      });
+    }
   }
+
+  products: ProductCard[] = [];
+  isLoading = false;
 
   // =========================================================
   // PANEL OPEN / CLOSE
@@ -173,12 +236,14 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // FILTER CHANGE HANDLERS
   // =========================================================
 
-  onCityChange(): void {
+  onCityChange() {
     this.pagination.goToPage(1);
+    this.updatePagination();
   }
 
-  onDeptChange(): void {
-    console.log(this.department);
+  onDeptChange() {
+    this.pagination.goToPage(1);
+    this.updatePagination();
   }
 
   // =========================================================
@@ -280,6 +345,13 @@ get sortedProducts(): ProductCard[] {
     return this.sortedProducts.slice(start, start + this.pageSize);
   }
 
+  updatePagination(): void {
+    this.pagination.init(
+      this.filteredProducts.length,
+      this.pageSize
+    );
+  }
+
   prevPage()              { this.pagination.prevPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   nextPage()              { this.pagination.nextPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   goToPage(page: number)  { this.pagination.goToPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -294,6 +366,8 @@ get sortedProducts(): ProductCard[] {
     this.sellerGrade    = this.DEFAULT_FILTERS.sellerGrade;
     this.cities.forEach(c => c.selected = false);
     this.department.forEach(d => d.selected = false);
+    this.type.forEach(t => t.selected = false);
+    this.condition.forEach(c => c.selected = false);
     this.pagination.goToPage(1);
   }
 
@@ -310,20 +384,22 @@ get sortedProducts(): ProductCard[] {
   // =========================================================
 
   get filteredProducts(): ProductCard[]{
-    return this.allProducts.filter(product =>{
+    return this.products.filter(product =>{
 
+      // category 篩選（只在非 search 模式下有意義）
       const chineseCat = CATEGORY_MAP[this.category!];
+      const matchCategory = !this.keyword
+        && this.category !== 'all'
+        ? product.type.includes(chineseCat)
+        : true;
 
-      const matchCategory =
-        this.category === 'all' || product.type.includes(chineseCat);
+      // const matchKeyword =
+      //   !this.keyword
+      //   || product.title.includes(this.keyword)
+      //   || product.location.includes(this.keyword);
 
-      const matchKeyword =
-        !this.keyword
-        || product.title.includes(this.keyword)
-        || product.location.includes(this.keyword);
-
-      const matchPrice =
-        product.price > this.priceValue && product.price < this.priceHighValue
+      // const matchPrice =
+      //   product.price > this.priceValue && product.price < this.priceHighValue
 
       const selectedCity = this.cities
         .filter(c => c.selected)
@@ -339,7 +415,25 @@ get sortedProducts(): ProductCard[] {
       const matchSchool = selectedSchool.length === 0
         || selectedSchool.some(s => product.type.includes(s));
 
-      return matchCategory && matchKeyword && matchPrice && matchCity;
+      const selectedTypes = this.type
+        .filter(t => t.selected)
+        .map(t => CATEGORY_MAP[t.value]);
+
+      const matchType = selectedTypes.length === 0
+        || selectedTypes.some(t => product.type.includes(t));
+
+      const selectedConditions = this.condition
+        .filter(c => c.selected)
+        .map(c => c.value);
+
+      const matchCondition = selectedConditions.length === 0
+        || selectedConditions.includes(product.condition);
+
+
+
+      return matchCity && matchType && matchCondition && matchCategory;
+      // matchCategory && matchKeyword && matchPrice
+
     })
   }
 
@@ -347,6 +441,14 @@ get sortedProducts(): ProductCard[] {
   // =========================================================
   // 假資料
   // =========================================================
+
+  get type() : any[]{
+    return this.ctgService.categories;
+  }
+
+  get condition() : any[]{
+    return this.ctgService.conditions;
+  }
 
   get department(): any[]{
     return this.aca.academy
@@ -377,9 +479,9 @@ get sortedProducts(): ProductCard[] {
     { id: 22, name: '連江縣', selected: false }
   ];
 
-  get allProducts():ProductCard[] {
-    return this.productservice.allProducts
-  }
+  // get allProducts():ProductCard[] {
+  //   return this.productservice.allProducts
+  // }
 
 
 }

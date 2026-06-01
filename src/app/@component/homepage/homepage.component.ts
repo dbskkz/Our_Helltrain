@@ -28,6 +28,10 @@ get categories():any[]{
   return this.category.categories;
 }
 
+ngOnInit(): void {
+  this.loadProducts();
+}
+
   //類型輪播效果
   @ViewChild('categoryScroll')
   categoryScroll!: ElementRef;
@@ -61,8 +65,23 @@ get categories():any[]{
   }
 
   get homeProducts(): ProductCard[] {
-    return this.productService.allProducts.slice(0,5);
+    return this.allProducts.slice(0,5);
   }
 
+  allProducts: ProductCard[] = [];
+
+  loadProducts(){
+    return this.productService.getAll().subscribe({
+      next: (res) => {
+        this.allProducts = res.productList;
+        console.log(res.statusCode);
+
+      },
+      error: (err) => {
+        console.error(err);
+        console.log(err.message);
+      }
+    });
+  }
 
 }

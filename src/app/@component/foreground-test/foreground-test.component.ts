@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
 import { GPSLocationService } from '../../@Services/gps-location.service';
+import { FormsModule } from "@angular/forms";
+import { UserService } from '../../@Services/user.service';
+import { ProductServiceService } from '../../@Services/product-service.service';
 
 @Component({
   selector: 'app-foreground-test',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './foreground-test.component.html',
   styleUrl: './foreground-test.component.scss'
 })
@@ -12,7 +15,9 @@ export class ForegroundTestComponent {
 
   constructor(
     private eduApi : EduApiGovService,
-    private gpsApi : GPSLocationService
+    private gpsApi : GPSLocationService,
+    private userService: UserService,
+    private productService:ProductServiceService
   ){
 
   }
@@ -28,8 +33,15 @@ export class ForegroundTestComponent {
 
     this.getCurrentPosition();
     // 實驗結論 : chrome 和 MicroSoftEdge 可以正常使用
-
     // this.gpsExp();
+
+    this.productService.getAll().subscribe({
+      next: (res) => {
+        console.log(res.productList);
+      }
+    })
+
+
   }
 
   // ========================================================================
@@ -111,6 +123,37 @@ export class ForegroundTestComponent {
       this.cityName = city;
       console.log('所在縣市：', city);
     });
+  }
+
+
+
+  // ========================================================================
+  //  登入測試
+  // ========================================================================
+
+  acc = '';
+  pwd = '';
+
+  submit(){
+    console.log(this.acc, this.pwd);
+
+    this.userService.login(this.acc, this.pwd).subscribe({
+      next: (res) =>
+
+        {
+
+          console.log(res.message)
+          if(res.message === "Please verify" )
+          {
+            console.log("Please verify");
+
+          }
+
+        },
+
+      error: (err) => console.log(err.message)
+    })
+
   }
 
 }

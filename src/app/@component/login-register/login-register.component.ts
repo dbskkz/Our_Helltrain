@@ -66,6 +66,15 @@ export class LoginRegisterComponent implements OnInit{
 
     this.route.queryParams.subscribe(params => {
       this.isRegister = params['mode'] === 'register';
+
+      // 如果網址帶了 email（從信件連結來的）
+      if (params['email']) {
+          this.userEmail = params['email'];
+          // 如果是重新驗證，直接跳到第 2 步
+          if (params['reVerify'] === 'true') {
+              this.currentStep = 2;
+          }
+      }
     }); // 佩霖寫的，處理路由
 
     this.initRegisterForm(); // 呼叫註冊箱子初始化
@@ -407,55 +416,61 @@ openLoginTermsDialog(event: MouseEvent): void {
   userInputLogin = ''
   isAgree = false;
 
-  onLogin(){
-    // if(this.loginForm.valid)
+  onLogin() {
     const hasAgreed = this.loginForm.get('agreeTerms')?.value;
 
-    if(this.isValidLoginEmail() && hasAgreed) // 先隨便寫的，只要email格式正確就能登入 By.佩霖
-    {
-      // const loginData = {
-      //   email: this.loginForm.get('email')?.value,
-      //   password: this.loginForm.get('password')?.value
-      // };
-      // console.log('【登入打包】準備送給後端驗證：', loginData);
+    if (this.isValidLoginEmail() && hasAgreed) {
+        const loginData = {
+            email: this.loginForm.get('email')?.value,
+            password: this.loginForm.get('password')?.value
+        };
 
-      // 接下來就是呼叫後端 API 驗證登入...
-      // this.userService.login(loginData.email, loginData.password).subscribe({
-      //   next: (res) => {
-      //     if (res.statusCode === 200) {
-      //       this.router.navigate(['/home']);
-      //     } else {
-      //       Swal.fire({
-      //         title: '登入失敗',
-      //         text: res.message,
-      //         icon: 'error',
-      //         confirmButtonColor: '#e57373'
-      //       });
-      //     }
-      //   },
-      //   error: () => {
-      //     Swal.fire({
-      //       title: '連線錯誤',
-      //       text: '請稍後再試',
-      //       icon: 'error',
-      //       confirmButtonColor: '#e57373'
-      //     });
-      //   }
-      // });
+        this.userService.login(loginData.email, loginData.password).subscribe({
+            next: (res) => {
+                if (res.statusCode === 200) {
+                    this.userService.isLoggedIn.set(true);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    this.gotoHome();
 
-      this.userService.isLoggedIn.set(true);
-      sessionStorage.setItem('isLoggedIn', 'true');
-      this.gotoHome();
+                // 驗證過期（490）
+                } else if (res.statusCode === 490) {
+                    Swal.fire({
+                        title: '驗證已過期',
+                        text: '驗證碼已重新寄至您的信箱，請完成驗證後再登入',
+                        icon: 'warning',
+                        confirmButtonColor: '#FB831D',
+                        confirmButtonText: '前往驗證'
+                    }).then(() => {
+                        // 導向驗證頁面，帶上 email
+                        this.router.navigate(['/login'], {
+                            queryParams: {
+                                mode: 'register',
+                                email: loginData.email,
+                                reVerify: true
+                            }
+                        });
+                    });
 
+                } else {
+                    Swal.fire({
+                        title: '登入失敗',
+                        text: res.message,
+                        icon: 'error',
+                        confirmButtonColor: '#e57373'
+                    });
+                }
+            },
+            error: () => {
+                Swal.fire({
+                    title: '連線錯誤',
+                    text: '請稍後再試',
+                    icon: 'error',
+                    confirmButtonColor: '#e57373'
+                });
+            }
+        });
     }
-    else
-    {
-      // 沒填對就集體炸開紅字紅框！
-      console.log("帳密錯誤或未同意條款");
-
-      this.loginForm.markAllAsTouched();
-    }
-  }
+}
 
   // 先隨便寫的，只要使用者input的email格式正確就能登入 By.佩霖
   isValidLoginEmail(): boolean {

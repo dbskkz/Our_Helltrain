@@ -1,7 +1,17 @@
 <p>foreground-test works!</p>
 <!-- foreground-test.component.html -->
-<div>
+<!-- <div>
   <p>緯度：{{ lat }}</p>
   <p>經度：{{ lng }}</p>
   <p>所在縣市：{{ cityName }}</p>
-</div>
+</div> -->
+
+<label for="acc">帳號</label>
+<input type="text" name="acc" [(ngModel)]="acc">
+
+<label for="pwd">密碼</label>
+<input type="password" name="pwd" [(ngModel)]="pwd">
+
+<button (click)="submit()">登入</button>
+
+

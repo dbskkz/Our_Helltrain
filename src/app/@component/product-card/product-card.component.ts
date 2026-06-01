@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 // 素材庫
-import { LucideAngularModule, Filter, ArrowUpDown, ChevronDown, MapPin } from 'lucide-angular';
+import { LucideAngularModule, MapPin } from 'lucide-angular';
 import { ProductCard } from '../../@Interface/product-card';
 import { Router } from '@angular/router';
 
@@ -17,10 +17,10 @@ import { Router } from '@angular/router';
 export class ProductCardComponent {
 
   constructor(
-    private router: Router,
+    private router: Router
     ){}
 
-readonly MapPinIcon= MapPin;
+  readonly MapPinIcon= MapPin;
 
 
   // 接收外部傳入的商品列表（必填）

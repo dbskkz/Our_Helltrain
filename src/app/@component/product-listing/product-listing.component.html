@@ -93,14 +93,14 @@
       <!-- 商品狀況 -->
       <div class="sidebar-section">
         <h6>商品新舊程度</h6>
-        <select class="filter-select full-width" (click)="$event.stopPropagation()">
-          <option value="">不限</option>
-          <option value="new">全新</option>
-          <option value="near-new">近全新</option>
-          <option value="lightly-used">輕度使用</option>
-          <option value="used">中度使用</option>
-          <option value="heavily-used">重度使用</option>
-        </select>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (cond of condition; track cond.value) {
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="cond.selected">
+              {{ cond.label }}
+            </label>
+          }
+        </div>
       </div>
 
       <!-- 賣家評價 -->
@@ -132,6 +132,19 @@
             <label class="checkbox-item">
               <input type="checkbox" [(ngModel)]="dept.selected" (change)="onDeptChange()">
               {{ dept.name }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- 常見分類 -->
+      <div class="sidebar-section">
+        <h6>常見分類</h6>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (item of type; track $index) {
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="item.selected">
+              {{ item.label }}
             </label>
           }
         </div>

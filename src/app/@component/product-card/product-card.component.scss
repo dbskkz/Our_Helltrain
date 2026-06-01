@@ -74,7 +74,7 @@
 
       .amount {
         font-size: 1.8rem;    // 數字放大，突顯重點
-        font-weight: 700;
+        font-weight: 750;
         line-height: 1;       // 避免行高影響對齊
       }
 
@@ -84,7 +84,7 @@
           align-items: center;
           font-size: 11px;
           color: $text-gray;
-          margin-bottom: 0.8rem;
+          margin: 0.5rem 0;
 
           .location {
             display: flex;
