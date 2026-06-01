@@ -47,6 +47,7 @@
   border-radius: $border-radius-lg;
   overflow: hidden;
   background: $primary-gray;
+
   img {
     width: 100%;
     height: 100%;
@@ -84,12 +85,15 @@
   &.completed {
     color: $semantic-green;
   }
+
   &.in-progress {
     color: $primary-yellow-dark;
   }
+
   &.pending {
     color: $semantic-orange;
   }
+
   &.cancelled {
     color: $text-gray;
   }
@@ -120,6 +124,7 @@ p {
     background-color: $background-yellow;
     color: $primary-yellow-darker;
     border-color: $primary-yellow;
+
     &:hover {
       background: $primary-yellow-dark;
       color: $background-white;
@@ -129,6 +134,7 @@ p {
   &.outline {
     background: $background-white;
     color: $text-gray;
+
     &:hover {
       background: $neutral-300;
     }
@@ -147,6 +153,7 @@ p {
       background-color: #c62828;
       color: $background-white;
       transform: translateY(-2px);
+
       lucide-icon {
         color: $background-white;
       }
@@ -160,6 +167,7 @@ p {
   font-weight: bold;
   color: $text-gray;
   padding: 10px 20px;
+
   &.active {
     color: $primary-yellow;
     border-bottom: 3px solid $primary-yellow;
@@ -196,10 +204,12 @@ p {
   &:hover:not(:disabled) {
     background: $background-yellow;
   }
+
   &:disabled {
     color: #c9c6c0;
     cursor: default;
   }
+
   &.active {
     background: $background-yellow-hover;
     color: $text-gray;

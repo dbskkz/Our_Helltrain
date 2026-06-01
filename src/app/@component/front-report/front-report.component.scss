@@ -1,92 +1,359 @@
 @use "../../styles/variables" as *;
 
+// 最外層 Container (僅在非 Dialog 模式生效，或做全域基礎設定)
 .container {
   max-width: 1400px;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 3rem;
 }
 
-// tabs
+// 頂部標題區區塊
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 650px;
+  margin-bottom: 1.5rem;
+  padding: 0 4px;
+
+  :host-context([class*="mat-mdc-dialog"]) & {
+    padding: 15px 20px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $neutral-700; // 假設你系統內部的深灰/黑文字變數
+    margin: 0;
+  }
+
+  .btn-close-dialog {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+
+    lucide-icon {
+      margin: 0;
+      color: $text-gray;
+    }
+
+    &:hover {
+      background-color: #f0f2f5;
+    }
+  }
+}
+
+// 導覽列標籤
+nav {
+  width: 100%;
+  max-width: 650px;
+  margin-bottom: 1rem;
+}
+
+.custom-tabs {
+  border-bottom: 2px solid $neutral-300;
+}
+
 .nav-link {
   border: none;
   font-weight: bold;
   color: $text-gray;
-  padding: 10px 20px;
+  padding: 12px 24px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
   &.active {
     color: $primary-yellow;
     border-bottom: 3px solid $primary-yellow;
+    background: transparent;
   }
 }
 
-// 檢舉對象
-.report-target {
+// 檢舉主體：徹底拋棄原本的 width: 40%
+.report-body {
+  width: 100%;
+  max-width: 650px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 4px;
+
+  &.in-dialog {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 20px 16px 4px 20px;
+
+    // 美化捲軸（非必要，但可以讓網頁更精緻，適用 Chrome / Edge / Safari）
+    &::-webkit-scrollbar {
+      width: 6px; // 捲軸寬度
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f5f9; // 捲軸軌道背景色
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e1; // 捲軸滑塊顏色
+      border-radius: 4px;
+
+      &:hover {
+        background: #94a3b8; // 滑鼠懸停時變深
+      }
+    }
+  }
 }
 
-// input框
-.report-input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid $neutral-300;
-  border-radius: 8px;
-}
-
-// 問題描述
+// 每個表單分組的容器美化
+.report-target,
+.filter-section,
 .report-description {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+
+  label,
+  .section-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151; // 具質感的深灰色
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+    .img-count {
+      margin-left: auto;
+      font-size: 0.85rem;
+      color: $text-gray;
+      background: $neutral-300;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+  }
 }
 
+// Input 與 Select 精緻化
+.report-input,
+.form-select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid $neutral-300;
+  border-radius: 10px; // 現代感大圓角
+  font-size: 0.95rem;
+  background-color: $background-white;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-yellow;
+    box-shadow: 0 0 0 3px rgba($primary-yellow, 0.15); // 黃色系呼吸燈聚焦效果
+  }
+
+  &[readonly] {
+    background-color: #f8fafc;
+    color: #64748b;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+  }
+}
+
+textarea.report-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+// 錯誤訊息精緻化
+.error-msg {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background-color: #fef2f2; // 柔和紅
+  color: #ef4444;
+  margin-top: 2px;
+  border: 1px solid rgba(#ef4444, 0.1);
+}
+
+// 💡 圖片上傳區塊優化（Grid 網格系統）
+.preview-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); // 響應式自動分配網格
+  gap: 16px;
+  margin-top: 8px;
+}
+
+// 上傳點擊框框
+.upload-area {
+  border: 2px dashed $neutral-300;
+  border-radius: 12px;
+  aspect-ratio: 1 / 1; // 強制做成正方形
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 12px;
+  box-sizing: border-box;
+
+  lucide-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    color: $neutral-500;
+    margin-bottom: 8px;
+    padding: 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: $neutral-500;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  &:hover {
+    background-color: #f1f5f9;
+    border-color: $primary-yellow;
+
+    lucide-icon {
+      color: $primary-yellow-darker;
+    }
+  }
+}
+
+// 圖片預覽卡片
+.preview-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1; // 強制跟上傳框同大小的正方形
+  border: 1px solid $neutral-300;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+  .preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // 裁切填滿不變形
+  }
+
+  // 覆蓋在圖片右上角的刪除按鈕
+  .btn-action.report {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    background-color: rgba(#ffffff, 0.9);
+    border: 1px solid rgba(#ef4444, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    lucide-icon {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      color: #ef4444;
+    }
+
+    &:hover {
+      background-color: #ef4444;
+      transform: scale(1.05);
+
+      lucide-icon {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// 底部按鈕列
 .btn-group {
   display: flex;
-  justify-content: end;
-  margin-top: 20px;
-  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 1.5rem;
+  gap: 16px;
+  width: 100%;
+
+  // 行動裝置或極小視窗下，按鈕可以撐滿排一列
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+
+    .btn-action {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
-// 通用按鈕封裝
+// 按鈕基礎樣式
 .btn-action {
-  width: 20%;
-  padding: 8px 16px;
-  border-radius: $border-radius-lg;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  border-radius: 10px;
   font-size: $font-size-base;
-  border: 1px solid $neutral-300;
-  transition: all 0.3s;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  lucide-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    color: inherit;
+  }
 
   &.primary {
     background-color: $background-yellow;
     color: $primary-yellow-darker;
     border-color: $primary-yellow;
+
     &:hover {
       background: $primary-yellow-dark;
       color: $background-white;
+      box-shadow: 0 4px 12px rgba($primary-yellow-dark, 0.2);
     }
   }
 
   &.outline {
     background: $background-white;
     color: $text-gray;
-    &:hover {
-      background: $neutral-300;
-    }
-  }
-
-  &.report {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid rgba(#c62828, 0.1);
-
-    lucide-icon {
-      color: #c62828;
-    }
+    border-color: $neutral-300;
 
     &:hover {
-      background-color: #c62828;
-      color: $background-white;
-      transform: translateY(-2px);
-      lucide-icon {
-        color: $background-white;
-      }
+      background: #f8fafc;
+      border-color: $neutral-500;
+      color: $neutral-700;
     }
   }
+}
+
+// 清除全域 lucide-icon 的潛在干擾
+lucide-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
