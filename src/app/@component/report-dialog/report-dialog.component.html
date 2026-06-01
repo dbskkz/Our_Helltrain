@@ -10,7 +10,10 @@
   <div class="info-row"><span class="label">被檢舉人:</span><span>{{ data.accusedName }}</span></div>
 
   <!-- 相關資料 -->
-  <div class="info-row"><span class="label">相關商品:</span><span>{{ data.productName }}（{{ data.productId }}）</span></div>
+  <div class="info-row"><span class="label">相關商品:</span>
+    <span >{{ data.productName }}（{{ data.productId }}）</span>
+    <a [href]="'/product_page/' + data.productId" target="_blank">前往商品頁面</a>
+  </div>
   <div class="info-row"><span class="label">相關訂單:</span><span>{{ data.orderId }}</span></div>
 
   <!-- 檢舉內容 -->

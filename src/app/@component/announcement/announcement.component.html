@@ -3,10 +3,10 @@
 
   <!-- 列表區塊 -->
   <div class="list-section">
-    <!-- 編輯中的公告 -->
+    <!-- 未發布公告 -->
     <div class="announce-group">
       <div class="group-header">
-        <h3 class="group-title">編輯中的公告</h3>
+        <h3 class="group-title">未發布公告</h3>
         <button class="btn addannounce" (click)="addAnnounce()">
           <lucide-icon [name]="addInco"></lucide-icon>
           新增公告
@@ -35,7 +35,7 @@
           </div>
         } @empty {
           <div class="announce-row empty-row">
-            <span class="empty-text">目前沒有編輯中的公告</span>
+            <span class="empty-text">目前沒有未發布公告</span>
           </div>
         }
       </div>
@@ -70,9 +70,9 @@
       </div>
     </div>
 
-    <!-- 架上的公告 -->
+    <!-- 發布中公告 -->
     <div class="announce-group">
-      <h3 class="group-title">架上的公告</h3>
+      <h3 class="group-title">發布中公告</h3>
       <div class="announce-table">
         <div class="announce-header">
           <span class="col-label">ID</span>
@@ -96,7 +96,7 @@
           </div>
         } @empty {
           <div class="announce-row empty-row">
-            <span class="empty-text">目前沒有架上公告</span>
+            <span class="empty-text">目前沒有發布中公告</span>
           </div>
         }
       </div>
@@ -131,9 +131,9 @@
       </div>
     </div>
 
-    <!-- 過去的公告 -->
+    <!-- 已結束公告 -->
     <div class="announce-group">
-      <h3 class="group-title">過去的公告</h3>
+      <h3 class="group-title">已結束公告</h3>
       <div class="announce-table">
         <div class="announce-header">
           <span class="col-label">ID</span>
