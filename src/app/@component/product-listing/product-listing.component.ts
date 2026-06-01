@@ -116,22 +116,27 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
     // 有 keyword → 用 search API
     if (this.keyword) {
-      const req: SearchProductReq = {
-        keyword: this.keyword,
-      };
+      // SearchBar 路徑：所有篩選條件都交給後端
+    const req: SearchProductReq = {
+      keyword: this.keyword,
+      minPrice: this.priceValue === this.DEFAULT_FILTERS.priceValue ? undefined : this.priceValue,
+      maxPrice: this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue ? undefined : this.priceHighValue,
+      types:      this.type.filter(t => t.selected).map(t => t.label),
+      // conditions: this.condition.filter(c => c.selected).map(c => c.value),
+      // grades / deptGroups 如果 sidebar 有的話也帶進來
+    };
 
-      this.productservice.search(req).subscribe({
-        next: (res) => {
-          console.log(res.message);
-
-          this.products = res.productList ?? [];
-          this.updatePagination();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          this.isLoading = false;
-        }
-      });
+    this.productservice.search(req).subscribe({
+      next: (res) => {
+        this.products = res.productList ?? [];
+        this.updatePagination();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('搜尋失敗', err);
+        this.isLoading = false;
+      }
+    });
 
     }
     else if (this.category && this.category !== 'all')
@@ -393,13 +398,14 @@ get sortedProducts(): ProductCard[] {
         ? product.type.includes(chineseCat)
         : true;
 
-      // const matchKeyword =
-      //   !this.keyword
-      //   || product.title.includes(this.keyword)
-      //   || product.location.includes(this.keyword);
+      const matchKeyword =
+        !this.keyword
+        || product.title.includes(this.keyword)
+        || product.type.includes(this.keyword)
+        || product.location.includes(this.keyword);
 
-      // const matchPrice =
-      //   product.price > this.priceValue && product.price < this.priceHighValue
+      const matchPrice =
+        product.price > this.priceValue && product.price < this.priceHighValue
 
       const selectedCity = this.cities
         .filter(c => c.selected)
@@ -413,7 +419,7 @@ get sortedProducts(): ProductCard[] {
         .map(d => d.name);
 
       const matchSchool = selectedSchool.length === 0
-        || selectedSchool.some(s => product.type.includes(s));
+        || selectedSchool.some(s => product.deptGroup.includes(s));
 
       const selectedTypes = this.type
         .filter(t => t.selected)
@@ -424,15 +430,13 @@ get sortedProducts(): ProductCard[] {
 
       const selectedConditions = this.condition
         .filter(c => c.selected)
-        .map(c => c.value);
+        .map(c => c.label);
 
       const matchCondition = selectedConditions.length === 0
         || selectedConditions.includes(product.condition);
 
-
-
-      return matchCity && matchType && matchCondition && matchCategory;
-      // matchCategory && matchKeyword && matchPrice
+      return matchCity && matchType && matchCondition && matchCategory
+      && matchCategory && matchKeyword && matchPrice;
 
     })
   }
