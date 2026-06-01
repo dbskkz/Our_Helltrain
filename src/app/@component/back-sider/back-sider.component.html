@@ -1,22 +1,26 @@
 <div class="side-wrapper">
   <ul class="nav-list">
-
-
-    <!-- 回總覽頁面 -->
-    <!-- <li class="nav-item">
-      <button class="nav-link"
-       routerLink="/back_index" routerLinkActive="active">
-        <lucide-icon [name]="HomeIcon"></lucide-icon>
-        <span>首頁</span>
-      </button>
-    </li> -->
+    <li class="nav-item">
+      <!-- <img
+        src="img/logo改版.png"
+        alt="logo"
+        class="logo"
+        title="首頁"
+        (click)="goToHome()"
+      /> -->
+    </li>
 
     <!-- 用戶管理 -->
     <li class="nav-item">
-      <button class="nav-link"(click)="goToUser()"
-      routerLink="/back_user" routerLinkActive="active">
+      <button
+        class="nav-link"
+        (click)="goToUser()"
+        routerLink="/back_user"
+        routerLinkActive="active"
+      >
         <lucide-icon [name]="UserIcon"></lucide-icon>
         <span>用戶管理</span>
+        <span class="nav-tooltip">用戶管理</span>
       </button>
     </li>
 
@@ -30,19 +34,29 @@
 
     <!-- 公告通知 -->
     <li class="nav-item">
-      <button class="nav-link" (click)="goToAnnouncement()"
-       routerLinkActive="active" routerLink="/announcement">
+      <button
+        class="nav-link"
+        (click)="goToAnnouncement()"
+        routerLinkActive="active"
+        routerLink="/announcement"
+      >
         <lucide-icon [name]="BellIcon"></lucide-icon>
         <span>公告通知</span>
+        <span class="nav-tooltip">公告通知</span>
       </button>
     </li>
 
     <!-- 爭議處理 -->
     <li class="nav-item">
-      <button class="nav-link" (click)="goToReport()"
-       routerLinkActive="active" routerLink="/report">
+      <button
+        class="nav-link"
+        (click)="goToReport()"
+        routerLinkActive="active"
+        routerLink="/report"
+      >
         <lucide-icon [name]="LibraIcon"></lucide-icon>
         <span>爭議處理</span>
+        <span class="nav-tooltip">爭議處理</span>
       </button>
     </li>
 
@@ -50,7 +64,8 @@
     <li class="nav-item">
       <button class="nav-link" (click)="logout()">
         <lucide-icon [name]="LogoutIcon"></lucide-icon>
-        <span>登出</span>
+        <span class="logout-text">登出</span>
+        <!-- <span class="nav-tooltip">登出</span> -->
       </button>
     </li>
   </ul>

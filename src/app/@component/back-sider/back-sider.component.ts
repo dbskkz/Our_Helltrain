@@ -28,7 +28,7 @@ export class BackSiderComponent {
   readonly LogoutIcon = LogOut;
 
   goToHome() {
-    this.router.navigate(['/back_index']);
+    this.router.navigate(['/home']);
   }
 
   goToUser() {
