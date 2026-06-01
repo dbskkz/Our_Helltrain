@@ -31,7 +31,14 @@
 
     <div class="field">
       <div class="section-label">額外可面交地區 <span class="optional">（選填）</span></div>
-      <input type="text" placeholder="例：高雄、台北(除了上述商品所在地點)" [value]="state.location" (input)="onLocationInput($event)"/>
+        <div class="checkbox-group location-checkbox-group">
+          <label class="checkbox-label" *ngFor="let region of regionOptions">
+          <input type="checkbox"
+           [checked]="state.locationRegions.includes(region)"
+           (change)="onLocationRegionChange($event, region)" />
+          <span>{{ region }}</span>
+          </label>
+        </div>
     </div>
 
     <div class="field">
@@ -48,15 +55,28 @@
 
     <div class="field">
       <div class="section-label">分類 <span class="req">*</span></div>
-      <select (change)="onCatMainChange($event)" [class.selected]="state.catMain !== ''"
-        [class.error]="touched.catMain && state.catMain === ''">
-        <option value="" disabled selected>請選擇分類</option>
-        <option *ngFor="let cat of catOptions" [value]="cat">{{ cat }}</option>
-      </select>
-      <!-- <select (change)="onCatSubChange($event)" [value]="state.catSub" [class.selected]="state.catSub !== ''" style="margin-top:8px;">
-        <option value="" disabled selected>請選擇</option>
-        <option *ngFor="let sub of subCats" [value]="sub">{{ sub }}</option>
-      </select> -->
+      <div class="radio-group" [class.error]="touched.catMain && state.catMain === ''">
+        <label class="radio-label" *ngFor="let cat of catOptions">
+        <input type="radio" name="catMain"
+             [value]="cat"
+             [checked]="state.catMain === cat"
+             (change)="onCatMainChange($event, cat)" />
+        <span>{{ cat }}</span>
+        </label>
+
+    <!-- 新增類別：radio + 文字輸入框 -->
+        <label class="radio-label">
+        <input type="radio" name="catMain" value="__custom__"
+         [checked]="state.catMain === '__custom__' || isCustomCat()"
+         (change)="onAddCatRadioSelect()" />
+        <span>新增類別</span>
+        <input *ngIf="state.catMain === '__custom__' || isCustomCat()"
+          class="cat-custom-input" type="text" placeholder="輸入類別"
+         [(ngModel)]="customCatInput"
+         (ngModelChange)="onCustomCatInput()"
+         (click)="$event.stopPropagation()" />
+        </label>
+      </div>
     </div>
 
     <div class="field">

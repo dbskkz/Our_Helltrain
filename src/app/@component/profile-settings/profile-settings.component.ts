@@ -33,6 +33,7 @@ import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import { ValidatorFn } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { UserService } from '../../@Services/user.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -119,6 +120,7 @@ export class ProfileSettingsComponent {
     private snackBar: MatSnackBar,
     private router: Router,
     private schoolService: SchoolDataService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -222,6 +224,7 @@ export class ProfileSettingsComponent {
 
     // 從記憶箱子倒回去
     this.avatarUrl = this.backupData.avatarUrl;
+    this.userService.updateAvatar(this.backupData.avatarUrl);
     this.selectedAvatarFile = null;
     this.tempName = this.name;
     this.schoolControl.setValue(this.backupData.school, { emitEvent: false });
@@ -477,7 +480,7 @@ onAreaSelected() {
     });
   }
 
-  // --- 頭像與密碼等其餘方法保持原本邏輯 ---
+  //更換照片
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -494,11 +497,15 @@ onAreaSelected() {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.avatarUrl = reader.result;
+        if (reader.result) {
+        this.userService.updateAvatar(reader.result as string);
+      }
       };
       reader.readAsDataURL(file);
     }
   }
 
+  //恢復預設頭像
   resetToDefaultAvatar() {
     Swal.fire({
       title: '確定要恢復預設頭像嗎？',
@@ -513,11 +520,12 @@ onAreaSelected() {
       if (result.isConfirmed) {
         this.avatarUrl = '/img/頭像範例.png';
         this.selectedAvatarFile = 'RESET_DEFAULT' as any;
+        this.userService.updateAvatar('/img/頭像範例.png');
       }
     });
   }
 
-
+//密碼確認修改按鈕
   toggleEditPassword() {
     this.isEditingPassword = !this.isEditingPassword;
     if (this.isEditingPassword) {

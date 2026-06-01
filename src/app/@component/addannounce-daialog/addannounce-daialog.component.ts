@@ -25,6 +25,7 @@ export class AddannounceDaialogComponent {
   readonly uploadIcon = CloudUpload;
   readonly chevronIcon = ChevronDown;
 
+  submitted = false;
   // 接收傳進來的資料，沒有傳就是 null（新增模式）
   private data = inject(MAT_DIALOG_DATA);
 
@@ -42,7 +43,7 @@ export class AddannounceDaialogComponent {
     removalDate: '',
     content: '',
     imgFile: null as File | null, //as...類型可能是A或B(A | B)
-    isPublished: null as boolean | null,
+    isPublished: false as boolean, // 原本是 null as boolean | null
     publishMode: null as string | null,
   };
 
@@ -58,54 +59,77 @@ export class AddannounceDaialogComponent {
 
   ngOnInit() {
     if (this.data) {
-      // 有資料就是編輯模式，把資料填入表單
       this.form.title = this.data.title;
       this.form.shelfDate = this.data.startDate;
       this.form.removalDate = this.data.endDate;
       this.form.content = this.data.content;
-      this.form.publishMode = this.data.isPublished ? 'publish' : 'draft';
+      this.form.isPublished = this.data.isPublished; // 直接帶入 boolean
       this.existingImgUrl = this.data.imgPath;
-      console.log('existingImgUrl:', this.existingImgUrl);
     }
   }
 
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.[0]) {
-      const file = input.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        alert('檔案大小不能超過 5MB');
-        return;
-      }
-      this.form.imgFile = file;
-      this.previewUrl = URL.createObjectURL(file); // 新圖片的預覽
-    }
-  }
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.[0]) return;
+
+  this.compressImage(input.files[0], 800, 0.7).then(base64 => {
+    this.previewUrl = base64;
+    this.existingImgUrl = base64;
+    this.form.imgFile = input.files![0];
+  });
+}
+
+onDrop(event: DragEvent) {
+  event.preventDefault();
+  const file = event.dataTransfer?.files?.[0];
+  if (!file) return;
+
+  this.compressImage(file, 800, 0.7).then(base64 => {
+    this.previewUrl = base64;
+    this.existingImgUrl = base64;
+    this.form.imgFile = file;
+  });
+}
+
+private compressImage(file: File, maxWidth: number, quality: number): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+        canvas.width  = img.width  * scale;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
   removeImage(event: Event) {
-    event.stopPropagation();
-    this.form.imgFile = null;
-    this.previewUrl = null;
-    this.existingImgUrl = null; // 舊圖片也一起清掉
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    const file = event.dataTransfer?.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert('檔案大小不能超過 2MB');
-        return;
-      }
-      this.selectedFile = file;
-      this.form.imgFile = file;
-      this.previewUrl = URL.createObjectURL(file);
-    }
-  }
+  event.stopPropagation();
+  this.form.imgFile = null;
+  this.previewUrl = null;
+  this.existingImgUrl = null;
+}
 
   submit() {
+    this.submitted = true;
+
+  // 依序檢查，找到第一個錯誤就跳過去
+  const firstError = this.getFirstError();
+  if (firstError) {
+    document.getElementById(firstError)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
     //isPublished 布林值，取值依據是比對表單中的publishMode是否為publish
-    const isPublished = this.form.publishMode === 'publish';
+    const isPublished = this.form.isPublished === true;
     //isPublished為true開啟確認用dialog
     if (isPublished) {
       const confirmRef = this.diao.open(AnnounDialogComponent);
@@ -129,8 +153,18 @@ export class AddannounceDaialogComponent {
       });
     }
   }
+  getFirstError() {
+  if (!this.form.title)                                          return 'field-title';
+  if (!this.form.shelfDate)                                      return 'field-shelfDate';
+  if (!this.form.removalDate || this.form.removalDate < this.today) return 'field-removalDate';
+  if (!this.displayImgUrl)                                       return 'field-img';
+  return null;  }
 
   cancel() {
     this.dialogRef.close(null);
   }
+
+  get isExpired(): boolean {
+  return !!this.data && this.data.endDate < this.today;
+}
 }
