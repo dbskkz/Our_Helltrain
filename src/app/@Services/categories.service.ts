@@ -31,4 +31,12 @@ export class CategoriesService {
     { icon: GraduationCap, label: '畢業季', value: 'graduation' },
   ];
 
+  conditions = [
+    { label: '全新', value: 'brandNew' },
+    { label: '近全新', value: 'likeNew' },
+    { label: '輕度使用', value: 'lightlyUsed' },
+    { label: '中度使用', value: 'moderatelyUsed' },
+    { label: '重度使用', value: 'heavilyUsed' }
+  ];
+
 }

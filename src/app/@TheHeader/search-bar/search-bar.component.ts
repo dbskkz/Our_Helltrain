@@ -1,10 +1,10 @@
-import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common'; // 為了 @if, @for
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// 素材庫
 import { LucideAngularModule, Search, Shapes, MapPin, Filter, Upload } from 'lucide-angular';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
+import { CategoriesService } from '../../@Services/categories.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,85 +15,73 @@ import { Router } from '@angular/router';
 })
 export class SearchBarComponent {
 
-  constructor (
-    private aca: EighteenAcademyService,
-    private router: Router ) {}
-
-  ngOnInit() {
-    this.filterForm.academic = this.aca.academy;
-  }
-
-  // Declare icon
   readonly FilterIcon = Filter;
   readonly UploadIcon = Upload;
   readonly SearchIcon = Search;
   readonly ShapesIcon = Shapes;
   readonly MapPinIcon = MapPin;
 
-
   isFilterOpen = false;
+  keyword = '';
 
-
-
-// 篩選條件資料模型
   filterForm = {
     minPrice: null,
     maxPrice: null,
-    categories: [
-      { label: "書籍", value: 'books' , selected:false},
-      { label: "專業器材", value: 'dept' , selected:false},
-      { label: "生活用品", value: 'life' , selected:false},
-      { label: "3C電子", value: 'tech' , selected:false},
-      { label: "家具家電", value: 'furniture' , selected:false},
-      { label: "其他", value: 'others' , selected:false}
-    ],
+    categories: [] as { label: string; value: string; selected: boolean }[],
+    conditions: [] as { label: string; value: string; selected: boolean }[],
     degree: [
       {
-        label: "學士",
-        value: "bachelor",
-        selected: false,
-
+        label: '學士', value: 'bachelor', selected: false,
         children: [
-          { label: "大一", value: "freshman", selected: false },
-          { label: "大二", value: "sophomore", selected: false },
-          { label: "大三", value: "junior", selected: false },
-          { label: "大四以上", value: "senior_plus", selected: false }
+          { label: '大一',     value: 'freshman',    selected: false },
+          { label: '大二',     value: 'sophomore',   selected: false },
+          { label: '大三',     value: 'junior',      selected: false },
+          { label: '大四以上', value: 'senior_plus', selected: false }
         ]
       },
-
-      {
-        label: "碩士",
-        value: "master",
-        selected: false
-      },
-
-      {
-        label: "博士",
-        value: "phd",
-        selected: false
-      }
+      { label: '碩士', value: 'master', selected: false, children: undefined },
+      { label: '博士', value: 'phd',    selected: false, children: undefined }
     ],
-
-    academic: [] as any
-
-
-
+    academic: [] as { id: number; name: string; value: string; selected: boolean }[]
   };
 
-  // 切換視窗
+  constructor(
+    private aca: EighteenAcademyService,
+    private category: CategoriesService,
+    private router: Router
+  ) {
+    this.filterForm.categories = this.category.categories.map(c => ({
+      label: c.label,
+      value: c.value,
+      selected: false
+    }));
+
+    this.filterForm.conditions = this.category.conditions.map(c => ({
+      label: c.label,
+      value: c.value,
+      selected: false
+    }));
+
+    this.filterForm.academic = this.aca.academy.map(a => ({ ...a, selected: false }));
+  }
+
   toggleFilter() {
     this.isFilterOpen = !this.isFilterOpen;
   }
 
-
-  // 重設篩選
   resetFilters() {
     this.filterForm.minPrice = null;
     this.filterForm.maxPrice = null;
     this.filterForm.categories.forEach(c => c.selected = false);
+    this.filterForm.conditions.forEach(c => c.selected = false);
+    this.filterForm.academic.forEach(a => a.selected = false);
+    this.filterForm.degree.forEach(d => {
+      d.selected = false;
+      d.children?.forEach(c => c.selected = false);
+    });
+    this.isFilterOpen = false;
   }
 
-  // 套用並送出
   applyFilters() {
     const selectedCategories = this.filterForm.categories
       .filter(c => c.selected)
@@ -107,10 +95,7 @@ export class SearchBarComponent {
     this.isFilterOpen = false;
   }
 
-  // 路由設定
-  keyword = '';
-
-  onSearch(){
-    this.router.navigate(['/product-list/all'], { queryParams: {keyword:this.keyword} })
+  onSearch() {
+    this.router.navigate(['/product-list/all'], { queryParams: { keyword: this.keyword } });
   }
 }
