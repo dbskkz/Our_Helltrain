@@ -12,6 +12,7 @@ import {
 import Swal from 'sweetalert2';
 import { PaginationService } from '../../@Services/pageination.service';
 import { Router } from '@angular/router';
+import { ReportService } from '../../@Services/report.service';
 
 @Component({
   selector: 'app-order-information',
@@ -23,7 +24,8 @@ export class OrderInformationComponent {
   constructor(
     public pagination: PaginationService,
     private router: Router,
-  ) {}
+    private reportService: ReportService
+  ) { }
 
   // Declare icon
   readonly CircleCheckBig = CircleCheckBig;
@@ -103,7 +105,7 @@ export class OrderInformationComponent {
     this.pagination.goToPage(1); // 回第一頁
   }
 
-  chat() {}
+  chat() { }
 
   // 分頁
   prevPage() {
@@ -213,7 +215,8 @@ export class OrderInformationComponent {
 
   // 檢舉
   goRepot() {
-    this.router.navigate(['/front_report']);
+    // 檢舉用戶
+    this.reportService.openReportDialog('user', '用戶名稱', '用戶ID');
   }
 
   // 假資料

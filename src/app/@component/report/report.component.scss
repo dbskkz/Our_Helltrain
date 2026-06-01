@@ -1,10 +1,10 @@
-@use '../../styles/variables' as *;
-@use '../../styles/backstage' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/backstage" as *;
 
+// ===== 頁面 =====
 .page-wrapper {
-  // max-width: 960px;
   margin: 0 auto;
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: "Noto Sans TC", sans-serif;
   background: $background-white;
   min-height: 100vh;
   padding: 40px 24px;
@@ -19,7 +19,41 @@
   letter-spacing: 0.02em;
 }
 
-/* Search bar */
+// ===== Tab =====
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid $border-radius-color;
+}
+
+.tab {
+  padding: 10px 24px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  font-family: inherit;
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $text-gray;
+  cursor: pointer;
+  border-radius: 0;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    color: $text-black;
+  }
+  &.active {
+    color: $text-black;
+    font-weight: 700;
+    border-bottom-color: $primary-yellow;
+  }
+}
+
+// ===== 搜尋列 =====
 .search-bar {
   display: flex;
   gap: 10px;
@@ -38,11 +72,16 @@
   color: #1a1814;
   outline: none;
   transition: border-color 0.2s;
-}
-.search-input::placeholder { color: #9e9a94; }
-.search-input:focus { border-color: #a8997a; }
 
-/* Buttons */
+  &::placeholder {
+    color: #9e9a94;
+  }
+  &:focus {
+    border-color: #a8997a;
+  }
+}
+
+// ===== 按鈕基底 =====
 .btn {
   padding: 10px 18px;
   border-radius: $border-radius-sm;
@@ -53,25 +92,44 @@
   border: 1.5px solid transparent;
   line-height: 1.4;
   white-space: nowrap;
-  transition: opacity 0.15s, transform 0.1s;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+
+  &:hover {
+    opacity: 0.84;
+    transform: translateY(-1px);
+  }
+  &:active {
+    transform: translateY(0);
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+    transform: none;
+  }
 }
-.btn:hover  { opacity: 0.84; transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-.btn:disabled { opacity: 0.4; cursor: default; transform: none; }
 
-.btn-search { background: #b47136; color: #fff; border-color: $primary-yellow; }
+.btn-search {
+  background: #b67741;
+  color: #fff;
+  border-color: $primary-yellow;
+}
 
-/* Table card */
+// ===== 表格卡片 =====
 .table-card {
   background: $background-table-care;
   border: 1px solid $border-radius-color;
   border-radius: $border-radius-lg;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
   margin-bottom: 20px;
+
+  & > * {
+    min-width: 680px;
+  }
 }
 
-/* Section title */
 .section-title {
   font-size: $font-size-base;
   font-weight: 700;
@@ -82,26 +140,38 @@
   padding: 18px 24px 14px;
   border-bottom: 1.5px solid $border-radius-color;
   background-color: $background-yellow-hover;
-  margin: 0px;
+  margin: 0;
 }
 
 .section-icon {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    width: 16px;
-    color: $text-gray;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  color: $text-gray;
 }
 
-/* Table header */
-.table-header {
+// ===== 表格欄位定義 =====
+// 待處理（7欄，最後欄放操作按鈕）
+.table-header,
+.dispute-row {
   display: grid;
   grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2.5fr;
   padding: 10px 24px;
-  background: $background-yellow;
-  border-bottom: 1.5px solid $background-yellow;
   gap: 8px;
   align-items: center;
+  // min-width: 680px;
+}
+
+// 已處理（最後欄縮小，只放查看事由）
+.table-header.no-action,
+.dispute-row.no-action {
+  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 1.2fr;
+}
+
+.table-header {
+  background: $background-yellow;
+  border-bottom: 1.5px solid $background-yellow;
 }
 
 .col-label {
@@ -111,18 +181,18 @@
   letter-spacing: 0.03em;
 }
 
-/* Dispute rows */
+// ===== 資料列 =====
 .dispute-row {
-  display: grid;
-  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2.5fr;
-  padding: 16px 24px;
   border-bottom: 1px solid $border-radius-color;
-  align-items: center;
-  gap: 8px;
   transition: background 0.15s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: $background-yellow;
+  }
 }
-.dispute-row:last-child { border-bottom: none; }
-.dispute-row:hover { background: $background-yellow; }
 
 .case-id {
   font-size: $font-size-base;
@@ -136,49 +206,68 @@
   gap: 2px;
 }
 
-.product-name { font-size: $font-size-base; font-weight: 500; color: $text-black; }
-.product-id   { font-size: 12px; color: $text-gray; }
-
-.party-text  { font-size: $font-size-base; color: $text-black }
-.time-text   { font-size: $font-size-base; color: $text-black; }
-.status-text { font-size: $font-size-base; color: $text-gray; font-weight: 500; }
-
-/* Action cell */
-.action-cell {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
+.product-name {
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $text-black;
+}
+.product-id {
+  font-size: 12px;
+  color: $text-gray;
+}
+.party-text {
+  font-size: $font-size-base;
+  color: $text-black;
+}
+.time-text {
+  font-size: $font-size-base;
+  color: $text-black;
+}
+.status-text {
+  font-size: $font-size-base;
+  color: $text-gray;
+  font-weight: 500;
 }
 
-.btn-reason  {
-  padding: 5px 10px;
-  font-size: $font-size-base;
-  border-radius: 6px;
+// ===== 操作按鈕區 =====
+.action-cell {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: stretch;
+
+  .btn {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 12px 6px;
+    height: 80px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.btn-reason {
   background: #f5ecd7;
   color: #5c4a1e;
   border-color: #d9c99a;
-}
-
-.btn-reject  {
-  padding: 5px 10px;
-  font-size: $font-size-base;
   border-radius: 6px;
+}
+.btn-reject {
   background: #fce9e8;
   color: #b5322a;
   border-color: #e0b0b0;
-}
-
-.btn-approve {
-  padding: 5px 10px;
-  font-size: $font-size-base;
   border-radius: 6px;
+}
+.btn-approve {
   background: #e6f4ec;
   color: #2d7a4f;
   border-color: #a8d5b8;
+  border-radius: 6px;
 }
 
-/* Empty row */
+// ===== 空狀態 =====
 .empty-row {
   padding: 28px 24px;
   display: flex;
@@ -190,7 +279,7 @@
   color: $text-gray;
 }
 
-/* Table footer */
+// ===== 表格底部 =====
 .table-footer {
   padding: 12px 24px;
   font-size: 14px;
@@ -199,7 +288,7 @@
   background: $background-white;
 }
 
-/* Pagination */
+// ===== 分頁 =====
 .pagination {
   display: flex;
   justify-content: center;
@@ -222,10 +311,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 
-  &:hover:not(:disabled) { background: $background-yellow; }
-  &:disabled { color: #c9c6c0; cursor: default; }
+  &:hover:not(:disabled) {
+    background: $background-yellow;
+  }
+  &:disabled {
+    color: #c9c6c0;
+    cursor: default;
+  }
   &.active {
     background: $background-yellow-hover;
     color: $text-gray;
@@ -233,16 +329,33 @@
   }
 }
 
+// ===== 手機版 =====
 @media (max-width: 768px) {
-  .table-header { display: none; }
+  .table-header {
+    display: none;
+  }
   .dispute-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     padding: 14px 16px;
     gap: 10px;
     border-radius: $border-radius-sm;
     margin: 8px;
     border: 1px solid $border-radius-color;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    min-width: unset;
   }
-  .action-cell { grid-column: 1 / -1; }
+
+  .action-cell {
+    grid-column: unset;
+    .btn {
+      writing-mode: horizontal-tb; // 改回橫向
+      text-orientation: mixed;
+      padding: 6px 10px;
+      height: auto; // 拿掉固定高度
+      width: auto; // 拿掉固定寬度
+    }
+  }
+  .table-card {
+    overflow-x: hidden;
+  }
 }

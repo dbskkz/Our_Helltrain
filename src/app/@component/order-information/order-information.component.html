@@ -15,7 +15,8 @@
   <!-- role 切換 -->
   <div class="role-toggle">
     @for (role of roleColumns; track role) {
-    <button class="role-btn" [class.active]="currentRole === role" (click)="changeRole(role)">
+    <button class="role-btn" [class.active]="currentRole === role" [class.btn-buyer]="role === '我購買的'"
+      [class.btn-seller]="role === '我販售的'" (click)="changeRole(role)">
       {{ role }}
     </button>
     }

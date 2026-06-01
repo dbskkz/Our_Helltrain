@@ -1,91 +1,92 @@
 @use '../../styles/variables' as *;
 @use '../../styles/backstage' as *;
-// 沿用 addannounce-daialog 的色系與規格
+:host {
+  display: block;
+}
 
-.dialog-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 24px 16px !important;
+h2[mat-dialog-title] {
+  margin: 0;
+  padding: 24px 24px 16px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1814;
   border-bottom: 1px solid #e2ded5;
 }
 
+mat-dialog-content {
+  min-width: 520px;
+  max-width: 600px;
+  padding: 24px !important;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.user-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
 .dialog-avatar {
-  width: 56px;
-  height: 56px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
   border: 2px solid #e2ded5;
 }
 
-.dialog-header-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.dialog-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1814;
-}
-
-.dialog-email {
-  font-size: 13px;
-  color: #9e9a94;
-}
-
-mat-dialog-content {
-  padding: 16px 24px !important;
-  margin: 0;
-}
-
-.info-row {
+.form-row {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0ede8;
-  font-size: 14px;
-
-  &:last-child { border-bottom: none; }
+  gap: 10px;
 }
 
-.label {
-  width: 72px;
+.form-label {
+  width: 150px;
+  flex-shrink: 0;
+  font-size: $font-size-base;
   font-weight: 600;
   color: #1a1814;
-  flex-shrink: 0;
 }
 
-span:not(.label) {
-  color: #6b6760;
-  line-height: 1.5;
+.form-row span:last-child {
+  flex: 1;
+  font-size: $font-size-base;
+  line-height: 1.6;
+  color: #444;
+  word-break: break-word;
 }
 
 mat-dialog-actions {
   display: flex;
-  gap: 12px;
-  padding: 16px 24px !important;
-  margin: 0;
   justify-content: center;
+  padding: 16px 24px 24px !important;
   border-top: 1px solid #e2ded5;
+}
 
-  button {
-    flex: 1;
-    padding: 12px 0;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1.5px solid #e2ded5;
-    background: #ffffff;
-    color: #1a1814;
-    transition: opacity 0.15s;
-    line-height: 1;
+.btn {
+  min-width: 120px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid #e2ded5;
+  background: #ffffff;
+  color: #1a1814;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 
-    &:hover { opacity: 0.85; }
+  &:hover {
+    opacity: 0.85;
   }
+}
+
+.btn-cancel {
+  background: #ffffff;
+  color: #1a1814;
+  border-color: #e2ded5;
 }

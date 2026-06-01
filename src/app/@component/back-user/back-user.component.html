@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="filter-group">
+    <!-- <div class="filter-group">
       <span class="filter-group-label">學生驗證</span>
       <div class="filter-chips">
         @for (s of verifyStatuses; track s) {
@@ -26,14 +26,13 @@
           >{{ s }}</button>
         }
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div class="table-card">
     <div class="table-header">
       <span class="col-label">用戶</span>
       <span class="col-label">帳號狀態</span>
-      <span class="col-label">學生驗證</span>
       <span class="col-label">地區</span>
       <span class="col-label">操作</span>
     </div>
@@ -60,17 +59,12 @@
           </div>
           <div class="region-text">{{ user.location }}</div>
           <div class="action-cell">
-            <!-- @if (user.status === "審查中") {
-              <button class="btn btn-approve">驗證通過</button>
-              <button class="btn btn-danger">駁回</button>
-            } @else {-->
-              <button class="btn btn-view" (click)="viewUser(user)">查看</button>
-              @if (user.status === "停權") {
-                <button class="btn btn-neutral">解除停權</button>
+            @if (user.status === "停權") {
+                <button class="btn btn-view" (click)="viewUser(user)">查看</button>
+                <button class="btn btn-neutral" (click)="unbanned(user)">解除停權</button>
               } @else {
-                <button class="btn btn-danger">停權</button>
+                <!-- <button class="btn btn-danger">停權</button> -->
               }
-            <!-- } -->
           </div>
         </div>
       }

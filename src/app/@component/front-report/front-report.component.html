@@ -1,5 +1,14 @@
-<main class="container py-5">
-  <h3 class="page-title">檢舉</h3>
+<main [class.container]="!isDialogMode" [class.py-5]="!isDialogMode">
+
+  <div class="dialog-header">
+    <h3 class="page-title">檢舉</h3>
+    <!-- Dialog 模式才顯示右上角關閉按鈕 -->
+    @if (isDialogMode) {
+    <button type="button" class="btn-close-dialog" (click)="cancel()">
+      <lucide-icon [name]="X"></lucide-icon>
+    </button>
+    }
+  </div>
 
   <!-- tabs -->
   <nav>
@@ -12,39 +21,101 @@
     </ul>
   </nav>
 
-  <section class="report-body">
-    <!-- 檢舉對象 -->
+  <form class="report-body" [class.in-dialog]="isDialogMode" [formGroup]="reportForm" (ngSubmit)="confirmSend()">
+
+    <!-- 檢舉對象（Dialog 模式自動帶入，唯讀） -->
     <div class="report-target">
       <label>檢舉對象名稱：</label>
-      <input type="text" placeholder="檢舉對象名稱" class="report-input">
+      <input type="text" formControlName="accusedName" placeholder="檢舉對象名稱" class="report-input"
+        [readonly]="isDialogMode">
+      @if (reportForm.get('accusedName')?.invalid && reportForm.get('accusedName')?.touched) {
+      <small class="error-msg">請填寫檢舉對象名稱！</small>
+      }
+
       <label>檢舉對象ID：</label>
-      <input type="text" placeholder="檢舉對象ID" class="report-input">
+      <input type="text" formControlName="accusedId" placeholder="檢舉對象ID" class="report-input"
+        [readonly]="isDialogMode">
+      @if (reportForm.get('accusedId')?.invalid && reportForm.get('accusedId')?.touched) {
+      <small class="error-msg">請填寫檢舉對象ID！</small>
+      }
     </div>
 
     <!-- 檢舉原因 -->
     <div class="filter-section">
-      <p class="section-label">檢舉原因</p>
-      <select class="form-select" aria-label=" select example">
-        <option value="1">面交未依約定時間到指定地點</option>
-        <option value="2">惡意刷評價（假好評／惡意差評）</option>
-        <option value="3">詐騙（釣魚連結、假客服）</option>
-        <option value="4">騷擾／威脅其他用戶</option>
-        <option value="5">盜用他人帳號</option>
-        <option value="6">其他</option>
+      <p class="section-label">檢舉原因：</p>
+      <select formControlName="violationType" class="form-select">
+        <option value="" disabled>-- 請選擇 --</option>
+        @for (reportType of reportColumns; track reportType) {
+        <option [value]="reportType">{{ reportType }}</option>
+        }
       </select>
+      @if (reportForm.get('violationType')?.invalid && reportForm.get('violationType')?.touched) {
+      <small class="error-msg">請選擇檢舉原因！</small>
+      }
     </div>
 
     <!-- 問題描述 -->
     <div class="report-description">
       <label>問題描述：</label>
-      <textarea placeholder="問題描述" class="report-input"></textarea>
+      <textarea formControlName="description" placeholder="問題描述（至少10個字，選其他則需20字）" class="report-input"></textarea>
+      @if (reportForm.get('description')?.invalid && reportForm.get('description')?.touched) {
+      @if (reportForm.get('description')?.errors?.['required']) {
+      <small class="error-msg">請填寫問題描述！</small>
+      }
+      @if (reportForm.get('description')?.errors?.['minlength']) {
+      <small class="error-msg">
+        描述至少需要
+        {{ reportForm.get('description')?.errors?.['minlength'].requiredLength }} 個字！
+      </small>
+      }
+      }
     </div>
 
+    <!-- 圖片上傳（最多三張） -->
+    <div class="filter-section">
+      <p class="section-label">
+        請上傳圖片（至少一張，最多三張）：
+        <span class="img-count">{{ imagePreviews.length }} / {{ MAX_IMAGES }}</span>
+      </p>
+
+      <input type="file" #fileInput accept="image/*" style="display: none" (change)="onFileSelected($event)" />
+
+      <!-- 已上傳的預覽 -->
+      <div class="preview-list">
+        @for (preview of imagePreviews; track $index) {
+        <div class="preview-item">
+          <img [src]="preview" alt="圖片預覽" class="preview-img" />
+          <button type="button" class="btn-action report" (click)="removeImage($index)">
+            <lucide-icon [name]="Trash2"></lucide-icon>
+          </button>
+        </div>
+        }
+
+        <!-- 還沒到上限才顯示上傳按鈕 -->
+        @if (imagePreviews.length < MAX_IMAGES) { <div class="upload-area" (click)="fileInput.click()">
+          <lucide-icon [name]="UploadIcon"></lucide-icon>
+          <p>點擊上傳</p>
+      </div>
+      }
+    </div>
+
+    @if (errorMessage) {
+    <small class="error-msg">{{ errorMessage }}</small>
+    }
+    </div>
+
+    <!-- 按鈕 -->
     <div class="btn-group">
-      <button class="btn-action outline">取消</button>
-      <button class="btn-action primary">送出</button>
+      <button type="button" class="btn-action outline" (click)="cancel()">
+        <lucide-icon [name]="X"></lucide-icon>取消
+      </button>
+      <button type="submit" class="btn-action primary">
+        <lucide-icon [name]="SendHorizontal"></lucide-icon>送出
+      </button>
     </div>
 
-  </section>
+  </form>
+
+
 
 </main>
