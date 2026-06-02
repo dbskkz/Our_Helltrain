@@ -1,8 +1,8 @@
-<main class="container py-5">
+<main class="container ">
   <h3 class="page-title">訂單資料 / 交易清單</h3>
 
   <!-- tabs -->
-  <nav>
+  <nav class="tabs-container">
     <ul class="nav nav-tabs custom-tabs">
       @for (tab of tabsColumns; track tab){
       <li class="nav-item">
@@ -15,7 +15,8 @@
   <!-- role 切換 -->
   <div class="role-toggle">
     @for (role of roleColumns; track role) {
-    <button class="role-btn" [class.active]="currentRole === role" (click)="changeRole(role)">
+    <button class="role-btn" [class.active]="currentRole === role" [class.btn-buyer]="role === '我購買的'"
+      [class.btn-seller]="role === '我販售的'" (click)="changeRole(role)">
       {{ role }}
     </button>
     }
@@ -23,7 +24,8 @@
 
   <!-- 資料頁 -->
   @for (order of filteredOrders(); track order.orderId) {
-  <section class="order-card">
+  <section class="order-card" [class.card-buyer]="order.counterpart.label === '賣家'"
+    [class.card-seller]="order.counterpart.label === '買家'">
     <header class="order-header">
       <div class="order-info">
         <span class="order-no">訂單編號：{{ order.orderId }}</span>

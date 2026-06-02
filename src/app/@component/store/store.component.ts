@@ -15,6 +15,7 @@ import {
   Trash2,
   Flag,
 } from 'lucide-angular';
+import { ReportService } from '../../@Services/report.service';
 
 @Component({
   selector: 'app-store',
@@ -23,7 +24,7 @@ import {
   styleUrl: './store.component.scss',
 })
 export class StoreComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private reportService: ReportService) { }
 
   // Declare icon
   readonly User = User;
@@ -57,10 +58,11 @@ export class StoreComponent {
 
   // 檢舉
   goRepot() {
-    this.router.navigate(['/front_report']);
+    // 檢舉用戶
+    this.reportService.openReportDialog('user', '用戶名稱', '用戶ID');
   }
 
-  fetchProduct() {}
+  fetchProduct() { }
 
   // totalPages產生陣列
   get pages(): number[] {

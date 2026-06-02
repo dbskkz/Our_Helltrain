@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -11,31 +11,29 @@ export class UserService {
   private apiUrl = 'http://localhost:8080/user';
   isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  login(email: string, password: string) {
-    const params = new HttpParams()
-      .set('email', email)
-      .set('password', password);
+  // login(email: string, password: string) {
+  //   const params = new HttpParams()
+  //     .set('email', email)
+  //     .set('password', password);
 
-    return this.http.get<{ // TODO: 待與後端確認後改為 POST，帳密不應出現在 URL
-      statusCode: number;
-      message: string;
-      role: string;
-      data: any }>
-      (
-        `${this.apiUrl}/login`,
-        { params, withCredentials: true }
-      ).pipe(
-        tap(res =>
-        {
-          if (res.statusCode === 200)
-          {
-            this.isLoggedIn.set(true);
-            sessionStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
-          }
-        })
-      );
+  //   return this.http.get<{ statusCode: number; message: string; role: string; data: any }>(
+  //     `${this.apiUrl}/login`,
+  //     { params, withCredentials: true }
+  //   ).pipe(
+  //     tap(res => {
+  //       if (res.statusCode === 200) {
+  //         this.isLoggedIn.set(true);
+  //         localStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
+  //       }
+  //     })
+  //   );
+  // }
+
+  // 登入by.絲絨
+  login(email: string, password: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/login?email=${email}&password=${password}`);
   }
 
   logout() {
@@ -50,11 +48,11 @@ export class UserService {
     });
   }
 
-/** 頭像同步變更廣播
- * 使用方法
- * TS 注入: constructor(public userService: UserService) {}
- * HTML 綁定: <img [src]="userService.avatarUrl()" alt="使用者大頭貼">
- */
+  /** 頭像同步變更廣播
+   * 使用方法
+   * TS 注入: constructor(public userService: UserService) {}
+   * HTML 綁定: <img [src]="userService.avatarUrl()" alt="使用者大頭貼">
+   */
   updateAvatar(newUrl: string) {
     this.avatarUrl.set(newUrl);
   }

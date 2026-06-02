@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
 
-// const MAX_TAGS = 5;
 
 
 @Component({
@@ -53,6 +52,7 @@ aiLabel = '一鍵評估推薦價格';
 private aiPendingPrice = 0;
 private readonly API_MODEL = 'claude-sonnet-4-20250514';
 
+dialogVisible = false;
 
   // Toast 提示框
   toastText = '';
@@ -313,6 +313,11 @@ private applyPrice(price: number): void {
   this.aiLabel = '一鍵評估推薦價格';
 }
 
+//dialog 填入的圖片清單
+get filledImages(): string[] {
+  return this.imageSlotUrls.filter(url => url !== '');
+}
+
   // ── Toast 訊息提示 ──
   showToast(msg: string): void {
     this.toastText = msg;
@@ -331,24 +336,37 @@ private applyPrice(price: number): void {
 
   onNextClick(): void {
     if (this.isNextDisabled) {
-      const missing: string[] = [];
-      if (!this.imageSlotUrls[0]) missing.push('商品主圖');
-      if (!this.state.name) missing.push('商品名稱');
-      if ((this.state.desc?.length || 0) < 1) missing.push('描述滿 1 字');
-      this.showToast(`請檢查：${missing.join('、')}`);
-      return;
-    }
-
-    // 模擬打 API 送出表單資料 (this.state) ...
-    this.showToast('✓ 商品上架成功！');
-
-    // 成功上架後，清空 Service 中的暫存資料
-    this.formService.resetState();
-
-    // 1.5 秒後跳轉至個人賣場
-    setTimeout(() => {
-      this.router.navigate(['/my-shop']);
-    }, 1200);
+    const missing: string[] = [];
+    if (!this.imageSlotUrls[0]) missing.push('商品主圖');
+    if (!this.state.name) missing.push('商品名稱');
+    if ((this.state.desc?.length || 0) < 1) missing.push('描述滿 1 字');
+    if (!(this.state.price > 0)) missing.push('售價');
+    this.showToast(`請檢查：${missing.join('、')}`);
+    return;
+  }
+  // 所有欄位都填好了，打開預覽 dialog
+  this.dialogVisible = true;
   }
 
+  // 返回：關閉 dialog，留在原頁
+onDialogCancel(): void {
+  this.dialogVisible = false;
+}
+
+// 點擊背景也能關閉
+onBackdropClick(event: MouseEvent): void {
+  if ((event.target as HTMLElement).classList.contains('dialog-backdrop')) {
+    this.dialogVisible = false;
+  }
+}
+
+// 確認上架
+  onDialogConfirm(): void {
+  this.dialogVisible = false;
+  // this.showToast('✓ 商品上架成功！');
+  this.formService.resetState();
+  setTimeout(() => {
+    this.router.navigate(['/store']);
+  }, 1200);
+  }
 }
