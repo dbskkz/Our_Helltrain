@@ -56,7 +56,13 @@
 
         .title {
           font-size: 1.1rem;
-          font-weight: bolder;
+          font-weight: 400;
+
+          // 核心代碼
+          white-space: nowrap;      // 強制不換行
+          overflow: hidden;         // 隱藏超出部分
+          text-overflow: ellipsis;  // 顯示省略號
+          width: 100%;             // 確保寬度受限
         }
 
       .price-container {
@@ -90,6 +96,12 @@
             display: flex;
             align-items: center;
             gap: 2px;
+
+            // 防止地點文字太長時把時間擠出去
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px; // 根據你的卡片寬度調整
           }
         }
 

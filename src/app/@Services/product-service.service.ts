@@ -628,7 +628,7 @@ export class ProductServiceService {
         // 防呆：如果後端 location 是空的，給個預設字串或陣列
         status: p.status,
         grade: p.grade,
-        location: (p.location && p.location.length > 0) ? p.location[0] : '未知地點',
+        location: (p.location && p.location.length > 0) ? p.location : '未知地點',
         deptGroup: p.deptGroup,
         // 補上前端元件需要的 user 欄位
         user: {
@@ -666,7 +666,7 @@ export class ProductServiceService {
         // 防呆：如果後端 location 是空的，給個預設字串或陣列
         status: p.status,
         grade: p.grade,
-        location: (p.location && p.location.length > 0) ? p.location[0] : '未知地點',
+        location: (p.location && p.location.length > 0) ? p.location : '未知地點',
         deptGroup: p.deptGroup,
         // 補上前端元件需要的 user 欄位
         user: {
@@ -719,7 +719,7 @@ searchByType(type:string): Observable<GetProductDataRes> {
         // 防呆：如果後端 location 是空的，給個預設字串或陣列
         status: p.status,
         grade: p.grade,
-        location: (p.location && p.location.length > 0) ? p.location[0] : '未知地點',
+        location: (p.location && p.location.length > 0) ? p.location : '未知地點',
         deptGroup: p.deptGroup,
         // 補上前端元件需要的 user 欄位
         user: {

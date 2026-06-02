@@ -436,7 +436,7 @@ get sortedProducts(): ProductCard[] {
         || selectedConditions.includes(product.condition);
 
       return matchCity && matchType && matchCondition && matchCategory
-      && matchCategory && matchKeyword && matchPrice;
+      && matchSchool && matchKeyword && matchPrice;
 
     })
   }

@@ -36,6 +36,17 @@ export class ProductCardComponent {
     return this.products;
   }
 
+  // 地點呈現
+  formatLocation(locations: string[]): string {
+    if (!locations || locations.length === 0) return '未提供地點';
+    if (locations.length === 1) return locations[0];
+
+    // 取得第一個地點，並計算剩餘數量
+    return `${locations[0]}等 ${locations.length} 個地方`;
+  }
+
+
+
   goToProductDetail(){
     this.router.navigate(['/product_page']);
   }

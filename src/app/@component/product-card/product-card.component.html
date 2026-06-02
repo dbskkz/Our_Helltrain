@@ -11,9 +11,9 @@
           </h5>
 
           <div class="meta-info">
-            <span class="location">
+            <span class="location" >
               <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
-              {{ item.location }} · {{ item.time }}
+              {{ formatLocation(item.location) }} · {{ item.time }}
             </span>
           </div>
 
