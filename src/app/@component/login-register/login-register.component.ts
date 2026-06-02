@@ -1,5 +1,4 @@
-
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +17,9 @@ import { ValidatorFn } from '@angular/forms';
 //佩霖寫的
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
-import { ApiTestService } from '../../@Services/api-test.service';
+
+// 絲絨的
+import { ApiTestService } from './../../@Services/api-test.service';
 
 @Component({
   selector: 'app-login-register',
@@ -38,7 +39,9 @@ export class LoginRegisterComponent implements OnInit {
     private schoolService: SchoolDataService,
     private route: ActivatedRoute,
     private userService: UserService,
-    private apiTestService: ApiTestService) { }
+    private apiTestService: ApiTestService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   isRegister: boolean = false; //是否為註冊頁面
   userEmail: string = ''; //輸入的 Email
@@ -410,7 +413,6 @@ export class LoginRegisterComponent implements OnInit {
   userInputLogin = ''
   isAgree = false;
 
-  currentUserData: any = null; //絲絨用
   onLogin() {
     // if(this.loginForm.valid)
     const hasAgreed = this.loginForm.get('agreeTerms')?.value;
@@ -459,35 +461,50 @@ export class LoginRegisterComponent implements OnInit {
     // }
 
     if (this.loginForm.valid) { // 需要可以直接拿去用或者修改，我只是不太敢動別人的程式碼。by.絲絨
-      const email = this.loginForm.get('email')?.value;
-      const password = this.loginForm.get('password')?.value;
+      let loginReq = this.loginForm.value;
 
-      // 3. 呼叫 Service 並把參數傳進去
-      this.userService.login(email, password).subscribe({
+      // 呼叫 Service 並把參數傳進去
+      this.userService.login(loginReq).subscribe({
         next: (res) => {
-          if (res.statusCode === 200) {
-            this.currentUserData = res.data;
-            this.userService.isLoggedIn.set(true); //暫用
-            console.log('成功取得資料：', this.currentUserData);
-            this.router.navigate(['/home']);
-          } else {
+          this.userService.isLoggedIn.set(true);
+          localStorage.setItem('isLoggedIn', 'true');
+          if (res.data) { // 未來如果改token動這裡
+            localStorage.setItem('userId', res.data.userId.toString());
+            this.userService.currentUser.set(res.data);
+          }
+          console.log('成功取得資料：', res);
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('失敗：', err);
+          this.loginForm.markAllAsTouched();
+          const status = err?.statusCode;
+
+          if (status === 400) {
             Swal.fire({
               title: '登入失敗',
               text: '帳號或密碼錯誤',
               icon: 'error',
               confirmButtonColor: '#e57373'
             });
+          } else if (err.message === 'Please verify' || err.message === 'Verification is invalid') {
+            Swal.fire({
+              title: '尚未驗證或驗證已過期',
+              text: '請驗證後再試',
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
+            this.currentStep = 2;
+            console.log('【除錯】目前的 currentStep 已經變成：', this.currentStep);
+            this.cdr.detectChanges();
+          } else {
+            Swal.fire({
+              title: '連線錯誤',
+              text: '請稍後再試',
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
           }
-        },
-        error: (err) => {
-          Swal.fire({
-            title: '連線錯誤',
-            text: '請稍後再試',
-            icon: 'error',
-            confirmButtonColor: '#e57373'
-          });
-          console.error('抓不到使用者資料...', err);
-          this.loginForm.markAllAsTouched();
         }
       });
     }
