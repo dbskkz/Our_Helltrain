@@ -150,7 +150,10 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     Object.keys(this.searchReq).length > 0;
     // this.keyword ||
 
+    console.log('hasSearch=', hasSearch);
+
     if (hasSearch) {
+      console.log('走 search API');
       // const req: SearchProductReq = {
       //   ...this.searchReq
       //   // keyword: this.keyword || this.searchReq.keyword

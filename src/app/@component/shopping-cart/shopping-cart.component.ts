@@ -68,14 +68,6 @@ export class ShoppingCartComponent {
   }
 
 
-  // get filteredProduct(){
-  //   return this.products.filter((p) => {
-  //     return p.selected == false;
-  //   })
-  // }
-
-
-
   products = [
     {
       listId: 1,
@@ -109,7 +101,7 @@ export class ShoppingCartComponent {
 
       imgUrl: 'assets/bag.jpg',
 
-      sellerName: '不吉掰娃娃',
+      sellerName: '不吉娃娃',
       university: '清大',
       location: '花蓮',
       selected: false
