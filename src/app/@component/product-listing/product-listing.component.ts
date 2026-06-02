@@ -50,7 +50,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   ngOnInit(): void {
-
+    // :)
     // 1. 常見分類
     this.route.paramMap.subscribe(params => {
       window.scrollTo({ top: 0, behavior: 'instant' });
