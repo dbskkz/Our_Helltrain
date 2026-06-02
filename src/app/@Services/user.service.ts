@@ -52,5 +52,15 @@ export class UserService {
   return this.http.post<BasicResponse>(`${this.apiUrl}/insert`, data);
 }
 
+//使用者輸入驗證碼後按下發送所需要街的資料回傳API(初次及後續驗證皆是這個)
+verifyEmail(payload: { email: string; code: string }): Observable<BasicResponse> {
+  return this.http.post<BasicResponse>(`${this.apiUrl}/verify`, payload);
+}
+
+//重新發送驗證碼
+resendCode(email: string): Observable<BasicResponse> {
+  return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_email: email });
+}
+
 
 }

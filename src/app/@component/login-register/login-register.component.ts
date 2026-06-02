@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -17,7 +17,7 @@ import {  ValidatorFn } from '@angular/forms';
 //佩霖寫的
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
-import { UserReq } from '../../@Interface/user';
+import { BasicResponse, UserReq } from '../../@Interface/user';
 
 @Component({
   selector: 'app-login-register',
@@ -36,7 +36,8 @@ export class LoginRegisterComponent implements OnInit{
     private router: Router,
     private schoolService: SchoolDataService,
     private route: ActivatedRoute,
-    private userService: UserService) {}
+    private userService: UserService,
+    private cdr: ChangeDetectorRef) {}
 
   isRegister: boolean = false; //是否為註冊頁面
   userEmail: string = ''; //輸入的 Email
@@ -250,18 +251,57 @@ openLoginTermsDialog(event: MouseEvent): void {
     this.isEmailTouched = true;// 強制讓 Email 亮起「碰過」的狀態
 
    if (this.registerForm.valid && this.isValidSchoolEmail()) {
-      // 資料都填對了，切換到 Step 2 畫面！
+      const rawPhone = this.registerForm.get('phone')?.value;
+    // 資料都填對了，切換到 Step 2 畫面！
       const finalRegisterData: UserReq = {
         name: this.registerForm.get('name')?.value,
         email: this.userEmail,
         password: this.registerForm.get('password')?.value,
         location: this.registerForm.get('area')?.value,
         school: this.registerForm.get('school')?.value,
-        phone: this.registerForm.get('phone')?.value,
-        status: 'PENDING'  // 剛註冊還沒驗證，狀態給 PENDING
+        phone: rawPhone && rawPhone.trim() !== '' ? rawPhone : null,
       };
       console.log('【精準打包】格式全面通關：', finalRegisterData);
-      this.currentStep = 2;
+
+      this.userService.register(finalRegisterData).subscribe({
+        next: (res: BasicResponse) => {
+
+          if (res.statusCode === 200) {
+            // ✅ 註冊成功，驗證碼已寄出
+            console.log('資料成功送出');
+            this.currentStep = 2;
+            this.startCountdown(60);
+            this.cdr.detectChanges();
+
+          } else if (res.statusCode === 400 && res.message === 'Email has found') {
+            // ❌ EMAIL_HAS_FOUND：email 已被註冊
+            // ⚠️ 注意：後端目前只有「已註冊」這一種，沒有區分「已驗證/未驗證」
+            // 如果要區分，請後端補一個 PENDING 狀態的判斷
+            Swal.fire({
+              title: '此信箱已被註冊',
+              text: '請直接使用學校信箱登入，或聯絡客服。',
+              icon: 'info',
+              confirmButtonText: '前往登入',
+              confirmButtonColor: '#FB831D',
+            }).then(() => {
+              this.isRegister = false; // 切回登入頁
+            });
+
+          } else {
+            // 其他 400 錯誤（格式不對等）
+            Swal.fire({
+              title: '註冊失敗',
+              text: res.message,
+              icon: 'warning',
+              confirmButtonColor: '#FB831D',
+            });
+          }
+        },
+        error: () => {
+          Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
+        }
+      });
+
     } else {
       // 如果沒填好，逼迫格子噴出紅字錯誤提示
       this.registerForm.markAllAsTouched();
@@ -287,28 +327,52 @@ openLoginTermsDialog(event: MouseEvent): void {
     this.isCodeTouched = true;
 
     if (this.isValidCode()) {
-      // Demo 測試用：如果是 455328 就過關
-      if (this.verificationCode === '455328') {
-        this.currentStep = 3; // 直接進入成功畫面
-        Swal.fire({
-          title: '驗證成功！',
-          text: '歡迎加入二手GO!',
-          icon: 'success',
-          confirmButtonColor: '#ffb74d', // 配合你們按鈕的鵝黃色
-          timer: 3000,
-          showConfirmButton: false
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',               // 紅色驚嘆號/打叉動畫
-          title: '驗證失敗...',         // 大標題
-          text: '您輸入的驗證碼不正確，請重新確認郵件！', // 內容細節
-          confirmButtonText: '重新輸入', // 把按鈕文字變親切
-          confirmButtonColor: '#e57373',
-          // footer: '<a href="#">沒收到驗證信？點我重新發送</a>' // 💡 未來有需要也可以加底部的點選連結喔！
-        });
-        this.verificationCode = ''; // 清空讓使用者重打
+        const payload = {
+      email: this.userEmail,
+      code: this.verificationCode
+    };
+
+    this.userService.verifyEmail(payload).subscribe({
+      next: (res: BasicResponse) => {
+
+        if (res.statusCode === 200) {
+          // ✅ 驗證成功
+          this.currentStep = 3;
+          Swal.fire({
+            title: '驗證成功！',
+            text: '歡迎加入二手GO!',
+            icon: 'success',
+            confirmButtonColor: '#ffb74d',
+            timer: 3000,
+            showConfirmButton: false
+          });
+           this.currentStep = 3;
+           this.cdr.detectChanges();
+
+        } else if (res.statusCode === 400 && res.message === 'Invalid verification code') {
+          // ❌ 驗證碼錯誤或過期（INVALID_VERIFICATION_CODE）
+          Swal.fire({
+            icon: 'error',
+            title: '驗證失敗',
+            text: '驗證碼不正確或已過期，請重新確認！',
+            confirmButtonText: '重新輸入',
+            confirmButtonColor: '#e57373',
+          });
+          this.verificationCode = ''; // 清空讓使用者重打
+
+        } else {
+          Swal.fire({
+            title: '驗證失敗',
+            text: res.message,
+            icon: 'error',
+            confirmButtonColor: '#e57373'
+          });
+        }
+      },
+      error: () => {
+        Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
       }
+    });
     }
     /* // ==========================================
     // 🌟 情境 B：未來與 Java 後端同學對接時（真正上線版）
@@ -340,21 +404,46 @@ openLoginTermsDialog(event: MouseEvent): void {
   }
 
   // 點擊「重新發送驗證信」
-  resendEmail(){
-    // 防呆：如果目前還在冷卻時間內，直接攔截不執行
-    if (!this.canResend) return;
+  resendEmail() {
+  if (!this.canResend) return;
 
-  Swal.fire({
-  title: "驗證信已重新發送，請檢查您的學校信箱！",
-  icon: "success",
-  confirmButtonColor: '#5E9759',
-  draggable: true
+  this.userService.resendCode(this.userEmail).subscribe({
+    next: (res: BasicResponse) => {
+
+      if (res.statusCode === 200) {
+        // ✅ VERIFICATION_CODE_IS_SEND：新驗證碼已寄出
+        Swal.fire({
+          title: '驗證信已重新發送！',
+          text: '請檢查您的學校信箱。',
+          icon: 'success',
+          confirmButtonColor: '#5E9759',
+        });
+        this.startCountdown(60);
+
+      } else if (res.statusCode === 400 && res.message === 'Account is verification') {
+        // ❌ ACCOUNT_IS_VERIFICATION：帳號已驗證，不需重寄
+        Swal.fire({
+          title: '此帳號已完成驗證',
+          text: '請直接登入。',
+          icon: 'info',
+          confirmButtonColor: '#FB831D',
+        }).then(() => {
+          this.isRegister = false;
+        });
+
+      } else {
+        Swal.fire({
+          title: '發送失敗',
+          text: res.message,
+          icon: 'error',
+          confirmButtonColor: '#e57373'
+        });
+      }
+    },
+    error: () => {
+      Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
+    }
   });
-    // 這裡未來可以放呼叫後端重發信件的 API
-    // this.authService.resendEmail(this.userEmail).subscribe();
-
-    // 2. 啟動倒數冷卻機制
-    this.startCountdown(60);
   }
 
   private startCountdown(seconds: number){

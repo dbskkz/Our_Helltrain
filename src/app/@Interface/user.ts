@@ -5,8 +5,7 @@ export interface UserReq {
   email: string;
   location: string;
   school: string;
-  phone: string;
-  status: string;
+  phone: string | null;
 }
 
 //通用的後端回應格式
