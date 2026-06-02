@@ -181,7 +181,6 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
 
   resetQuery(){
-    this.category = 'all';
     this.searchReq = {};
   }
 
@@ -423,67 +422,78 @@ get sortedProducts(): ProductCard[] {
   // 搜尋結果
   // =========================================================
 
-  private matchCategory (product:ProductCard):boolean {
+  private matchCategory(product: ProductCard): boolean {
     const chineseCat = CATEGORY_MAP[this.category!];
 
-    return (!this.searchReq.keyword &&
-        this.category !== 'all'
-          ? product.type.includes(chineseCat)
-          : true);
+    return (
+      !this.searchReq.keyword &&
+      this.category !== 'all'
+        ? product.type.includes(chineseCat)
+        : true
+    );
   }
-  get filteredProducts(): ProductCard[]{
-    return this.products.filter(product =>{
 
-      // category 篩選（只在非 search 模式下有意義）
-      const chineseCat = CATEGORY_MAP[this.category!];
+  private matchPrice(product: ProductCard): boolean {
+    return (
+      product.price > this.priceValue &&
+      product.price < this.priceHighValue
+    );
+  }
 
-      const matchCategory =
-        !this.searchReq.keyword &&
-        this.category !== 'all'
-          ? product.type.includes(chineseCat)
-          : true;
+  private matchCity(product: ProductCard): boolean {
+    const selectedCity = this.cities
+      .filter(c => c.selected)
+      .map(c => c.name);
 
-      // const matchKeyword =
-      //   !this.keyword
-      //   || product.title.includes(this.keyword)
-      //   || product.type.includes(this.keyword)
-      //   || product.location.includes(this.keyword);
+    return (
+      selectedCity.length === 0 ||
+      selectedCity.some(city => product.location.includes(city))
+    );
+  }
 
-      const matchPrice =
-        product.price > this.priceValue && product.price < this.priceHighValue
+  private matchSchool(product: ProductCard): boolean {
+    const selectedSchool = this.department
+      .filter(d => d.selected)
+      .map(d => d.name);
 
-      const selectedCity = this.cities
-        .filter(c => c.selected)
-        .map(c => c.name);
+    return (
+      selectedSchool.length === 0 ||
+      selectedSchool.some(s => product.deptGroup.includes(s))
+    );
+  }
 
-      const matchCity = selectedCity.length === 0
-        || selectedCity.some(city => product.location.includes(city))
+  private matchType(product: ProductCard): boolean {
+    const selectedTypes = this.type
+      .filter(t => t.selected)
+      .map(t => CATEGORY_MAP[t.value]);
 
-      const selectedSchool = this.department
-        .filter(d => d.selected)
-        .map(d => d.name);
+    return (
+      selectedTypes.length === 0 ||
+      selectedTypes.some(t => product.type.includes(t))
+    );
+  }
 
-      const matchSchool = selectedSchool.length === 0
-        || selectedSchool.some(s => product.deptGroup.includes(s));
+  private matchCondition(product: ProductCard): boolean {
+    const selectedConditions = this.condition
+      .filter(c => c.selected)
+      .map(c => c.label);
 
-      const selectedTypes = this.type
-        .filter(t => t.selected)
-        .map(t => CATEGORY_MAP[t.value]);
+    return (
+      selectedConditions.length === 0 ||
+      selectedConditions.includes(product.condition)
+    );
+  }
 
-      const matchType = selectedTypes.length === 0
-        || selectedTypes.some(t => product.type.includes(t));
 
-      const selectedConditions = this.condition
-        .filter(c => c.selected)
-        .map(c => c.label);
-
-      const matchCondition = selectedConditions.length === 0
-        || selectedConditions.includes(product.condition);
-
-      return matchCity && matchType && matchCondition && matchCategory
-      && matchSchool && matchPrice;
-
-    })
+  get filteredProducts(): ProductCard[] {
+    return this.products.filter(product =>
+      this.matchCategory(product) &&
+      this.matchPrice(product) &&
+      this.matchCity(product) &&
+      this.matchSchool(product) &&
+      this.matchType(product) &&
+      this.matchCondition(product)
+    );
   }
 
 
@@ -503,29 +513,9 @@ get sortedProducts(): ProductCard[] {
     return this.aca.academy
   }
 
-  cities = [
-    { id: 1,  name: '基隆市', selected: false },
-    { id: 2,  name: '台北市', selected: false },
-    { id: 3,  name: '新北市', selected: false },
-    { id: 4,  name: '桃園縣', selected: false },
-    { id: 5,  name: '新竹市', selected: false },
-    { id: 6,  name: '新竹縣', selected: false },
-    { id: 7,  name: '苗栗縣', selected: false },
-    { id: 8,  name: '台中市', selected: false },
-    { id: 9,  name: '彰化縣', selected: false },
-    { id: 10, name: '南投縣', selected: false },
-    { id: 11, name: '雲林縣', selected: false },
-    { id: 12, name: '嘉義市', selected: false },
-    { id: 13, name: '嘉義縣', selected: false },
-    { id: 14, name: '台南市', selected: false },
-    { id: 15, name: '高雄市', selected: false },
-    { id: 16, name: '屏東縣', selected: false },
-    { id: 17, name: '台東縣', selected: false },
-    { id: 18, name: '花蓮縣', selected: false },
-    { id: 19, name: '宜蘭縣', selected: false },
-    { id: 20, name: '澎湖縣', selected: false },
-    { id: 21, name: '金門縣', selected: false },
-    { id: 22, name: '連江縣', selected: false }
-  ];
+  get cities(): any[]{
+    return this.ctgService.cities;
+  }
+
 
 }
