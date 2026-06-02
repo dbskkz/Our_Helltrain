@@ -61,7 +61,29 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     // 2. 自由篩選
     this.route.queryParamMap.subscribe(query => {
       window.scrollTo({ top: 0, behavior: 'instant' });
-      this.keyword = query.get('keyword') || ''; // 文字搜尋
+
+      // 處理來自 SearchBar 的文字篩選
+      // this.keyword = query.get('keyword') || ''; // 文字搜尋
+
+      // 處理來自 SearchPanel 的複雜篩選 (filter)
+      const filterJson = query.get('filter');
+
+      console.log('filterJson=', filterJson);
+
+      if (filterJson) {
+        try {
+          this.searchReq = JSON.parse(filterJson);
+
+          console.log('searchReq=', this.searchReq);
+
+        } catch (e) {
+          console.error('filter parse error', e);
+          this.searchReq = {};
+        }
+      } else {
+        this.searchReq = {};
+      }
+
 
       // 接收來自 side-nav 的學群
       const deptsParam = query.get('depts');
@@ -84,8 +106,10 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   resetQuery(){
     this.category = 'all';
-    this.keyword = '';
+    this.searchReq = {};
   }
+
+
 
   // =========================================================
   // ICONS
@@ -101,44 +125,76 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // CATEGORY
   // =========================================================
 
+  searchReq: SearchProductReq = {};
   allProducts:ProductCard[] = [];
-  keyword: string | null = '';
+  // keyword: string | null = '';
   category: string | null = '';
 
   get categoryName(): string {
-    if (this.keyword) return '搜尋結果';
-    if (this.category === 'all') return '全部商品';
+
+    if (this.searchReq.keyword) {
+      return '搜尋結果';
+    }
+
+    if (this.category === 'all') {
+      return '全部商品';
+    }
+
     return CATEGORY_MAP[this.category!] || '全部商品';
   }
 
   loadProducts(){
     this.isLoading = true;
 
-    // 有 keyword → 用 search API
-    if (this.keyword) {
-      // SearchBar 路徑：所有篩選條件都交給後端
-    const req: SearchProductReq = {
-      keyword: this.keyword,
-      minPrice: this.priceValue === this.DEFAULT_FILTERS.priceValue ? undefined : this.priceValue,
-      maxPrice: this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue ? undefined : this.priceHighValue,
-      types:      this.type.filter(t => t.selected).map(t => t.label),
-      // conditions: this.condition.filter(c => c.selected).map(c => c.value),
-      // grades / deptGroups 如果 sidebar 有的話也帶進來
-    };
+    const hasSearch =
+    Object.keys(this.searchReq).length > 0;
+    // this.keyword ||
 
-    this.productservice.search(req).subscribe({
-      next: (res) => {
-        this.products = res.productList ?? [];
-        this.updatePagination();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('搜尋失敗', err);
-        this.isLoading = false;
-      }
-    });
+    if (hasSearch) {
+      // const req: SearchProductReq = {
+      //   ...this.searchReq
+      //   // keyword: this.keyword || this.searchReq.keyword
+      // };
 
+      this.productservice.search(this.searchReq).subscribe({
+        next: (res) => {
+          this.products = res.productList ?? [];
+          this.updatePagination();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+        }
+      });
+
+      return;
     }
+    // 有 keyword → 用 search API
+    // if (this.keyword) {
+    //   // SearchBar 路徑：所有篩選條件都交給後端
+    // const req: SearchProductReq = {
+    //   keyword: this.keyword,
+    //   minPrice: this.priceValue === this.DEFAULT_FILTERS.priceValue ? undefined : this.priceValue,
+    //   maxPrice: this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue ? undefined : this.priceHighValue,
+    //   types:      this.type.filter(t => t.selected).map(t => t.label),
+    //   // conditions: this.condition.filter(c => c.selected).map(c => c.value),
+    //   // grades / deptGroups 如果 sidebar 有的話也帶進來
+    // };
+
+    // this.productservice.search(req).subscribe({
+    //   next: (res) => {
+    //     this.products = res.productList ?? [];
+    //     this.updatePagination();
+    //     this.isLoading = false;
+    //   },
+    //   error: (err) => {
+    //     console.error('搜尋失敗', err);
+    //     this.isLoading = false;
+    //   }
+    // });
+
+    // }
     else if (this.category && this.category !== 'all')
     {
 
@@ -393,16 +449,18 @@ get sortedProducts(): ProductCard[] {
 
       // category 篩選（只在非 search 模式下有意義）
       const chineseCat = CATEGORY_MAP[this.category!];
-      const matchCategory = !this.keyword
-        && this.category !== 'all'
-        ? product.type.includes(chineseCat)
-        : true;
 
-      const matchKeyword =
-        !this.keyword
-        || product.title.includes(this.keyword)
-        || product.type.includes(this.keyword)
-        || product.location.includes(this.keyword);
+      const matchCategory =
+        !this.searchReq.keyword &&
+        this.category !== 'all'
+          ? product.type.includes(chineseCat)
+          : true;
+
+      // const matchKeyword =
+      //   !this.keyword
+      //   || product.title.includes(this.keyword)
+      //   || product.type.includes(this.keyword)
+      //   || product.location.includes(this.keyword);
 
       const matchPrice =
         product.price > this.priceValue && product.price < this.priceHighValue
@@ -436,7 +494,7 @@ get sortedProducts(): ProductCard[] {
         || selectedConditions.includes(product.condition);
 
       return matchCity && matchType && matchCondition && matchCategory
-      && matchSchool && matchKeyword && matchPrice;
+      && matchSchool && matchPrice;
 
     })
   }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideAngularModule, Search, Shapes, MapPin, Filter } from 'lucide-angular';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
+import { SearchProductReq } from '../../@Services/product-service.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -28,6 +29,18 @@ export class SearchBarComponent {
   }
 
   onSearch() {
-    this.router.navigate(['/product-list/all'], { queryParams: { keyword: this.keyword } });
+
+    const req: SearchProductReq = {
+      keyword: this.keyword
+    };
+
+    this.router.navigate(
+      ['/product-list/all'],
+      {
+        queryParams: {
+          filter: JSON.stringify(req)
+        }
+      }
+    );
   }
 }

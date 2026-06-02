@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 import { CategoriesService } from '../../@Services/categories.service';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Upload } from 'lucide-angular';
 import { ProductServiceService, SearchProductReq } from '../../@Services/product-service.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-panel',
@@ -23,6 +23,7 @@ export class SearchPanelComponent {
       private aca: EighteenAcademyService,
       private category: CategoriesService,
       private router: Router,
+      private route: ActivatedRoute,
       private productService: ProductServiceService
     ) {
       this.filterForm.categories = this.category.categories.map(c => ({
@@ -77,27 +78,65 @@ export class SearchPanelComponent {
   }
 
   applyFilters() {
-    const req: SearchProductReq = {};
 
-    if (this.filterForm.minPrice != null) req.minPrice = this.filterForm.minPrice;
-    if (this.filterForm.maxPrice != null) req.maxPrice = this.filterForm.maxPrice;
+    // 先取得目前網址上的 filter
+    const currentFilter =
+      this.route.snapshot.queryParamMap.get('filter');
 
+    const req: SearchProductReq =
+      currentFilter
+        ? JSON.parse(currentFilter)
+        : {};
+
+    // 價格
+    if (this.filterForm.minPrice != null) {
+      req.minPrice = this.filterForm.minPrice;
+    }
+
+    if (this.filterForm.maxPrice != null) {
+      req.maxPrice = this.filterForm.maxPrice;
+    }
+
+    // 分類
     const selectedTypes = this.filterForm.categories
-      .filter(c => c.selected).map(c => c.value);
-    if (selectedTypes.length) req.types = selectedTypes;
+      .filter(c => c.selected)
+      .map(c => c.value);
 
+    if (selectedTypes.length) {
+      req.types = selectedTypes;
+    }
+
+    // 年級
     const selectedDegrees = this.filterForm.degree
       .flatMap(d => {
-        if (!d.selected) return [];
-        // 學士且有選子項目，就帶子項目；沒選子項目就帶學士本身
-        const selectedChildren = d.children?.filter(c => c.selected).map(c => c.value) ?? [];
-        return selectedChildren.length ? selectedChildren : [d.value];
-      });
-    if (selectedDegrees.length) req.grade = selectedDegrees.join(',');
 
-    // ✅ 把篩選條件帶去 query string，讓 product-list 頁面用
-    const queryParams: Record<string, any> = { filter: JSON.stringify(req) };
-    this.router.navigate(['/product-list/all'], { queryParams });
+        if (!d.selected) {
+          return [];
+        }
+
+        const selectedChildren =
+          d.children
+            ?.filter(c => c.selected)
+            .map(c => c.value) ?? [];
+
+        return selectedChildren.length
+          ? selectedChildren
+          : [d.value];
+      });
+
+    if (selectedDegrees.length) {
+      req.grade = selectedDegrees.join(',');
+    }
+
+    this.router.navigate(
+      ['/product-list/all'],
+      {
+        queryParams: {
+          filter: JSON.stringify(req)
+        }
+      }
+    );
+
     this.closePanel.emit();
   }
 
