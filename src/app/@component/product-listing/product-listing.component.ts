@@ -483,9 +483,4 @@ get sortedProducts(): ProductCard[] {
     { id: 22, name: '連江縣', selected: false }
   ];
 
-  // get allProducts():ProductCard[] {
-  //   return this.productservice.allProducts
-  // }
-
-
 }
