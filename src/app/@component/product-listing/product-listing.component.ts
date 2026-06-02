@@ -1,4 +1,4 @@
-import { ProductServiceService } from './../../@Services/product-service.service';
+import { GetProductDataRes, ProductServiceService } from './../../@Services/product-service.service';
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { EighteenAcademyService } from '../../@Services/eighteen-academy.service
 import { ProductCard } from '../../@Interface/product-card';
 import { CategoriesService } from '../../@Services/categories.service';
 import { SearchProductReq } from '../../@Services/product-service.service';
+import { combineLatest, Observable } from 'rxjs';
 
 // 網址用的 slug → type 中文名稱
 const CATEGORY_MAP: Record<string, string> = {
@@ -36,6 +37,21 @@ const CATEGORY_MAP: Record<string, string> = {
 })
 export class ProductListingComponent implements OnInit, OnDestroy {
 
+
+  // =========================================================
+  // ICONS
+  // =========================================================
+
+  readonly HomeIcon     = Home;
+  readonly nextIcon     = ChevronRight;
+  readonly prevIcon     = ChevronLeft;
+  readonly RotateCcwIcon = RotateCcw;
+  readonly XIcon        = X;
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
   constructor(
     private route: ActivatedRoute,
     private uiBehavior: UiBehaviorService,
@@ -50,51 +66,39 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   ngOnInit(): void {
-    // :)
-    // 1. 常見分類
-    this.route.paramMap.subscribe(params => {
+      combineLatest([
+      this.route.paramMap,
+      this.route.queryParamMap
+    ]).subscribe(([params, query]) => {
+
       window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // category
       this.category = params.get('category') || 'all';
-      this.loadProducts();
-    });
 
-    // 2. 自由篩選
-    this.route.queryParamMap.subscribe(query => {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-
-      // 處理來自 SearchBar 的文字篩選
-      // this.keyword = query.get('keyword') || ''; // 文字搜尋
-
-      // 處理來自 SearchPanel 的複雜篩選 (filter)
+      // filter
       const filterJson = query.get('filter');
-
-      console.log('filterJson=', filterJson);
 
       if (filterJson) {
         try {
           this.searchReq = JSON.parse(filterJson);
-
-          console.log('searchReq=', this.searchReq);
-
-        } catch (e) {
-          console.error('filter parse error', e);
+        } catch {
           this.searchReq = {};
         }
       } else {
         this.searchReq = {};
       }
 
-
-      // 接收來自 side-nav 的學群
+      // department
       const deptsParam = query.get('depts');
-      const selectedNames = deptsParam ? deptsParam.split(',') : [];
+      const selectedNames = deptsParam?.split(',') ?? [];
+
       this.department.forEach(d => {
-        d.selected = selectedNames.includes(d.name); // .includes 回傳 boolean，所以這一行的意思就是 d.selected = true 或 false
+        d.selected = selectedNames.includes(d.name);
       });
 
-      this.loadProducts(); // ← 加這行，keyword 變了要重新計算分頁
+      this.loadProducts();
     });
-
   }
 
   ngOnDestroy(): void {
@@ -104,6 +108,78 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   }
 
+  // =========================================================
+  // LOADING AND RESET
+  // =========================================================
+
+  products: ProductCard[] = [];
+  isLoading = false;
+
+  loadProducts(){
+    this.isLoading = true;
+
+    const hasSearch =
+    Object.keys(this.searchReq).length > 0;
+    // this.keyword ||
+
+    console.log('hasSearch=', hasSearch);
+
+    if (hasSearch) {
+      this.loadSearchProducts();
+      return;
+    }
+    else if (this.category && this.category !== 'all')
+    {
+      this.loadCategoryProducts();
+      return;
+    }
+    else
+    {
+      this.loadAllProducts();
+      return;
+    }
+  }
+
+  private loadSearchProducts() {
+    console.log('走 search API');
+
+    this.handleProductResponse(
+      this.productservice.search(this.searchReq)
+    );
+  }
+
+  private loadCategoryProducts() {
+    const chineseCat = CATEGORY_MAP[this.category!] ?? this.category;
+
+    this.handleProductResponse(
+      this.productservice.searchByType(chineseCat)
+    );
+  }
+
+  private loadAllProducts() {
+    this.handleProductResponse(
+      this.productservice.getAll()
+    );
+  }
+
+  private handleProductResponse(
+    observable: Observable<GetProductDataRes>
+  )
+  {
+    observable.subscribe({
+      next: (res) => {
+        this.products = res.productList ?? [];
+        this.updatePagination();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+
   resetQuery(){
     this.category = 'all';
     this.searchReq = {};
@@ -111,15 +187,6 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
 
 
-  // =========================================================
-  // ICONS
-  // =========================================================
-
-  readonly HomeIcon     = Home;
-  readonly nextIcon     = ChevronRight;
-  readonly prevIcon     = ChevronLeft;
-  readonly RotateCcwIcon = RotateCcw;
-  readonly XIcon        = X;
 
   // =========================================================
   // CATEGORY
@@ -143,100 +210,9 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return CATEGORY_MAP[this.category!] || '全部商品';
   }
 
-  loadProducts(){
-    this.isLoading = true;
 
-    const hasSearch =
-    Object.keys(this.searchReq).length > 0;
-    // this.keyword ||
 
-    console.log('hasSearch=', hasSearch);
 
-    if (hasSearch) {
-      console.log('走 search API');
-      // const req: SearchProductReq = {
-      //   ...this.searchReq
-      //   // keyword: this.keyword || this.searchReq.keyword
-      // };
-
-      this.productservice.search(this.searchReq).subscribe({
-        next: (res) => {
-          this.products = res.productList ?? [];
-          this.updatePagination();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.isLoading = false;
-        }
-      });
-
-      return;
-    }
-    // 有 keyword → 用 search API
-    // if (this.keyword) {
-    //   // SearchBar 路徑：所有篩選條件都交給後端
-    // const req: SearchProductReq = {
-    //   keyword: this.keyword,
-    //   minPrice: this.priceValue === this.DEFAULT_FILTERS.priceValue ? undefined : this.priceValue,
-    //   maxPrice: this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue ? undefined : this.priceHighValue,
-    //   types:      this.type.filter(t => t.selected).map(t => t.label),
-    //   // conditions: this.condition.filter(c => c.selected).map(c => c.value),
-    //   // grades / deptGroups 如果 sidebar 有的話也帶進來
-    // };
-
-    // this.productservice.search(req).subscribe({
-    //   next: (res) => {
-    //     this.products = res.productList ?? [];
-    //     this.updatePagination();
-    //     this.isLoading = false;
-    //   },
-    //   error: (err) => {
-    //     console.error('搜尋失敗', err);
-    //     this.isLoading = false;
-    //   }
-    // });
-
-    // }
-    else if (this.category && this.category !== 'all')
-    {
-
-      const chineseCat = CATEGORY_MAP[this.category] ?? this.category;
-
-      this.productservice.searchByType(chineseCat).subscribe({
-        next: (res) => {
-          console.log(res.message);
-
-          this.products = res.productList ?? [];
-          this.updatePagination();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('類別載入失敗', err);
-          this.isLoading = false;
-        }
-      });
-
-    }
-    else
-    {
-      // 沒有 keyword → 用 getAll，category 在前端過濾
-      this.productservice.getAll().subscribe({
-        next: (res) => {
-          this.products = res.productList ?? [];
-          this.updatePagination();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('載入失敗', err);
-          this.isLoading = false;
-        }
-      });
-    }
-  }
-
-  products: ProductCard[] = [];
-  isLoading = false;
 
   // =========================================================
   // PANEL OPEN / CLOSE
@@ -447,6 +423,14 @@ get sortedProducts(): ProductCard[] {
   // 搜尋結果
   // =========================================================
 
+  private matchCategory (product:ProductCard):boolean {
+    const chineseCat = CATEGORY_MAP[this.category!];
+
+    return (!this.searchReq.keyword &&
+        this.category !== 'all'
+          ? product.type.includes(chineseCat)
+          : true);
+  }
   get filteredProducts(): ProductCard[]{
     return this.products.filter(product =>{
 
