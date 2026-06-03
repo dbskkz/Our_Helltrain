@@ -208,7 +208,7 @@ lucide-icon {
 
     .item-title {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: $text-black;
 
@@ -258,14 +258,14 @@ lucide-icon {
   .item-description-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem; // 🔴 讓「商品描述」標題與內文之間有小空隙
+    gap: 0.4rem;
 
     .item-description-title {
       margin: 0;
-      font-size: 0.85rem; // 稍微縮小字級
+      font-size: 0.85rem;
       font-weight: 600;
-      color: $neutral-500; // 🔴 改用較輕的灰色，區分層次
-      letter-spacing: 0.05em; // 增加一點字間距提升質感
+      color: $neutral-500;
+      letter-spacing: 0.05em;
     }
 
     .item-description {
