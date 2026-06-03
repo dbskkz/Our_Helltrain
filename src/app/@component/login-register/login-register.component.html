@@ -121,11 +121,24 @@
                       姓名 <span class="required-star">*</span>
                     </div>
                     <div class="input-box-wrapper">
-                      <input matInput type="text" placeholder="可寫匿名" class="custom-input" formControlName="name" maxlength="20"/>
+                      <input matInput type="text"
+                      placeholder="可寫匿名"
+                      class="custom-input"
+                      formControlName="name"
+                      maxlength="20"/>
                     </div>
-                    @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')) {
-                          <p class="field-hint error-text">✘ 姓名為必填欄位</p>
-                        }
+                    @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+
+                      @if (registerForm.get('name')?.hasError('required')) {
+                        <p class="field-hint error-text">✘ 姓名為必填欄位</p>
+
+                      } @else if (registerForm.get('name')?.hasError('minlength')) {
+                        <p class="field-hint error-text">⚠ 姓名最少需要 2 個字喔！</p>
+                      }@else if (registerForm.get('name')?.hasError('pattern')) {
+                        <p class="field-hint error-text">✘ 姓名只能包含中英文，不能有數字或符號！</p>
+                      }
+
+                    }
                   </div>
 
                   <div class="input-group">
@@ -337,8 +350,6 @@
               <mat-icon class="tip-icon">info</mat-icon>
               <p class="tip-text">若沒收到驗證信，請到<strong>「垃圾信箱」</strong>翻翻看喔！</p>
             </div>
-                            <!-- 示範用，之後會刪除 -->
-            <p class="demo-tip">(本次驗證碼：455328)示範用，之後會刪除</p>
 
             <div class="input-group code-group">
               <div class="email-box" [class.is-invalid]="isCodeTouched && !isValidCode()">

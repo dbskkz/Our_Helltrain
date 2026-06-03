@@ -36,7 +36,6 @@
     color: $text-black;
 
     // 🎯 控制整個 Dialog 的最高高度與滾動條
-    max-height: 450px;
     overflow-y: auto;
     padding-right: 12px;
     box-sizing: border-box;
@@ -230,8 +229,10 @@
 
       // 🎨 補上設計：高質感淺灰膠囊取消按鈕
       .cancel-btn {
-        background-color: $neutral-300 !important; // 採用質感優雅的淺灰色
+        background-color: $neutral-300 !important;
         color: $neutral-700 !important;
+        border: none !important;
+        outline: none !important;
         font-weight: bold;
         padding: 8px 24px;
         border-radius: 20px;
@@ -240,7 +241,8 @@
         transition: all 0.2s ease;
 
         &:hover {
-          background-color: $neutral-300 !important; // hover 時微微加深
+          background-color: $neutral-500 !important;
+          color: $neutral-100 !important;
           transform: translateY(-1px);
         }
       }
@@ -249,6 +251,8 @@
       .close-btn {
         background-color: $accent-brown;
         color: $background-white !important;
+        border: none !important;
+        outline: none !important;
         font-weight: bold;
         padding: 8px 24px;
         border-radius: 20px;

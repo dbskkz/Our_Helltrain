@@ -108,10 +108,15 @@ export class LoginRegisterComponent implements OnInit{
     }, 100);
   }
 
-  // (註冊箱子)把所有的欄位通通寫成變數
+  // (註冊箱子)把所有的欄位通通寫成變數 //改道一半
   private initRegisterForm() {
     this.registerForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(20),
+      Validators.pattern(/^[\u4e00-\u9fa5a-zA-Z\s]{2,20}$/)]
+    ),
     area: new FormControl('', [Validators.required,this.isInListValidator('area')]),
     school: new FormControl('', [Validators.required, this.isInListValidator('school')]),
      //                新盒子                 必填     ,       長度檢查
@@ -176,6 +181,7 @@ export class LoginRegisterComponent implements OnInit{
    // 打開對話框
   const dialogRef = this.dialog.open(PlatformRulesComponent, {
     width: '550px',            // 稍微放大一點點，閱讀體驗更好
+    maxHeight: '90vh',
     disableClose: true,        // 關鍵防護：不允許點擊旁邊空白處關閉，強迫他看完按按鈕！
     autoFocus: false           // 防止進去直接滾動到按鈕
   });
