@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
-import { SetInfoVo } from '../../@Interface/user';
+import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 
 @Component({
   selector: 'app-profile-settings',
@@ -136,7 +136,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
       }
 
         // 2. 處理地區 (後端給 String，前端要塞進 Array)
-        const backendAreas = (user.location || '').split(',');
+        const backendAreas : string[] = Array.isArray(user.location) ? user.location : [];
         this.areas = [
           backendAreas[0] || '',
           backendAreas[1] || '',
@@ -219,17 +219,18 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
       // 🌟 1. 判斷圖片狀態
-      let currentFile: File | null = null;
+      let base64Img: string | null = null;
       let isDelete = false;
 
       if (this.selectedAvatarFile === 'RESET_DEFAULT' as any) {
         isDelete = true;
       } else if (this.selectedAvatarFile instanceof File) {
-        currentFile = this.selectedAvatarFile;
+        base64Img = this.avatarUrl as string;
       }
 
       // 🌟 2. 打包成 SetInfoVo 物件 (準備送給 Java)
       const updateData: SetInfoVo = {
+        email: this.email,
         name: this.tempName,
         school: this.schoolControl.value ?? '',
         department: this.deptControl.value ?? '',
@@ -238,7 +239,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         location: this.areaFormArray.controls
                     .map(c => c.value ?? '')
                     .filter(val => val.trim() !== ''), // 過濾掉空字串
-        img: currentFile,
+        img: base64Img,
         deleteImg: isDelete
       };
 
@@ -604,8 +605,43 @@ onAreaSelected() {
         this.isEditingPassword = true;
         return;
       }
+
+      const requestData: ChangePasswordVo = {
+      nowPad: this.passwordForm.value.oldPassword,
+      newPad: this.passwordForm.value.newPassword
+      };
+
+      this.userService.changePassword(requestData).subscribe({
+        next:(res) => {
+          if(res.statusCode === 200){
+          Swal.fire({
+            title: '密碼修改成功！',
+            icon: 'success',
+            confirmButtonText: '確定',
+            confirmButtonColor: '#FB831D',
+          });
+          // 成功後才執行收尾動作 (禁用並清空密碼表單)
+          this.finalizeEdit();
+          }else{
+            console.error('修改密碼被後端拒絕:', res.message);
+            Swal.fire({
+            title: '修改失敗',
+            text: '舊密碼輸入錯誤，請確認後再試！',
+            icon: 'error',
+            confirmButtonText: '知道了',
+            confirmButtonColor: '#FB831D',
+          });
+          this.isEditingPassword = true;
+          }
+        },
+        error: (err) => {
+        console.error('更換密碼 API 錯誤', err);
+        Swal.fire('系統錯誤', '無法連線到伺服器，請稍後再試！', 'error');
+        this.isEditingPassword = true;
+        }
+      });
+
       console.log('送出修改密碼請求', this.passwordForm.value);
-      this.finalizeEdit();
     }
   }
 
