@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms'; // 1. Import FormsModule
 import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin, GraduationCap } from 'lucide-angular';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-shopping-cart',
   imports: [LucideAngularModule, FormsModule],
@@ -30,6 +31,23 @@ export class ShoppingCartComponent {
   // =========================================================
 
   productAmount = 2;
+
+  expandedDescriptions = new Set<number>();
+
+
+  toggleDescription(productId: number) {
+    if (this.expandedDescriptions.has(productId)) {
+      this.expandedDescriptions.delete(productId);
+    } else {
+      this.expandedDescriptions.add(productId);
+    }
+  }
+
+
+  isDescriptionExpanded(productId: number): boolean {
+    return this.expandedDescriptions.has(productId);
+  }
+
   alert ="";
 
   deleteList() {

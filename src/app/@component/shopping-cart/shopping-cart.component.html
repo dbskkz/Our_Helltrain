@@ -30,7 +30,18 @@
 
       <div class="product-info">
         <div class="product-header">
-          <h5 class="item-title" [title]="item.title">{{item.title}}</h5>
+
+          <div class="title-wrapper">
+
+            <h5
+              class="item-title"
+              [title]="item.title">
+
+              {{ item.title }}
+
+            </h5>
+
+          </div> <!-- the end of title-wrapper -->
 
           <div class="header-side-info">
             <span class="item-condition">{{item.condition}}</span>
@@ -42,10 +53,52 @@
         </div>
 
         <div class="item-description-wrapper">
-          <p class="item-description">商品描述</p>
-          <p class="item-description">{{item.description}}</p>
+
+          <p class="item-description-title">
+            商品描述
+          </p>
+
+          <div
+            class="description-content-wrapper"
+            [class.expanded]="isDescriptionExpanded(item.productId)"
+            [class.has-overflow]="item.description.length > 80"
+          >
+
+            <p class="item-description">
+              {{ item.description }}
+            </p>
+
+            @if(item.description.length > 80 && !isDescriptionExpanded(item.productId)){
+              <div class="fade-overlay"></div>
+            }
+
+          </div>
+
+          @if(item.description.length > 80) {
+
+            <div class="toggle-btn-container">
+
+              <button
+                class="toggle-btn"
+                type="button"
+                (click)="toggleDescription(item.productId)"
+                 [class.expanded]="isDescriptionExpanded(item.productId)">
+
+                {{
+                  isDescriptionExpanded(item.productId)
+                    ? '收合'
+                    : '查看更多'
+                }}
+
+              </button>
+
+            </div>
+
+          }
+
         </div>
-      </div>
+
+      </div> <!-- the end of item description wrapper -->
 
       <div class="item-content">
 
