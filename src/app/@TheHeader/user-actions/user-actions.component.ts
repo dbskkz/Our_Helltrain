@@ -53,6 +53,10 @@ export class UserActionsComponent {
   goToOrder(){
     this.router.navigate(['/order_information']);
   }
+  goToDraft(){
+    this.router.navigate(['/draft_list']);
+  }
+
 
   logout(){
     Swal.fire({
