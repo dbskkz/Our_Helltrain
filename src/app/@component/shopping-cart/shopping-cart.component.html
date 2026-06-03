@@ -41,15 +41,21 @@
           </div>
         </div>
 
-        <p class="item-description">{{item.description}}</p>
+        <div class="item-description-wrapper">
+          <p class="item-description-title">商品描述</p>
+          <p class="item-description">{{item.description}}</p>
+        </div>
       </div>
 
       <div class="item-content">
 
         <div class="seller-info">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
-           class="seller-avatar" alt="賣家頭像">
-          <span class="seller-name">{{item.sellerName}}</span>
+          <div class="seller-header">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
+             class="seller-avatar" alt="賣家頭像">
+            <span class="seller-name">{{item.sellerName}}</span>
+          </div>
+
           <button class="btn-chat" title="和同學聊聊!">
             <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
           </button>
