@@ -25,7 +25,7 @@ export class LaunchProductInfoComponent implements OnInit{
   customCatInput = '';
 
   // 年級清單
-  gradeList: string[] = ['不拘','大一', '大二', '大三', '大四', '碩士', '博士'];
+  gradeList: string[] = ['大一', '大二', '大三', '大四以上', '碩士', '博士', '不分年級'];
 
   isNextDisabled = true;
 
@@ -90,12 +90,12 @@ export class LaunchProductInfoComponent implements OnInit{
     const checked = (event.target as HTMLInputElement).checked;
 
     if (checked) {
-      if (grade === '不拘') {
-        // 如果選了「不拘」，直接清空其餘選項，只保留不拘
-        this.state.grades = ['不拘'];
+      if (grade === '不分年級') {
+        // 如果選了「不分年級」，直接清空其餘選項，只保留不分年級
+        this.state.grades = ['不分年級'];
       } else {
-        // 如果選了常規年級，先剔除「不拘」再加入新勾選項
-        const filtered = this.state.grades.filter(g => g !== '不拘');
+        // 如果選了常規年級，先剔除「不分年級」再加入新勾選項
+        const filtered = this.state.grades.filter(g => g !== '不分年級');
         this.state.grades = [...filtered, grade];
       }
     } else {
@@ -142,17 +142,28 @@ onCustomCatInput(): void {
     this.updateNextButton();
   }
 
+  // 儲存草稿
+  onSaveDraft(): void {
+  this.formService.saveDraft();
+  this.showToast('✓ 草稿已儲存');
+}
+
+onNewProduct(): void {
+  this.formService.resetState(); // 確保 currentDraftId 被清掉
+  this.router.navigate(['/launch_product_info']);
+}
+
+  // 下一步
+  onNextClick(): void {
+    if (this.isNextDisabled) return;
+    this.router.navigate(['/launch_product_price']);
+  }
 
   showToast(msg: string): void {
     this.toastText = msg;
     this.toastVisible = true;
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => { this.toastVisible = false; }, 1500);
-  }
-
-  onNextClick(): void {
-    if (this.isNextDisabled) return;
-    this.router.navigate(['/launch_product_price']);
   }
 
 }
