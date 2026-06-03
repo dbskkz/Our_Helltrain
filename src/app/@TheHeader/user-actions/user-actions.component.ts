@@ -28,14 +28,9 @@ export class UserActionsComponent {
   // Show menu
   isDisplayed = false;
 
-  // 取得名字資料by.絲絨
-  get userName(): string {
-    const user = this.userService.currentUser();
-    return this.userService.currentUser() ? user.userName : '小明';
-  }
-  // 取得頭像資料by.絲絨
-  get imgPath(): string {
-    return this.userService.avatarUrl();
+  // 獲取使用者資料.絲絨
+  get userData() {
+    return this.userService.currentUser;
   }
 
 
@@ -53,8 +48,9 @@ export class UserActionsComponent {
   goToCart() {
     this.router.navigate(['/cart']);
   }
-  goToStore() {
-    this.router.navigate(['/store']);
+  goToStore() { // 絲絨更動
+    let id = this.userService.currentUser().userId;
+    if (id) { this.router.navigate(['/store', Number(id)]); }
   }
   goToSetting() {
     this.router.navigate(['/profile_settings']);
