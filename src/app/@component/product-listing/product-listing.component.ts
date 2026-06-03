@@ -3,7 +3,7 @@ import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { FormsModule } from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaginationService } from '../../@Services/pageination.service';
 
 // 素材庫
@@ -53,6 +53,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private uiBehavior: UiBehaviorService,
     private aca: EighteenAcademyService,
@@ -188,12 +189,34 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
 
   // =========================================================
+  // 偷 sidenav 的 code 來用
+  // =========================================================
+
+  // 宣告商品種類
+  get categories():any[]{
+    return this.ctgService.categories
+  }
+
+  // 被選擇的商品種類
+  selectedCategory = '';
+
+  // 以常見分類選擇商品
+  selectCategory(value: string){
+    this.selectedCategory = value;
+    this.goToProductList();
+  }
+
+  goToProductList(){
+    this.router.navigate(['/product-list', this.selectedCategory]);
+  }
+
+  // =========================================================
   // CATEGORY
   // =========================================================
 
   searchReq: SearchProductReq = {};
   allProducts:ProductCard[] = [];
-  // keyword: string | null = '';
+
   category: string | null = '';
 
   get categoryName(): string {
@@ -208,10 +231,6 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
     return CATEGORY_MAP[this.category!] || '全部商品';
   }
-
-
-
-
 
   // =========================================================
   // PANEL OPEN / CLOSE
@@ -419,7 +438,7 @@ get sortedProducts(): ProductCard[] {
 
 
   // =========================================================
-  // 搜尋結果
+  // 前端篩選結果
   // =========================================================
 
   private matchCategory(product: ProductCard): boolean {

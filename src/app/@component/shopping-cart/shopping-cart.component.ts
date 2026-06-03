@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // 1. Import FormsModule
 
 
-import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin} from 'lucide-angular';
+import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin, GraduationCap } from 'lucide-angular';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,6 +22,7 @@ export class ShoppingCartComponent {
   readonly MapPinIcon = MapPin;
   readonly HeartIcon = HeartIcon;
   readonly MessageCircleIcon = MessageCircleMore;
+  readonly GraduationCapIcon = GraduationCap;
 
 
   // =========================================================
@@ -35,8 +36,6 @@ export class ShoppingCartComponent {
     for (const item of this.products){
       if(this.products.filter(p => p.selected).length > 0)
       {
-
-
       Swal.fire({
             title: "確定要刪除這些商品嗎",
             text: "",
@@ -76,14 +75,15 @@ export class ShoppingCartComponent {
 
       quantity: 1,
 
-      title: '極簡黑後背包',
+      title: '收納箱，2個',
       price: 300,
-      stock: 5,
+      condition: '近全新',
+       description:'搬家贈送，關新路附近全家大贏店自取（以收2個優先）',
 
       imgUrl: 'assets/bag.jpg',
 
       sellerName: '生科吉娃娃甘霖',
-      university: '清大',
+      university: '國立清華大學',
       location: '新竹',
       selected: false
     },
@@ -95,14 +95,15 @@ export class ShoppingCartComponent {
 
       quantity: 2,
 
-      title: '奶茶色帆布袋',
+      title: 'Dyson 直髮吹風機 玫瑰色AAAAAAAAAAAAAAAAAAA',
       price: 250,
-      stock: 3,
+      condition: '全新',
+      description: '情人節又要來了 懂事的帥哥們不用煩惱了 因為我來了 好像是日本限定的顏色？正常使用無刮傷 配件只剩後面那個黑色的袋子 質感不錯',
 
       imgUrl: 'assets/bag.jpg',
 
-      sellerName: '不吉娃娃',
-      university: '清大',
+      sellerName: '王珩',
+      university: '國立清華大學',
       location: '花蓮',
       selected: false
     }

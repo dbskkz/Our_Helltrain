@@ -55,8 +55,8 @@
       .card-body {
 
         .title {
-          font-size: 1.1rem;
-          font-weight: 400;
+          font-size: 1.5rem;
+          font-weight: 500;
 
           // 核心代碼
           white-space: nowrap;      // 強制不換行
@@ -79,7 +79,7 @@
       }
 
       .amount {
-        font-size: 1.8rem;    // 數字放大，突顯重點
+        font-size: 1.5rem;    // 數字放大，突顯重點
         font-weight: 750;
         line-height: 1;       // 避免行高影響對齊
       }
@@ -113,6 +113,10 @@
           color: $neutral-500;
           padding-bottom: 0.3rem;
 
+          // 避免內容換行導致卡片高度不一
+          white-space: nowrap;
+          overflow: hidden;
+
           .picture {
             height: 1.2rem;
             width: 1.2rem;
@@ -120,6 +124,40 @@
             border-radius: 50%;
             flex-shrink: 0;
           }
+
+          .user-name, .user-university
+          {
+            // 🔴 核心：平分剩餘空間
+            flex: 1 1 0;
+
+            // 文字截斷必備三件套
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+
+          .user-name {
+            font-weight: 600;
+            color: $text-black;
+            // 名字可以靠右一點點，與學校拉開
+            text-align: left;
+          }
+
+          .user-university {
+            color: $text-gray;
+            position: relative;
+            padding-left: 0.5rem;
+
+            // 加上分隔線，視覺上更精緻
+            &::before {
+              content: '·';
+              position: absolute;
+              left: 0;
+              color: $neutral-300;
+            }
+          }
+
         }
 
       }
@@ -141,4 +179,9 @@
   }
 
 
+}
+
+.card-img-top
+{
+  aspect-ratio: 1;
 }

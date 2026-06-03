@@ -1,4 +1,21 @@
 <main class="content">
+  <nav class="type-nav">
+      <ul class="sub-list">
+            <li>
+              <button class="sub-link" (click)="selectCategory('all')" [class.active]="selectedCategory === 'all'">
+                <span class="sub-panel-text">全部</span>
+              </button>
+            </li>
+          @for (item of categories; track $index) {
+            <li>
+              <button class="sub-link" (click)="selectCategory(item.value)" [class.active]="selectedCategory === item.value">
+                <!-- <lucide-icon [name]="item.icon"></lucide-icon> -->
+                <span class="sub-panel-text">{{ item.label }}</span>
+              </button>
+            </li>
+          }
+      </ul>
+  </nav>
   <nav class="filter-panel">
 
     <!-- 麵包屑 -->
@@ -47,6 +64,7 @@
         篩選
       </button>
 
+
       @for (tag of activeFilters; track tag.key) {
         <span class="filter-tag">
           {{ tag.label }}
@@ -61,7 +79,6 @@
       }
 
     </div>
-
   </nav>
 
   <!-- Overlay -->

@@ -9,7 +9,7 @@ import {
   GraduationCap,
   NotebookText,
   Shirt,
-  BicepsFlexed
+  BicepsFlexed,
 } from 'lucide-angular';
 
 @Injectable({

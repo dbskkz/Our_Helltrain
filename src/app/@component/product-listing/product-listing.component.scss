@@ -1,5 +1,93 @@
 @use '../../styles/variables' as *;
 
+.type-nav {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05); // 極淺底線
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+}
+
+.sub-list {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; // 稍微拉開間距，底線感更明顯
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.sub-link {
+  position: relative; // 為了定位底線
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 0.2rem; // 縮小左右 padding，增加上下空間
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 1rem;
+  font-weight: 300;
+  color: $text-gray; // 預設灰
+  transition: all 0.25s ease;
+
+  // lucide-icon {
+  //   font-size: 1.1rem;
+  //   color: inherit;
+  // }
+
+  // 🔴 底線設計
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; // 貼齊最下方
+    left: 0;
+    width: 100%;
+    height: 3px; // 底線粗度
+    background-color: $primary-yellow; // 預設使用你的主題黃
+    border-radius: 999px 999px 0 0;
+
+    // 動態效果：預設縮小，Active 時展開
+    transform: scaleX(0);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover:not(.active) {
+    color: $text-black;
+    // Hover 時可以給一個淡淡的底線預覽
+    &::after {
+      transform: scaleX(0.3);
+      background-color: $semantic-orange;
+    }
+  }
+
+  // 🔘 選中狀態
+  &.active {
+    color: $text-black;
+    font-weight: 600; // 選中時加粗
+
+    &::after {
+      transform: scaleX(1); // 展開底線
+    }
+  }
+}
+
+
+// 針對手機版最佳化
+@media (max-width: 768px) {
+  .sub-list {
+    gap: 1.2rem;
+  }
+  .sub-link {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.1rem;
+  }
+}
+
 // =========================================================
 // 基礎
 // =========================================================

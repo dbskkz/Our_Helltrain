@@ -28,13 +28,27 @@
           alt="商品照片"> -->
       </div>
 
+      <div class="product-info">
+        <div class="product-header">
+          <h5 class="item-title" [title]="item.title">{{item.title}}</h5>
+
+          <div class="header-side-info">
+            <span class="item-condition">{{item.condition}}</span>
+            <div class="item-price">
+              <span class="price-currency">$</span>
+              <span class="price-amount">{{item.price}}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="item-description">{{item.description}}</p>
+      </div>
+
       <div class="item-content">
-        <h5 class="item-title">{{item.title}}</h5>
 
         <div class="seller-info">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
            class="seller-avatar" alt="賣家頭像">
-           <span>優良賣家</span>
           <span class="seller-name">{{item.sellerName}}</span>
           <button class="btn-chat" title="和同學聊聊!">
             <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
@@ -42,16 +56,17 @@
         </div>
 
         <div class="location-info">
+          <lucide-icon [img]="GraduationCapIcon" size="14"></lucide-icon>
+          <span>{{item.university}}學生</span>
+        </div>
+        <div class="location-info">
           <lucide-icon [img]="MapPinIcon" size="14"></lucide-icon>
-          <span>{{item.university}} · {{item.location}}</span>
+          <span>{{item.location}}</span>
         </div>
 
       </div>
 
-      <div class="item-price">
-        <span class="price-amount">{{item.price}}</span>
-        <span class="price-currency">$</span>
-      </div>
+
 
     </li>
     }

@@ -97,7 +97,7 @@ export class ProductServiceService {
           userName: '李吉娃娃',
           userImg:
             'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '清華大學',
+          university: '國立清華大學',
           department: '生科系',
           location: '高雄'
         }
@@ -141,7 +141,7 @@ export class ProductServiceService {
         user: {
           userName: '李吉娃娃',
           userImg: 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '清華大學',
+          university: '國立清華大學',
           department: '生科系',
           location: '高雄'
         }
@@ -194,7 +194,7 @@ searchByType(type:string): Observable<GetProductDataRes> {
         user: {
           userName: '李吉娃娃',
           userImg: 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '清華大學',
+          university: '國立清華大學',
           department: '生科系',
           location: '高雄'
         }
