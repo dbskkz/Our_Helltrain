@@ -173,8 +173,8 @@ private getSlotIndex(el: HTMLElement): number {
 
   private processFiles(files: FileList): void {
   Array.from(files).forEach((file) => {
-    if (file.size > 10 * 1024 * 1024) {
-      this.showToast('單張圖片不能超過 10MB');
+    if (file.size > 2 * 1024 * 1024) {
+      this.showToast('單張圖片不能超過 2MB');
       return;
     }
 
@@ -358,6 +358,12 @@ onBackdropClick(event: MouseEvent): void {
   if ((event.target as HTMLElement).classList.contains('dialog-backdrop')) {
     this.dialogVisible = false;
   }
+}
+
+// 儲存草稿
+onSaveDraft(): void {
+  this.formService.saveDraft();
+  this.showToast('✓ 草稿已儲存');
 }
 
 // 確認上架

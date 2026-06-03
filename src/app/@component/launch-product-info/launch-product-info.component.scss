@@ -105,18 +105,18 @@
 }
 
 .section-label {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #1e293b;
 
   .hint-text {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: normal;
     color: #64748b;
   }
 }
 
-.req { color: #ef4444; font-size: 14px; }
+.req { color: #ef4444; font-size: 16px; }
 
 /* ── 新增功能元件樣式 ── */
 .select-group {
@@ -138,7 +138,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 16px;
     color: #334155;
     cursor: pointer;
 
@@ -169,7 +169,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 16px;
     color: #334155;
     cursor: pointer;
     white-space: nowrap;
@@ -205,7 +205,7 @@
   top: 50%;
   transform: translateY(-50%);
   padding: 3px 8px !important;
-  font-size: 14px;
+  font-size: 16px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   outline: none;
@@ -223,7 +223,7 @@ select, input[type="text"], input[type="number"] {
   padding: 11px 14px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   color: #334155;
   background-color: #fff;
   box-sizing: border-box;
@@ -249,7 +249,7 @@ select, input[type="text"], input[type="number"] {
   }
 }
 
-.optional { font-size: 12px; color: #6b7280; font-weight: 400; }
+.optional { font-size: 16px; color: #6b7280; font-weight: 400; }
 
 /* ── Fields ── */
 .field { margin-bottom: 20px; }
@@ -269,7 +269,7 @@ textarea,
 select {
   width: 100%;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 16px;
   color: #1e1e1e;
   background: #fff;
   border: 1px solid #e2e5ea;
@@ -337,7 +337,7 @@ select option { color: #1e1e1e; }
   background: #f0f2ff;
   border: 1px solid #c7d0ff;
   color: #4f63d6;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
   padding: 2px 8px 2px 10px;
   border-radius: 20px;
@@ -348,7 +348,7 @@ select option { color: #1e1e1e; }
   border: none;
   cursor: pointer;
   color: #9ba8e8;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
   padding: 0 1px;
   display: flex;
@@ -363,7 +363,7 @@ select option { color: #1e1e1e; }
   border: none;
   outline: none;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 16px;
   color: #1e1e1e;
   background: transparent;
   padding: 0;
@@ -376,14 +376,14 @@ select option { color: #1e1e1e; }
 /* ── Footer：右下角下一步 ── */
 .form-footer {
   display: flex;
-  justify-content: flex-end;  /* ← 靠右 */
+  justify-content: space-between;  /* ← 靠右 */
   align-items: center;
   margin-top: 20px;
 }
 
 .btn {
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   border-radius: 6px;
   padding: 11px 24px;
@@ -393,6 +393,18 @@ select option { color: #1e1e1e; }
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.btn-draft {
+  background: #fff;
+  border: 1.5px dashed #d1d5db;
+  color: #6b7280;
+
+  &:hover {
+    border-color: $primary-yellow;
+    color: #92740a;
+    background: #fffdf0;
+  }
 }
 
 .btn-primary {
@@ -440,7 +452,7 @@ input.error {
   transform: translateX(-50%) translateY(-50%);
   background: #1a1d23;
   color: #fff;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
   padding: 10px 20px;
   border-radius: 8px;

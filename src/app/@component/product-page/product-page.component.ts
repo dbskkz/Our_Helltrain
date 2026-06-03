@@ -121,10 +121,10 @@ export class ProductPageComponent {
 
   selectedImageIndex = 0;
   isExpanded = false; //控制商品說明是否展開
+  isOverflowing = false; // 用來決定要不要顯示[查看更多]按鈕
   isCollected = false; // 是否已收藏
   isRequested = false; // 是否已發送請求
-
-
+  @ViewChild('descText') descText!: ElementRef;
 
   ngOnInit(): void {}
 
@@ -144,6 +144,26 @@ export class ProductPageComponent {
   selectImage(index: number): void {
 if (index >= 0 && index < this.validImages.length) {
       this.selectedImageIndex = index;
+    }
+  }
+
+    ngAfterViewInit() {
+    setTimeout(() => {
+      this.checkTextOverflow();
+    });
+  }
+
+//檢查是否要顯示 查看更多 按鈕
+  checkTextOverflow() {
+    if (this.descText && this.descText.nativeElement) {
+      const element = this.descText.nativeElement;
+
+      // 取得這段文字「真實」長出的總高度
+      const actualHeight = element.scrollHeight;
+      const maxAllowedHeight = 110;
+
+      // 如果真實高度大於 4 行的高度，isOverflowing 就會變成 true！
+      this.isOverflowing = actualHeight > maxAllowedHeight;
     }
   }
 

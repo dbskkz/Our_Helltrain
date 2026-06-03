@@ -1,0 +1,81 @@
+<div class="draft-wrapper">
+  <h2 class="page-title">我的草稿</h2>
+
+  <div *ngIf="drafts.length === 0" class="empty">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none"
+      viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.2">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
+    </svg>
+    <p>目前沒有任何草稿</p>
+  </div>
+
+  <div class="draft-list">
+    <div class="draft-card" *ngFor="let draft of pagedDrafts">
+
+      <!-- 縮圖 -->
+      <div class="draft-thumb">
+        <img *ngIf="getThumb(draft)" [src]="getThumb(draft)" alt="草稿縮圖" />
+        <svg *ngIf="!getThumb(draft)" xmlns="http://www.w3.org/2000/svg"
+          width="28" height="28" fill="none" viewBox="0 0 24 24"
+          stroke="#cbd5e1" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </div>
+
+      <!-- 資訊 -->
+      <div class="draft-info">
+        <p class="draft-title">{{ getTitle(draft) }}</p>
+        <p class="draft-meta">
+          {{ draft.state.catMain || '未分類' }}
+          <span *ngIf="draft.state.price > 0"> ・ NT$ {{ draft.state.price }}</span>
+        </p>
+        <p class="draft-time">儲存於 {{ draft.savedAt | date:'yyyy/MM/dd HH:mm' }}</p>
+      </div>
+
+      <!-- 操作 -->
+      <div class="draft-actions">
+        <button class="btn-load" (click)="onLoad(draft.id)">繼續編輯</button>
+        <button class="btn-del" (click)="onDelete(draft.id)">刪除</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 防呆 -->
+<div class="confirm-overlay" *ngIf="showConfirm">
+  <div class="confirm-box">
+    <p class="confirm-msg">確定要刪除這個草稿嗎？</p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-yes" (click)="confirmDelete()">是，刪除</button>
+      <button class="btn-confirm-no" (click)="cancelDelete()">否，取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 分頁 -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <span>共{{totalElements}}筆資料</span>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      @for (p of pages; track p) {
+      <li class="page-item" [class.active]="currentPage === p">
+        <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</div>
