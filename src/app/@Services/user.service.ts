@@ -16,24 +16,6 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  // login(email: string, password: string) {
-  //   const params = new HttpParams()
-  //     .set('email', email)
-  //     .set('password', password);
-
-  //   return this.http.get<{ statusCode: number; message: string; role: string; data: any }>(
-  //     `${this.apiUrl}/login`,
-  //     { params, withCredentials: true }
-  //   ).pipe(
-  //     tap(res => {
-  //       if (res.statusCode === 200) {
-  //         this.isLoggedIn.set(true);
-  //         localStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
-  //       }
-  //     })
-  //   );
-  // }
-
   // 登入by.絲絨
   login(email: string, password: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/login?email=${email}&password=${password}`);

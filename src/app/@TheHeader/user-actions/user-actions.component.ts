@@ -22,6 +22,8 @@ export class UserActionsComponent {
   readonly MessageIcon = MessageCircleMore;
   readonly ChevronDownIcon = ChevronDownIcon;
 
+  ngOnInit(): void {
+  }
   // Declare
   userName = "小明";
 

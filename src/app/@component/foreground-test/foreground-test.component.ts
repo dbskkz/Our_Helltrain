@@ -35,12 +35,14 @@ export class ForegroundTestComponent {
     // 實驗結論 : chrome 和 MicroSoftEdge 可以正常使用
     // this.gpsExp();
 
-    this.productService.getAll().subscribe({
-      next: (res) => {
-        console.log(res.productList);
-      }
-    })
+    // this.productService.getAll().subscribe({
+    //   next: (res) => {
+    //     console.log(res.productList);
+    //   }
+    // })
 
+
+    this.submit();
 
   }
 
@@ -135,25 +137,9 @@ export class ForegroundTestComponent {
   pwd = '';
 
   submit(){
-    console.log(this.acc, this.pwd);
-
-    this.userService.login(this.acc, this.pwd).subscribe({
-      next: (res) =>
-
-        {
-
-          console.log(res.message)
-          if(res.message === "Please verify" )
-          {
-            console.log("Please verify");
-
-          }
-
-        },
-
-      error: (err) => console.log(err.message)
+    this.userService.login(this.acc,this.pwd).subscribe(res => {
+      console.log(res);
     })
-
   }
 
 }

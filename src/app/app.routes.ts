@@ -18,6 +18,8 @@ import { LoginRegisterComponent } from './@component/login-register/login-regist
 import { ProductPageComponent } from './@component/product-page/product-page.component';
 import { FrontReportComponent } from './@component/front-report/front-report.component';
 import { LaunchProductPriceComponent } from './@component/launch-product-price/launch-product-price.component';
+import { SchoolCommunityLayoutComponent } from './@SchoolCommunity/school-community-layout/school-community-layout.component';
+import { SchoolCommunityProductComponent } from './@SchoolCommunity/school-community-product/school-community-product.component';
 
 export const routes: Routes = [
   //前台
@@ -37,6 +39,11 @@ export const routes: Routes = [
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
+      { path: 'school-community',
+        component: SchoolCommunityLayoutComponent,
+        children:[
+          { path: 'school-product', component: SchoolCommunityProductComponent }, //校版商品
+        ]}, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
