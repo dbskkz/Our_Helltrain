@@ -29,6 +29,7 @@ export class UserService {
         next: (res) => {
           if (res && res.user) {
             this.currentUser.set(res.user); // 補滿電台，這樣重整網頁王明也不會消失！
+            this.updateAvatar(res.user.imgPath);
           }
         }
       });

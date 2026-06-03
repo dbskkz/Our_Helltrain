@@ -28,16 +28,15 @@ export class UserActionsComponent {
   // Show menu
   isDisplayed = false;
 
-  // 取得資料by.絲絨
+  // 取得名字資料by.絲絨
   get userName(): string {
     const user = this.userService.currentUser();
-    return user ? user.userName : '小明';
+    return this.userService.currentUser() ? user.userName : '小明';
   }
-
-  // get imgPath(): string {
-  //   let img = this.userService.currentUser();
-  //   return img;
-  // }
+  // 取得頭像資料by.絲絨
+  get imgPath(): string {
+    return this.userService.avatarUrl();
+  }
 
 
 
