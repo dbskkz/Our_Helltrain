@@ -488,15 +488,16 @@ export class LoginRegisterComponent implements OnInit {
               confirmButtonColor: '#e57373'
             });
           } else if (err.message === 'Please verify' || err.message === 'Verification is invalid') {
+            this.isRegister = true;
+            this.currentStep = 2;
+            this.cdr.detectChanges();
+
             Swal.fire({
               title: '尚未驗證或驗證已過期',
               text: '請驗證後再試',
               icon: 'error',
               confirmButtonColor: '#e57373'
             });
-            this.currentStep = 2;
-            console.log('【除錯】目前的 currentStep 已經變成：', this.currentStep);
-            this.cdr.detectChanges();
           } else {
             Swal.fire({
               title: '連線錯誤',
