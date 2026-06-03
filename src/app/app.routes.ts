@@ -18,6 +18,7 @@ import { LoginRegisterComponent } from './@component/login-register/login-regist
 import { ProductPageComponent } from './@component/product-page/product-page.component';
 import { FrontReportComponent } from './@component/front-report/front-report.component';
 import { LaunchProductPriceComponent } from './@component/launch-product-price/launch-product-price.component';
+import { DraftListComponent } from './@component/draft-list/draft-list.component';
 
 export const routes: Routes = [
   //前台
@@ -33,7 +34,8 @@ export const routes: Routes = [
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
-      { path: 'launch_product_price', component: LaunchProductPriceComponent },//上架商品頁-價格
+      { path: 'launch_product_price', component: LaunchProductPriceComponent }, //上架商品頁-價格
+      { path: 'draft_list', component: DraftListComponent }, //儲存草稿頁
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
