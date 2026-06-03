@@ -8,7 +8,7 @@
   <div class="main_card consolidation-card">
 
     <div class="card_header">
-      <h4><span><lucide-icon [name]="bookUser"></lucide-icon></span> 公開基本檔案</h4>
+      <h4><span><lucide-icon [name]="icons.BookUser"></lucide-icon></span> 公開基本檔案</h4>
       <div class="button_group">
         @if (isEditingBasic) {
           <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
@@ -30,16 +30,38 @@
       </div>
 
       <div class="main_card_right">
+
         <div class="main_card_right_up">
           <span class="label-text">姓名：</span>
           @if (!isEditingBasic) {
             <h4 class="pure-text-display">{{name}}</h4>
           } @else {
             <div class="edit-group">
-              <input type="text" [(ngModel)]="tempName" class="edit-input" placeholder="請輸入姓名 (必填)" maxlength="20">
-              <small class="word-count-hint" [style.color]="tempName.length >= 20 ? 'red' : '#999'">
-                {{ tempName.length || 0 }} / 20
-              </small>
+              <div class="input-row">
+                <input
+                type="text"
+                [(ngModel)]="tempName"
+                #nameInput="ngModel"
+                class="edit-input"
+                placeholder="請輸入姓名 (必填)"
+                minlength="2"
+                maxlength="20"
+                pattern="^[\u4e00-\u9fa5a-zA-Z\s]{2,20}$"
+                >
+                <small class="word-count-hint" [style.color]="tempName.length >= 20 ? 'red' : '#999'">
+                  {{ tempName.length || 0 }} / 20
+                </small>
+              </div>
+              @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+                @if (nameInput.hasError('required')) {
+                  <p class="field-hint error-text">✘ 姓名是必填喔！</p>
+                } @else if (nameInput.hasError('minlength')) {
+                  <p class="field-hint error-text">⚠ 姓名最少需要 2 個字喔！</p>
+                }
+                 @else if (nameInput.hasError('pattern')) {
+                  <p class="field-hint error-text">✘ 姓名只能包含中英文與空白，不能有數字或符號！</p>
+                }
+              }
             </div>
           }
         </div>
@@ -49,10 +71,7 @@
             <h5>{{score}}</h5>
             <p>評分</p>
           </div>
-          <div class="main_card_1" (click)="orderInformation()">
-            <h5>{{tradeNumber}}</h5>
-            <p>交易數</p>
-          </div>
+
           <div class="main_card_1" (click)="gotoStore()">
             <h5>{{onTheShelves}}</h5>
             <p>目前上架</p>
@@ -66,7 +85,7 @@
 <div class="region_group_grid">
 
   <div class="grid-field-item school">
-    <p class="field-title"><lucide-icon [name]="School"></lucide-icon>就讀學校</p>
+    <p class="field-title"><lucide-icon [name]="icons.School"></lucide-icon>就讀學校</p>
 
     <div class="field-content-block">
       @if (!isEditingBasic) {
@@ -97,7 +116,7 @@
   </div>
 
   <div class="grid-field-item department">
-    <p class="field-title"><lucide-icon [name]="BoxIcon"></lucide-icon>就讀科系</p>
+    <p class="field-title"><lucide-icon [name]="icons.Box"></lucide-icon>就讀科系</p>
 
     <div class="field-content-block">
       @if (!isEditingBasic) {
@@ -120,7 +139,7 @@
   </div>
 
   <div class="grid-field-item multi-area-section">
-    <p class="field-title"><lucide-icon [name]="MapPin"></lucide-icon>常出沒地區
+    <p class="field-title"><lucide-icon [name]="icons.MapPin"></lucide-icon>常出沒地區
       @if (isEditingBasic) {<span class="optional-text">(最多填三個)</span>}
     </p>
 
@@ -174,7 +193,7 @@
   </div>
 
   <div class="grid-field-item phone_section">
-    <p class="field-title"><lucide-icon [name]="Phone"></lucide-icon>聯絡電話
+    <p class="field-title"><lucide-icon [name]="icons.Phone"></lucide-icon>手機號碼
       @if (isEditingBasic) {<span class="optional-text">(選填 作為聯絡方式之一)</span>}
     </p>
 
@@ -201,7 +220,7 @@
   <hr class="section-divider">
 
     <div class="profile_section_block">
-      <p class="field-title"><span><lucide-icon [name]="clipboardPenLine"></lucide-icon></span> 個人簡介</p>
+      <p class="field-title"><span><lucide-icon [name]="icons.ClipboardPenLine"></lucide-icon></span> 個人簡介</p>
       <div class="profile_content">
         @if (!isEditingBasic) {
           <p class="display_text pure-text-display">{{ profile }}</p>
@@ -221,7 +240,7 @@
     </div>
 
     <div class="email_group_integration">
-      <p class="email-title"><lucide-icon [name]="Mail"></lucide-icon>驗證信箱 <span class="isVerify">官方已驗證</span></p>
+      <p class="email-title"><lucide-icon [name]="icons.Mail"></lucide-icon>驗證信箱 <span class="isVerify">官方已驗證</span></p>
       <p class="email-value">{{email}}</p>
       <p class="email-hint">學校教育信箱一經認證，即無法修改，如需修改請聯繫客服</p>
     </div>
@@ -229,7 +248,7 @@
 
   <div class="main_card consolidation-card password-independent-card">
     <div class="card_header">
-      <h4><span><lucide-icon [name]="lockKeyhole"></lucide-icon></span> 帳號密碼安全</h4>
+      <h4><span><lucide-icon [name]="icons.LockKeyhole"></lucide-icon></span> 帳號密碼安全</h4>
       <div class="button_group">
         @if (isEditingPassword) {
           <button class="cancel_btn" (click)="cancelEditPassword()">取消修改</button>

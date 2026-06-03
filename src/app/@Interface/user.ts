@@ -1,3 +1,26 @@
+//「使用者」的詳細資料
+export interface User {
+  userId: number;
+  userEmail: string;
+  userName: string;
+  password?: string;      // ⚠️ 備註：實戰中密碼通常不會傳給前端
+  phone: string | null;
+  location: string;
+  school: string;
+  department: string | null;
+  status: string;
+  verified: string | null;
+  goodLevel: number;
+  msg: string | null;
+  imgPath: string;
+  createDate: string;
+}
+
+//使用者回傳格式
+export interface UserRes extends BasicResponse{
+  user: User;
+}
+
 //送出基本資料
 export interface UserReq {
   name: string;
@@ -5,8 +28,7 @@ export interface UserReq {
   email: string;
   location: string;
   school: string;
-  phone: string;
-  status: string;
+  phone: string | null;
 }
 
 //通用的後端回應格式
@@ -23,7 +45,7 @@ export interface VerifyVO {
 
 //修改個人資訊（密碼以外）
 export interface SetInfoVo {
-  email: string;
+  img?: File | null;
   name: string;
   location: string[]; // 如果選方案 A 叫 List；選方案 B 就改成 location: string
   school: string;

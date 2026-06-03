@@ -31,9 +31,9 @@ import {
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
-import { ValidatorFn } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
+import { SetInfoVo } from '../../@Interface/user';
 
 @Component({
   selector: 'app-profile-settings',
@@ -54,15 +54,7 @@ import { UserService } from '../../@Services/user.service';
 })
 export class ProfileSettingsComponent {
   // --- 唯讀常數與圖標 ---
-  readonly School = School;
-  readonly MapPin = MapPin;
-  readonly Phone = Phone;
-  readonly BoxIcon = Box;
-  readonly Mail = Mail;
-  readonly pencilIcon = PencilLine;
-  readonly bookUser = BookUser;
-  readonly clipboardPenLine = ClipboardPenLine;
-  readonly lockKeyhole = LockKeyhole;
+readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, ClipboardPenLine, LockKeyhole };
 
   // --- 狀態變數 ---
   isEditingBasic = false;
@@ -72,17 +64,16 @@ export class ProfileSettingsComponent {
   hideConfirmPassword = signal(true);
 
   // --- 使用者原始數據 (與後端對接用) ---
-  name = '小明';
-  school = '輔仁大學';
-  department = '醫學系';
-  areas: string[] = ['新北市', '', ''];
+  name = '';
+  school = '';
+  department = '';
+  areas: string[] = ['', '', ''];
   phone = '';
-  email = '401338013@gapp.fju.edu.tw';
-  profile = '本人常駐於輔仁大學，偶爾會穿越到台灣大學';
-  avatarUrl: string | ArrayBuffer | null = '/img/頭像範例.png';
+  email = '';
+  profile = '';
+  avatarUrl: string | ArrayBuffer | null = '';
 
-  score: number = 4.5; //評分
-  tradeNumber: number = 52;  //交易
+  score: number = 0; //評分
   onTheShelves: number = 37;  //目前上架
 
   // --- 暫存與記憶箱子 ---
@@ -117,28 +108,72 @@ export class ProfileSettingsComponent {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
     private router: Router,
     private schoolService: SchoolDataService,
     private userService: UserService
   ) {}
 
+  // --- 串接後端：載入個人資料 ---
+  loadUserProfile() {
+// 實戰中，這裡的 ID 應該是從登入時存的 localStorage 拿出來的
+/**💡💡💡這裡12是測試用，之後要拿掉 💡💡💡*/
+    const currentUserId = Number(localStorage.getItem('userId')) || 12;
+  this.userService.getUserData(currentUserId).subscribe({
+    next:(res)=>{
+      if(res.statusCode === 200){
+        const user = res.user;
+
+        this.name = user.userName;
+        this.email = user.userEmail;
+        this.school = user.school;
+        this.department = user.department || '';
+        this.phone = user.phone || '';
+        this.profile = user.msg || '';
+        this.score = user.goodLevel || 5;
+
+      if (user.imgPath) {
+        this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
+      }
+
+        // 2. 處理地區 (後端給 String，前端要塞進 Array)
+        const backendAreas = (user.location || '').split(',');
+        this.areas = [
+          backendAreas[0] || '',
+          backendAreas[1] || '',
+          backendAreas[2] || ''
+        ];
+
+        // 3. 將資料灌進表單控制項 (FormControl)
+          this.schoolControl.setValue(this.school, { emitEvent: false });
+          this.deptControl.setValue(this.department, { emitEvent: false });
+          this.phoneControl.setValue(this.phone, { emitEvent: false });
+          this.profileControl.setValue(this.profile, { emitEvent: false });
+
+          // 4. 重建並灌入地區 FormArray
+          this.areaFormArray.clear(); // 先把原本空的清掉
+          this.areas.forEach((areaValue, index) => {
+            const validators = index === 0 ? [Validators.required] : [];
+            this.areaFormArray.push(
+              new FormControl({ value: areaValue, disabled: true }, validators)
+            );
+          });
+
+          // 因為我們重新建立了 FormArray，所以要重新接上地區的水管！
+          this.initAutocompletePipelines();
+      }
+    },
+    error: (err) =>{
+      console.error('取得個人資料失敗', err);
+      this.showWarningAlert('無法載入個人資料，請稍後再試。');
+    }
+  });
+  }
+
   ngOnInit() {
     // 1. 初始化集體禁用
     this.setBasicControlsStatus(false);
 
-    // 2. 初始化地區 FormArray
-    this.areas.forEach((areaValue, index) => {
-      const validators = index === 0 ? [Validators.required] : [];
-      this.areaFormArray.push(
-        new FormControl({ value: areaValue, disabled: true }, validators),
-      );
-    });
-
-    // 3. 串接所有 Autocomplete 監聽水管
-    this.initAutocompletePipelines();
-
-    // 4. 密碼表單初始化
+    // 2. 密碼表單初始化
     this.passwordForm = this.fb.group(
       {
         oldPassword: [{ value: '', disabled: true }, [Validators.required]],
@@ -151,18 +186,8 @@ export class ProfileSettingsComponent {
       { validators: this.passwordMatchValidator },
     );
 
-    // 5. 延遲通水機制
-    setTimeout(() => {
-      this.setBasicControlsStatus(true, { emitEvent: false });
-      Object.values(this.basicControlsMap).forEach((c) => {
-        if (c instanceof FormArray)
-          c.controls.forEach((ctrl) =>
-            ctrl.updateValueAndValidity({ emitEvent: true }),
-          );
-        else c.updateValueAndValidity({ emitEvent: true });
-      });
-      this.setBasicControlsStatus(false, { emitEvent: false });
-    }, 300);
+  // 3. 呼叫 API 載入資料 (這裡面會自動幫你處理 FormArray 和水管)
+    this.loadUserProfile();
   }
 
   // 神級重構 B：集體控制狀態的萬能開關工具
@@ -193,27 +218,64 @@ export class ProfileSettingsComponent {
       // 確定儲存時的前端大檢查
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
-      // 🔒 驗證全過，一鍵集體鎖定
-      this.setBasicControlsStatus(false);
+      // 🌟 1. 判斷圖片狀態
+      let currentFile: File | null = null;
+      let isDelete = false;
 
-      // 數據同步
-      this.name = this.tempName;
-      this.school = this.schoolControl.value ?? '';
-      this.department = this.deptControl.value ?? '';
-      this.phone = this.phoneControl.value ?? '';
-      this.profile = this.profileControl.value ?? '';
-      this.areas = this.areaFormArray.controls.map((c) => c.value ?? '');
+      if (this.selectedAvatarFile === 'RESET_DEFAULT' as any) {
+        isDelete = true;
+      } else if (this.selectedAvatarFile instanceof File) {
+        currentFile = this.selectedAvatarFile;
+      }
 
-      console.log('正式送交 Java 後端:', {
-        name: this.name,
-        school: this.school,
-        dept: this.department,
-        phone: this.phone,
-        profile: this.profile,
-        areas: this.areas.filter((a) => a !== ''),
-        avatarFile: this.selectedAvatarFile,
+      // 🌟 2. 打包成 SetInfoVo 物件 (準備送給 Java)
+      const updateData: SetInfoVo = {
+        name: this.tempName,
+        school: this.schoolControl.value ?? '',
+        department: this.deptControl.value ?? '',
+        phone: this.phoneControl.value ?? '',
+        msg: this.profileControl.value ?? '',
+        location: this.areaFormArray.controls
+                    .map(c => c.value ?? '')
+                    .filter(val => val.trim() !== ''), // 過濾掉空字串
+        img: currentFile,
+        deleteImg: isDelete
+      };
+
+      // 🌟 3. 正式發送給後端！
+      this.userService.updateProfile(updateData).subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            // ✅ 後端說存檔成功了！
+            Swal.fire({ title: '儲存成功！', icon: 'success', confirmButtonColor: '#FB831D' });
+
+            // 確定成功後，才一鍵集體鎖定表單並關閉編輯模式
+            this.setBasicControlsStatus(false);
+            this.isEditingBasic = false;
+
+            // 數據同步：用剛剛送出去的資料，來更新畫面上的變數
+            this.name = updateData.name;
+            this.school = updateData.school;
+            this.department = updateData.department;
+            this.phone = updateData.phone;
+            this.profile = updateData.msg;
+            this.areas = updateData.location;
+            this.selectedAvatarFile = null;
+
+          } else if (res.statusCode === 400 && res.message === 'Please login first') {
+            // ⚠️ 假設這是你們後端「未登入」的代碼，依你們實際情況調整
+            Swal.fire({ title: '登入已過期', text: '請重新登入', icon: 'error' }).then(() => {
+              this.router.navigate(['/login']);
+            });
+          } else {
+            // ❌ 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
+            this.showWarningAlert(res.message);
+          }
+        },
+        error: () => {
+          this.showWarningAlert('伺服器連線異常，請稍後再試！');
+        }
       });
-      this.selectedAvatarFile = null;
     }
   }
 
@@ -308,6 +370,7 @@ export class ProfileSettingsComponent {
 
   // 🔑 如果使用者把字擦掉變空字串，清空所有自訂錯誤，回歸 required 判斷
   if (!value) {
+    control.setErrors(null);
     return;
   }
 
