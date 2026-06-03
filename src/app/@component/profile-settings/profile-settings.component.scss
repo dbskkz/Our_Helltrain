@@ -168,13 +168,24 @@
   }
 
   .main_card_right_up {
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     width: 100%;
 
-    .label-text { color: #666; font-size: 0.9rem; margin: 0; white-space: nowrap; }
+    @media (max-width: 768px) {
+    justify-content: center; // 外層保持整體置中
+    }
+
+
+    .label-text {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+      white-space: nowrap;
+      line-height: 43px;
+    }
 
     .pure-text-display {
       @media (max-width: 768px) {
@@ -184,18 +195,36 @@
 
     .edit-group {
       display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
+      flex-direction: column !important;
+      align-items:flex-start !important;
       gap: 8px !important;
       width: 100%;
 
-      @media (max-width: 768px) { justify-content: center; }
+    .input-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .error-text {
+      margin: 0;
+      // 不再需要絕對定位，它現在是真實存在的，會把底下的評分區塊自然往下推
+      @media (max-width: 768px) {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: auto !important; // 🌟 關鍵魔法：手機版讓寬度「縮合」，它就會乖乖被外層置中了！
+    }
     }
 
     .edit-input {
       height: 40px;
-      width: 100%;
-      max-width: 240px;
+      width: 330px;
+      max-width: 100%;
       background-color: $background-yellow;
       border: 1px solid $neutral-300;
       border-radius: $border-radius-sm;
