@@ -61,7 +61,13 @@
 
       <div class="title-row">
         <h1 class="product-title">{{ product.productName }}</h1>
-        </div>
+              <div class="report-section">
+                <button class="btn-report-subtle" (click)="reportProduct()">
+                  <lucide-icon [img]="Flag" size="13"></lucide-icon>
+                  檢舉商品
+                </button>
+              </div>
+      </div>
 
       <div class="info-grid">
         <div class="info-row">
@@ -126,13 +132,6 @@
             }
           </button>
         </div>
-      </div>
-
-      <div class="report-section">
-        <button class="btn-report-subtle" (click)="reportProduct()">
-          <lucide-icon [img]="Flag" size="13"></lucide-icon>
-          檢舉商品
-        </button>
       </div>
 
     </div>
