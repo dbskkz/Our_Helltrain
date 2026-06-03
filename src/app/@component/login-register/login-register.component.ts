@@ -584,8 +584,8 @@ export class LoginRegisterComponent implements OnInit {
               confirmButtonColor: '#e57373'
             });
           } else if (err.message === 'Please verify' || err.message === 'Verification is invalid') {
-            this.isRegister = true;
-            this.currentStep = 2;
+            this.isRegister = true; // 控制畫面顯示的變數(註冊)
+            this.currentStep = 2; // 控制畫面顯示的變數(寄驗證信)
             this.cdr.detectChanges();
 
             Swal.fire({
