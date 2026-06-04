@@ -147,6 +147,7 @@
       height: 16px;
       accent-color: #4f46e5;
       cursor: pointer;
+      flex-shrink: 0;
     }
   }
 }
@@ -157,63 +158,41 @@
   gap: 10px 24px;
 }
 
-/* Radio 分類 */
-.radio-group {
+/* 分類 */
+.cat-checkbox-group {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px 24px;
-  padding: 6px 0;
-  align-items: start;
+}
 
-  .radio-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    color: #334155;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: visible;   // 讓 input 框溢出不影響格線
-    position: relative;
-
-    input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #4f46e5;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-  }
-
-  .add-cat-text {
-    color: #4f46e5;
-    font-weight: 500;
-  }
-
-  &.error {
-    outline: 1px solid #ef4444;
-    outline-offset: 4px;
-    border-radius: 1px;
-    padding: 4px 6px;
-  }
+.custom-cat-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .cat-custom-input {
-  width: 200px !important;
-  position: absolute;  // 脫離 grid 流
-  left: 90px;   // radio + span 後面的位置
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 3px 8px !important;
-  font-size: 16px;
+  width: 200px ;
+  height: 24px ;
+  padding: 0px 8px !important;
+  font-size: 16px ;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   outline: none;
-  margin-left: 4px;
+  flex-shrink: 0;
+
+
+  &::placeholder {
+    font-size: 14px;
+    color: #b0b7c3;
+  }
 
   &:focus {
-    border-color: #a5b4fc;
-    box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.25);
+    border-color: #fadf3c ;
+    box-shadow: 0 0 0 3px rgba(250, 223, 60, 0.25) ;
   }
 }
 
@@ -450,8 +429,9 @@ input.error {
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
-  background: #1a1d23;
-  color: #fff;
+  background: #fcfcfc;
+  color: #1E1E1E;
+  // border: 1px solid #fadf3c;
   font-size: 16px;
   font-weight: 500;
   padding: 10px 20px;
