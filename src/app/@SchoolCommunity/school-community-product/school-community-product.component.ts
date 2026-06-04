@@ -9,6 +9,6 @@ import { ProductListingComponent } from '../../@component/product-listing/produc
 })
 export class SchoolCommunityProductComponent extends ProductListingComponent implements OnInit{
 
-  universityName = '國立清華大學';
+
 
 }
