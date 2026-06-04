@@ -116,22 +116,24 @@
 
         <div class="desc-content-wrapper" [class.expanded]="isExpanded">
           <div class="desc-content">
-            <p class="desc-text">{{ product.description }}</p>
+            <p class="desc-text" #descText>{{ product.description }}</p>
           </div>
-          @if (!isExpanded) {
+          @if (!isExpanded && isOverflowing) {
             <div class="fade-overlay"></div>
           }
         </div>
 
-        <div class="toggle-btn-container">
-          <button class="btn-toggle-desc" (click)="toggleExpand()">
-            @if (isExpanded) {
-              收起詳情 <lucide-icon [img]="ChevronUpIcon" size="16"></lucide-icon>
-            } @else {
-              查看更多 <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
-            }
-          </button>
-        </div>
+        @if (isOverflowing) {
+          <div class="toggle-btn-container">
+            <button class="btn-toggle-desc" (click)="toggleExpand()">
+              @if (isExpanded) {
+                收起詳情 <lucide-icon [img]="ChevronUpIcon" size="16"></lucide-icon>
+              } @else {
+                查看更多 <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
+              }
+            </button>
+          </div>
+        }
       </div>
 
     </div>

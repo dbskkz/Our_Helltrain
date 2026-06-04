@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+<<<<<<< HEAD
 import {MatButtonModule} from '@angular/material/button';
+=======
+import { MatButtonModule } from '@angular/material/button';
+>>>>>>> origin/main
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +22,12 @@ import { ValidatorFn } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
 import { BasicResponse, UserReq } from '../../@Interface/user';
+<<<<<<< HEAD
+=======
+
+// 絲絨的
+import { ApiTestService } from './../../@Services/api-test.service';
+>>>>>>> origin/main
 
 @Component({
   selector: 'app-login-register',
@@ -37,7 +47,13 @@ export class LoginRegisterComponent implements OnInit {
     private schoolService: SchoolDataService,
     private route: ActivatedRoute,
     private userService: UserService,
+<<<<<<< HEAD
     private cdr: ChangeDetectorRef) {}
+=======
+    private apiTestService: ApiTestService,
+    private cdr: ChangeDetectorRef
+  ) { }
+>>>>>>> origin/main
 
   isRegister: boolean = false; //是否為註冊頁面
   userEmail: string = ''; //輸入的 Email
@@ -120,6 +136,7 @@ export class LoginRegisterComponent implements OnInit {
   // (註冊箱子)把所有的欄位通通寫成變數 //改道一半
   private initRegisterForm() {
     this.registerForm = new FormGroup({
+<<<<<<< HEAD
     name: new FormControl('', [
       Validators.required,
       Validators.minLength(2),
@@ -139,6 +156,27 @@ export class LoginRegisterComponent implements OnInit {
   }, {
     validators: this.passwordMatchValidator // 綁定下方比對密碼的方法
   });
+=======
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(20),
+        Validators.pattern(/^[\u4e00-\u9fa5a-zA-Z\s]{2,20}$/)]
+      ),
+      area: new FormControl('', [Validators.required, this.isInListValidator('area')]),
+      school: new FormControl('', [Validators.required, this.isInListValidator('school')]),
+      //                新盒子                 必填     ,       長度檢查
+      password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)]),
+      confirmPassword: new FormControl('', [Validators.required]),
+      phone: new FormControl('', {
+        validators: [Validators.pattern(/^09-\d{8}$/)],
+        updateOn: 'blur' // 游標離開這格後，才開始進行格式檢查
+      }),
+      agreeTerms: new FormControl(false, [Validators.requiredTrue]) //有沒有打勾(平台說明)
+    }, {
+      validators: this.passwordMatchValidator // 綁定下方比對密碼的方法
+    });
+>>>>>>> origin/main
   }
 
   // 萬能過濾器（直接複製你寫好的繁簡通用版）
@@ -187,6 +225,7 @@ export class LoginRegisterComponent implements OnInit {
     event.preventDefault();  // 阻止原生行為（防止干擾 checkbox 的勾選狀態）
     event.stopPropagation(); // 阻止事件冒泡
 
+<<<<<<< HEAD
    // 打開對話框
   const dialogRef = this.dialog.open(PlatformRulesComponent, {
     width: '550px',            // 稍微放大一點點，閱讀體驗更好
@@ -194,6 +233,15 @@ export class LoginRegisterComponent implements OnInit {
     disableClose: true,        // 關鍵防護：不允許點擊旁邊空白處關閉，強迫他看完按按鈕！
     autoFocus: false           // 防止進去直接滾動到按鈕
   });
+=======
+    // 打開對話框
+    const dialogRef = this.dialog.open(PlatformRulesComponent, {
+      width: '550px',            // 稍微放大一點點，閱讀體驗更好
+      maxHeight: '90vh',
+      disableClose: true,        // 關鍵防護：不允許點擊旁邊空白處關閉，強迫他看完按按鈕！
+      autoFocus: false           // 防止進去直接滾動到按鈕
+    });
+>>>>>>> origin/main
 
     // 靈魂監聽：當使用者關閉這個彈出視窗時
     dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -265,9 +313,13 @@ export class LoginRegisterComponent implements OnInit {
 
     this.isEmailTouched = true;// 強制讓 Email 亮起「碰過」的狀態
 
+<<<<<<< HEAD
    if (this.registerForm.valid && this.isValidSchoolEmail()) {
+=======
+    if (this.registerForm.valid && this.isValidSchoolEmail()) {
+>>>>>>> origin/main
       const rawPhone = this.registerForm.get('phone')?.value;
-    // 資料都填對了，切換到 Step 2 畫面！
+      // 資料都填對了，切換到 Step 2 畫面！
       const finalRegisterData: UserReq = {
         name: this.registerForm.get('name')?.value,
         email: this.userEmail,
@@ -342,52 +394,52 @@ export class LoginRegisterComponent implements OnInit {
     this.isCodeTouched = true;
 
     if (this.isValidCode()) {
-        const payload = {
-      email: this.userEmail,
-      code: this.verificationCode
-    };
+      const payload = {
+        email: this.userEmail,
+        code: this.verificationCode
+      };
 
-    this.userService.verifyEmail(payload).subscribe({
-      next: (res: BasicResponse) => {
+      this.userService.verifyEmail(payload).subscribe({
+        next: (res: BasicResponse) => {
 
-        if (res.statusCode === 200) {
-          // ✅ 驗證成功
-          this.currentStep = 3;
-          Swal.fire({
-            title: '驗證成功！',
-            text: '歡迎加入二手GO!',
-            icon: 'success',
-            confirmButtonColor: '#ffb74d',
-            timer: 3000,
-            showConfirmButton: false
-          });
-           this.currentStep = 3;
-           this.cdr.detectChanges();
+          if (res.statusCode === 200) {
+            // ✅ 驗證成功
+            this.currentStep = 3;
+            Swal.fire({
+              title: '驗證成功！',
+              text: '歡迎加入二手GO!',
+              icon: 'success',
+              confirmButtonColor: '#ffb74d',
+              timer: 3000,
+              showConfirmButton: false
+            });
+            this.currentStep = 3;
+            this.cdr.detectChanges();
 
-        } else if (res.statusCode === 400 && res.message === 'Invalid verification code') {
-          // ❌ 驗證碼錯誤或過期（INVALID_VERIFICATION_CODE）
-          Swal.fire({
-            icon: 'error',
-            title: '驗證失敗',
-            text: '驗證碼不正確或已過期，請重新確認！',
-            confirmButtonText: '重新輸入',
-            confirmButtonColor: '#e57373',
-          });
-          this.verificationCode = ''; // 清空讓使用者重打
+          } else if (res.statusCode === 400 && res.message === 'Invalid verification code') {
+            // ❌ 驗證碼錯誤或過期（INVALID_VERIFICATION_CODE）
+            Swal.fire({
+              icon: 'error',
+              title: '驗證失敗',
+              text: '驗證碼不正確或已過期，請重新確認！',
+              confirmButtonText: '重新輸入',
+              confirmButtonColor: '#e57373',
+            });
+            this.verificationCode = ''; // 清空讓使用者重打
 
-        } else {
-          Swal.fire({
-            title: '驗證失敗',
-            text: res.message,
-            icon: 'error',
-            confirmButtonColor: '#e57373'
-          });
+          } else {
+            Swal.fire({
+              title: '驗證失敗',
+              text: res.message,
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
+          }
+        },
+        error: () => {
+          Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
         }
-      },
-      error: () => {
-        Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
-      }
-    });
+      });
     }
     /* // ==========================================
     // 🌟 情境 B：未來與 Java 後端同學對接時（真正上線版）
@@ -420,45 +472,57 @@ export class LoginRegisterComponent implements OnInit {
 
   // 點擊「重新發送驗證信」
   resendEmail() {
+<<<<<<< HEAD
   if (!this.canResend) return;
+=======
+    if (!this.canResend) return;
 
-  this.userService.resendCode(this.userEmail).subscribe({
-    next: (res: BasicResponse) => {
+    this.userService.resendCode(this.userEmail).subscribe({
+      next: (res: BasicResponse) => {
 
-      if (res.statusCode === 200) {
-        // ✅ VERIFICATION_CODE_IS_SEND：新驗證碼已寄出
-        Swal.fire({
-          title: '驗證信已重新發送！',
-          text: '請檢查您的學校信箱。',
-          icon: 'success',
-          confirmButtonColor: '#5E9759',
-        });
-        this.startCountdown(60);
+        if (res.statusCode === 200) {
+          // ✅ VERIFICATION_CODE_IS_SEND：新驗證碼已寄出
+          Swal.fire({
+            title: '驗證信已重新發送！',
+            text: '請檢查您的學校信箱。',
+            icon: 'success',
+            confirmButtonColor: '#5E9759',
+          });
+          this.startCountdown(60);
+>>>>>>> origin/main
 
-      } else if (res.statusCode === 400 && res.message === 'Account is verification') {
-        // ❌ ACCOUNT_IS_VERIFICATION：帳號已驗證，不需重寄
-        Swal.fire({
-          title: '此帳號已完成驗證',
-          text: '請直接登入。',
-          icon: 'info',
-          confirmButtonColor: '#FB831D',
-        }).then(() => {
-          this.isRegister = false;
-        });
+        } else if (res.statusCode === 400 && res.message === 'Account is verification') {
+          // ❌ ACCOUNT_IS_VERIFICATION：帳號已驗證，不需重寄
+          Swal.fire({
+            title: '此帳號已完成驗證',
+            text: '請直接登入。',
+            icon: 'info',
+            confirmButtonColor: '#FB831D',
+          }).then(() => {
+            this.isRegister = false;
+          });
 
-      } else {
-        Swal.fire({
-          title: '發送失敗',
-          text: res.message,
-          icon: 'error',
-          confirmButtonColor: '#e57373'
-        });
+        } else {
+          Swal.fire({
+            title: '發送失敗',
+            text: res.message,
+            icon: 'error',
+            confirmButtonColor: '#e57373'
+          });
+        }
+      },
+      error: () => {
+        Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
       }
+<<<<<<< HEAD
     },
     error: () => {
       Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
     }
   });
+=======
+    });
+>>>>>>> origin/main
   }
 
   private startCountdown(seconds: number) {
@@ -513,7 +577,6 @@ export class LoginRegisterComponent implements OnInit {
   userInputLogin = ''
   isAgree = false;
 
-  currentUserData: any = null; //絲絨用
   onLogin() {
     // if(this.loginForm.valid)
     const hasAgreed = this.loginForm.get('agreeTerms')?.value;
@@ -562,35 +625,51 @@ export class LoginRegisterComponent implements OnInit {
     // }
 
     if (this.loginForm.valid) { // 需要可以直接拿去用或者修改，我只是不太敢動別人的程式碼。by.絲絨
-      const email = this.loginForm.get('email')?.value;
-      const password = this.loginForm.get('password')?.value;
+      let loginReq = this.loginForm.value;
 
-      // 3. 呼叫 Service 並把參數傳進去
-      this.userService.login(email, password).subscribe({
+      // 呼叫 Service 並把參數傳進去
+      this.userService.login(loginReq).subscribe({
         next: (res) => {
-          if (res.statusCode === 200) {
-            this.currentUserData = res.data;
-            this.userService.isLoggedIn.set(true); //暫用
-            console.log('成功取得資料：', this.currentUserData);
-            this.router.navigate(['/home']);
-          } else {
+          this.userService.isLoggedIn.set(true);
+          localStorage.setItem('isLoggedIn', 'true');
+          if (res.data) { // 未來如果改token動這裡
+            localStorage.setItem('userId', res.data.userId.toString());
+            this.userService.currentUser.set(res.data);
+          }
+          console.log('成功取得資料：', res);
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('失敗：', err);
+          this.loginForm.markAllAsTouched();
+          const status = err?.statusCode;
+
+          if (status === 400) {
             Swal.fire({
               title: '登入失敗',
               text: '帳號或密碼錯誤',
               icon: 'error',
               confirmButtonColor: '#e57373'
             });
+          } else if (err.message === 'Please verify' || err.message === 'Verification is invalid') {
+            this.isRegister = true; // 控制畫面顯示的變數(註冊)
+            this.currentStep = 2; // 控制畫面顯示的變數(寄驗證信)
+            this.cdr.detectChanges();
+
+            Swal.fire({
+              title: '尚未驗證或驗證已過期',
+              text: '請驗證後再試',
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
+          } else {
+            Swal.fire({
+              title: '連線錯誤',
+              text: '請稍後再試',
+              icon: 'error',
+              confirmButtonColor: '#e57373'
+            });
           }
-        },
-        error: (err) => {
-          Swal.fire({
-            title: '連線錯誤',
-            text: '請稍後再試',
-            icon: 'error',
-            confirmButtonColor: '#e57373'
-          });
-          console.error('抓不到使用者資料...', err);
-          this.loginForm.markAllAsTouched();
         }
       });
     }

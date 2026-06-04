@@ -59,7 +59,7 @@ export class FrontReportComponent {
     this.currentTab = tabName;
     this.reportForm.get('violationType')?.reset(''); //重置檢舉原因
 
-    // 💡 取得兩個控制項的引用，少寫一點點程式碼
+    // 💡 取得控制項的引用，少寫一點點程式碼
     const nameCtrl = this.reportForm.get('accusedName');
     const idCtrl = this.reportForm.get('accusedId');
     const productCtrl = this.reportForm.get('productId');

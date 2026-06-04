@@ -4,11 +4,11 @@
 .user-actions-wrapper {
   display: flex;
   align-items: center; // 確保圖示、頭像、名字垂直置中
-  gap: 1.25rem;        // 訊息圖示與頭像區的間距
-  flex-shrink: 0;      // 確保在縮放時這一區塊不會被壓扁
+  gap: 1.25rem; // 訊息圖示與頭像區的間距
+  flex-shrink: 0; // 確保在縮放時這一區塊不會被壓扁
   user-select: none;
 
-  .msg{
+  .msg {
     cursor: pointer;
     color: $text-gray;
     display: flex;
@@ -27,16 +27,16 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem;       // 頭像與 select 之間的間距
+    gap: 0.5rem; // 頭像與 select 之間的間距
     cursor: pointer;
 
     // ... 你原本的屬性 ...
-    padding: 0.5rem 0.8rem;      // 增加一點內距，讓 hover 的背景色有呼吸空間
-    margin: -0.5rem -1rem;     // 配合 padding 使用負 margin 抵銷，確保排版位置不跳動
-    border-radius: 9999px;    // 讓 hover 的背景有一點圓角感
+    padding: 0.5rem 0.8rem; // 增加一點內距，讓 hover 的背景色有呼吸空間
+    margin: -0.5rem -1rem; // 配合 padding 使用負 margin 抵銷，確保排版位置不跳動
+    border-radius: 9999px; // 讓 hover 的背景有一點圓角感
     transition: background-color 0.2s ease, opacity 0.2s ease;
 
-    .drop-menu{
+    .drop-menu {
       position: absolute;
       top: calc(100% + 10px); // 出現在頭像下方 10px
       right: 0;
@@ -67,7 +67,7 @@
           &.logout {
             color: $primary-yellow-darker;
 
-            &:hover{
+            &:hover {
               color: white;
               background-color: $primary-yellow-darker;
             }
@@ -83,20 +83,21 @@
     }
 
     .picture {
-      height: 2rem;    // 稍微加大一點比較符合視覺
+      height: 2rem; // 稍微加大一點比較符合視覺
       width: 2rem;
       background-color: rgb(186, 186, 186);
       border-radius: 999px;
       background-size: cover;
       background-position: center;
-      flex-shrink: 0;  // 防止頭像變形
+      flex-shrink: 0; // 防止頭像變形
+      overflow: hidden;
     }
 
-    .user-name{
+    .user-name {
       font-size: 0.8rem;
     }
 
-    &:hover{
+    &:hover {
       background-color: $neutral-100;
 
       .user-name {

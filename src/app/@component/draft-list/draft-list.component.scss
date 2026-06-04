@@ -1,0 +1,220 @@
+@use '../../styles/variables' as *;
+.draft-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 32px;
+   min-height: calc(100vh - 270px);
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 16px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.draft-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.draft-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  transition: box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-color: #fadf3c;
+    background: #fffef5; }
+}
+
+.draft-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  border: 1px solid #e2e5ea;
+  background: #f8fafc;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.draft-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.draft-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.draft-meta {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.draft-time {
+  font-size: 11px;
+  color: #b0b7c3;
+}
+
+.draft-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-load {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #fadf3c;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1e293b;
+
+  &:hover { background: #f5d400; }
+}
+
+.btn-del {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background: #fff;
+  border: 1px solid #e2e5ea;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ef4444;
+
+  &:hover { background: #fff5f5; border-color: #fca5a5; }
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.confirm-msg {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-confirm-yes {
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover { background: #dc2626; }
+}
+
+.btn-confirm-no {
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover { background: #e2e8f0; }
+}
+
+// 頁碼
+.pagination {
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  color: $text-gray;
+  font-size: 14px;
+
+  span {
+    margin-right: 8px;
+    font-weight: 500;
+  }
+}
+
+.page-item {
+  &.active .page-link {
+    background-color: $primary-yellow;
+    border-color: $primary-yellow;
+    color: $background-white;
+  }
+}
+
+.page-link {
+  color: $text-gray;
+  border-radius: $border-radius-sm;
+  border: 1px solid $neutral-300;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background-color: $background-yellow;
+    color: $primary-yellow;
+  }
+}
+
+.disabled .page-link {
+  color: $neutral-300;
+  background-color: $neutral-100;
+}
