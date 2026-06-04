@@ -17,8 +17,21 @@ lucide-icon { display: flex; align-items: center; }
 
 .list-header{
   display: flex;
+  gap: 1rem
 }
 
 .university-name{
   @include main-title-style;
+}
+
+.sort-container {
+  @include sort-style;
+}
+
+.dropdown-content {
+  @include dropdown-style;
+}
+
+.panel-nav{
+  @include borded-nav;
 }

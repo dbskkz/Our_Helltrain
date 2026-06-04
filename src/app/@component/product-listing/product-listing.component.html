@@ -9,13 +9,13 @@
           @for (item of categories; track $index) {
             <li>
               <button class="sub-link" (click)="selectCategory(item.value)" [class.active]="selectedCategory === item.value">
-                <!-- <lucide-icon [name]="item.icon"></lucide-icon> -->
                 <span class="sub-panel-text">{{ item.label }}</span>
               </button>
             </li>
           }
       </ul>
   </nav>
+
   <nav class="filter-panel">
 
     <!-- 麵包屑 -->

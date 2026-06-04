@@ -15,4 +15,12 @@ import { LucideAngularModule, House } from "lucide-angular";
 export class SchoolCommunityLayoutComponent extends ProductListingComponent{
 
   universityName = '國立清華大學';
+
+  goToSchoolProduct(){
+    this.router.navigate(['/school-community/school-product'])
+  }
+
+  goToClassmates(){
+    this.router.navigate(['/school-community/school-product'])
+  }
 }

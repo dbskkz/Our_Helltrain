@@ -53,13 +53,13 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private uiBehavior: UiBehaviorService,
-    private aca: EighteenAcademyService,
+    protected router: Router,
+    protected route: ActivatedRoute,
+    protected uiBehavior: UiBehaviorService,
+    protected aca: EighteenAcademyService,
     public pagination: PaginationService,
-    private productservice:ProductServiceService,
-    private ctgService:CategoriesService
+    protected productservice:ProductServiceService,
+    protected ctgService:CategoriesService
   ) {}
 
   // =========================================================
