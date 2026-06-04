@@ -2,8 +2,8 @@
   <lucide-icon [img]="MessageIcon" class="msg"></lucide-icon>
 
   <div class="profile" (click)="showMenu($event)" [class.active]="isDisplayed">
-    <div class="picture"><img [src]=imgPath alt="頭像"></div>
-    <span class="user-name">{{userName}}</span>
+    <div class="picture"><img [src]=userData()?.imgPath alt="頭像"></div>
+    <span class="user-name">{{userData()?.userName}}</span>
     <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
 
     @if(isDisplayed === true)
