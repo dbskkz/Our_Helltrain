@@ -1,0 +1,37 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.content {
+  @include common-layout;
+}
+
+a {
+  @include reset-link;
+}
+
+lucide-icon { display: flex; align-items: center; }
+
+.breadcrumb {
+  @include breadcrumb-style;
+}
+
+.list-header{
+  display: flex;
+  gap: 1rem
+}
+
+.university-name{
+  @include main-title-style;
+}
+
+.sort-container {
+  @include sort-style;
+}
+
+.dropdown-content {
+  @include dropdown-style;
+}
+
+.panel-nav{
+  @include borded-nav;
+}

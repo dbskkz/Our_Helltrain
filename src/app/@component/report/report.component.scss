@@ -232,20 +232,9 @@
 // ===== 操作按鈕區 =====
 .action-cell {
   display: flex;
-  flex-direction: row;
   gap: 6px;
-  align-items: stretch;
-
-  .btn {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    padding: 12px 6px;
-    height: 80px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .btn-reason {

@@ -1,0 +1,58 @@
+<main class="content">
+
+  <nav class="breadcrumb">
+    <a routerLink="/home" class="breadcrumb-link">
+      <lucide-icon [name]="HomeIcon" size="14"></lucide-icon>
+      首頁
+    </a>
+    <span class="sep">></span>
+    <span class="current">{{ universityName }}</span>
+  </nav>
+
+  <header class="list-header">
+        <h1 class="university-name">{{ universityName }}</h1>
+        <button>關注</button>
+        <input type="text" placeholder="在校版中搜尋商品">
+
+        <div class="sort-container">
+          <button class="sort-button"
+          (click)="togglePanel($event, 'sort')"
+          [class.active]="panelState.sort">
+            <span>排序依據</span>
+            <span class="material-symbols-outlined">sort</span>
+          </button>
+
+          @if (panelState.sort) {
+            <ul class="dropdown-content" (click)="$event.stopPropagation()">
+              <li [class.selected]="sortOption === 'newest'"
+                  (click)="setSort('newest', $event)">最新上架</li>
+              <li [class.selected]="sortOption === 'price-asc'"
+                  (click)="setSort('price-asc', $event)">價格由低到高</li>
+              <li [class.selected]="sortOption === 'price-desc'"
+                  (click)="setSort('price-desc', $event)">價格由高到低</li>
+            </ul>
+          }
+        </div>
+
+
+      </header>
+      <nav class="panel-nav">
+        <ul class="sub-list">
+              <li>
+                <button class="sub-link" (click)="goToSchoolProduct()" [class.active]="">
+                  <span class="sub-panel-text">校內商品</span>
+                </button>
+              </li>
+
+              <li>
+                <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                  <span class="sub-panel-text">版上的同學</span>
+                </button>
+              </li>
+
+        </ul>
+    </nav>
+
+  <router-outlet></router-outlet>
+
+</main>

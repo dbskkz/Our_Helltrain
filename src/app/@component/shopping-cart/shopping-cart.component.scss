@@ -1,23 +1,13 @@
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
 
-/* =========================
-   Layout
-========================= */
 .content {
-  padding: 1rem 5%;
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 1rem;
-  }
+  max-width: 100vw;
+  @include common-layout;
 }
 
-/* =========================
-   Shared
-========================= */
-lucide-icon {
-  display: flex;
-  align-items: center;
-}
+lucide-icon { display: flex; align-items: center; }
+
 
 /* =========================
    Header
@@ -36,6 +26,20 @@ lucide-icon {
     color: $text-black;
   }
 
+  .btn-clear-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+  }
+
+  .alert-msg {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #ef4444;
+  }
+
   .btn-clear-all {
     display: flex;
     align-items: center;
@@ -48,7 +52,6 @@ lucide-icon {
     background-color: $neutral-100;
     font-weight: 500;
     cursor: pointer;
-
     transition: all 0.2s ease;
 
     lucide-icon {
@@ -65,20 +68,6 @@ lucide-icon {
         color: $semantic-orange;
       }
     }
-  }
-
-  .btn-clear-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;  // 靠右對齊，和按鈕同側
-    gap: 0.35rem;
-  }
-
-  .alert-msg {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #ef4444;  // 紅字
-    font-weight: 500;
   }
 }
 
@@ -107,15 +96,17 @@ lucide-icon {
 ========================= */
 .favorite-item {
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  align-items: flex-start;
+  gap: 1.5rem;
+  max-width: 100%;
 
-  padding: 1.25rem;
-  border: 2px solid transparent;
-  border-radius: $border-radius-lg;
-
+  padding: 1.5rem;
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 
   transition: all 0.3s ease;
 }
@@ -134,22 +125,22 @@ lucide-icon {
   width: 20px;
   height: 20px;
 
-  border: 2px solid #d1d5db; // 初始灰色邊框
+  border: 2px solid #d1d5db;
   border-radius: 6px;
-  accent-color: $primary-yellow;
 
+  background: white;
   cursor: pointer;
   position: relative;
-  background: white;
+
+  accent-color: $primary-yellow;
 
   transition: transform 0.2s ease;
 
-   &:checked {
+  &:checked {
     border-color: $primary-yellow;
     background-color: $primary-yellow;
 
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E");
-
     background-repeat: no-repeat;
     background-position: center;
     background-size: 14px;
@@ -167,8 +158,8 @@ lucide-icon {
   flex-shrink: 0;
   overflow: hidden;
 
-  width: 7rem;
-  height: 7rem;
+  width: 10rem;
+  height: 10rem;
   padding: 0.75rem;
 
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -188,44 +179,216 @@ lucide-icon {
 }
 
 /* =========================
-   Content
+   Product Info
 ========================= */
-.item-content {
+.product-info {
+  flex: 2;
+  min-width: 0;
+  min-height: 10rem;
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: 0.5rem;
+  justify-content: center;
 
-  min-width: 0;
-}
+  .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+
+    .title-wrapper {
+      flex: 1;
+      min-width: 0;
+
+      display: flex;
+      flex-direction: column;
+    }
 
 .item-title {
   margin: 0;
 
-  font-size: 1.125rem;
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: 1.6rem;
+  font-weight: 700;
+
   color: $text-black;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+    // 🔴 右側容器：狀態與價格併排
+    .header-side-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem; // 狀態與價格之間的間距
+      flex-shrink: 0; // 絕對不准被擠壓
+      white-space: nowrap; // 🔴 核心：強制不換行
+
+      .item-condition {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $semantic-orange;
+        background-color: rgba($semantic-orange, 0.1); // 加個淡色背景更有標籤感
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      .item-price {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+
+        .price-amount {
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: $text-price;
+        }
+
+        .price-currency {
+          font-size: 1rem;
+          color: $text-price;
+        }
+      }
+    }
+  }
+
+  .item-description-wrapper {
+  margin-top: 0.75rem;
+
+  .item-description-title {
+    margin: 0 0 .5rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: $neutral-500;
+  }
+
+  .description-content-wrapper {
+      position: relative;
+
+      max-height: 3.2rem; // 約兩行
+
+      overflow: hidden;
+      padding-bottom: 1rem;
+
+      transition: max-height .3s ease;
+
+      &.expanded {
+        max-height: 500px;
+      }
+
+      .item-description {
+        margin: 0;
+
+        font-size: .85rem;
+        line-height: 1.6;
+
+        color: $text-gray;
+
+        white-space: pre-line;
+
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+
+      .fade-overlay {
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+        height: 1.5rem;
+
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          #fff
+        );
+
+        pointer-events: none;
+      }
+    }
+
+    .toggle-btn-container {
+      display: flex;
+      justify-content: center;
+
+      margin-top: .75rem;
+    }
+  }
 }
 
 /* =========================
-   Seller Info
+   Seller & Location
 ========================= */
-.seller-info {
+.item-content {
+  flex: 1;
+  min-width: 150px;
+  height: 10rem;
+
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.2rem;
 
-  font-size: 0.875rem;
+  padding-left: 1rem;
+  border-left: 1px solid #f1f5f9;
 
-  span {
-    color: #64748b;
+  .seller-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: space-between;
+
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+
+    span {
+      color: $text-gray;
+    }
+
+    .seller-header{
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .seller-name,
+    span:first-of-type {
+      font-weight: 500;
+      color: $text-black;
+    }
+
+    .seller-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+
+      max-width: 120px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
-  .seller-name,
-  span:first-of-type {
-    font-weight: 500;
-    color: $text-black;
+  .location-info {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    font-size: 1rem;
+    color: $text-gray;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    lucide-icon {
+      color: #94a3b8;
+    }
   }
 }
 
@@ -235,9 +398,11 @@ lucide-icon {
 
   border-radius: 50%;
   object-fit: cover;
-
 }
 
+/* =========================
+   Chat Button
+========================= */
 .btn-chat {
   display: flex;
   align-items: center;
@@ -245,6 +410,7 @@ lucide-icon {
 
   width: 2rem;
   height: 2rem;
+
   margin-left: 0.25rem;
 
   border: none;
@@ -272,126 +438,121 @@ lucide-icon {
 }
 
 /* =========================
-   Location
-========================= */
-.location-info {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-
-  font-size: 0.875rem;
-  color: #64748b;
-
-  lucide-icon {
-    color: #94a3b8;
-  }
-}
-
-/* =========================
    Price
 ========================= */
 .item-price {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-
   flex-shrink: 0;
-  font-weight: 700;
+
+  min-width: 100px;
+  text-align: right;
+
+  .price-amount {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: $text-price;
+  }
+
+  .price-currency {
+    margin-left: 2px;
+    font-size: 1rem;
+    color: $text-price;
+  }
 }
-
-.price-amount {
-  font-size: 1.875rem;
-  letter-spacing: -0.02em;
-  color: $text-price;
-}
-
-.price-currency {
-  font-size: 1.25rem;
-  color: $text-price;
-}
-
-
 
 /* =========================
-   Responsive
+   Reminder
 ========================= */
-@media (max-width: 768px) {
-  .favorite-item {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem 5rem;
-    gap: 1rem;
-  }
-
-  .item-img {
-    width: 100%;
-    height: 12rem;
-  }
-
-  .item-price {
-    align-self: flex-end;
-  }
-
-  .favorites-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-
-
 .favorites-reminder {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+
+  margin: 2rem 0;
   padding: 1.25rem 1.5rem;
+
   background: linear-gradient(135deg, #fffbf0 0%, #fff8e6 100%);
   border: 2px solid rgba(247, 209, 117, 0.3);
   border-radius: $border-radius-lg;
-  margin: 2rem 0;
 
   .reminder-icon {
-    flex-shrink: 0;
-    width: 2.5rem;
-    height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, $semantic-orange 0%, #ff6b00 100%);
+
+    flex-shrink: 0;
+
+    width: 2.5rem;
+    height: 2.5rem;
+
+    background: linear-gradient(
+      135deg,
+      $semantic-orange 0%,
+      #ff6b00 100%
+    );
+
     border-radius: 12px;
 
     lucide-icon {
-      color: white;
       width: 1.25rem;
       height: 1.25rem;
+      color: white;
     }
   }
 
   .reminder-text {
     flex: 1;
+
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 
     strong {
+      display: block;
+      margin-bottom: 0.125rem;
+
       font-size: 1rem;
       font-weight: 600;
       color: $text-black;
-      display: block;
-      margin-bottom: 0.125rem;
     }
 
     p {
-      font-size: 0.875rem;
-      color: $text-price;
-      line-height: 1.5;
       margin: 0;
+
+      font-size: 0.875rem;
+      line-height: 1.5;
+
+      color: $text-price;
       opacity: 0.9;
     }
   }
+}
 
-  // 響應式設計
-  @media (max-width: 768px) {
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 768px) {
+  .favorites-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .favorite-item {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .item-img {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .item-content {
+    display: none;
+  }
+
+
+  .favorites-reminder {
     padding: 1rem;
     gap: 0.75rem;
 
@@ -414,5 +575,43 @@ lucide-icon {
         font-size: 0.8125rem;
       }
     }
+  }
+}
+
+
+.toggle-btn-container{
+  background-color: transparent;
+  border: none;
+}
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  padding: 0.5rem .8rem;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $text-gray;
+
+  background-color: transparent;
+  border: transparent;
+  border-radius: 999px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $background-yellow;
+  }
+
+  &:active {
+    transform: translateY(0);
+    color: $primary-yellow-dark;
+  }
+
+  &.expanded {
+    color: $primary-yellow-darker;
   }
 }

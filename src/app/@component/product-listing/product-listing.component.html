@@ -1,16 +1,32 @@
 <main class="content">
+  <nav class="type-nav">
+      <ul class="sub-list">
+            <li>
+              <button class="sub-link" (click)="selectCategory('all')" [class.active]="selectedCategory === 'all'">
+                <span class="sub-panel-text">全部</span>
+              </button>
+            </li>
+          @for (item of categories; track $index) {
+            <li>
+              <button class="sub-link" (click)="selectCategory(item.value)" [class.active]="selectedCategory === item.value">
+                <span class="sub-panel-text">{{ item.label }}</span>
+              </button>
+            </li>
+          }
+      </ul>
+  </nav>
+
   <nav class="filter-panel">
 
     <!-- 麵包屑 -->
-    <div class="site-path">
-      <span class="breadcrumb">
-        <a routerLink="/home">
-          <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
+    <nav class="breadcrumb" >
+      <a routerLink="/home" class="breadcrumb-link">
+        <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
           首頁
-        </a>
-        > {{ categoryName }}
-      </span>
-    </div>
+      </a>
+      <span class="sep">></span>
+      <span class="current"> {{ categoryName }}</span>
+    </nav>
 
     <!-- 標題列 + 排序 -->
     <header class="list-header">
@@ -47,6 +63,7 @@
         篩選
       </button>
 
+
       @for (tag of activeFilters; track tag.key) {
         <span class="filter-tag">
           {{ tag.label }}
@@ -61,7 +78,6 @@
       }
 
     </div>
-
   </nav>
 
   <!-- Overlay -->
@@ -93,14 +109,14 @@
       <!-- 商品狀況 -->
       <div class="sidebar-section">
         <h6>商品新舊程度</h6>
-        <select class="filter-select full-width" (click)="$event.stopPropagation()">
-          <option value="">不限</option>
-          <option value="new">全新</option>
-          <option value="near-new">近全新</option>
-          <option value="lightly-used">輕度使用</option>
-          <option value="used">中度使用</option>
-          <option value="heavily-used">重度使用</option>
-        </select>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (cond of condition; track cond.value) {
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="cond.selected">
+              {{ cond.label }}
+            </label>
+          }
+        </div>
       </div>
 
       <!-- 賣家評價 -->
@@ -132,6 +148,19 @@
             <label class="checkbox-item">
               <input type="checkbox" [(ngModel)]="dept.selected" (change)="onDeptChange()">
               {{ dept.name }}
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- 常見分類 -->
+      <div class="sidebar-section">
+        <h6>常見分類</h6>
+        <div class="checkbox-group static" (click)="$event.stopPropagation()">
+          @for (item of type; track $index) {
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="item.selected">
+              {{ item.label }}
             </label>
           }
         </div>
@@ -182,7 +211,7 @@
     <div class="empty-content">
       <h2>找不到相關商品</h2>
       <p class="empty-description">
-        我們找不到符合 <span>"{{ keyword }}"</span> 的結果，請嘗試其他關鍵字。
+        我們找不到符合 <span>"{{ searchReq.keyword }}"</span> 的結果，請嘗試其他關鍵字。
       </p>
     </div>
 

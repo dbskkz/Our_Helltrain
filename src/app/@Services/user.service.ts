@@ -18,7 +18,7 @@ export class UserService {
   private myProxyUrl = '/user';
 
   private apiUrl = 'http://localhost:8080/user';
-  isLoggedIn = signal<boolean>(localStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
+  isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
   // 存使用者資料的 Signal by.絲絨
   currentUser = signal<any>(null);

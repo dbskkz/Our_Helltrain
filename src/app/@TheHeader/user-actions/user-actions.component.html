@@ -6,21 +6,20 @@
     <span class="user-name">{{userData()?.userName}}</span>
     <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
 
-    @if(isDisplayed === true)
-    {
-    <div class="drop-menu">
-      <ul>
-        <li type="button" (click)="goToSetting()">帳號設定</li>
-        <li type="button" (click)="goToCart()">收藏清單</li>
-        <li type="button" (click)="goToStore()">個人賣場</li>
-        <li type="button" (click)="goToSell()">我要販售</li>
-        <li type="button" (click)="goToOrder()">查看訂單</li>
-        <li type="button" (click)="goToDraft()">我的草稿</li>
-        <hr>
-        <li type="button" class="logout" (click)="logout()">登出</li>
-      </ul>
-    </div>
-    }
+     @if(isDisplayed === true)
+     {
+       <div class="drop-menu">
+         <ul>
+           <li type="button" (click)="goToSetting()">帳號設定</li>
+           <li type="button" (click)="goToCart()">收藏清單</li>
+           <li type="button" (click)="goToStore()">個人賣場</li>
+           <li type="button" (click)="goToSell()">商品管理</li>
+           <li type="button" (click)="goToOrder()">查看訂單</li>
+           <hr>
+           <li type="button" class="logout" (click)="logout()">登出</li>
+         </ul>
+       </div>
+     }
 
   </div>
 </div>

@@ -28,30 +28,104 @@
           alt="商品照片"> -->
       </div>
 
+      <div class="product-info">
+        <div class="product-header">
+
+          <div class="title-wrapper">
+
+            <h5
+              class="item-title"
+              [title]="item.title">
+
+              {{ item.title }}
+
+            </h5>
+
+          </div> <!-- the end of title-wrapper -->
+
+          <div class="header-side-info">
+            <span class="item-condition">{{item.condition}}</span>
+            <div class="item-price">
+              <span class="price-currency">$</span>
+              <span class="price-amount">{{item.price}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-description-wrapper">
+
+          <p class="item-description-title">
+            商品描述
+          </p>
+
+          <div
+            class="description-content-wrapper"
+            [class.expanded]="isDescriptionExpanded(item.productId)"
+            [class.has-overflow]="item.description.length > 80"
+          >
+
+            <p class="item-description">
+              {{ item.description }}
+            </p>
+
+            @if(item.description.length > 80 && !isDescriptionExpanded(item.productId)){
+              <div class="fade-overlay"></div>
+            }
+
+          </div>
+
+          @if(item.description.length > 80) {
+
+            <div class="toggle-btn-container">
+
+              <button
+                class="toggle-btn"
+                type="button"
+                (click)="toggleDescription(item.productId)"
+                 [class.expanded]="isDescriptionExpanded(item.productId)">
+
+                {{
+                  isDescriptionExpanded(item.productId)
+                    ? '收合'
+                    : '查看更多'
+                }}
+
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div> <!-- the end of item description wrapper -->
+
       <div class="item-content">
-        <h5 class="item-title">{{item.title}}</h5>
 
         <div class="seller-info">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
-           class="seller-avatar" alt="賣家頭像">
-           <span>優良賣家</span>
-          <span class="seller-name">{{item.sellerName}}</span>
+          <div class="seller-header">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
+             class="seller-avatar" alt="賣家頭像">
+            <span class="seller-name">{{item.sellerName}}</span>
+          </div>
+
           <button class="btn-chat" title="和同學聊聊!">
             <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
           </button>
         </div>
 
         <div class="location-info">
+          <lucide-icon [img]="GraduationCapIcon" size="14"></lucide-icon>
+          <span>{{item.university}}學生</span>
+        </div>
+        <div class="location-info">
           <lucide-icon [img]="MapPinIcon" size="14"></lucide-icon>
-          <span>{{item.university}} · {{item.location}}</span>
+          <span>{{item.location}}</span>
         </div>
 
       </div>
 
-      <div class="item-price">
-        <span class="price-amount">{{item.price}}</span>
-        <span class="price-currency">$</span>
-      </div>
+
 
     </li>
     }

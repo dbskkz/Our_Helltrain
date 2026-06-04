@@ -1,9 +1,9 @@
-import { ProductServiceService } from './../../@Services/product-service.service';
+import { GetProductDataRes, ProductServiceService } from './../../@Services/product-service.service';
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { FormsModule } from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaginationService } from '../../@Services/pageination.service';
 
 // 素材庫
@@ -12,12 +12,15 @@ import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 import { ProductCard } from '../../@Interface/product-card';
+import { CategoriesService } from '../../@Services/categories.service';
+import { SearchProductReq } from '../../@Services/product-service.service';
+import { combineLatest, Observable } from 'rxjs';
 
 // 網址用的 slug → type 中文名稱
 const CATEGORY_MAP: Record<string, string> = {
   'books':       '教科書',
   'equipment':   '專業器材',
-  'daily':       '生活用品',
+  'daily':       '日用品',
   'electronics': '3C電子',
   'furniture':   '家具家電',
   'notes':       '筆記考古',
@@ -34,12 +37,29 @@ const CATEGORY_MAP: Record<string, string> = {
 })
 export class ProductListingComponent implements OnInit, OnDestroy {
 
+
+  // =========================================================
+  // ICONS
+  // =========================================================
+
+  protected readonly HomeIcon     = Home;
+  readonly nextIcon     = ChevronRight;
+  readonly prevIcon     = ChevronLeft;
+  readonly RotateCcwIcon = RotateCcw;
+  readonly XIcon        = X;
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
+
   constructor(
-    private route: ActivatedRoute,
-    private uiBehavior: UiBehaviorService,
-    private aca: EighteenAcademyService,
+    protected router: Router,
+    protected route: ActivatedRoute,
+    protected uiBehavior: UiBehaviorService,
+    protected aca: EighteenAcademyService,
     public pagination: PaginationService,
-    private productservice:ProductServiceService
+    protected productservice:ProductServiceService,
+    protected ctgService:CategoriesService
   ) {}
 
   // =========================================================
@@ -47,18 +67,39 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // =========================================================
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+      combineLatest([
+      this.route.paramMap,
+      this.route.queryParamMap
+    ]).subscribe(([params, query]) => {
+
       window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // category
       this.category = params.get('category') || 'all';
+
+      // filter
+      const filterJson = query.get('filter');
+
+      if (filterJson) {
+        try {
+          this.searchReq = JSON.parse(filterJson);
+        } catch {
+          this.searchReq = {};
+        }
+      } else {
+        this.searchReq = {};
+      }
+
+      // department
+      const deptsParam = query.get('depts');
+      const selectedNames = deptsParam?.split(',') ?? [];
+
+      this.department.forEach(d => {
+        d.selected = selectedNames.includes(d.name);
+      });
+
       this.loadProducts();
     });
-
-    this.route.queryParamMap.subscribe(query => {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      this.keyword = query.get('keyword') || '';
-      this.loadProducts(); // ← 加這行，keyword 變了要重新計算分頁
-    });
-
   }
 
   ngOnDestroy(): void {
@@ -68,36 +109,127 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   }
 
-  resetQuery(){
-    this.category = 'all';
-    this.keyword = '';
+  // =========================================================
+  // LOADING AND RESET
+  // =========================================================
+
+  products: ProductCard[] = [];
+  isLoading = false;
+
+  loadProducts(){
+    this.isLoading = true;
+
+    const hasSearch =
+    Object.keys(this.searchReq).length > 0;
+    // this.keyword ||
+
+    console.log('hasSearch=', hasSearch);
+
+    if (hasSearch) {
+      this.loadSearchProducts();
+      return;
+    }
+    else if (this.category && this.category !== 'all')
+    {
+      this.loadCategoryProducts();
+      return;
+    }
+    else
+    {
+      this.loadAllProducts();
+      return;
+    }
   }
 
+  private loadSearchProducts() {
+    console.log('走 search API');
+
+    this.handleProductResponse(
+      this.productservice.search(this.searchReq)
+    );
+  }
+
+  private loadCategoryProducts() {
+    const chineseCat = CATEGORY_MAP[this.category!] ?? this.category;
+
+    this.handleProductResponse(
+      this.productservice.searchByType(chineseCat)
+    );
+  }
+
+  private loadAllProducts() {
+    this.handleProductResponse(
+      this.productservice.getAll()
+    );
+  }
+
+  private handleProductResponse(
+    observable: Observable<GetProductDataRes>
+  )
+  {
+    observable.subscribe({
+      next: (res) => {
+        this.products = res.productList ?? [];
+        this.updatePagination();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+
+  resetQuery(){
+    this.searchReq = {};
+  }
+
+
+
+
   // =========================================================
-  // ICONS
+  // 偷 sidenav 的 code 來用
   // =========================================================
 
-  readonly HomeIcon     = Home;
-  readonly nextIcon     = ChevronRight;
-  readonly prevIcon     = ChevronLeft;
-  readonly RotateCcwIcon = RotateCcw;
-  readonly XIcon        = X;
+  // 宣告商品種類
+  get categories():any[]{
+    return this.ctgService.categories
+  }
+
+  // 被選擇的商品種類
+  selectedCategory = '';
+
+  // 以常見分類選擇商品
+  selectCategory(value: string){
+    this.selectedCategory = value;
+    this.goToProductList();
+  }
+
+  goToProductList(){
+    this.router.navigate(['/product-list', this.selectedCategory]);
+  }
 
   // =========================================================
   // CATEGORY
   // =========================================================
 
-  keyword: string | null = '';
+  searchReq: SearchProductReq = {};
+  allProducts:ProductCard[] = [];
+
   category: string | null = '';
 
   get categoryName(): string {
-    if (this.keyword) return '搜尋結果';
-    if (this.category === 'all') return '全部商品';
-    return CATEGORY_MAP[this.category!] || '全部商品';
-  }
 
-  loadProducts() {
-    this.pagination.init(this.sortedProducts.length, this.pageSize);
+    if (this.searchReq.keyword) {
+      return '搜尋結果';
+    }
+
+    if (this.category === 'all') {
+      return '全部商品';
+    }
+
+    return CATEGORY_MAP[this.category!] || '全部商品';
   }
 
   // =========================================================
@@ -162,12 +294,14 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // FILTER CHANGE HANDLERS
   // =========================================================
 
-  onCityChange(): void {
+  onCityChange() {
     this.pagination.goToPage(1);
+    this.updatePagination();
   }
 
-  onDeptChange(): void {
-    console.log(this.department);
+  onDeptChange() {
+    this.pagination.goToPage(1);
+    this.updatePagination();
   }
 
   // =========================================================
@@ -258,7 +392,6 @@ get sortedProducts(): ProductCard[] {
   }
 }
 
-
   // =========================================================
   // PAGINATION（每頁最多 30 筆）
   // =========================================================
@@ -268,6 +401,13 @@ get sortedProducts(): ProductCard[] {
   get pagedProducts(): ProductCard[] {
     const start = (this.pagination.currentPage - 1) * this.pageSize;
     return this.sortedProducts.slice(start, start + this.pageSize);
+  }
+
+  updatePagination(): void {
+    this.pagination.init(
+      this.filteredProducts.length,
+      this.pageSize
+    );
   }
 
   prevPage()              { this.pagination.prevPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -284,6 +424,8 @@ get sortedProducts(): ProductCard[] {
     this.sellerGrade    = this.DEFAULT_FILTERS.sellerGrade;
     this.cities.forEach(c => c.selected = false);
     this.department.forEach(d => d.selected = false);
+    this.type.forEach(t => t.selected = false);
+    this.condition.forEach(c => c.selected = false);
     this.pagination.goToPage(1);
   }
 
@@ -296,42 +438,81 @@ get sortedProducts(): ProductCard[] {
 
 
   // =========================================================
-  // 搜尋結果
+  // 前端篩選結果
   // =========================================================
 
-  get filteredProducts(): ProductCard[]{
-    return this.allProducts.filter(product =>{
+  private matchCategory(product: ProductCard): boolean {
+    const chineseCat = CATEGORY_MAP[this.category!];
 
-      const chineseCat = CATEGORY_MAP[this.category!];
+    return (
+      !this.searchReq.keyword &&
+      this.category !== 'all'
+        ? product.type.includes(chineseCat)
+        : true
+    );
+  }
 
-      const matchCategory =
-        this.category === 'all' || product.type.includes(chineseCat);
+  private matchPrice(product: ProductCard): boolean {
+    return (
+      product.price > this.priceValue &&
+      product.price < this.priceHighValue
+    );
+  }
 
-      const matchKeyword =
-        !this.keyword
-        || product.title.includes(this.keyword)
-        || product.location.includes(this.keyword);
+  private matchCity(product: ProductCard): boolean {
+    const selectedCity = this.cities
+      .filter(c => c.selected)
+      .map(c => c.name);
 
-      const matchPrice =
-        product.price > this.priceValue && product.price < this.priceHighValue
+    return (
+      selectedCity.length === 0 ||
+      selectedCity.some(city => product.location.includes(city))
+    );
+  }
 
-      // const selectedCity = []
-      //   for (const element of this.cities) {
-      //     if(element.selected == true)
-      //     {
-      //       selectedCity.push(element.name);
-      //     }
-      //   }
+  private matchSchool(product: ProductCard): boolean {
+    const selectedSchool = this.department
+      .filter(d => d.selected)
+      .map(d => d.name);
 
-      const selectedCity = this.cities
-        .filter(c => c.selected)
-        .map(c => c.name);
+    return (
+      selectedSchool.length === 0 ||
+      selectedSchool.some(s => product.deptGroup.includes(s))
+    );
+  }
 
-      const matchCity = selectedCity.length === 0
-      || selectedCity.some(city => product.location.includes(city))
+  private matchType(product: ProductCard): boolean {
+    const selectedTypes = this.type
+      .filter(t => t.selected)
+      .map(t => CATEGORY_MAP[t.value]);
 
-      return matchCategory && matchKeyword && matchPrice && matchCity;
-    })
+    return (
+      selectedTypes.length === 0 ||
+      selectedTypes.some(t => product.type.includes(t))
+    );
+  }
+
+  private matchCondition(product: ProductCard): boolean {
+    const selectedConditions = this.condition
+      .filter(c => c.selected)
+      .map(c => c.label);
+
+    return (
+      selectedConditions.length === 0 ||
+      selectedConditions.includes(product.condition)
+    );
+  }
+
+
+  get filteredProducts(): ProductCard[] {
+    return this.products.filter(product =>
+      this.matchCategory(product) &&
+      this.matchPrice(product) &&
+      this.matchCity(product) &&
+      this.matchSchool(product) &&
+      this.matchType(product) &&
+      this.matchCondition(product)
+    );
   }
 
 
@@ -339,37 +520,20 @@ get sortedProducts(): ProductCard[] {
   // 假資料
   // =========================================================
 
+  get type() : any[]{
+    return this.ctgService.categories;
+  }
+
+  get condition() : any[]{
+    return this.ctgService.conditions;
+  }
+
   get department(): any[]{
     return this.aca.academy
   }
 
-  cities = [
-    { id: 1,  name: '基隆市', selected: false },
-    { id: 2,  name: '台北市', selected: false },
-    { id: 3,  name: '新北市', selected: false },
-    { id: 4,  name: '桃園縣', selected: false },
-    { id: 5,  name: '新竹市', selected: false },
-    { id: 6,  name: '新竹縣', selected: false },
-    { id: 7,  name: '苗栗縣', selected: false },
-    { id: 8,  name: '台中市', selected: false },
-    { id: 9,  name: '彰化縣', selected: false },
-    { id: 10, name: '南投縣', selected: false },
-    { id: 11, name: '雲林縣', selected: false },
-    { id: 12, name: '嘉義市', selected: false },
-    { id: 13, name: '嘉義縣', selected: false },
-    { id: 14, name: '台南市', selected: false },
-    { id: 15, name: '高雄市', selected: false },
-    { id: 16, name: '屏東縣', selected: false },
-    { id: 17, name: '台東縣', selected: false },
-    { id: 18, name: '花蓮縣', selected: false },
-    { id: 19, name: '宜蘭縣', selected: false },
-    { id: 20, name: '澎湖縣', selected: false },
-    { id: 21, name: '金門縣', selected: false },
-    { id: 22, name: '連江縣', selected: false }
-  ];
-
-  get allProducts():ProductCard[] {
-    return this.productservice.allProducts
+  get cities(): any[]{
+    return this.ctgService.cities;
   }
 
 

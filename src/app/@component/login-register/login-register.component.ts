@@ -19,8 +19,10 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
 import { BasicResponse, UserReq } from '../../@Interface/user';
 
+
 // 絲絨的
 import { ApiTestService } from './../../@Services/api-test.service';
+
 
 @Component({
   selector: 'app-login-register',
@@ -73,6 +75,15 @@ export class LoginRegisterComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.isRegister = params['mode'] === 'register';
+
+      // 如果網址帶了 email（從信件連結來的）
+      if (params['email']) {
+          this.userEmail = params['email'];
+          // 如果是重新驗證，直接跳到第 2 步
+          if (params['reVerify'] === 'true') {
+              this.currentStep = 2;
+          }
+      }
     }); // 佩霖寫的，處理路由
 
     this.initRegisterForm(); // 呼叫註冊箱子初始化
@@ -540,6 +551,7 @@ export class LoginRegisterComponent implements OnInit {
       let loginReq = this.loginForm.value;
 
       // 呼叫 Service 並把參數傳進去
+      // 我決定要把這一段註解掉 ㄇ的
       this.userService.login(loginReq).subscribe({
         next: (res) => {
           this.userService.isLoggedIn.set(true);
@@ -583,9 +595,9 @@ export class LoginRegisterComponent implements OnInit {
             });
           }
         }
-      });
+      });  // 我決定要把這一段註解掉 ㄇ的
     }
-  }
+}
 
   // 先隨便寫的，只要使用者input的email格式正確就能登入 By.佩霖
   isValidLoginEmail(): boolean {

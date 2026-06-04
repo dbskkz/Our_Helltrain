@@ -4,17 +4,17 @@
   <section class="row information">
 
     <!-- 頭貼 -->
-    <div class="col-md-2">
+    <div class="col-md-2 userImg">
       <figure class="user-img">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyz9M0k9ziX8SKisx9t8So1s4Ya8bI1RyaEA&s"
-          alt="大頭貼" width="300" height="300" />
+        <img [src]=userData()?.imgPath alt="大頭貼" width="300" height="300" />
       </figure>
+      <small>賣家 ID： {{userData()?.userId}}</small>
     </div>
 
     <!-- 基本資料 -->
     <div class="col-md-4 profile-list">
       <div class="userName">
-        <p><lucide-icon [name]="User"></lucide-icon>賣家名稱：</p>
+        <p><lucide-icon [name]="User"></lucide-icon>賣家名稱：{{userData()?.userName}}</p>
         @if (isGood) {
         <div class="ThumbsUp">
           <lucide-icon [name]="ThumbsUp"></lucide-icon>
@@ -22,16 +22,17 @@
         </div>
         }
       </div>
-      <p> <lucide-icon [name]="BookText"></lucide-icon>賣家 ID： </p>
-      <p> <lucide-icon [name]="MapPin"></lucide-icon>所在地區： </p>
-      <p> <lucide-icon [name]="School"></lucide-icon>學校： </p>
-      <p> <lucide-icon [name]="School"></lucide-icon>學群/科系： </p>
+      <p> <lucide-icon [name]="MapPin"></lucide-icon>常出沒地區： {{formattedLocation}}</p>
+      <p> <lucide-icon [name]="School"></lucide-icon>就讀學校： {{userData()?.school}}</p>
+      <p> <lucide-icon [name]="School"></lucide-icon>就讀學群/科系： {{userData()?.department || '未填寫'}}</p>
+      <p> <lucide-icon [name]="Mail"></lucide-icon>賣家 email： {{userData()?.userEmail}}</p>
+      <p> <lucide-icon [name]="Phone"></lucide-icon>手機： {{userData()?.phone || '未填寫'}}</p>
     </div>
 
     <!-- 簡介 + 聊聊按鈕 -->
     <div class="col-md-6 intro-block">
       <label class="introduction">簡介：</label>
-      <p>這是一段簡介。</p>
+      <p>{{userData()?.msg}}</p>
       <div class="introBtn">
         @if (!isOwner) {
         <button class="btn-action primary">
@@ -69,23 +70,21 @@
 
     </header>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-      @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
+      @for (item of products ; track $index) {
       <div class="col">
         <div class="card" (click)="goProductPage()">
           <!-- 左側圖片 -->
           <figure class="img-wrapper">
-            <img
-              src="https://d2lfcsub12kx0l.cloudfront.net/tw/product/img/Apple_apple_airpods_pro_2_0907194607052_640x480.jpg"
-              class="card-img-top" alt="商品圖片">
+            <img [src]=item.imgPath class="card-img-top" alt="商品圖片">
           </figure>
           <!-- 右側內容 -->
           <div class="card-body">
             <div>
-              <h5 class="name">AirPods (第二代)</h5>
-              <p class="desc">使用狀況良好，功能正常，含充電盒。</p>
+              <h5 class="name">{{item.productName}}</h5>
+              <p class="desc">{{item.description}}</p>
             </div>
             <div class="card-bottom">
-              <span class="price">$180</span>
+              <span class="price">{{item.price}}</span>
 
               @if (!isOwner) {
               <button class="btn-icon-action" (click)="goCollectProduct()">

@@ -55,14 +55,34 @@
       .card-body {
 
         .title {
-          font-size: 1.1rem;
-          font-weight: bolder;
+          font-size: 1.5rem;
+          font-weight: 500;
+
+          // 核心代碼
+          white-space: nowrap;      // 強制不換行
+          overflow: hidden;         // 隱藏超出部分
+          text-overflow: ellipsis;  // 顯示省略號
+          width: 100%;             // 確保寬度受限
         }
-        .price {
-          font-weight: bold;
-          font-size: 1.6rem;
-          color: $text-price;
-        }
+
+      .price-container {
+        display: flex;
+        align-items: baseline; // 關鍵：確保文字底部對齊
+        gap: 2px;             // 符號與數字間的微小間距
+        color: $text-price;
+        margin: 0;            // 清除標題預設 margin
+      }
+
+      .currency-symbol {
+        font-size: 1rem;      // 符號稍微縮小，視覺重心會更平衡
+        font-weight: 500;
+      }
+
+      .amount {
+        font-size: 1.5rem;    // 數字放大，突顯重點
+        font-weight: 750;
+        line-height: 1;       // 避免行高影響對齊
+      }
 
         .meta-info {
           display: flex;
@@ -70,12 +90,18 @@
           align-items: center;
           font-size: 11px;
           color: $text-gray;
-          margin-bottom: 0.8rem;
+          margin: 0.5rem 0;
 
           .location {
             display: flex;
             align-items: center;
             gap: 2px;
+
+            // 防止地點文字太長時把時間擠出去
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px; // 根據你的卡片寬度調整
           }
         }
 
@@ -87,6 +113,10 @@
           color: $neutral-500;
           padding-bottom: 0.3rem;
 
+          // 避免內容換行導致卡片高度不一
+          white-space: nowrap;
+          overflow: hidden;
+
           .picture {
             height: 1.2rem;
             width: 1.2rem;
@@ -94,6 +124,40 @@
             border-radius: 50%;
             flex-shrink: 0;
           }
+
+          .user-name, .user-university
+          {
+            // 🔴 核心：平分剩餘空間
+            flex: 1 1 0;
+
+            // 文字截斷必備三件套
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+
+          .user-name {
+            font-weight: 600;
+            color: $text-black;
+            // 名字可以靠右一點點，與學校拉開
+            text-align: left;
+          }
+
+          .user-university {
+            color: $text-gray;
+            position: relative;
+            padding-left: 0.5rem;
+
+            // 加上分隔線，視覺上更精緻
+            &::before {
+              content: '·';
+              position: absolute;
+              left: 0;
+              color: $neutral-300;
+            }
+          }
+
         }
 
       }
@@ -115,4 +179,9 @@
   }
 
 
+}
+
+.card-img-top
+{
+  aspect-ratio: 1;
 }

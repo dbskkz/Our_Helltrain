@@ -1,11 +1,21 @@
 export interface ProductCard {
+  productId: number,
+  userId:number,
+
   title: string; // 對應後端productName
-  type: string[];
+  description: string,
   price: number;
-  time: string; // 後端沒有這個欄位
-  imgUrl: string; // 對應後端 imgPath ( 好像是
-  location: string;
-  quantity?: number;
+  type: string[];
+
+  time: string;
+  condition: string;
+  imgUrl: string;
+  status: string,
+
+  grade: string[],
+  location: string[],
+  deptGroup:string[],
+
   user: {
     userName: string;
     userImg: string;

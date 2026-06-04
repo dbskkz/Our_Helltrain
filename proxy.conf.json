@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://api.opencube.tw/",
+    "target": "https://api.opencube.tw",
     "changeOrigin": true,
     "pathRewrite": {
       "^/api": ""

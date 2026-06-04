@@ -18,6 +18,8 @@ import { LoginRegisterComponent } from './@component/login-register/login-regist
 import { ProductPageComponent } from './@component/product-page/product-page.component';
 import { FrontReportComponent } from './@component/front-report/front-report.component';
 import { LaunchProductPriceComponent } from './@component/launch-product-price/launch-product-price.component';
+import { SchoolCommunityLayoutComponent } from './@SchoolCommunity/school-community-layout/school-community-layout.component';
+import { SchoolCommunityProductComponent } from './@SchoolCommunity/school-community-product/school-community-product.component';
 import { DraftListComponent } from './@component/draft-list/draft-list.component';
 
 export const routes: Routes = [
@@ -36,9 +38,17 @@ export const routes: Routes = [
       { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
       { path: 'launch_product_price', component: LaunchProductPriceComponent }, //上架商品頁-價格
       { path: 'draft_list', component: DraftListComponent }, //儲存草稿頁
-      { path: 'store', component: StoreComponent }, //賣場頁面
+      { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
+
+      // TODO: school-community/:universityName
+      { path: 'school-community',
+        component: SchoolCommunityLayoutComponent,
+        children:[
+          // TODO : 當路徑是 /school-community/清華大學/school-product 時
+          { path: 'school-product', component: SchoolCommunityProductComponent }, //校版商品
+        ]}, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

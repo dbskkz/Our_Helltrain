@@ -18,6 +18,12 @@
 }
 
 // 頭貼
+.userImg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .user-img {
   width: 120px;
   height: 120px;
@@ -89,6 +95,7 @@
 .intro-block {
   border-left: 1px solid rgba($neutral-300, 0.6);
   padding-left: 40px;
+
   p {
     color: $text-gray;
     margin-bottom: 12px;
@@ -257,6 +264,7 @@
     background-color: $background-yellow;
     color: $primary-yellow-darker;
     border-color: $primary-yellow;
+
     &:hover {
       background: $primary-yellow-dark;
       color: $background-white;
@@ -267,6 +275,7 @@
   &.outline {
     background: $background-white;
     color: $text-gray;
+
     &:hover {
       background: $neutral-300;
       transform: translateY(-2px);
@@ -286,6 +295,7 @@
       background-color: #c62828;
       color: $background-white;
       transform: translateY(-2px);
+
       lucide-icon {
         color: $background-white;
       }
@@ -346,6 +356,7 @@
   border: 1px solid $neutral-300;
   cursor: pointer;
   user-select: none;
+
   &:hover {
     background-color: $background-yellow;
     color: $primary-yellow;

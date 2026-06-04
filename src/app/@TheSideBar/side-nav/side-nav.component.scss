@@ -1,21 +1,21 @@
 @use '../../styles/variables' as *;
 
-
 .side-wrapper {
-  width: 100%;          // 原本 260px → 12rem
+  width: 100%;
   height: 100%;
-  background-color: $background-white;
+  padding: 1rem;
+
   display: flex;
   flex-direction: column;
-  gap: 1rem;             // 原本 1.5rem
-  padding: 1rem;         // 原本 1.5rem
-  // box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);  // 右側陰影
+  gap: 1rem;
 
-  // overflow-y: scroll;        // ← 加這行，內容超出時出現滾輪
-  overflow-x: hidden;      // ← 加這行，防止水平滾動
+  background-color: $background-white;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
 
   .nav-list {
     list-style: none;
@@ -23,54 +23,51 @@
     margin: 0;
 
     .nav-item {
-      // 這裡只負責動畫，不要寫樣式
       opacity: 0;
       transform: translateY(10px);
       animation: slideIn 0.4s ease forwards;
 
       .nav-link {
-        // 1. 強力清除按鈕預設樣式
         width: 100%;
-        background: none;
-        border: none;
-        text-align: left;
-        font-family: inherit;
 
-        // 2. 搬移原本 .nav-item 的樣式
         display: flex;
         align-items: center;
         gap: 0.6rem;
+
         padding: 0.5rem 0.8rem;
-        border-radius: 10px;
-        color: $text-gray;
-        cursor: pointer;
         margin-bottom: 0.3rem;
-        transition: all 0.2s ease-in-out;
 
-          lucide-icon {
-            width: 1.1rem;     // 原本 1.2rem
-            height: 1.1rem;
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-          }
+        border: none;
+        border-radius: 10px;
+        background: none;
 
-          span {
-            font-size: 0.8rem;  // 縮小文字
-            font-weight: 500;
-          }
+        color: $text-gray;
+        text-align: left;
+        font-family: inherit;
 
-          &:hover {
-            background-color: $primary-yellow;
-            color: white;
-            transform: translateX(4px) !important;
-            transition: 0.5s;
-          }
+        cursor: pointer;
+        transition: all 0.3s ease;
 
-          &.active {
-            background-color: $primary-yellow;
-            color: white;
-          }
+        lucide-icon {
+          width: 1.1rem;
+          height: 1.1rem;
+        }
+
+        span {
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+
+        &:hover {
+          background-color: $primary-yellow;
+          color: white;
+          transform: translateX(4px);
+        }
+
+        &.active {
+          background-color: $primary-yellow;
+          color: white;
+        }
       }
     }
   }
@@ -80,19 +77,177 @@
     border-top: 1px solid #f0f0f0;
     margin: 0.3rem 0;
   }
-
 }
 
-
 .nav-item {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: slideIn 0.4s ease forwards;
-
-  @for $i from 1 through 8 {
+  @for $i from 1 through 12 {
     &:nth-child(#{$i}) {
       animation-delay: #{$i * 0.05}s;
     }
+  }
+}
+
+lucide-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+
+.sub-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+
+  margin: 0 0.4rem;
+
+  border-radius: 8px;
+  background-color: #f9f9f9;
+
+  transition:
+    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+
+  &.show {
+    max-height: 1000px;
+    opacity: 1;
+
+    padding: 0.4rem 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 常用分類 */
+
+.sub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  padding: 0 0.5rem;
+}
+
+/* 學群 */
+
+.sub-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  padding: 0 0.5rem;
+
+  max-height: 260px;
+  overflow-y: auto;
+
+  border-bottom: 1px solid #eee;
+}
+
+/* 常用分類按鈕 */
+
+.sub-link {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+
+  padding: 0.45rem 0.6rem;
+
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+
+  font-size: 0.75rem;
+  color: #666;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  lucide-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  &:hover {
+    background: #eee;
+  }
+
+  &.active {
+    color: $primary-yellow;
+    background: rgba($primary-yellow, 0.08);
+    font-weight: 700;
+  }
+}
+
+/* 學群選項 */
+
+.sub-checkbox-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.45rem 0.6rem;
+
+  border-radius: 6px;
+
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #eee;
+  }
+
+  &:has(input:checked) {
+    background: rgba($primary-yellow, 0.08);
+    font-weight: 700;
+  }
+
+  input[type='checkbox'] {
+    width: 0.9rem;
+    height: 0.9rem;
+
+    margin: 0;
+
+    flex-shrink: 0;
+    accent-color: $primary-yellow;
+
+    outline: none;
+
+    cursor: pointer;
+  }
+}
+
+.sub-confirm-btn {
+  width: calc(100% - 1rem);
+
+  margin: 0.5rem;
+  padding: 0.55rem;
+
+  border: 1px solid $semantic-orange;
+  border-radius: 6px;
+
+  background: $background-yellow;
+  color: $semantic-orange;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 
@@ -101,131 +256,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-
-.academics {
-  /* 1. 定位與形狀 */
-  position: fixed;
-  top: 66px;              /* 稍微向下偏移，不要貼頂 */
-  left: 15rem; /* 距離側邊欄一段距離 */
-  width: 280px;           /* 設定固定寬度 */
-  max-height: 80vh;       /* 限制最大高度，避免超出螢幕 */
-
-  /* 2. 背景與陰影 (關鍵：營造懸浮感) */
-  background-color: #ffffff;
-  border-radius: 20px;    /* 像圖片一樣的大圓角 */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); /* 柔和深邃的陰影 */
-  border: 1px solid rgba(0, 0, 0, 0.05);
-
-  /* 3. 佈局 */
-  display: grid;          /* 使用 grid 讓內容排列更整齊 */
-  grid-template-columns: repeat(2, 1fr); /* 兩欄佈局 */
-  gap: 0.8rem;
-  padding: 1.5rem;
-
-  /* 4. 滾動條美化 */
-  /* 關鍵修改：改變渲染方向，讓滾輪跑去左邊 */
-  direction: rtl;
-  overflow-y: auto;
-  overflow-x: hidden; /* 防止出現水平滾動條 */
-  z-index: 1000;          /* 確保在最上層 */
-
-  /* 進場動畫 */
-  animation: fadeInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-
-  /* 學群按鈕樣式 (內部 Item) */
-  .academy {
-    background: #f8f9fa;   /* 淺灰色底色 */
-    border: none;
-    border-radius: 12px;   /* 圓角矩形 */
-    padding: 0.6rem;
-    font-size: 0.85rem;
-    color: #444;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: $primary-yellow;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba($primary-yellow, 0.3);
-    }
-  }
-}
-
-/* 讓面板彈出的動畫 */
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-
-.categories {
-  position: fixed;
-  top: 66px;
-  left: 15rem;
-  width: 200px;
-  max-height: 80vh;
-
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1rem;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-  z-index: 1000;
-
-  animation: fadeInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-
-  .category {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: #f8f9fa;
-    border: none;
-    border-radius: 12px;
-    padding: 0.55rem 0.8rem;
-    font-size: 0.85rem;
-    color: #444;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.2s ease;
-
-    lucide-icon {
-      width: 1rem;
-      height: 1rem;
-      flex-shrink: 0;
-    }
-
-    &:hover {
-      background-color: $primary-yellow;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba($primary-yellow, 0.3);
-    }
-
-    &.active {
-      background-color: $primary-yellow;
-      color: white;
-    }
-  }
-}
-
-lucide-icon{
-  display: flex;
-  align-items: center;
 }

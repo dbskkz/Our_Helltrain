@@ -6,7 +6,7 @@
         class="nav-link"
         (click)="goToHome()"
       >
-        <lucide-icon [name]="HomeIcon" (click)="goToHome()"></lucide-icon>
+        <lucide-icon [name]="HomeIcon"></lucide-icon>
         <span>回首頁</span>
       </button>
     </li>
@@ -27,24 +27,62 @@
       <button
         type="button"
         class="nav-link"
-        (click)="togglePanel($event, 'academic')"
-      >
-        <lucide-icon [name]="BoxIcon"></lucide-icon>
-        <span>所有學群</span>
-      </button>
-    </li>
-
-    <li class="nav-item">
-      <button
-        type="button"
-        class="nav-link"
         (click)="togglePanel($event, 'category')"
         [class.active]="panelState.category"
       >
         <lucide-icon [name]="CirclePileIcon"></lucide-icon>
         <span>常用分類</span>
       </button>
+
+      <div class="sub-panel" [class.show]="panelState.category">
+        <ul class="sub-list">
+          @for (item of categories; track $index) {
+            <li>
+
+              <button class="sub-link" (click)="selectCategory(item.value)" [class.active]="selectedCategory === item.value">
+                <lucide-icon [name]="item.icon"></lucide-icon>
+                <span class="sub-panel-text">{{ item.label }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+
     </li>
+
+    <li class="nav-item">
+      <button
+        type="button"
+        class="nav-link"
+        (click)="togglePanel($event, 'academic')"
+      >
+        <lucide-icon [name]="BoxIcon"></lucide-icon>
+        <span>所有學群</span>
+      </button>
+
+      <div class="sub-panel" [class.show]="panelState.academic">
+        <div class="sub-grid" (click)="$event.stopPropagation()">
+          @for (item of academics; track $index) {
+            <label
+              class="sub-checkbox-item sub-panel-text"
+              [class.active]="selectedDepts.includes(item.name)"
+            >
+              <input
+                type="checkbox"
+                [checked]="selectedDepts.includes(item.name)"
+                (change)="toggleDept(item.name)"
+              />
+              {{ item.name }}
+            </label>
+          }
+        </div>
+          <button class="sub-confirm-btn" (click)="confirmDepts(); $event.stopPropagation()">
+            確認選取（{{ selectedDepts.length }}）
+          </button>
+      </div>
+    </li>
+
+
 
     <li class="nav-item">
       <button
@@ -57,16 +95,7 @@
       </button>
     </li>
 
-    <li class="nav-item">
-      <button
-        type="button"
-        class="nav-link"
-        (click)="goToHome()"
-      >
-        <lucide-icon [name]="SchoolIcon"></lucide-icon>
-        <span>看看校板</span>
-      </button>
-    </li>
+
 
     <li class="nav-item">
       <button
@@ -94,6 +123,17 @@
       <button
         type="button"
         class="nav-link"
+        (click)="goToSchoolForum()"
+      >
+        <lucide-icon [name]="SchoolIcon"></lucide-icon>
+        <span>看看校板</span>
+      </button>
+    </li>
+
+    <li class="nav-item">
+      <button
+        type="button"
+        class="nav-link"
         (click)="goToManual()"
       >
         <lucide-icon [name]="CircleQuestionMarkIcon"></lucide-icon>
@@ -106,31 +146,8 @@
   <hr class="divider">
 
 
-  @if (panelState.academic) {
-    <div class="academics" >
-      @for (item of academics; track $index)
-      {
-        <button class="academy">
-          {{item.name}}
-        </button>
-      }
-    </div>
-  }
 
-  @if (panelState.category) {
-  <div class="categories">
-    @for (item of categories; track $index) {
-      <button
-        class="category"
-        (click)="selectCategory(item.value)"
-        [class.active]="selectedCategory === item.value"
-      >
-        <lucide-icon [name]="item.icon"></lucide-icon>
-        <span>{{ item.label }}</span>
-      </button>
-    }
-  </div>
-}
+
 
 
 </div>

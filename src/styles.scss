@@ -2,21 +2,24 @@
 
 /* You can add global styles to this file, and also import other style files */
 /* 請確認這段是在 src/styles.scss 裡 */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: auto;      // 讓 body 可以被內容撐開
-  overflow-y: auto;  // 確保瀏覽器層級出現滾輪
+  height: auto; // 讓 body 可以被內容撐開
+  overflow-y: auto; // 確保瀏覽器層級出現滾輪
   overflow-x: hidden; // 防止左右晃動
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
-   /* 關鍵：Inter 寫前面，Noto Sans TC 寫後面 */
+  /* 關鍵：Inter 寫前面，Noto Sans TC 寫後面 */
   font-family: "Inter", "Noto Sans TC", sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
@@ -43,7 +46,19 @@ body {
   .ngx-slider-tick.ngx-slider-selected {
     background: $primary-yellow !important;
   }
-
 }
 
+// 檢舉Dialog
+.cdk-overlay-pane {
+  z-index: 1000000 !important;
+}
 
+// .report-dialog {
+//   z-index: 9999 !important;
+
+//   // 強制讓它隔壁跟上層的鄰居都一起升天
+//   parent,
+//   & {
+//     z-index: 9999 !important;
+//   }
+// }
