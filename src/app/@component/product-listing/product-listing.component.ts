@@ -68,45 +68,44 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
       combineLatest([
-      this.route.paramMap,
-      this.route.queryParamMap
-    ]).subscribe(([params, query]) => {
+        this.route.paramMap,
+        this.route.queryParamMap
+      ]).subscribe(([params, query]) => {
 
-      window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, behavior: 'instant' });
 
-      // category
-      this.category = params.get('category') || 'all';
+        // category
+        this.category = params.get('category') || 'all';
 
-      // filter
-      const filterJson = query.get('filter');
+        // filter
+        const filterJson = query.get('filter');
 
-      if (filterJson) {
-        try {
-          this.searchReq = JSON.parse(filterJson);
-        } catch {
+        if (filterJson) {
+          try {
+            this.searchReq = JSON.parse(filterJson);
+          } catch {
+            this.searchReq = {};
+          }
+        } else {
           this.searchReq = {};
         }
-      } else {
-        this.searchReq = {};
-      }
 
-      // department
-      const deptsParam = query.get('depts');
-      const selectedNames = deptsParam?.split(',') ?? [];
+        // department
+        const deptsParam = query.get('depts');
+        const selectedNames = deptsParam?.split(',') ?? [];
 
-      this.department.forEach(d => {
-        d.selected = selectedNames.includes(d.name);
+        this.department.forEach(d => {
+          d.selected = selectedNames.includes(d.name);
+        });
+
+        this.loadProducts();
       });
-
-      this.loadProducts();
-    });
   }
 
   ngOnDestroy(): void {
     this.resetFilters();
     this.goToPage(1);
     this.resetQuery();
-
   }
 
   // =========================================================
@@ -453,9 +452,12 @@ get sortedProducts(): ProductCard[] {
   }
 
   private matchPrice(product: ProductCard): boolean {
+    if (this.priceHighValue >= 5000) {
+      return product.price >= this.priceValue;  // 上限拉滿就不限上限
+    }
     return (
-      product.price > this.priceValue &&
-      product.price < this.priceHighValue
+      product.price >= this.priceValue &&
+      product.price <= this.priceHighValue
     );
   }
 
