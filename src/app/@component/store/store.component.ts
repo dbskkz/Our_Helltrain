@@ -1,6 +1,6 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   LucideAngularModule,
@@ -60,6 +60,8 @@ export class StoreComponent {
       this.isOwner = !this.isOwner;
     }
   }
+  // 賣場主人資料
+  shopOwnerData = signal<any>(null);
 
   // 分頁變數
   currentPage = 1;
