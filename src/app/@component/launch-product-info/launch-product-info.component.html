@@ -56,28 +56,24 @@
 
     <div class="field">
       <div class="section-label">分類 <span class="req">*</span></div>
-      <div class="radio-group" [class.error]="touched.catMain && state.catMain === ''">
-        <label class="radio-label" *ngFor="let cat of catOptions">
-        <input type="radio" name="catMain"
-             [value]="cat"
-             [checked]="state.catMain === cat"
-             (change)="onCatMainChange($event, cat)" />
-        <span>{{ cat }}</span>
-        </label>
+        <div class="checkbox-group cat-checkbox-group" [class.error]="touched.catMain && state.catMain.length === 0">
+          <label class="checkbox-label" *ngFor="let cat of catOptions">
+          <input type="checkbox"
+            [checked]="state.catMain.includes(cat)"
+            (change)="onCatChange($event, cat)" />
+          <span>{{ cat }}</span>
+          </label>
 
-    <!-- 新增類別：radio + 文字輸入框 -->
-        <label class="radio-label">
-        <input type="radio" name="catMain" value="__custom__"
-         [checked]="state.catMain === '__custom__' || isCustomCat()"
-         (change)="onAddCatRadioSelect()" />
-        <span>新增類別</span>
-        <input *ngIf="state.catMain === '__custom__' || isCustomCat()"
-          class="cat-custom-input" type="text" placeholder="輸入類別"
-         [(ngModel)]="customCatInput"
-         (ngModelChange)="onCustomCatInput()"
-         (click)="$event.stopPropagation()" />
-        </label>
-      </div>
+
+      <!-- 新增類別 -->
+          <label class="checkbox-label custom-cat-label">
+            <input type="checkbox"  [checked]="customCatChecked"  (change)="onCustomCatCheckChange($event)" />
+            <span>新增類別</span>
+            <input *ngIf="customCatChecked"  class="cat-custom-input"  type="text"
+              placeholder="輸入類別"  [(ngModel)]="customCatInput"
+              (ngModelChange)="onCustomCatInput()"  (click)="$event.stopPropagation()" />
+          </label>
+        </div>
     </div>
 
     <div class="field">
