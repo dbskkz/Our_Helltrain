@@ -1,2 +1,20 @@
-<p>school-community-layout works!</p>
-<router-outlet></router-outlet>
+<main class="content">
+
+  <nav class="breadcrumb">
+    <a routerLink="/home" class="breadcrumb-link">
+      <lucide-icon [name]="HomeIcon" size="14"></lucide-icon>
+      首頁
+    </a>
+    <span class="sep">></span>
+    <span class="current">{{ universityName }}</span>
+  </nav>
+
+  <header class="list-header">
+        <h1 class="university-name">{{ universityName }}</h1>
+        <button>關注</button>
+        <input type="text" placeholder="在校版中搜尋商品">
+  </header>
+
+  <router-outlet></router-outlet>
+
+</main>

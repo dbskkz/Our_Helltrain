@@ -1,24 +1,13 @@
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
 
-/* =========================
-   Layout
-========================= */
 .content {
-  padding: 1rem 5%;
-
   max-width: 100vw;
-  @media (max-width: 768px) {
-    padding: 0.5rem 1rem;
-  }
+  @include common-layout;
 }
 
-/* =========================
-   Shared
-========================= */
-lucide-icon {
-  display: flex;
-  align-items: center;
-}
+lucide-icon { display: flex; align-items: center; }
+
 
 /* =========================
    Header

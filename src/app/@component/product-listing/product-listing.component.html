@@ -19,15 +19,14 @@
   <nav class="filter-panel">
 
     <!-- 麵包屑 -->
-    <div class="site-path">
-      <span class="breadcrumb">
-        <a routerLink="/home">
-          <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
+    <nav class="breadcrumb" >
+      <a routerLink="/home" class="breadcrumb-link">
+        <lucide-icon [name]="HomeIcon" size="16"></lucide-icon>
           首頁
-        </a>
-        > {{ categoryName }}
-      </span>
-    </div>
+      </a>
+      <span class="sep">></span>
+      <span class="current"> {{ categoryName }}</span>
+    </nav>
 
     <!-- 標題列 + 排序 -->
     <header class="list-header">

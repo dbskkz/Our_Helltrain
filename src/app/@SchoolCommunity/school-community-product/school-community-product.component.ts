@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ProductListingComponent } from '../../@component/product-listing/product-listing.component';
 
 @Component({
   selector: 'app-school-community-product',
@@ -6,6 +7,8 @@ import { Component } from '@angular/core';
   templateUrl: './school-community-product.component.html',
   styleUrl: './school-community-product.component.scss'
 })
-export class SchoolCommunityProductComponent {
+export class SchoolCommunityProductComponent extends ProductListingComponent implements OnInit{
+
+  universityName = '國立清華大學';
 
 }

@@ -124,6 +124,10 @@ export class SideNavComponent {
     this.router.navigate(['/product-list', this.selectedCategory]);
   }
 
+  goToSchoolForum(){
+    this.router.navigate(['/school-community', this.selectedCategory]);
+  }
+
   get academics(): any[]{
     return this.eac.academy
   }

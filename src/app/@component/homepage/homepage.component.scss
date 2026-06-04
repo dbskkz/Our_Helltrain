@@ -1,14 +1,11 @@
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
 
-// 內容區塊的間距建議
-.content{
-  padding: 1rem 5%; // 使用百分比在不同螢幕會更彈性
-  overflow-x: hidden;
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 1rem; // 手機版縮小內縮
-  }
+.content {
+  @include common-layout;
 }
+
+lucide-icon { display: flex; align-items: center; }
 
 
 // 建議包裹一個父層容器，方便管理間距

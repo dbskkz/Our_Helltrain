@@ -41,9 +41,12 @@ export const routes: Routes = [
       { path: 'store', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
+
+      // TODO: school-community/:universityName
       { path: 'school-community',
         component: SchoolCommunityLayoutComponent,
         children:[
+          // TODO : 當路徑是 /school-community/清華大學/school-product 時
           { path: 'school-product', component: SchoolCommunityProductComponent }, //校版商品
         ]}, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },

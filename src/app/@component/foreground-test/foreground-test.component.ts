@@ -42,7 +42,7 @@ export class ForegroundTestComponent {
     // })
 
 
-    this.submit();
+    // this.submit();
 
   }
 
@@ -137,9 +137,9 @@ export class ForegroundTestComponent {
   pwd = '';
 
   submit(){
-    this.userService.login(this.acc,this.pwd).subscribe(res => {
-      console.log(res);
-    })
+    // this.userService.login(this.acc,this.pwd).subscribe(res => {
+    //   console.log(res);
+    // })
   }
 
 }

@@ -42,7 +42,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   // ICONS
   // =========================================================
 
-  readonly HomeIcon     = Home;
+  protected readonly HomeIcon     = Home;
   readonly nextIcon     = ChevronRight;
   readonly prevIcon     = ChevronLeft;
   readonly RotateCcwIcon = RotateCcw;
