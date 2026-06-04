@@ -22,10 +22,13 @@ export class LaunchProductInfoComponent implements OnInit{
   regionOptions = ['基隆市','台北市','新北市','桃園縣','新竹市','新竹縣','苗栗縣',
                    '台中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','台南市',
                    '高雄市','屏東縣','台東縣','花蓮縣','宜蘭縣','澎湖縣','金門縣','連江縣'];
-  customCatInput = '';
 
   // 年級清單
   gradeList: string[] = ['大一', '大二', '大三', '大四以上', '碩士', '博士', '不分年級'];
+
+  // 類別相關
+  customCatInput = '';
+  customCatChecked = false;
 
   isNextDisabled = true;
 
@@ -48,7 +51,12 @@ export class LaunchProductInfoComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    //還原主分類對應的子分類
+    // 還原自訂類別狀態：若 state.catMain 裡有不在 catOptions 的值，代表有自訂
+    const custom = this.state.catMain.find(c => !this.catOptions.includes(c));
+    if (custom) {
+      this.customCatChecked = true;
+      this.customCatInput = custom;
+    }
     this.updateNextButton();
   }
 
@@ -57,8 +65,8 @@ export class LaunchProductInfoComponent implements OnInit{
     return (
       this.state.region !== '' &&
       this.state.grades.length > 0 &&
-      this.state.catMain !== '' &&
-       this.state.catMain !== '__custom__' &&  // 避免只選了radio但沒輸入
+      this.state.catMain.length > 0 &&
+      !(this.customCatChecked && this.customCatInput.trim() === '') && // 勾了新增但沒填
       this.state.condition !== ''
     );
   }
@@ -69,8 +77,7 @@ export class LaunchProductInfoComponent implements OnInit{
 
   // ── 三級連動變更事件 ──
   onRegionChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.state.region = value;
+    this.state.region = (event.target as HTMLSelectElement).value;
     this.touched.region = true;
     this.updateNextButton();
   }
@@ -105,32 +112,44 @@ export class LaunchProductInfoComponent implements OnInit{
     this.updateNextButton();
   }
 
-  //分類
-  onCatMainChange(event: Event, cat: string): void {
-  this.state.catMain = cat;
-  this.customCatInput = '';
-  this.touched.catMain = true;
-  this.updateNextButton();
-}
+  // 預設分類 checkbox
+  onCatChange(event: Event, cat: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.state.catMain = [...this.state.catMain, cat];
+    } else {
+      this.state.catMain = this.state.catMain.filter(c => c !== cat);
+    }
+    this.touched.catMain = true;
+    this.updateNextButton();
+  }
 
-onAddCatRadioSelect(): void {
-  this.state.catMain = '__custom__';
-  this.touched.catMain = true;
-  this.updateNextButton();
-}
+  // 新增類別 checkbox 勾選/取消
+  onCustomCatCheckChange(event: Event): void {
+    this.customCatChecked = (event.target as HTMLInputElement).checked;
+    if (!this.customCatChecked) {
+      // 取消時，把舊的自訂值從 catMain 移除
+      this.state.catMain = this.state.catMain.filter(c => this.catOptions.includes(c));
+      this.customCatInput = '';
+    }
+    this.touched.catMain = true;
+    this.updateNextButton();
+  }
 
-isCustomCat(): boolean {
-  return this.state.catMain !== '' &&
-         this.state.catMain !== '__custom__' &&
-         !this.catOptions.includes(this.state.catMain);
-}
+  // 新增類別文字輸入
+  onCustomCatInput(): void {
+    // 先移除舊的自訂值，再加入新的
+    const base = this.state.catMain.filter(c => this.catOptions.includes(c));
+    if (this.customCatInput.trim()) {
+      this.state.catMain = [...base, this.customCatInput.trim()];
+    } else {
+      this.state.catMain = base; // 還沒打字時暫時不加入，讓驗證擋住
+    }
+    this.updateNextButton();
+  }
 
-onCustomCatInput(): void {
-  this.state.catMain = this.customCatInput.trim() || '__custom__';
-  this.updateNextButton();
-}
 
-  onConditionChange(event: Event): void {
+   onConditionChange(event: Event): void {
     this.state.condition = (event.target as HTMLSelectElement).value;
     this.touched.condition = true;
     this.updateNextButton();
@@ -148,7 +167,7 @@ onCustomCatInput(): void {
   this.showToast('✓ 草稿已儲存');
 }
 
-onNewProduct(): void {
+  onNewProduct(): void {
   this.formService.resetState(); // 確保 currentDraftId 被清掉
   this.router.navigate(['/launch_product_info']);
 }
