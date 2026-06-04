@@ -5,7 +5,7 @@ export interface User {
   userName: string;
   password?: string;      // ⚠️ 備註：實戰中密碼通常不會傳給前端
   phone: string | null;
-  location: string[];
+  location: string;
   school: string;
   department: string | null;
   status: string;
@@ -26,7 +26,7 @@ export interface UserReq {
   name: string;
   password: string;
   email: string;
-  location: string;
+  location: string[];
   school: string;
   phone: string | null;
 }

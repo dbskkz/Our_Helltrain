@@ -131,12 +131,41 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         this.profile = user.msg || '';
         this.score = user.goodLevel || 5;
 
-      if (user.imgPath) {
-        this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
-      }
+      if (user.imgPath && user.imgPath.trim() !== '') {
+          if (user.imgPath.startsWith('http')) {
+            this.avatarUrl = user.imgPath; // 👉 如果是 Cloudinary 網址，直球對決直接用！
+          } else {
+            this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
+          }
+        } else {
+          this.avatarUrl = 'https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png';
+        }
 
-        // 2. 處理地區 (後端給 String，前端要塞進 Array)
-        const backendAreas : string[] = Array.isArray(user.location) ? user.location : [];
+        // 同步通知全站右上角
+        this.userService.updateAvatar(this.avatarUrl as string);
+
+       // 2. 處理地區 (🌟 終極拆彈防禦：管他資料庫是字串、陣列、還是帶括號的亂碼，前端統統相容！)
+        let backendAreas: string[] = [];
+
+        if (Array.isArray(user.location)) {
+          // 情境 A：後端給的是標準陣列 (例如：["臺南市"])
+          backendAreas = user.location;
+        } else if (user.location && typeof user.location === 'string') {
+          const cleanStr = user.location.trim();
+
+          // 情境 B：後端給的是「長得像陣列的字串」 (例如：'["臺北市"]')
+          if (cleanStr.startsWith('[') && cleanStr.endsWith(']')) {
+            try {
+              backendAreas = JSON.parse(cleanStr);
+            } catch (e) {
+              // 萬一 JSON 解析失敗，用正規表達式把中括號和雙引號暴力濾掉
+              backendAreas = [cleanStr.replace(/[\[\]"']/g, '')];
+            }
+          } else {
+            // 情境 C：後端給的是最單純的純字串 (例如：'臺北市')
+            backendAreas = [cleanStr];
+          }
+        }
         this.areas = [
           backendAreas[0] || '',
           backendAreas[1] || '',
@@ -582,9 +611,10 @@ onAreaSelected() {
       cancelButtonColor: '#999999',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.avatarUrl = '/img/頭像範例.png';
+        const defaultAvatar = 'https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png';
+        this.avatarUrl = defaultAvatar;
         this.selectedAvatarFile = 'RESET_DEFAULT' as any;
-        this.userService.updateAvatar('/img/頭像範例.png');
+        this.userService.updateAvatar(defaultAvatar);
       }
     });
   }

@@ -14,7 +14,7 @@ interface LoginReq {
 export class UserService {
 
   //預設頭像
-  avatarUrl = signal<string>('/img/頭像範例.png');
+  avatarUrl = signal<string>('https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png');
   private myProxyUrl = '/user';
 
   private apiUrl = 'http://localhost:8080/user';
@@ -38,23 +38,6 @@ export class UserService {
     }
   }
 
-  // login(email: string, password: string) {
-  //   const params = new HttpParams()
-  //     .set('email', email)
-  //     .set('password', password);
-
-  //   return this.http.get<{ statusCode: number; message: string; role: string; data: any }>(
-  //     `${this.apiUrl}/login`,
-  //     { params, withCredentials: true }
-  //   ).pipe(
-  //     tap(res => {
-  //       if (res.statusCode === 200) {
-  //         this.isLoggedIn.set(true);
-  //         localStorage.setItem('isLoggedIn', 'true'); // Demo 暫用
-  //       }
-  //     })
-  //   );
-  // }
 
   // 登入 by.絲絨
   login(data: LoginReq): Observable<any> {
@@ -76,6 +59,7 @@ export class UserService {
   }
 
 
+
   logout() {
     this.isLoggedIn.set(false);
     localStorage.removeItem('isLoggedIn'); // Demo 暫用
@@ -93,7 +77,7 @@ export class UserService {
 
   //註冊
   register(data: UserReq): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.myProxyUrl}/insert`, data, {
+    return this.http.post<BasicResponse>(`${this.apiUrl}/insert`, data, {
       withCredentials: true
     });
   }
@@ -108,21 +92,16 @@ export class UserService {
     return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_email: email });
   }
 
-// //取得單一使用者資料
-// getUserData(userId: number): Observable<UserRes> {
-//     const params = new HttpParams().set('userId', userId.toString());
-//     return this.http.get<UserRes>(`${this.myProxyUrl}/getByUserId`, { params });
-// }
 
 //修改個人資料
 updateProfile(vo: SetInfoVo): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.myProxyUrl}/setInfo`, vo, {
+    return this.http.post<BasicResponse>(`${this.apiUrl}/setInfo`, vo, {
       withCredentials: true
     });
  }
 
  //修改密碼
  public changePassword(pwdData: ChangePasswordVo) {
-  return this.http.post<BasicResponse>(`${this.myProxyUrl}/changePassword`, pwdData);
+  return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData);
  }
 }

@@ -1,8 +1,16 @@
 {
+  "/api": {
+    "target": "https://api.opencube.tw/",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "secure": false,
   "/user": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8080/",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   }
+}
 }

@@ -75,12 +75,12 @@
 
             <a class="forgot-password">忘記密碼？</a>
 
-              <div class="checkbox-group">
+              <!-- <div class="checkbox-group">
                 <input type="checkbox" id="terms" formControlName="agreeTerms"
                       (click)="openLoginTermsDialog($event)" readonly>
 
                 <label for="terms">我已閱讀並同意<span class="terms-link" (click)="openLoginTermsDialog($event)">使用說明與注意事項</span></label>
-              </div>
+              </div> -->
 
               @if (loginForm.get('agreeTerms')?.touched && loginForm.get('agreeTerms')?.hasError('required')) {
                 <p class="field-hint error-text" style="margin-top: 4px;">✘ 您必須同意使用說明才能登入</p>
