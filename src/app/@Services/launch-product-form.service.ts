@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // 定義表單資料的介面結構
 export interface ProductState {
-  catMain: string;
+  catMain: string[];
   condition: string;
   price: number;
   tags: string[];
@@ -34,7 +34,7 @@ export class LaunchProductFormService {
 
   private emptyState(): ProductState {
   return {
-    catMain: '',
+    catMain: [],
     condition: '',
     price: 0,
     tags: [],
