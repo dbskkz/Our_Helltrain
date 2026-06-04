@@ -113,7 +113,7 @@ export class LoginRegisterComponent implements OnInit {
     }, 100);
   }
 
-  // (註冊箱子)把所有的欄位通通寫成變數 //改道一半
+  // (註冊箱子)把所有的欄位通通寫成變數
   private initRegisterForm() {
     this.registerForm = new FormGroup({
       name: new FormControl('', [
@@ -385,27 +385,7 @@ export class LoginRegisterComponent implements OnInit {
         }
       });
     }
-    /* // ==========================================
-    // 🌟 情境 B：未來與 Java 後端同學對接時（真正上線版）
-    // ==========================================
-    const verifyPayload = {
-      email: this.userEmail,       // Step 1 留下來的學校信箱
-      code: this.verificationCode  // 使用者剛剛打的 6 位數
-    };
 
-    // 呼叫你的 HttpClient 服務傳給 Java
-    this.authService.verifyEmail(verifyPayload).subscribe({
-      next: (response) => {
-        // Java 回報成功（status 變成 true 了）
-        this.currentStep = 3;
-      },
-      error: (err) => {
-        // Java 回報驗證碼打錯或過期
-        alert(err.error.message || '驗證失敗，請重新確認');
-        this.verificationCode = '';
-      }
-    });
-    */
   }
 
   // 點擊「驗證完成，請重新登入」
