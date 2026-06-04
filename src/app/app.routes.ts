@@ -36,7 +36,7 @@ export const routes: Routes = [
       { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
       { path: 'launch_product_price', component: LaunchProductPriceComponent }, //上架商品頁-價格
       { path: 'draft_list', component: DraftListComponent }, //儲存草稿頁
-      { path: 'store', component: StoreComponent }, //賣場頁面
+      { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
       { path: '', redirectTo: 'home', pathMatch: 'full' },
