@@ -5,9 +5,6 @@
   @include borded-nav;
 }
 
-
-
-
 // 針對手機版最佳化
 @media (max-width: 768px) {
   .sub-list {
@@ -86,7 +83,7 @@ lucide-icon { display: flex; align-items: center; }
 // =========================================================
 
 .filter-row {
-  @include filter-style;
+  @include filter-btn-style ;
 }
 
 .filter-tag {

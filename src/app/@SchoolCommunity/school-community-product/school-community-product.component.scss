@@ -1,6 +1,11 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
+.behavior-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
+
 .sort-container {
   @include sort-style;
 }
@@ -9,14 +14,9 @@
   @include dropdown-style;
 }
 
-.panel-nav{
-  display: flex;
-  justify-content: space-evenly;
-  @include borded-nav;
-}
 
 .filter-row {
-  @include filter-style;
+  @include filter-btn-style;
 }
 
 .filter-tag {
@@ -25,6 +25,10 @@
 
 .sidebar-overlay {
   @include overlay-undernav-style;
+}
+
+.filter-sidebar {
+  @include filter-sidebar;
 }
 
 .tag-remove{

@@ -31,24 +31,9 @@ lucide-icon { display: flex; align-items: center; }
   @include main-title-style;
 }
 
-.sort-container {
-  @include sort-style;
-}
-
-.dropdown-content {
-  @include dropdown-style;
-}
 
 .panel-nav{
   display: flex;
   justify-content: space-evenly;
   @include borded-nav;
-}
-
-.filter-row {
-  @include filter-style;
-}
-
-.filter-tag {
-  @include active-tag;
 }
