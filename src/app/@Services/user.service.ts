@@ -16,7 +16,7 @@ export class UserService {
   private myProxyUrl = '/user';
 
   private apiUrl = 'http://localhost:8080/user';
-  isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
+  isLoggedIn = signal<boolean>(localStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
   // 存使用者資料的 Signal by.絲絨
   currentUser = signal<any>(null);
@@ -56,7 +56,7 @@ export class UserService {
 
   // 登入 by.絲絨
   login(data: LoginReq): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, data).pipe(
+    return this.http.post(`${this.apiUrl}/login`, data,).pipe(
       map((res: any) => {
         //  只要不是 200，就直接 Throw Error！
         if (!res || res.statusCode !== 200) { throw res; }

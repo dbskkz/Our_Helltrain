@@ -1,5 +1,9 @@
 @use 'variables' as *; // 因為在同一層，直接寫 'variables' 即可
 
+// ============================================================================================
+// BASIC
+// ============================================================================================
+
 @mixin common-layout {
   padding: 1rem 5%;
   @media (max-width: 768px) {
@@ -16,8 +20,6 @@
   gap: inherit;
   &:visited { color: inherit; }
 }
-
-
 
 @mixin breadcrumb-style($link-color: $text-gray, $hover-color: $semantic-orange){
   display: flex;
@@ -44,7 +46,6 @@
   .current { color: $primary-yellow-dark; font-weight: 500; }
 }
 
-
 @mixin main-title-style {
   position: relative;
   font-size: clamp(2rem, 3vw, 2.8rem);
@@ -66,6 +67,16 @@
   }
 }
 
+@mixin overlay-undernav-style {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 299;
+}
+
+// ============================================================================================
+// PRODUCT DISPLAY
+// ============================================================================================
 
 @mixin sort-style {
   position: relative;
@@ -74,10 +85,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.8rem;
 
-    width: 11rem;
-    padding: 0.75rem 1rem;
+    padding: 0.45rem 1rem;
 
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 999px;
@@ -89,6 +98,8 @@
     font-weight: 600;
     color: $text-black;
 
+    gap: 0.4rem;
+
     cursor: pointer;
     transition: all 0.25s ease;
 
@@ -97,7 +108,7 @@
       inset 0 1px 0 rgba(255,255,255,0.7);
 
     .material-symbols-outlined {
-      font-size: 1.2rem;
+      font-size: 25px;
       transition: transform 0.25s ease;
     }
 
@@ -109,9 +120,12 @@
         transform: rotate(90deg);
       }
     }
+
+    .text{
+      font-size: 16px;
+    }
   }
 }
-
 
 @mixin dropdown-style {
   position: absolute;
@@ -215,4 +229,211 @@
 
   }
 
+}
+
+@mixin filter-btn-style {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  height: fit-content;
+
+  .fab-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    background-color: #fff;
+    border: 1px solid $primary-yellow-darker;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    color: $primary-yellow-darker;
+
+    &.active{
+      color: $semantic-orange;
+      border: 1px solid $semantic-orange;
+      background-color: $background-yellow;
+    }
+
+    &:hover { background-color: $background-yellow; }
+
+    .material-symbols-outlined {
+      font-size: 25px;
+    }
+
+    .text{
+      font-size: 16px;
+    }
+  }
+
+}
+
+@mixin active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: $background-yellow;
+  color: $semantic-orange;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+@mixin tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  color: $semantic-orange;
+}
+
+@mixin tag-clear-all {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: $text-gray;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover { color: $semantic-orange; }
+}
+
+
+@mixin filter-sidebar {
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 340px;
+  height: 100dvh;
+  background: #fff;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+  transition: right 0.3s ease;
+
+  &.open { right: 0; }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .sidebar-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    border-radius: 6px;
+
+    &:hover { background: #f3f3f3; }
+  }
+
+  .sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sidebar-section {
+    h6 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $text-gray;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .slider-container.static,
+  .checkbox-group.static {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    min-width: unset;
+  }
+
+  .filter-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &:hover { border-color: #888; }
+  }
+
+  .full-width { width: 100%; }
+
+  select { outline: none; }
+
+  .checkbox-group {
+    max-height: 300px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+
+      input[type="checkbox"] { cursor: pointer; }
+    }
+  }
+
+  .range-label {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: $semantic-orange;
+  }
+
+  .sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eee;
+  }
+
+  .btn-reset {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+
+    &:hover {
+      background: #fff3e0;
+      border-color: $semantic-orange;
+      color: $semantic-orange;
+    }
+  }
 }

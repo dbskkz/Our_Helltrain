@@ -41,6 +41,7 @@ export class FrontReportComponent {
 
   reportForm!: FormGroup;
   errorMessage: string | null = null;
+  userId?: number; //檢舉者ID
 
   // 圖片預覽（最多三張）
   imagePreviews: string[] = [];
@@ -154,7 +155,7 @@ export class FrontReportComponent {
       description: new FormControl('', [
         Validators.required, Validators.minLength(10), Validators.maxLength(200)
       ]), // 檢舉原因描述
-      imageFile: new FormControl(null, [Validators.required]), // 圖片檔案欄位（預設為 null）
+      imagePreviews: new FormControl(null, [Validators.required]), // 圖片檔案欄位（預設為 null）
       productId: new FormControl(
         this.dialogData?.productId || '', Validators.required,     // 商品 ID
       ),
@@ -224,7 +225,7 @@ export class FrontReportComponent {
 
   // 確認送出
   confirmSend() {
-    if (this.reportForm.invalid || this.imagePreviews.length === 0) {
+    if (this.reportForm.invalid) {
       this.reportForm.markAllAsTouched();
       if (this.imagePreviews.length === 0) {
         this.errorMessage = '請上傳至少一張圖片！';
@@ -270,6 +271,7 @@ export class FrontReportComponent {
       accusedId: formValues.accusedId,
       description: formValues.description,
       violationType: formValues.violationType,
+      complainant_id: this.userId,
       type: this.currentTab === '檢舉商品' ? 'product' : 'user',
       productId: this.currentTab === '檢舉商品' ? formValues.productId : null, // 商品檢舉才帶，用戶檢舉給 null 或不傳
       images: this.imagePreviews // 📄 後端會收到一個裝滿 Base64 字串的 String 陣列！
