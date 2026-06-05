@@ -6,7 +6,7 @@
        (click)="togglePanel($event, 'filter')"
        [class.active]="activeFilters.length > 0">
         <span class="material-symbols-outlined">tune</span>
-        <span>篩選</span>
+        <span class="text">篩選</span>
       </button>
 
 
@@ -30,7 +30,7 @@
         <button class="sort-button"
         (click)="togglePanel($event, 'sort')"
         [class.active]="panelState.sort">
-          <span>排序依據</span>
+          <span class="text">排序依據</span>
           <span class="material-symbols-outlined">sort</span>
         </button>
 
