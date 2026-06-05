@@ -257,6 +257,8 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     priceValue:     0,
     priceHighValue: 5000,
     sellerGrade:    1,
+    condition: "",
+    type: "",
   } as const;
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
@@ -313,6 +315,13 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return isDefault ? '價格區間' : `$${this.priceValue} - $${this.priceHighValue}+`;
   }
 
+  get conditionLabel(): string {
+    const selected = this.condition.filter(c => c.selected).map(c => c.label);
+    if (selected.length === 0) return '';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種物況`;
+  }
+
   get gradeLabel(): string {
     return this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade
       ? '賣家評價'
@@ -339,10 +348,11 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   get activeFilters(): { key: string; label: string }[] {
     const tags: { key: string; label: string }[] = [];
-    if (this.priceLabel    !== '價格區間') tags.push({ key: 'price',    label: this.priceLabel });
-    if (this.gradeLabel    !== '賣家評價') tags.push({ key: 'grade',    label: this.gradeLabel });
-    if (this.locationLabel !== '地區')     tags.push({ key: 'location', label: this.locationLabel });
-    if (this.schoolLabel   !== '科系類別') tags.push({ key: 'school',   label: this.schoolLabel });
+    if (this.priceLabel       !== '價格區間') tags.push({ key: 'price',    label: this.priceLabel });
+    if (this.conditionLabel   !== '') tags.push({ key: 'condition',    label: this.conditionLabel });
+    if (this.gradeLabel       !== '賣家評價') tags.push({ key: 'grade',    label: this.gradeLabel });
+    if (this.locationLabel    !== '地區')     tags.push({ key: 'location', label: this.locationLabel });
+    if (this.schoolLabel      !== '科系類別') tags.push({ key: 'school',   label: this.schoolLabel });
     return tags;
   }
 
