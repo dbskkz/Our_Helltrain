@@ -1,0 +1,36 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.sort-container {
+  @include sort-style;
+}
+
+.dropdown-content {
+  @include dropdown-style;
+}
+
+.panel-nav{
+  display: flex;
+  justify-content: space-evenly;
+  @include borded-nav;
+}
+
+.filter-row {
+  @include filter-style;
+}
+
+.filter-tag {
+  @include active-tag;
+}
+
+.sidebar-overlay {
+  @include overlay-undernav-style;
+}
+
+.tag-remove{
+  @include tag-remove;
+}
+
+.tag-clear-all{
+  @include tag-clear-all;
+}

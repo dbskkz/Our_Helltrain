@@ -317,9 +317,9 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   get conditionLabel(): string {
     const selected = this.condition.filter(c => c.selected).map(c => c.label);
-    if (selected.length === 0) return '';
+    if (selected.length === 0) return '物況';
     if (selected.length <= 2) return selected.join('、');
-    return `${selected[0]} 等 ${selected.length} 種物況`;
+    return `${selected[0]} 等 ${selected.length} 種`;
   }
 
   get gradeLabel(): string {
@@ -342,6 +342,13 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return `${selected[0]} 等 ${selected.length} 個學群`;
   }
 
+  get typeLabel(): string {
+    const selected = this.type.filter(d => d.selected).map(d => d.label);
+    if (selected.length === 0) return '常見分類';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種分類`;
+  }
+
   // =========================================================
   // ACTIVE FILTER TAGS
   // =========================================================
@@ -349,10 +356,11 @@ export class ProductListingComponent implements OnInit, OnDestroy {
   get activeFilters(): { key: string; label: string }[] {
     const tags: { key: string; label: string }[] = [];
     if (this.priceLabel       !== '價格區間') tags.push({ key: 'price',    label: this.priceLabel });
-    if (this.conditionLabel   !== '') tags.push({ key: 'condition',    label: this.conditionLabel });
+    if (this.conditionLabel   !== '物況') tags.push({ key: 'condition',    label: this.conditionLabel });
     if (this.gradeLabel       !== '賣家評價') tags.push({ key: 'grade',    label: this.gradeLabel });
     if (this.locationLabel    !== '地區')     tags.push({ key: 'location', label: this.locationLabel });
     if (this.schoolLabel      !== '科系類別') tags.push({ key: 'school',   label: this.schoolLabel });
+    if (this.typeLabel        !== '常見分類') tags.push({ key: 'type',   label: this.typeLabel });
     return tags;
   }
 
@@ -363,6 +371,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
       this.priceValue     = this.DEFAULT_FILTERS.priceValue;
       this.priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
     }
+    if (key === 'condition') this.condition.forEach(c => c.selected = false);
     if (key === 'grade')    this.sellerGrade = this.DEFAULT_FILTERS.sellerGrade;
     if (key === 'location') this.cities.forEach(c => c.selected = false);
     if (key === 'school')   this.department.forEach(d => d.selected = false);
