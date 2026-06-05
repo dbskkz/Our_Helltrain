@@ -1,1 +1,153 @@
-<p>school-community-product works!</p>
+  <section class="behavior-wrapper">
+
+    <div class="filter-row">
+
+      <button class="fab-filter"
+       (click)="togglePanel($event, 'filter')"
+       [class.active]="activeFilters.length > 0">
+        <span class="material-symbols-outlined">tune</span>
+        <span class="text">篩選</span>
+      </button>
+
+
+      @for (tag of activeFilters; track tag.key) {
+        <span class="filter-tag">
+          {{ tag.label }}
+          <button class="tag-remove" (click)="removeFilter(tag.key)">
+            <lucide-icon [name]="XIcon" size="12"></lucide-icon>
+          </button>
+        </span>
+      }
+
+      @if (activeFilters.length > 0) {
+        <button class="tag-clear-all" (click)="clearAllFilters($event)">清除全部</button>
+      }
+
+    </div>
+
+
+    <div class="sort-container">
+        <button class="sort-button"
+        (click)="togglePanel($event, 'sort')"
+        [class.active]="panelState.sort">
+          <span class="text">排序依據</span>
+          <span class="material-symbols-outlined">sort</span>
+        </button>
+
+        @if (panelState.sort) {
+           <ul class="dropdown-content" (click)="$event.stopPropagation()">
+            <li [class.selected]="sortOption === 'newest'"
+                (click)="setSort('newest', $event)">最新上架</li>
+            <li [class.selected]="sortOption === 'price-asc'"
+                (click)="setSort('price-asc', $event)">價格由低到高</li>
+            <li [class.selected]="sortOption === 'price-desc'"
+                (click)="setSort('price-desc', $event)">價格由高到低</li>
+          </ul>
+        }
+    </div>
+
+  </section>
+
+  <section class="sidePanel">
+
+    <!-- Overlay -->
+    @if (panelState.filter) {
+      <div class="sidebar-overlay" (click)="togglePanel($event, 'filter')"></div>
+    }
+
+    <!-- 篩選側邊欄 -->
+    <aside class="filter-sidebar" [class.open]="panelState.filter">
+
+      <div class="sidebar-header">
+        <span>篩選條件</span>
+        <button class="sidebar-close" (click)="togglePanel($event, 'filter')">
+          <lucide-icon [name]="XIcon" size="20"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="sidebar-body">
+
+        <!-- 價格篩選 -->
+        <div class="sidebar-section">
+          <h6>價格區間</h6>
+          <div class="slider-container static" (click)="$event.stopPropagation()">
+            <ngx-slider [(value)]="priceValue" [(highValue)]="priceHighValue" [options]="priceOptions"></ngx-slider>
+            <div class="range-label">${{ priceValue }} - ${{ priceHighValue }}</div>
+          </div>
+        </div>
+
+        <!-- 商品狀況 -->
+        <div class="sidebar-section">
+          <h6>商品新舊程度</h6>
+          <div class="checkbox-group static" (click)="$event.stopPropagation()">
+            @for (cond of condition; track cond.value) {
+              <label class="checkbox-item">
+                <input type="checkbox" [(ngModel)]="cond.selected">
+                {{ cond.label }}
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- 賣家評價 -->
+        <div class="sidebar-section">
+          <h6>賣家評價</h6>
+          <div class="slider-container static" (click)="$event.stopPropagation()">
+            <ngx-slider [(value)]="sellerGrade" [options]="sellerGradeOptions"></ngx-slider>
+          </div>
+        </div>
+
+        <!-- 地區 -->
+        <div class="sidebar-section">
+          <h6>地區</h6>
+          <div class="checkbox-group static" (click)="$event.stopPropagation()">
+            @for (city of cities; track city.id) {
+              <label class="checkbox-item">
+                <input type="checkbox" [(ngModel)]="city.selected" (change)="onCityChange()">
+                {{ city.name }}
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- 科系 -->
+        <div class="sidebar-section">
+          <h6>科系類別</h6>
+          <div class="checkbox-group static" (click)="$event.stopPropagation()">
+            @for (dept of department; track dept.id) {
+              <label class="checkbox-item">
+                <input type="checkbox" [(ngModel)]="dept.selected" (change)="onDeptChange()">
+                {{ dept.name }}
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- 常見分類 -->
+        <div class="sidebar-section">
+          <h6>常見分類</h6>
+          <div class="checkbox-group static" (click)="$event.stopPropagation()">
+            @for (item of type; track $index) {
+              <label class="checkbox-item">
+                <input type="checkbox" [(ngModel)]="item.selected">
+                {{ item.label }}
+              </label>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 清空篩選 -->
+      <div class="sidebar-footer">
+        <button class="btn-reset" (click)="clearAllFilters($event)">
+          <lucide-icon [name]="RotateCcwIcon" size="16"></lucide-icon>
+          清空所有篩選
+        </button>
+      </div>
+
+    </aside>
+
+  </section>
+
+<app-product-card [products]="pagedProducts"></app-product-card>

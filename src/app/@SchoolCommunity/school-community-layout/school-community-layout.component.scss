@@ -11,7 +11,14 @@ a {
 
 lucide-icon { display: flex; align-items: center; }
 
+.top-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .breadcrumb {
+  margin-top: 1.5rem;
   @include breadcrumb-style;
 }
 
@@ -24,14 +31,9 @@ lucide-icon { display: flex; align-items: center; }
   @include main-title-style;
 }
 
-.sort-container {
-  @include sort-style;
-}
-
-.dropdown-content {
-  @include dropdown-style;
-}
 
 .panel-nav{
+  display: flex;
+  justify-content: space-evenly;
   @include borded-nav;
 }

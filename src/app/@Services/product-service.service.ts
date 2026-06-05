@@ -30,39 +30,6 @@ export class ProductServiceService {
 
   constructor(private http:HttpClient) { }
 
-  // search(req: SearchProductReq): Observable<GetProductDataRes> {
-  //   return this.http.post<any>(`${this.BASE}/search`, req).pipe(
-  //     map(res => res.products.map((p: any) => ({
-  //       // 後端欄位 → 前端欄位， 後端沒有就先留空  title:    p.productName,
-  //       productId: p.productId,
-  //       userId: p.userId,
-  //       title: p.productName || '未命名商品',
-  //       description: p.description,
-  //       price: p.price || 0,
-  //       type: p.type || [],
-  //       time: p.shelfDate || '',
-  //       condition: p.productCondition || '未知',
-  //       // 防呆：如果後端 imgPath 是空的或不是陣列，給它一張預設圖
-  //       imgUrl: (p.imgPath && p.imgPath.length > 0)
-  //         ? p.imgPath[0]
-  //         : 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-  //       // 防呆：如果後端 location 是空的，給個預設字串或陣列
-  //       status: p.status,
-  //       grade: p.grade,
-  //       location: (p.location && p.location.length > 0) ? p.location : '未知地點',
-  //       deptGroup: p.deptGroup,
-  //       // 補上前端元件需要的 user 欄位
-  //       user: {
-  //         userName: '李吉娃娃',
-  //         userImg: 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-  //         university: '清華大學',
-  //         department: '生科系',
-  //         location: '高雄'
-  //       }
-
-  //     })))
-  //   );
-  // }
   search(req: SearchProductReq): Observable<GetProductDataRes> {
   return this.http.post<any>(`${this.BASE}/search`, req).pipe(
     map(res => {

@@ -17,10 +17,13 @@ import {
   Trash2,
   Flag,
   Phone,
-  Mail
+  Mail,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-angular';
 import { ReportService } from '../../@Services/report.service';
 import Swal from 'sweetalert2';
+import { PaginationService } from '../../@Services/pageination.service';
 
 @Component({
   selector: 'app-store',
@@ -33,7 +36,8 @@ export class StoreComponent {
     private reportService: ReportService,
     private userService: UserService,
     private route: ActivatedRoute,
-    private apiTestService: ApiTestService) { }
+    private apiTestService: ApiTestService,
+    public pagination: PaginationService,) { }
 
   // Declare icon
   readonly User = User;
@@ -50,6 +54,8 @@ export class StoreComponent {
   readonly Flag = Flag;
   readonly Phone = Phone;
   readonly Mail = Mail;
+  readonly ChevronLeft = ChevronLeft;
+  readonly ChevronRight = ChevronRight;
 
   isGood: boolean = true;
   isOwner: boolean = false;
@@ -60,56 +66,39 @@ export class StoreComponent {
       this.isOwner = !this.isOwner;
     }
   }
-  // 賣場主人資料
-  shopOwnerData = signal<any>(null);
 
-  // 分頁變數
-  currentPage = 1;
-  pageSize = 6;
-  totalElements = 6;
-  totalPages = 5;
+  shopOwnerData = signal<any>(null); // 賣場主人資料
+  products: any[] = []; // 商品列表的變數
+  allProducts: any[] = []; //全部商品
+  pageSize = 6; // 分頁變數
+  targetUserId?: number; // 賣場網址ID
+  loggedInId?: number; // 使用者ID
 
   ngOnInit(): void {
     let idFromUrl = this.route.snapshot.paramMap.get('id');
-    let targetUserId = Number(idFromUrl); //賣場網址ID
-    let currentLoggedInId = this.userService.currentUser().userId; //使用者ID
+    this.targetUserId = Number(idFromUrl);
 
     if (!idFromUrl) return;
-
-    if (targetUserId === Number(currentLoggedInId)) { // 切換編輯模式
-      this.isOwner = true;
-    } else {
-      this.isOwner = false;
-    }
-
-    this.fetchShopOwnerData(targetUserId);
+    this.fetchShopOwnerData(this.targetUserId);
   }
 
   // 檢舉
   goRepot() {
     // 檢舉用戶
-    this.reportService.openReportDialog('user', '用戶名稱', '用戶ID');
+    this.reportService.openReportDialog('user', this.shopOwnerData().userName, this.shopOwnerData().userId);
   }
 
-  shopOwnerName: string = '該賣場用戶'; // 暫存這家賣場主人的名字，用來給檢舉彈窗使用
-  // 假設你有商品列表的變數
-  products: any[] = [];
   // 取得賣場專屬資料與商品
   fetchShopOwnerData(userId: number) {
-    // 呼叫你剛才處理好連線的 UserService 撈取該賣家個資
     this.userService.getUserData(userId).subscribe({
       next: (res) => {
-        console.log('成功撈到賣場主人資料：', res);
-        // 根據你們後端的資料結構調整，假設包在 res.user 或 res.data 裡
-        const ownerData = res.user || res.data;
+        const ownerData = res.user;
         if (ownerData) {
-          this.shopOwnerName = ownerData.name || ownerData.username || '該賣場用戶';
+          this.shopOwnerData.set(ownerData);  // ← 存進 signal
 
-          // 如果 UserService 廣播需要，也可以在這裡同步處理
-          // 例如，如果是自己的賣場，順便更新全域頭像
-          if (this.isOwner) {
-            this.userService.updateAvatar(ownerData.imgPath);
-          }
+          this.loggedInId = this.userService.currentUser()?.userId;
+          this.isOwner = (userId === Number(this.loggedInId)); // 切換編輯/瀏覽模式
+          this.isGood = (ownerData.goodLevel > 4); // 信譽良好徽章
         }
       },
       error: (err) => {
@@ -117,30 +106,25 @@ export class StoreComponent {
       }
     });
 
-    // 順便在這邊發送撈取該賣家商品的 API
     this.fetchProduct(userId);
   }
 
   // 取得販賣商品資訊
   fetchProduct(userId: number) {
     this.apiTestService.searchBySellerId(userId).subscribe({
-      next: (res) => { this.products = res; },
+      next: (res) => {
+        this.allProducts = res.productList;
+        this.pagination.init(this.allProducts.length, this.pageSize);  // 初始化分頁
+        this.updatePaginationTotal(); // 切出當頁
+      },
       error: (err) => { console.error('撈取商品失敗：', err); }
     });
+
   }
 
-  // totalPages產生陣列
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  // 獲取使用者資料
-  get userData() {
-    return this.userService.currentUser;
-  }
   // 處理地區陣列 (有空再看看能不能重構)
   get formattedLocation(): string {
-    const user = this.userService.currentUser();
+    const user = this.shopOwnerData();
     if (!user || !user.location) return '未填寫';
 
     // 🕵️ 抓漏核心：判斷後端給的到底是不是陣列
@@ -163,13 +147,6 @@ export class StoreComponent {
 
     // 如果本來就是純字串（例如 "高雄市"），就直接回傳
     return user.location;
-  }
-
-  // 點擊頁碼
-  goToPage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    // this.fetchProduct();
   }
 
   // 新增商品
@@ -200,5 +177,23 @@ export class StoreComponent {
   // 編輯個人資料
   goSettings() {
     this.router.navigate(['/profile_settings']);
+  }
+
+  // 分頁
+  prevPage() {
+    this.pagination.prevPage();
+    this.updatePaginationTotal();
+  }
+  nextPage() {
+    this.pagination.nextPage();
+    this.updatePaginationTotal();
+  }
+  goToPage(page: number) {
+    this.pagination.goToPage(page);
+    this.updatePaginationTotal();
+  }
+  private updatePaginationTotal() {
+    const start = (this.pagination.currentPage - 1) * this.pageSize;
+    this.products = this.allProducts.slice(start, start + this.pageSize);
   }
 }

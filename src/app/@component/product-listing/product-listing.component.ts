@@ -68,45 +68,44 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
       combineLatest([
-      this.route.paramMap,
-      this.route.queryParamMap
-    ]).subscribe(([params, query]) => {
+        this.route.paramMap,
+        this.route.queryParamMap
+      ]).subscribe(([params, query]) => {
 
-      window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, behavior: 'instant' });
 
-      // category
-      this.category = params.get('category') || 'all';
+        // category
+        this.category = params.get('category') || 'all';
 
-      // filter
-      const filterJson = query.get('filter');
+        // filter
+        const filterJson = query.get('filter');
 
-      if (filterJson) {
-        try {
-          this.searchReq = JSON.parse(filterJson);
-        } catch {
+        if (filterJson) {
+          try {
+            this.searchReq = JSON.parse(filterJson);
+          } catch {
+            this.searchReq = {};
+          }
+        } else {
           this.searchReq = {};
         }
-      } else {
-        this.searchReq = {};
-      }
 
-      // department
-      const deptsParam = query.get('depts');
-      const selectedNames = deptsParam?.split(',') ?? [];
+        // department
+        const deptsParam = query.get('depts');
+        const selectedNames = deptsParam?.split(',') ?? [];
 
-      this.department.forEach(d => {
-        d.selected = selectedNames.includes(d.name);
+        this.department.forEach(d => {
+          d.selected = selectedNames.includes(d.name);
+        });
+
+        this.loadProducts();
       });
-
-      this.loadProducts();
-    });
   }
 
   ngOnDestroy(): void {
     this.resetFilters();
     this.goToPage(1);
     this.resetQuery();
-
   }
 
   // =========================================================
@@ -258,6 +257,8 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     priceValue:     0,
     priceHighValue: 5000,
     sellerGrade:    1,
+    condition: "",
+    type: "",
   } as const;
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
@@ -314,6 +315,13 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return isDefault ? '價格區間' : `$${this.priceValue} - $${this.priceHighValue}+`;
   }
 
+  get conditionLabel(): string {
+    const selected = this.condition.filter(c => c.selected).map(c => c.label);
+    if (selected.length === 0) return '物況';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種`;
+  }
+
   get gradeLabel(): string {
     return this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade
       ? '賣家評價'
@@ -334,16 +342,25 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     return `${selected[0]} 等 ${selected.length} 個學群`;
   }
 
+  get typeLabel(): string {
+    const selected = this.type.filter(d => d.selected).map(d => d.label);
+    if (selected.length === 0) return '常見分類';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種分類`;
+  }
+
   // =========================================================
   // ACTIVE FILTER TAGS
   // =========================================================
 
   get activeFilters(): { key: string; label: string }[] {
     const tags: { key: string; label: string }[] = [];
-    if (this.priceLabel    !== '價格區間') tags.push({ key: 'price',    label: this.priceLabel });
-    if (this.gradeLabel    !== '賣家評價') tags.push({ key: 'grade',    label: this.gradeLabel });
-    if (this.locationLabel !== '地區')     tags.push({ key: 'location', label: this.locationLabel });
-    if (this.schoolLabel   !== '科系類別') tags.push({ key: 'school',   label: this.schoolLabel });
+    if (this.priceLabel       !== '價格區間') tags.push({ key: 'price',    label: this.priceLabel });
+    if (this.conditionLabel   !== '物況') tags.push({ key: 'condition',    label: this.conditionLabel });
+    if (this.gradeLabel       !== '賣家評價') tags.push({ key: 'grade',    label: this.gradeLabel });
+    if (this.locationLabel    !== '地區')     tags.push({ key: 'location', label: this.locationLabel });
+    if (this.schoolLabel      !== '科系類別') tags.push({ key: 'school',   label: this.schoolLabel });
+    if (this.typeLabel        !== '常見分類') tags.push({ key: 'type',   label: this.typeLabel });
     return tags;
   }
 
@@ -354,6 +371,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
       this.priceValue     = this.DEFAULT_FILTERS.priceValue;
       this.priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
     }
+    if (key === 'condition') this.condition.forEach(c => c.selected = false);
     if (key === 'grade')    this.sellerGrade = this.DEFAULT_FILTERS.sellerGrade;
     if (key === 'location') this.cities.forEach(c => c.selected = false);
     if (key === 'school')   this.department.forEach(d => d.selected = false);
@@ -453,9 +471,12 @@ get sortedProducts(): ProductCard[] {
   }
 
   private matchPrice(product: ProductCard): boolean {
+    if (this.priceHighValue >= 5000) {
+      return product.price >= this.priceValue;  // 上限拉滿就不限上限
+    }
     return (
-      product.price > this.priceValue &&
-      product.price < this.priceHighValue
+      product.price >= this.priceValue &&
+      product.price <= this.priceHighValue
     );
   }
 

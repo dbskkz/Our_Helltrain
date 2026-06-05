@@ -318,6 +318,13 @@ p {
   align-items: center;
   gap: 6px;
   margin: 20px 0;
+  color: $text-gray;
+  font-size: 14px;
+
+  span {
+    margin-right: 8px;
+    font-weight: 500;
+  }
 }
 
 .page-btn {

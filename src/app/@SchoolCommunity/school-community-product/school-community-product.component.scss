@@ -1,0 +1,45 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.behavior-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort-container {
+  @include sort-style;
+}
+
+.dropdown-content {
+  @include dropdown-style;
+}
+
+
+.filter-row {
+  @include filter-btn-style;
+}
+
+.filter-tag {
+  @include active-tag;
+}
+
+.sidebar-overlay {
+  @include overlay-undernav-style;
+}
+
+.filter-sidebar {
+  @include filter-sidebar;
+}
+
+.tag-remove{
+  @include tag-remove;
+}
+
+.tag-clear-all{
+  @include tag-clear-all;
+}
+
+app-product-card{
+  margin-top: 1rem;
+}
