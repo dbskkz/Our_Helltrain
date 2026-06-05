@@ -16,7 +16,7 @@ export class ApiTestService {
 
   // // 存使用者資料的 Signal
   // currentUser = signal<any>(null);
-  private apiUrl = 'http://localhost:8080/product';
+  private productApiUrl = 'http://localhost:8080/product';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -42,6 +42,6 @@ export class ApiTestService {
 
   // 取得單一帳號內的商品資訊
   searchBySellerId(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search/userId?userId=${userId}`);
+    return this.http.get(`${this.productApiUrl}/search/userId?userId=${userId}`);
   }
 }
