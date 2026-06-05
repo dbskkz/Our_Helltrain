@@ -169,7 +169,7 @@
   }
 
   .main_card_right_up {
-    margin-bottom: 28px;
+    margin-bottom: 10px;
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -269,6 +269,10 @@
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s;
+
+  &.disabled {
+    pointer-events: none; /* 🚫 核心機關：讓所有點擊事件、Hover 效果完全失效！ */
+  }
 
   &:hover { transform: translateY(-2px); }
   h5 { font-size: 1.2rem; font-weight: 700; color: $semantic-orange; margin: 0 0 4px 0; }
@@ -581,7 +585,13 @@ mat-form-field { width: 100%; }
   .field_group {
     width: 100% !important;
 
-    .label { font-size: 15px; color: $text-black; margin-bottom: 8px; display: block; }
+    .label {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 400;
+    }
 
     &, .input-box-wrapper, .autocomplete-field,
     ::ng-deep .mat-mdc-form-field,
@@ -639,6 +649,7 @@ mat-form-field { width: 100%; }
   width: 100%;
   margin-top: 16px;
   align-items: start;
+
 
   .grid-hidden { display: none !important; }
 
