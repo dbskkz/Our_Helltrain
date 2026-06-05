@@ -1,57 +1,105 @@
 <main class="content">
+  <section class="top-wrapper">
 
-  <nav class="breadcrumb">
-    <a routerLink="/home" class="breadcrumb-link">
-      <lucide-icon [name]="HomeIcon" size="14"></lucide-icon>
-      首頁
-    </a>
-    <span class="sep">></span>
-    <span class="current">{{ universityName }}</span>
-  </nav>
-
-  <header class="list-header">
-        <h1 class="university-name">{{ universityName }}</h1>
-        <button>關注</button>
-        <input type="text" placeholder="在校版中搜尋商品">
-
-        <div class="sort-container">
-          <button class="sort-button"
-          (click)="togglePanel($event, 'sort')"
-          [class.active]="panelState.sort">
-            <span>排序依據</span>
-            <span class="material-symbols-outlined">sort</span>
-          </button>
-
-          @if (panelState.sort) {
-            <ul class="dropdown-content" (click)="$event.stopPropagation()">
-              <li [class.selected]="sortOption === 'newest'"
-                  (click)="setSort('newest', $event)">最新上架</li>
-              <li [class.selected]="sortOption === 'price-asc'"
-                  (click)="setSort('price-asc', $event)">價格由低到高</li>
-              <li [class.selected]="sortOption === 'price-desc'"
-                  (click)="setSort('price-desc', $event)">價格由高到低</li>
-            </ul>
-          }
-        </div>
-
-
-      </header>
-      <nav class="panel-nav">
-        <ul class="sub-list">
-              <li>
-                <button class="sub-link" (click)="goToSchoolProduct()" [class.active]="">
-                  <span class="sub-panel-text">校內商品</span>
-                </button>
-              </li>
-
-              <li>
-                <button class="sub-link" (click)="goToClassmates()" [class.active]="">
-                  <span class="sub-panel-text">版上的同學</span>
-                </button>
-              </li>
-
-        </ul>
+    <nav class="breadcrumb">
+      <a routerLink="/home" class="breadcrumb-link">
+        <lucide-icon [name]="HomeIcon" size="14"></lucide-icon>
+        首頁
+      </a>
+      <span class="sep">></span>
+      <span class="current">{{ universityName }}</span>
     </nav>
+
+    <header class="list-header">
+          <h1 class="university-name">{{ universityName }}</h1>
+          <button>關注</button>
+          <input type="text" placeholder="在校版中搜尋商品">
+
+
+
+    </header>
+
+    <nav class="panel-nav">
+          <ul class="sub-list">
+            <li>
+              <button class="sub-link" (click)="goToSchoolProduct()" [class.active]="">
+                <span class="sub-panel-text">校內商品</span>
+              </button>
+            </li>
+
+            <li>
+              <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                    <span class="sub-panel-text">版上的同學</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                    <span class="sub-panel-text">校園許願池</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                    <span class="sub-panel-text">哈啦吐槽區</span>
+                  </button>
+                </li>
+
+          </ul>
+    </nav>
+
+  </section>
+
+  <section class="behavior-wrapper">
+
+    <div class="filter-row">
+
+      <button class="fab-filter"
+       (click)="togglePanel($event, 'filter')"
+       [class.active]="activeFilters.length > 0">
+        <span class="material-symbols-outlined">tune</span>
+        篩選
+      </button>
+
+
+      @for (tag of activeFilters; track tag.key) {
+        <span class="filter-tag">
+          {{ tag.label }}
+          <button class="tag-remove" (click)="removeFilter(tag.key)">
+            <lucide-icon [name]="XIcon" size="12"></lucide-icon>
+          </button>
+        </span>
+      }
+
+      @if (activeFilters.length > 0) {
+        <button class="tag-clear-all" (click)="clearAllFilters($event)">清除全部</button>
+      }
+
+    </div>
+
+
+    <div class="sort-container">
+        <button class="sort-button"
+        (click)="togglePanel($event, 'sort')"
+        [class.active]="panelState.sort">
+          <span>排序依據</span>
+          <span class="material-symbols-outlined">sort</span>
+        </button>
+
+        @if (panelState.sort) {
+           <ul class="dropdown-content" (click)="$event.stopPropagation()">
+            <li [class.selected]="sortOption === 'newest'"
+                (click)="setSort('newest', $event)">最新上架</li>
+            <li [class.selected]="sortOption === 'price-asc'"
+                (click)="setSort('price-asc', $event)">價格由低到高</li>
+            <li [class.selected]="sortOption === 'price-desc'"
+                (click)="setSort('price-desc', $event)">價格由高到低</li>
+          </ul>
+        }
+    </div>
+
+  </section>
+
 
   <router-outlet></router-outlet>
 

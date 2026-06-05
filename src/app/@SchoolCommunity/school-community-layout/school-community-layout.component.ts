@@ -5,10 +5,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ProductListingComponent } from '../../@component/product-listing/product-listing.component';
 import { LucideAngularModule, House } from "lucide-angular";
+import { ProductCardComponent } from "../../@component/product-card/product-card.component";
 
 @Component({
   selector: 'app-school-community-layout',
-  imports: [RouterOutlet, LucideAngularModule, RouterLink,],
+  imports: [RouterOutlet, LucideAngularModule, RouterLink, ProductCardComponent],
   templateUrl: './school-community-layout.component.html',
   styleUrl: './school-community-layout.component.scss'
 })

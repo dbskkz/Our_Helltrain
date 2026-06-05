@@ -86,71 +86,13 @@ lucide-icon { display: flex; align-items: center; }
 // =========================================================
 
 .filter-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  @include filter-style;
 }
 
-.fab-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 1rem;
-  background-color: #fff;
-  border: 1px solid $primary-yellow-darker;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.2s;
-  color: $primary-yellow-darker;
-
-  &.active{
-    color: $semantic-orange;
-    border: 1px solid $semantic-orange;
-    background-color: $background-yellow;
-  }
-
-  &:hover { background-color: $background-yellow; }
-}
-
-// 已選條件 tags
 .filter-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  background-color: $background-yellow;
-  color: $semantic-orange;
-  border-radius: 999px;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 500;
+  @include active-tag;
 }
 
-.tag-remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  color: $semantic-orange;
-}
-
-.tag-clear-all {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: $text-gray;
-  text-decoration: underline;
-  padding: 0;
-
-  &:hover { color: $semantic-orange; }
-}
 
 // =========================================================
 // Overlay

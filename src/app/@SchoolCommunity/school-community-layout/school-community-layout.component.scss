@@ -11,7 +11,14 @@ a {
 
 lucide-icon { display: flex; align-items: center; }
 
+.top-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .breadcrumb {
+  margin-top: 1.5rem;
   @include breadcrumb-style;
 }
 
@@ -33,5 +40,15 @@ lucide-icon { display: flex; align-items: center; }
 }
 
 .panel-nav{
+  display: flex;
+  justify-content: space-evenly;
   @include borded-nav;
+}
+
+.filter-row {
+  @include filter-style;
+}
+
+.filter-tag {
+  @include active-tag;
 }
