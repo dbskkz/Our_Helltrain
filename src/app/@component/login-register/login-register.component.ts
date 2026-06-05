@@ -56,7 +56,6 @@ export class LoginRegisterComponent implements OnInit {
 
   // 🔑 倒數計時專用變數
   countdown = signal<number>(0);      // 剩餘秒數
-  canResend: boolean = true;  // 是否可以重新發送（預設可以）
   private timer: any;         // 用來存計時器的變數
 
   // 專門控制「登入分頁」的密碼眼睛
@@ -105,7 +104,7 @@ export class LoginRegisterComponent implements OnInit {
       );
     }
 
-    // 【學校】動態過濾水管（全新大改版：完全直球對決全台灣總名單，徹底抽離地區干擾）
+    // 【學校】動態過濾水管
     if (registerSchoolCtrl) {
       this.filteredSchools = registerSchoolCtrl.valueChanges.pipe(
         startWith(registerSchoolCtrl.value || ''),
@@ -148,7 +147,7 @@ export class LoginRegisterComponent implements OnInit {
     });
   }
 
-  // 萬能過濾器（直接複製你寫好的繁簡通用版）
+  // 萬能過濾器
   private _filter(value: string, options: string[]): string[] {
     let filterValue = value.toLowerCase().replace(/台/g, '臺');
     return options.filter(opt => {
@@ -163,7 +162,7 @@ export class LoginRegisterComponent implements OnInit {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.tw$/)]),
       password: new FormControl('', [Validators.required]),
-      agreeTerms: new FormControl(false, [Validators.requiredTrue])
+      // agreeTerms: new FormControl(false, [Validators.requiredTrue])
     });
   }
 
@@ -217,29 +216,29 @@ export class LoginRegisterComponent implements OnInit {
   }
 
   /* 專門控制「登入分頁」注意事項的彈出視窗方法 */
-  openLoginTermsDialog(event: MouseEvent): void {
-    event.preventDefault();  // 阻止原生直接勾選的行為
-    event.stopPropagation();
+  // openLoginTermsDialog(event: MouseEvent): void {
+  //   event.preventDefault();  // 阻止原生直接勾選的行為
+  //   event.stopPropagation();
 
-    // 打開一模一樣的平台規範視窗
-    const dialogRef = this.dialog.open(PlatformRulesComponent, {
-      width: '500px',
-      disableClose: true,    // 強制不能點旁邊關閉，一定要滑到最下面按確定
-      autoFocus: false
-    });
+  //   // 打開一模一樣的平台規範視窗
+  //   const dialogRef = this.dialog.open(PlatformRulesComponent, {
+  //     width: '500px',
+  //     disableClose: true,    // 強制不能點旁邊關閉，一定要滑到最下面按確定
+  //     autoFocus: false
+  //   });
 
-    // 監聽視窗關閉的結果
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result === true) {
-        // 🎯 核心差別：讀完之後，自動打勾的對象換成【登入箱子（loginForm）】的 agreeTerms！
-        this.loginForm.get('agreeTerms')?.setValue(true);
-        this.loginForm.get('agreeTerms')?.markAsDirty();
-      } else {
-        // 沒看完或點取消，維持不打勾
-        this.loginForm.get('agreeTerms')?.setValue(false);
-      }
-    });
-  }
+  //   // 監聽視窗關閉的結果
+  //   dialogRef.afterClosed().subscribe((result: boolean) => {
+  //     if (result === true) {
+  //       // 🎯 核心差別：讀完之後，自動打勾的對象換成【登入箱子（loginForm）】的 agreeTerms！
+  //       this.loginForm.get('agreeTerms')?.setValue(true);
+  //       this.loginForm.get('agreeTerms')?.markAsDirty();
+  //     } else {
+  //       // 沒看完或點取消，維持不打勾
+  //       this.loginForm.get('agreeTerms')?.setValue(false);
+  //     }
+  //   });
+  // }
 
   /* 檢查 Email 的方法（回傳 true 或 false） */
   isValidSchoolEmail(): boolean {
@@ -273,6 +272,16 @@ export class LoginRegisterComponent implements OnInit {
     this.isEmailTouched = true;// 強制讓 Email 亮起「碰過」的狀態
 
     if (this.registerForm.valid && this.isValidSchoolEmail()) {
+
+      Swal.fire({
+        title: '正在發送驗證信',
+        text: '請稍候，系統正在為您備妥驗證碼...',
+        allowOutsideClick: false, // 關鍵防護：點擊旁邊不允許關閉
+        didOpen: () => {
+          Swal.showLoading(); // ⚡ 啟動內建的轉圈圈動畫
+        }
+      });
+
       const rawPhone = this.registerForm.get('phone')?.value;
       // 資料都填對了，切換到 Step 2 畫面！
       const finalRegisterData: UserReq = {
@@ -287,7 +296,7 @@ export class LoginRegisterComponent implements OnInit {
 
       this.userService.register(finalRegisterData).subscribe({
         next: (res: BasicResponse) => {
-
+          Swal.close();
           if (res.statusCode === 200) {
             // ✅ 註冊成功，驗證碼已寄出
             console.log('資料成功送出');
@@ -310,6 +319,7 @@ export class LoginRegisterComponent implements OnInit {
             });
 
           } else {
+
             // 其他 400 錯誤（格式不對等）
             Swal.fire({
               title: '註冊失敗',
@@ -320,6 +330,7 @@ export class LoginRegisterComponent implements OnInit {
           }
         },
         error: () => {
+          Swal.close();
           Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
         }
       });
@@ -407,11 +418,20 @@ export class LoginRegisterComponent implements OnInit {
 
   // 點擊「重新發送驗證信」
   resendEmail() {
-    if (!this.canResend) return;
+    if (this.countdown() > 0) return;
+
+    Swal.fire({
+        title: '正在發送驗證信',
+        text: '請稍候，系統正在為您備妥驗證碼...',
+        allowOutsideClick: false, // 關鍵防護：點擊旁邊不允許關閉
+        didOpen: () => {
+          Swal.showLoading(); // ⚡ 啟動內建的轉圈圈動畫
+        }
+      });
 
     this.userService.resendCode(this.userEmail).subscribe({
       next: (res: BasicResponse) => {
-
+        Swal.close();
         if (res.statusCode === 200) {
           // ✅ VERIFICATION_CODE_IS_SEND：新驗證碼已寄出
           Swal.fire({
@@ -443,14 +463,15 @@ export class LoginRegisterComponent implements OnInit {
         }
       },
       error: () => {
+        Swal.close();
         Swal.fire({ title: '連線錯誤', text: '請稍後再試', icon: 'error', confirmButtonColor: '#e57373' });
       }
     });
   }
 
+  //重新發送驗證信的按鈕計時控制
   private startCountdown(seconds: number) {
     this.countdown.set(seconds);
-    this.canResend = false; // 進入冷卻狀態，按鈕鎖起來
 
     // 如果原本有殘留的計時器，先清除確保安全
     if (this.timer) {
@@ -462,10 +483,9 @@ export class LoginRegisterComponent implements OnInit {
       this.countdown.update(val => val - 1);
 
       if (this.countdown() <= 0) {
-        // 秒數歸零，解除封印
-        this.canResend = true;
         clearInterval(this.timer); // 停止計時器
       }
+      this.cdr.detectChanges();
     }, 1000);
 
   }

@@ -89,7 +89,7 @@ export class UserService {
 
   //重新發送驗證碼
   resendCode(email: string): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_email: email });
+    return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_id: email });
   }
 
 
@@ -102,6 +102,6 @@ updateProfile(vo: SetInfoVo): Observable<BasicResponse> {
 
  //修改密碼
  public changePassword(pwdData: ChangePasswordVo) {
-  return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData);
+  return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData,{ withCredentials: true });
  }
 }

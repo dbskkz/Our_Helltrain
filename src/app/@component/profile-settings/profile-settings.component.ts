@@ -292,7 +292,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
             this.areas = updateData.location;
             this.selectedAvatarFile = null;
 
-          } else if (res.statusCode === 400 && res.message === 'Please login first') {
+          } else if (res.statusCode === 401 && res.message === 'Please login first') {
             // ⚠️ 假設這是你們後端「未登入」的代碼，依你們實際情況調整
             Swal.fire({ title: '登入已過期', text: '請重新登入', icon: 'error' }).then(() => {
               this.router.navigate(['/login']);
@@ -688,9 +688,8 @@ onAreaSelected() {
   }
 
   gotoStore() {
-    this.router.navigate(['/store']);
+    const myId = localStorage.getItem('userId');
+    this.router.navigate(['/store', myId]);
   }
-  orderInformation() {
-    this.router.navigate(['/order_information']);
-  }
+
 }
