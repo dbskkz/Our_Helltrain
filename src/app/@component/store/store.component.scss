@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0;
 }
 
 .user-img {
@@ -179,11 +180,12 @@
 .card {
   display: flex;
   flex-direction: row;
+  align-items: center;
   background: $neutral-100;
   border: 1px solid $neutral-300;
   border-radius: $border-radius-lg;
   overflow: hidden;
-  height: 100%;
+  height: 160px;
   padding: 6px;
   transition:
     transform 0.3s,
@@ -196,13 +198,14 @@
 }
 
 .img-wrapper {
-  width: 120px;
+  width: 150px;
   min-width: 120px;
   aspect-ratio: 1/1;
   overflow: hidden;
   background: $neutral-100;
   margin: 0;
   flex-shrink: 0;
+  border-radius: $border-radius-sm;
 
   img {
     width: 100%;
@@ -232,8 +235,9 @@
   color: $neutral-500;
   margin-bottom: 0;
   display: -webkit-box; // 啟用這個舊版 flexbox 模式
-  -line-clamp: 2; // 最多顯示 2 行
+  -webkit-line-clamp: 2; // 最多顯示 2 行
   -webkit-box-orient: vertical; // 指定垂直方向排列
+  line-clamp: 2;
   overflow: hidden;
 }
 
@@ -329,10 +333,11 @@
 
 // 頁碼
 .pagination {
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin: 10px 0;
+  gap: 6px;
+  margin: 20px 0;
   color: $text-gray;
   font-size: 14px;
 
@@ -342,30 +347,38 @@
   }
 }
 
-.page-item {
-  &.active .page-link {
-    background-color: $primary-yellow;
-    border-color: $primary-yellow;
-    color: $background-white;
-  }
-}
-
-.page-link {
+.page-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid $neutral-300;
+  background: $background-white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
   color: $text-gray;
-  border-radius: $border-radius-sm;
-  border: 1px solid $neutral-300;
   cursor: pointer;
-  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 
-  &:hover {
-    background-color: $background-yellow;
-    color: $primary-yellow;
+  &:hover:not(:disabled) {
+    background: $background-yellow;
   }
-}
 
-.disabled .page-link {
-  color: $neutral-300;
-  background-color: $neutral-100;
+  &:disabled {
+    color: #c9c6c0;
+    cursor: default;
+  }
+
+  &.active {
+    background: $background-yellow-hover;
+    color: $text-gray;
+    border-color: $background-yellow-hover;
+  }
 }
 
 // 全域
