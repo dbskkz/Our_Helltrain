@@ -47,18 +47,3 @@ body {
     background: $primary-yellow !important;
   }
 }
-
-// 檢舉Dialog
-.cdk-overlay-pane {
-  z-index: 1000000 !important;
-}
-
-// .report-dialog {
-//   z-index: 9999 !important;
-
-//   // 強制讓它隔壁跟上層的鄰居都一起升天
-//   parent,
-//   & {
-//     z-index: 9999 !important;
-//   }
-// }

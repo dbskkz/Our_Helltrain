@@ -156,7 +156,7 @@ export class StoreComponent {
 
   // 商品管理
   manageProduct() {
-    this.router.navigate(['/launch_product_info']);
+    this.router.navigate(['/draft_list']);
   }
 
   // 收藏商品

@@ -1,3 +1,5 @@
+import { ApiTestService } from './../../@Services/api-test.service';
+import { UserService } from './../../@Services/user.service';
 import { Component } from '@angular/core';
 import {
   CircleCheckBig,
@@ -24,7 +26,9 @@ export class OrderInformationComponent {
   constructor(
     public pagination: PaginationService,
     private router: Router,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private userService: UserService,
+    private apiTestService: ApiTestService,
   ) { }
 
   // Declare icon
@@ -50,6 +54,7 @@ export class OrderInformationComponent {
   // role 切換
   currentRole: string = '全部'; // 預設
   roleColumns: string[] = ['全部', '我購買的', '我販售的'];
+  role: string = 'buyer' // 預設
 
   // tab 對應 status
   statusMap: Record<string, string> = {
@@ -60,13 +65,13 @@ export class OrderInformationComponent {
     交易請求中: 'pending',
   };
 
-  // 分頁變數
-  pageSize = 5;
-
-  // 存放當前頁要顯示的資料
-  orders: any[] = [];
+  pageSize = 5; // 分頁變數
+  orders: any[] = []; // 存放當前頁要顯示的資料
 
   ngOnInit() {
+    let userId = this.userService.currentUser()?.userId;
+    // if(userId != buyerId) {this.role = 'seller'} 取得後寫上
+
     // 初始載入時，直接根據篩選後的總資料量初始化分頁器
     this.updatePaginationTotal();
   }

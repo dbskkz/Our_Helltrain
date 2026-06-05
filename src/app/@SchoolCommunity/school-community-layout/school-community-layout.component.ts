@@ -13,19 +13,19 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-school-community-layout',
-  imports: [RouterOutlet, LucideAngularModule, RouterLink, FormsModule, NgxSliderModule, ProductCardComponent],
+  imports: [RouterOutlet, LucideAngularModule, RouterLink, FormsModule, NgxSliderModule,],
   templateUrl: './school-community-layout.component.html',
   styleUrl: './school-community-layout.component.scss'
 })
-export class SchoolCommunityLayoutComponent extends ProductListingComponent{
+export class SchoolCommunityLayoutComponent extends ProductListingComponent {
 
   universityName = '國立清華大學';
 
-  goToSchoolProduct(){
+  goToSchoolProduct() {
     this.router.navigate(['/school-community/school-product'])
   }
 
-  goToClassmates(){
+  goToClassmates() {
     this.router.navigate(['/school-community/school-product'])
   }
 }

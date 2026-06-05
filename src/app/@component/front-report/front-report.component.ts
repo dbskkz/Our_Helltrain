@@ -1,3 +1,5 @@
+import { ApiTestService } from './../../@Services/api-test.service';
+import { UserService } from './../../@Services/user.service';
 import { Component, Inject, Optional } from '@angular/core';
 import {
   ReactiveFormsModule,
@@ -31,6 +33,8 @@ export class FrontReportComponent {
     // Optional 讓路由直接開啟時不會因為沒有 data 而報錯
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: ReportDialogData,
     @Optional() private dialogRef: MatDialogRef<FrontReportComponent>,
+    private userService: UserService,
+    private apiTestService: ApiTestService,
   ) { }
 
   // Declare icon
@@ -41,7 +45,6 @@ export class FrontReportComponent {
 
   reportForm!: FormGroup;
   errorMessage: string | null = null;
-  userId?: number; //檢舉者ID
 
   // 圖片預覽（最多三張）
   imagePreviews: string[] = [];
@@ -229,10 +232,9 @@ export class FrontReportComponent {
       this.reportForm.markAllAsTouched();
       if (this.imagePreviews.length === 0) {
         this.errorMessage = '請上傳至少一張圖片！';
+        return;
       }
-      return;
     }
-
     Swal.fire({
       title: '確認送出檢舉？',
       text: '確認後將無法撤回！',
@@ -271,24 +273,30 @@ export class FrontReportComponent {
       accusedId: formValues.accusedId,
       description: formValues.description,
       violationType: formValues.violationType,
-      complainant_id: this.userId,
       type: this.currentTab === '檢舉商品' ? 'product' : 'user',
       productId: this.currentTab === '檢舉商品' ? formValues.productId : null, // 商品檢舉才帶，用戶檢舉給 null 或不傳
-      images: this.imagePreviews // 📄 後端會收到一個裝滿 Base64 字串的 String 陣列！
+      filePath: this.imagePreviews //
     };
 
     console.log('JSON 封包已打包完成：', finalData);
-    // 之後接 API 就變成傳普通的物件：
-    // this.apiService.submitReport(finalData).subscribe(...)
+    this.apiTestService.addReport(finalData).subscribe({
+      next: (res) => {
+        console.error('成功：', res);
+        Swal.fire({
+          title: '檢舉已送出！',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => {
+          this.closeDialog();
+        });
+      },
+      error: (err) => {
+        console.error('失敗：', err);
+      }
+    })
 
-    Swal.fire({
-      title: '檢舉已送出！',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false,
-    }).then(() => {
-      this.closeDialog();
-    });
+
   }
 
   closeDialog() {

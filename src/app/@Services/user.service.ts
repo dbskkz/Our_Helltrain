@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map, Observable, tap } from 'rxjs';
 import { BasicResponse, ChangePasswordVo, SetInfoVo, UserReq, UserRes } from '../@Interface/user';
+import { Router } from '@angular/router';
 interface LoginReq {
   email: string;
   password: string;
@@ -23,7 +24,7 @@ export class UserService {
   // 存使用者資料的 Signal by.絲絨
   currentUser = signal<any>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router,) {
     // 💡 補上這段防禦：網頁一打開，如果發現有 userId，就自動去後端撈資料來補滿電台！
     const savedUserId = localStorage.getItem('userId');
     if (savedUserId) {
@@ -41,7 +42,7 @@ export class UserService {
 
   // 登入 by.絲絨
   login(data: LoginReq): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, data,).pipe(
+    return this.http.post(`${this.apiUrl}/login`, data, { withCredentials: true }).pipe(
       map((res: any) => {
         //  只要不是 200，就直接 Throw Error！
         if (!res || res.statusCode !== 200) { throw res; }
@@ -64,6 +65,9 @@ export class UserService {
     this.isLoggedIn.set(false);
     localStorage.removeItem('isLoggedIn'); // Demo 暫用
     localStorage.removeItem('userId'); // Demo 暫用
+    this.currentUser.set(null);
+    this.isLoggedIn.set(false);
+    this.router.navigate(['/home']);
   }
 
   /** 頭像同步變更廣播
@@ -93,15 +97,15 @@ export class UserService {
   }
 
 
-//修改個人資料
-updateProfile(vo: SetInfoVo): Observable<BasicResponse> {
+  //修改個人資料
+  updateProfile(vo: SetInfoVo): Observable<BasicResponse> {
     return this.http.post<BasicResponse>(`${this.apiUrl}/setInfo`, vo, {
       withCredentials: true
     });
- }
+  }
 
- //修改密碼
- public changePassword(pwdData: ChangePasswordVo) {
-  return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData,{ withCredentials: true });
- }
+  //修改密碼
+  public changePassword(pwdData: ChangePasswordVo) {
+    return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData, { withCredentials: true });
+  }
 }

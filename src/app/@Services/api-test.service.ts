@@ -2,10 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-interface LoginReq {
-  email: string;
-  password: string;
-}
+// interface LoginReq {
+//   email: string;
+//   password: string;
+// }
+
+interface reportReq { }
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,7 @@ export class ApiTestService {
   // // 存使用者資料的 Signal
   // currentUser = signal<any>(null);
   private productApiUrl = 'http://localhost:8080/product';
+  private reportApiUrl = 'http://localhost:8080/report';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -43,5 +46,10 @@ export class ApiTestService {
   // 取得單一帳號內的商品資訊
   searchBySellerId(userId: number): Observable<any> {
     return this.http.get(`${this.productApiUrl}/search/userId?userId=${userId}`);
+  }
+
+  // 新增檢舉
+  addReport(data: reportReq) {
+    return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true });
   }
 }
