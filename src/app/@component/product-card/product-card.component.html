@@ -2,7 +2,7 @@
   <section class="product-list">
     @for (item of displayedProducts; track item.title) {
       <div class="card" type="button" (click)="goToProductDetail()">
-        <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="card-img-top" alt="...">
+        <img [src]="item.imgUrl" class="card-img-top" alt="...">
         <div class="card-body">
           <div class="head">
             <h6 class="title">{{ item.title }}</h6>

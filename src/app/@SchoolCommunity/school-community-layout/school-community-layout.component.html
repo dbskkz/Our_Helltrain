@@ -22,25 +22,25 @@
     <nav class="panel-nav">
           <ul class="sub-list">
             <li>
-              <button class="sub-link" (click)="goToSchoolProduct()" [class.active]="">
+              <button class="sub-link" routerLink="school-product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <span class="sub-panel-text">校內商品</span>
               </button>
             </li>
 
             <li>
-              <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+              <button class="sub-link" routerLink="school-member" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <span class="sub-panel-text">版上的同學</span>
                   </button>
                 </li>
 
                 <li>
-                  <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                  <button class="sub-link" routerLink="school-seeking" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <span class="sub-panel-text">校園許願池</span>
                   </button>
                 </li>
 
                 <li>
-                  <button class="sub-link" (click)="goToClassmates()" [class.active]="">
+                  <button class="sub-link" routerLink="school-chatting" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <span class="sub-panel-text">哈啦吐槽區</span>
                   </button>
                 </li>
