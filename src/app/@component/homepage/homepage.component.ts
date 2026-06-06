@@ -1,5 +1,6 @@
 import { ManualComponent } from './../manual/manual.component';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild,
+  AfterViewInit, OnDestroy, NgZone } from '@angular/core';
 
 // 素材庫
 import { LucideAngularModule } from 'lucide-angular';
@@ -21,16 +22,17 @@ export class HomepageComponent{
   constructor(
     private route: Router,
     private productService:ProductServiceService,
-    private category:CategoriesService
+    private category:CategoriesService,
+    private ngZone: NgZone
   ) {}
 
-get categories():any[]{
-  return this.category.categories;
-}
+  get categories():any[]{
+    return this.category.categories;
+  }
 
-ngOnInit(): void {
-  this.loadProducts();
-}
+  ngOnInit(): void {
+    this.loadProducts();
+  }
 
   //類型輪播效果
   @ViewChild('categoryScroll')
@@ -50,7 +52,35 @@ ngOnInit(): void {
     });
   }
 
- @ViewChild('manualSection')
+  showNavBtns = false;
+  private resizeObserver!: ResizeObserver;
+
+  ngAfterViewInit(): void {
+    // 用 setTimeout 確保 DOM 完全渲染後再初始化
+    setTimeout(() => {
+      this.checkOverflow();
+
+      this.resizeObserver = new ResizeObserver(() => {
+        // 用 NgZone 確保 Angular 變更偵測被觸發
+        this.ngZone.run(() => this.checkOverflow());
+      });
+
+      this.resizeObserver.observe(this.categoryScroll.nativeElement);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+  }
+
+  checkOverflow(): void {
+    const el = this.categoryScroll.nativeElement;
+    // scrollWidth > clientWidth 代表內容超出容器，需要捲動
+    this.showNavBtns = el.scrollWidth > el.clientWidth;
+  }
+
+  // 使用說明
+  @ViewChild('manualSection')
   manualSection!: ElementRef;
 
   goToManual() {
@@ -60,6 +90,7 @@ ngOnInit(): void {
     });
   }
 
+  // 路由設定
   goToProductListById(type: string){
     this.route.navigate(['/product-list',type]);
   }
