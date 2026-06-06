@@ -1,0 +1,61 @@
+<form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+  <h2 class="welcome-title">
+    歡迎回來
+    <mat-icon class="wave-icon">waving_hand</mat-icon>
+  </h2>
+  <p class="form-desc">請使用學校 Email 登入</p>
+
+  <div class="input-group login-email-group">
+    <div class="custom-outside-label">
+      <mat-icon class="label-icon">school</mat-icon>
+      學校 Email <span class="required-star">*</span>
+    </div>
+    <div class="email-box">
+      <input matInput type="email"
+        placeholder="yourname@mail.school.edu.tw"
+        class="custom-input"
+        formControlName="email"
+        [(ngModel)]="userInputLogin"
+      />
+      <mat-icon class="suffix-icon">mail_outline</mat-icon>
+    </div>
+    @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+      @if (loginForm.get('email')?.hasError('required')) {
+        <p class="field-hint error-text">✘ 學校信箱為必填欄位</p>
+      } @else if (loginForm.get('email')?.hasError('pattern')) {
+        <p class="field-hint error-text">⚠ 請輸入正確的信箱格式 (需包含 .edu.tw)</p>
+      }
+    }
+  </div>
+
+  <div class="input-group">
+    <div class="custom-outside-label">
+      <mat-icon class="label-icon">lock</mat-icon>
+      密碼 <span class="required-star">*</span>
+    </div>
+    <div class="password-box">
+      <input matInput
+        [type]="hideLoginPassword() ? 'password' : 'text'"
+        placeholder="請輸入密碼"
+        class="custom-input"
+        formControlName="password"
+      />
+      <button type="button" class="eye-btn"
+        (click)="hideLoginPassword.set(!hideLoginPassword())">
+        <mat-icon>{{ hideLoginPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    </div>
+    @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+      <p class="field-hint error-text">✘ 密碼為必填欄位</p>
+    }
+  </div>
+
+  <a class="forgot-password">忘記密碼？</a>
+
+  <button class="submit-btn" type="button" (click)="onLogin()">登入</button>
+
+  <p class="switch-mode">
+    還沒有帳號？
+    <a (click)="switchToRegister.emit()" style="cursor: pointer;">立即註冊</a>
+  </p>
+</form>

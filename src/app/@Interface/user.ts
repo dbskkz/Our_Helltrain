@@ -50,9 +50,9 @@ export interface SetInfoVo {
   name: string;
   location: string[]; // 如果選方案 A 叫 List；選方案 B 就改成 location: string
   school: string;
-  department: string; // 配合 Java 名稱叫 department
-  phone: string;
-  msg: string;        // 配合 Java 變數名稱：個人簡介（原本叫 profile）
+  department: string | null; // 配合 Java 名稱叫 department
+  phone: string | null;
+  msg: string | null;        // 配合 Java 變數名稱：個人簡介（原本叫 profile）
   deleteImg: boolean; // 配合 Java 變數名稱：是否刪除照片
 }
 
