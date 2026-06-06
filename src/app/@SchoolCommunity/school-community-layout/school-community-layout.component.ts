@@ -18,6 +18,30 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 })
 export class SchoolCommunityLayoutComponent extends ProductListingComponent{
 
+  override ngOnInit(): void {
+    this.loadSchool();
+
+  }
+
+  schools: any[] = [];
+  loading = true;
+  error = '';
+
+  loadSchool(){
+    this.eduApiGovService.getSchools().subscribe({
+      next: (res) => {
+        this.schools = res;
+        console.log(res);
+        this.loading = false;
+      },
+
+      error: (err) => {
+        this.error = '載入失敗';
+        this.loading = false;
+      }
+    });
+  }
+
   universityName = '國立清華大學';
 
   goToSchoolProduct(){

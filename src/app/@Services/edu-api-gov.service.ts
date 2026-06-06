@@ -6,17 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EduApiGovService {
+  private url = '/moe-api/files/opendata/u1_new.json';
 
-  // 此為實驗用 Service ， 要使用正式 API ，請左轉 school-data.service !
-  // 實驗結果於 foreground-test component
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http :HttpClient
-  ) { }
-
-  getData(): Observable<any> {
-    return this.http.get(
-      'https://stats.moe.gov.tw/files/opendata/sdata.json'
-    );
+  getSchools(): Observable<any[]> {
+    return this.http.get<any[]>(this.url);
   }
 }

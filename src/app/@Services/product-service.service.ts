@@ -52,6 +52,14 @@ export class ProductServiceService {
       .pipe(map(res => this.mapResponse(res)));
   }
 
+  getByUniversity(university:string): Observable<GetProductDataRes> {
+    const params = new HttpParams()
+      .set('school',university);
+
+    return this.http
+      .get<any>(`${this.BASE}/search/school`, { params })
+      .pipe(map(res => this.mapResponse(res)));
+  }
 
   private mapProduct(p: any): ProductCard {
     return {
@@ -83,21 +91,21 @@ export class ProductServiceService {
       deptGroup: p.deptGroup,
 
       user: {
-        userName: '李吉娃娃',
+        userName: p.seller?.userName || `幽靈同學${p.userId}號`,
         userImg:
-          'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-        university: '國立清華大學',
-        department: '生科系',
-        location: ['高雄']
+        p.seller?.userImgPath ??
+        'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
+        university: p.seller?.school || '吉利開心大學',
+        department: p.seller?.department || '未設定系所',
       }
     };
   }
 
   private mapResponse(res: any): GetProductDataRes {
     return {
-      statusCode: res?.statusCode ?? 200,
+      statusCode: res?.statusCode ?? 418,
 
-      message: res?.message ?? 'Success',
+      message: res?.message ?? 'ㄐ哥踩到狗屎ㄏㄏ',
 
       productList: (res?.productList ?? []).map((p: any) =>
         this.mapProduct(p)

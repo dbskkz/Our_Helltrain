@@ -21,6 +21,5 @@ export interface ProductCard {
     userImg: string;
     university: string;
     department: string;
-    location: string[];
   };
 }

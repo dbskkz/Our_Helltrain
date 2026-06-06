@@ -15,6 +15,16 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 })
 export class SchoolCommunityProductComponent extends ProductListingComponent implements OnInit{
 
+  override loadProducts(){
+    this.loadUniversityProducts();
+  }
 
+  private loadUniversityProducts() {
+    console.log('走 university API');
+
+    this.handleProductResponse(
+      this.productservice.getByUniversity('國立清華大學')
+    );
+  }
 
 }
