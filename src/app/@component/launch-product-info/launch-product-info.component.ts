@@ -34,7 +34,7 @@ export class LaunchProductInfoComponent implements OnInit{
 
   //點選沒填會亮紅邊
   touched = {
-    region: false,
+    locationRegions: false,
     grades: false,
     catMain: false,
     condition: false,
@@ -63,7 +63,7 @@ export class LaunchProductInfoComponent implements OnInit{
   // ── 核心驗證：加入地區判定 ──
   isStep1Valid(): boolean {
     return (
-      this.state.region !== '' &&
+      this.state.locationRegions.length > 0 &&
       this.state.grades.length > 0 &&
       this.state.catMain.length > 0 &&
       !(this.customCatChecked && this.customCatInput.trim() === '') && // 勾了新增但沒填
@@ -75,14 +75,7 @@ export class LaunchProductInfoComponent implements OnInit{
     this.isNextDisabled = !this.isStep1Valid();
   }
 
-  // ── 三級連動變更事件 ──
-  onRegionChange(event: Event): void {
-    this.state.region = (event.target as HTMLSelectElement).value;
-    this.touched.region = true;
-    this.updateNextButton();
-  }
-
- //額外地區 Checkbox
+ //可面交地區 Checkbox
  onLocationRegionChange(event: Event, region: string): void {
   const checked = (event.target as HTMLInputElement).checked;
   if (checked) {
@@ -90,6 +83,8 @@ export class LaunchProductInfoComponent implements OnInit{
   } else {
     this.state.locationRegions = this.state.locationRegions.filter(r => r !== region);
   }
+  this.touched.locationRegions = true;
+  this.updateNextButton();
 }
 
   // ── 年級 Checkbox 複選處理 ──

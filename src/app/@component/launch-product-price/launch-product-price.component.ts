@@ -378,7 +378,7 @@ export class LaunchProductPriceComponent implements OnInit {
       if (id) {
         this.router.navigate(['/store', Number(id)]);
       }
-    }, 1200);
+    });
 
   }
 }
