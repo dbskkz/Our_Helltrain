@@ -77,8 +77,7 @@ export class SchoolDataService {
     // 🎯 初始化時自動載入，路徑直球對決，不需要加 public/
     this.http.get<RegionMap>('schools-with-departments.json').subscribe({
       next: (data) => {
-        this.regionMap.set(data),
-        console.log('【雷達回報】成功載入 JSON！所有的縣市 Key 為：', Object.keys(data));
+        this.regionMap.set(data);
       },
       error: (err) => console.error('共享資料庫載入失敗：', err)
     });

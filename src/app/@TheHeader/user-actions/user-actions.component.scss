@@ -1,5 +1,4 @@
-@use '../../styles/variables' as *;
-
+@use "../../styles/variables" as *;
 
 .user-actions-wrapper {
   display: flex;
@@ -34,7 +33,9 @@
     padding: 0.5rem 0.8rem; // 增加一點內距，讓 hover 的背景色有呼吸空間
     margin: -0.5rem -1rem; // 配合 padding 使用負 margin 抵銷，確保排版位置不跳動
     border-radius: 9999px; // 讓 hover 的背景有一點圓角感
-    transition: background-color 0.2s ease, opacity 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      opacity 0.2s ease;
 
     .drop-menu {
       position: absolute;
@@ -91,6 +92,13 @@
       background-position: center;
       flex-shrink: 0; // 防止頭像變形
       overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // 對 <img> 才有效
+        object-position: center;
+      }
     }
 
     .user-name {
