@@ -24,9 +24,11 @@
 
   <section class="category-wrapper" >
 
-    <button class="nav-btn left" (click)="scrollLeft()">
-      ←
-    </button>
+    @if (showNavBtns) {
+       <button class="nav-btn left" (click)="scrollLeft()">
+         ←
+       </button>
+    }
 
     <section class="popular-categories" #categoryScroll>
       @for (item of categories; track $index) {
@@ -36,9 +38,11 @@
       }
     </section>
 
-    <button class="nav-btn right" (click)="scrollRight()">
-      →
-    </button>
+    @if (showNavBtns) {
+      <button class="nav-btn right" (click)="scrollRight()">
+        →
+      </button>
+    }
 
   </section>
 
@@ -71,7 +75,7 @@
   <div class="subtitle">
     <h5>
       <mark>
-        使用說明
+        網站說明
       </mark>
     </h5>
   </div>

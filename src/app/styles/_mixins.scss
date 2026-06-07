@@ -437,3 +437,165 @@
     }
   }
 }
+
+
+@mixin pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+
+  .page-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: transparent;
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $text-gray;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+
+    &:hover:not(:disabled) { background: $primary-yellow }
+    &:disabled { color: $neutral-c9; cursor: no-drop; }
+
+    &:active {
+      background: $background-yellow-active;
+    }
+
+    &.active {
+      background: $neutral-ea;
+      color: $text-gray;
+    }
+  }
+}
+
+@mixin empty-state {
+  width: 100%;
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  // =========================================================
+  // Icon 強調設計
+  // =========================================================
+  .empty-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+    background-color: #f3f4f6; // 極淺灰底色襯托
+    color: #9ca3af;            // 柔和的 Icon 顏色
+
+    margin-bottom: 1.8rem;
+
+
+    .material-symbols-outlined {
+      font-size: 8rem; // 放大 Icon
+    }
+  }
+  // =========================================================
+  // Content 簡潔文字
+  // =========================================================
+  .empty-content {
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #1f2937; // 稍微清晰的深灰，但不死黑
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+      font-size: 0.95rem;
+      color: #6b7280;
+      line-height: 1.5;
+
+      span {
+        color: #374151;
+        font-weight: 600;
+      }
+    }
+  }
+
+  // =========================================================
+  // Actions 極簡化按鈕 (文字連結風格)
+  // =========================================================
+  .empty-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    // 中央分隔線
+    .divider {
+      color: #e5e7eb;
+      user-select: none;
+    }
+  }
+
+  .text-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    position: relative;
+
+    // 加上簡約的底線 hover 效果
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      transition: width 0.2s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+
+  // 主按鈕：顏色稍深
+  .primary-link {
+    color: #4b5563;
+
+    &::after {
+      background-color: #4b5563;
+    }
+
+    &:hover {
+      color: #111827;
+    }
+  }
+
+  // 次按鈕：顏色較淡
+  .secondary-link {
+    color: #9ca3af;
+
+    &::after {
+      background-color: #9ca3af;
+    }
+
+    &:hover {
+      color: #4b5563;
+    }
+  }
+}
