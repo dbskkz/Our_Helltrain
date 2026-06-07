@@ -14,21 +14,23 @@ import { SchoolCommunityLayoutComponent } from '../school-community-layout/schoo
   templateUrl: './school-community-product.component.html',
   styleUrl: './school-community-product.component.scss'
 })
-export class SchoolCommunityProductComponent extends SchoolCommunityLayoutComponent implements OnInit{
+export class SchoolCommunityProductComponent extends ProductListingComponent implements OnInit{
+
+  override ngOnInit(): void {
+    this.loadProducts();
+  }
 
   override loadProducts(){
     this.loadUniversityProducts();
   }
 
   loadUniversityProducts() {
-    console.log('universityName:', this.universityName);
-    this.productservice.getByUniversity(this.universityName).subscribe({
-      next: (res) => {
-        console.log('API 回應:', res); // 確認後端回了什麼
-      },
-      error: (err) => {
-        console.error('API 錯誤:', err);
-      }
-    });
+    // console.log('universityName:', this.universityName);
+    this.handleProductResponse(
+      this.productservice.getByUniversity('國立清華大學')
+    );
   }
-}
+
+
+
+} // The end of the component
