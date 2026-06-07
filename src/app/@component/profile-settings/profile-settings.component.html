@@ -67,12 +67,12 @@
         </div>
 
         <div class="main_card_right_dowm">
-          <div class="main_card_1">
+          <div class="main_card_1 disabled" >
             <h5>{{score}}</h5>
             <p>評分</p>
           </div>
 
-          <div class="main_card_1" (click)="gotoStore()">
+          <div class="main_card_1" [class.disabled]="isEditingBasic" (click)="gotoStore()">
             <h5>{{onTheShelves}}</h5>
             <p>目前上架</p>
           </div>
@@ -154,39 +154,89 @@
           }
         </div>
       } @else {
-        <div class="area-edit-grid">
-          @for (control of areaFormArray.controls; track $index) {
+          <div class="area-edit-grid">
+            <!-- 第一格 -->
             <div class="area-column-item">
               <div class="input-box-wrapper">
-                <form class="example-form">
-                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                    <input type="text" [placeholder]="'地區' + ($index + 1) + ($index > 0 ? '(選填)' : '')"
-                     matInput [formControl]="control"
-                     [matAutocomplete]="autoArea"
-                     class="custom-input"
-                     [required]="$index === 0"
-                     (blur)="validateOnBlur(control, 'area')"
-                     maxlength="5"
-                     >
-                    <mat-autocomplete #autoArea="matAutocomplete" (optionSelected)="onAreaSelected()">
-                      @for (opt of filteredAreasList[$index] | async; track opt) {
-                        <mat-option [value]="opt">{{opt}}</mat-option>
-                      }
-                    </mat-autocomplete>
-                  </mat-form-field>
-                </form>
-              </div>
-            </div>
-          }
-        </div>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                  <input type="text" placeholder="地區1"
+                    matInput [formControl]="areaFormArray.controls[0]"
+                    [matAutocomplete]="autoArea0"
+                    class="custom-input"
+                    required
+                    (blur)="validateOnBlur(areaFormArray.controls[0], 'area')"
+                    maxlength="5">
+                  <mat-autocomplete #autoArea0="matAutocomplete" >
+                    @for (opt of filteredAreasList[0] | async; track opt) {
+                      <mat-option [value]="opt">{{opt}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
 
-        @if (areaFormArray.controls[0].touched) {
-          @if (areaFormArray.controls[0].hasError('required')) {
-            <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
-          } @else if (areaFormArray.controls[0].hasError('notInList')) {
-            <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
-          }
-        }
+              </div>
+                @if (areaFormArray.controls[0].touched) {
+                  @if (areaFormArray.controls[0].hasError('required')) {
+                    <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
+                  } @else if (areaFormArray.controls[0].hasError('notInList')) {
+                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
+                  } @else if (areaFormArray.controls[0].hasError('duplicated')) {
+                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
+                  }
+                }
+            </div>
+
+            <!-- 第二格 -->
+            <div class="area-column-item">
+              <div class="input-box-wrapper">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                  <input type="text" placeholder="地區2(選填)"
+                    matInput [formControl]="areaFormArray.controls[1]"
+                    [matAutocomplete]="autoArea1"
+                    class="custom-input"
+                    (blur)="validateOnBlur(areaFormArray.controls[1], 'area')"
+                    maxlength="5">
+                  <mat-autocomplete #autoArea1="matAutocomplete" >
+                    @for (opt of filteredAreasList[1] | async; track opt) {
+                      <mat-option [value]="opt">{{opt}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+                @if (areaFormArray.controls[1].touched) {
+                  @if (areaFormArray.controls[1].hasError('notInList')) {
+                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
+                  } @else if (areaFormArray.controls[1].hasError('duplicated')) {
+                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
+                  }
+                }
+            </div>
+
+            <!-- 第三格 -->
+            <div class="area-column-item">
+              <div class="input-box-wrapper">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
+                  <input type="text" placeholder="地區3(選填)"
+                    matInput [formControl]="areaFormArray.controls[2]"
+                    [matAutocomplete]="autoArea2"
+                    class="custom-input"
+                    (blur)="validateOnBlur(areaFormArray.controls[2], 'area')"
+                    maxlength="5">
+                  <mat-autocomplete #autoArea2="matAutocomplete" >
+                    @for (opt of filteredAreasList[2] | async; track opt) {
+                      <mat-option [value]="opt">{{opt}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+               @if (areaFormArray.controls[2].touched) {
+                  @if (areaFormArray.controls[2].hasError('notInList')) {
+                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
+                  } @else if (areaFormArray.controls[2].hasError('duplicated')) {
+                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
+                  }
+              }
+            </div>
+          </div>
 
       }
     </div>
@@ -223,12 +273,12 @@
       <p class="field-title"><span><lucide-icon [name]="icons.ClipboardPenLine"></lucide-icon></span> 個人簡介</p>
       <div class="profile_content">
         @if (!isEditingBasic) {
-          <p class="display_text pure-text-display">{{ profile }}</p>
+          <p class="display_text pure-text-display">{{ profile ? profile: '未填寫' }}</p>
         } @else {
           <form class="example-form">
             <div class="input-box-wrapper textarea-wrapper">
               <mat-form-field class="self-care" appearance="outline">
-                <textarea matInput [formControl]="profileControl" placeholder="分享一下你的二手心得守則吧！(限200字)" maxlength="200" cdkTextareaAutosize #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="3" [cdkAutosizeMaxRows]="6"></textarea>
+                <textarea matInput [formControl]="profileControl" placeholder="可寫科系背景、常用面交地點與時間、或對買家說的話(限200字)" maxlength="200" cdkTextareaAutosize #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="3" [cdkAutosizeMaxRows]="6"></textarea>
               </mat-form-field>
             </div>
           </form>
@@ -269,7 +319,7 @@
               <p class="label">請輸入舊密碼</p>
               <div class="input-box-wrapper">
                 <mat-form-field class="autocomplete-field" appearance="outline" subscriptSizing="dynamic">
-                  <input matInput [type]="hideOldPassword() ? 'password' : 'text'" formControlName="oldPassword" placeholder="輸入目前的舊密碼進行身分確認" maxlength="20">
+                  <input matInput [type]="hideOldPassword() ? 'password' : 'text'" formControlName="oldPassword" placeholder="請輸入目前的舊密碼" maxlength="20">
                   <button type="button" class="eye-btn" (click)="hideOldPassword.set(!hideOldPassword())">
                     <mat-icon>{{ hideOldPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>

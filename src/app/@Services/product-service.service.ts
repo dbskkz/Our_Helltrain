@@ -31,154 +31,85 @@ export class ProductServiceService {
   constructor(private http:HttpClient) { }
 
   search(req: SearchProductReq): Observable<GetProductDataRes> {
-  return this.http.post<any>(`${this.BASE}/search`, req).pipe(
-    map(res => {
+    return this.http
+      .post<any>(`${this.BASE}/search`, req)
+      .pipe(map(res => this.mapResponse(res)));
+  }
 
-      const rawList = res?.productList || [];
+  getAll(): Observable<GetProductDataRes> {
+    return this.http
+      .get<any>(`${this.BASE}/getInfo`)
+      .pipe(map(res => this.mapResponse(res)));
+  }
 
-      const mappedList = rawList.map((p: any) => ({
-        productId: p.productId,
-        userId: p.userId,
-        title: p.productName || '未命名商品',
-        description: p.description,
-        price: p.price || 0,
-        type: p.type || [],
-        time: p.shelfDate || '',
-        condition: p.productCondition || '未知',
+  searchByType(type: string): Observable<GetProductDataRes> {
 
-        imgUrl:
-          p.imgPath && p.imgPath.length > 0
-            ? p.imgPath[0]
-            : 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
+    const params = new HttpParams()
+      .set('type', type);
 
-        status: p.status,
-        grade: p.grade,
-        location:
-          p.location && p.location.length > 0
-            ? p.location
-            : '未知地點',
+    return this.http
+      .get<any>(`${this.BASE}/search/type`, { params })
+      .pipe(map(res => this.mapResponse(res)));
+  }
 
-        deptGroup: p.deptGroup,
+  getByUniversity(university:string): Observable<GetProductDataRes> {
+    const params = new HttpParams()
+      .set('school',university);
 
-        user: {
-          userName: '李吉娃娃',
-          userImg:
-            'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '國立清華大學',
-          department: '生科系',
-          location: '高雄'
-        }
-      }));
+    return this.http
+      .get<any>(`${this.BASE}/search/school`, { params })
+      .pipe(map(res => this.mapResponse(res)));
+  }
 
-      return {
-        statusCode: res?.statusCode || 200,
-        message: res?.message || 'Success',
-        productList: mappedList
-      };
-    })
-  );
-}
+  private mapProduct(p: any): ProductCard {
+    return {
+      productId: p.productId,
+      userId: p.userId,
 
- getAll(): Observable<GetProductDataRes> {
-  // 1. 將 get<GetProductDataRes> 改為 get<any>，這樣 map 才能自由轉換結構
-  return this.http.get<any>(`${this.BASE}/getInfo`).pipe(
-    map(res => {
-      // 安全檢查：確保後端有回傳 productList，沒有的話就給空陣列
-      const rawList = res?.productList || [];
+      title: p.productName || '未命名商品',
 
-      const mappedList = rawList.map((p: any) => ({
-        productId: p.productId,
-        userId: p.userId,
-        title: p.productName || '未命名商品',
-        description: p.description,
-        price: p.price || 0,
-        type: p.type || [],
-        time: p.shelfDate || '',
-        condition: p.productCondition || '未知',
-        // 防呆：如果後端 imgPath 是空的或不是陣列，給它一張預設圖
-        imgUrl: (p.imgPath && p.imgPath.length > 0)
-          ? p.imgPath[0]
-          : 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-        // 防呆：如果後端 location 是空的，給個預設字串或陣列
-        status: p.status,
-        grade: p.grade,
-        location: (p.location && p.location.length > 0) ? p.location : '未知地點',
-        deptGroup: p.deptGroup,
-        // 補上前端元件需要的 user 欄位
-        user: {
-          userName: '李吉娃娃',
-          userImg: 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '國立清華大學',
-          department: '生科系',
-          location: '高雄'
-        }
-      }));
+      description: p.description,
 
-      // 回傳符合 GetProductDataRes 介面的格式
-      return {
-        statusCode: res?.statusCode || 200,
-        message: res?.message || 'Success',
-        productList: mappedList
-      };
+      price: p.price || 0,
 
-    }) // The end of outer map
-  );
-}
+      type: p.type || [],
 
-searchByType(type:string): Observable<GetProductDataRes> {
-  // 後端用@RequestParam --> 前端用 HttpParam --> 建立HttpParam物件
-  // const param = new HttpParams; 錯1: 不完整
-  // const param = new HttpParams().set('type', type); 錯2: param要加s
-  const params = new HttpParams().set('type', type);
+      time: p.shelfDate || '',
 
-  // 發送GET請求，記得網址帶Httpparam變數
-  // return get<any>
-  return this.http.get<any>(`${this.BASE}/search/type`, {params}).pipe(
-    map(res => {
-      // 檢查是否有ProductList，若無則給他空陣列，有則Map
-      // const rawList = res.productList || [];
-      const rawList = res?.productList || [];
+      condition: p.productCondition || '未知',
 
-      const mappedList = rawList.map((p:any) => ({
-        productId: p.productId,
-        userId: p.userId,
-        title: p.productName || '未命名商品',
-        description: p.description,
-        price: p.price || 0,
-        type: p.type || [],
-        time: p.shelfDate || '',
-        condition: p.productCondition || '未知',
-        // 防呆：如果後端 imgPath 是空的或不是陣列，給它一張預設圖
-        imgUrl: (p.imgPath && p.imgPath.length > 0)
-          ? p.imgPath[0]
-          : 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-        // 防呆：如果後端 location 是空的，給個預設字串或陣列
-        status: p.status,
-        grade: p.grade,
-        location: (p.location && p.location.length > 0) ? p.location : '未知地點',
-        deptGroup: p.deptGroup,
-        // 補上前端元件需要的 user 欄位
-        user: {
-          userName: '李吉娃娃',
-          userImg: 'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
-          university: '國立清華大學',
-          department: '生科系',
-          location: '高雄'
-        }
-      })) // the end of inner map
+      imgUrl:
+        p.imgPath?.[0] ??
+        'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
 
-      return {
-        statusCode: res?.statusCode || 418,
-        message: res?.message || "為甚麼要演奏春日影",
-        productList: mappedList
-      };
+      status: p.status,
 
-    }) // The end of outer map
+      grade: p.grade,
 
-  )
-  // 完成回符合GetProductDataRes 介面的回傳
+      location: p.location || '未知地點',
 
-}
+      deptGroup: p.deptGroup,
 
+      user: {
+        userName: p.seller?.userName || `幽靈同學${p.userId}號`,
+        userImg:
+        p.seller?.userImgPath ??
+        'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
+        university: p.seller?.school || '吉利開心大學',
+        department: p.seller?.department || '未設定系所',
+      }
+    };
+  }
 
+  private mapResponse(res: any): GetProductDataRes {
+    return {
+      statusCode: res?.statusCode ?? 418,
+
+      message: res?.message ?? 'ㄐ哥踩到狗屎ㄏㄏ',
+
+      productList: (res?.productList ?? []).map((p: any) =>
+        this.mapProduct(p)
+      )
+    };
+  }
 }

@@ -3,7 +3,7 @@
     <mat-icon>gavel</mat-icon> 平台使用規範與免責聲明
   </h2>
 
-  <mat-dialog-content class="custom-content" (scroll)="onScroll($event)">
+  <mat-dialog-content class="custom-content" >
     <div class="welcome-box">
       歡迎使用本平台。為保障買賣雙方權益，建立誠信、安全的交易環境，所有使用者均須遵守以下規範。完成註冊或開始使用本服務時，即視為您已閱讀並同意本規範。
     </div>
@@ -34,7 +34,7 @@
       <div class="trading-steps">
         <div class="step"><span>1</span> 約定細節 (優先約公共場所)</div>
         <div class="step"><span>2</span> 現場查驗 (買賣雙方共同配合)</div>
-        <div class="step"><span>3</span> 当面結清 (確認無誤後付款)</div>
+        <div class="step"><span>3</span> 當面結清 (確認無誤後付款)</div>
       </div>
       <p class="notice-text">※ 一旦買家現場確認並付款，即視為交易達成。</p>
     </section>
@@ -57,9 +57,9 @@
     <div class="custom-inline-actions">
       <button mat-button class="cancel-btn" (click)="onCancel()">取消</button>
 
-      @if (isReadToBottom) {
+
         <button mat-raised-button class="close-btn" (click)="onConfirm()">我瞭解了並同意</button>
-      }
+
     </div>
   </mat-dialog-content>
 </div>

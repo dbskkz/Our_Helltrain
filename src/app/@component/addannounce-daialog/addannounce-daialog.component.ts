@@ -27,7 +27,7 @@ export class AddannounceDaialogComponent {
 
   submitted = false;
   // 接收傳進來的資料，沒有傳就是 null（新增模式）
-  private data = inject(MAT_DIALOG_DATA);
+  public data = inject(MAT_DIALOG_DATA);
 
   today: string = new Date().toISOString().split('T')[0];
   selectedFile: File | null = null;

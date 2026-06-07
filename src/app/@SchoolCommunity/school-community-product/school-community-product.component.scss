@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem
 }
 
 .sort-container {
@@ -40,6 +41,11 @@
   @include tag-clear-all;
 }
 
-app-product-card{
-  margin-top: 1rem;
+
+.pagination {
+  @include pagination;
+}
+
+.empty-state {
+  @include empty-state;
 }

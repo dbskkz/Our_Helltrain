@@ -1,16 +1,14 @@
 {
-  "/api": {
-    "target": "https://api.opencube.tw",
+  "/moe-api": {
+    "target": "https://stats.moe.gov.tw",
     "changeOrigin": true,
-    "pathRewrite": {
-      "^/api": ""
-    },
-    "secure": false,
+    "pathRewrite": { "^/moe-api": "" },
+    "secure": false
+  },
   "/user": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8080/",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   }
-}
 }

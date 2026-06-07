@@ -12,7 +12,7 @@ export interface User {
   verified: string | null;
   goodLevel: number;
   msg: string | null;
-  imgPath: string;
+  imgPath:  string | null;
   createDate: string;
 }
 
@@ -26,7 +26,7 @@ export interface UserReq {
   name: string;
   password: string;
   email: string;
-  location: string;
+  location: string[];
   school: string;
   phone: string | null;
 }
@@ -45,7 +45,8 @@ export interface VerifyVO {
 
 //修改個人資訊（密碼以外）
 export interface SetInfoVo {
-  img?: File | null;
+  email: string;
+  img?: string | null;
   name: string;
   location: string[]; // 如果選方案 A 叫 List；選方案 B 就改成 location: string
   school: string;
@@ -58,9 +59,8 @@ export interface SetInfoVo {
 
 //修改密碼
 export interface ChangePasswordVo {
-  email: string;
-  nowPad: string; // 配合 Java 的變數名稱：目前密碼
-  newPad: string; // 配合 Java 的變數名稱：新密碼
+  nowPad: string;
+  newPad: string;
 }
 
 //登入成功專用的回應格式判斷<是管理者或是使用者>
