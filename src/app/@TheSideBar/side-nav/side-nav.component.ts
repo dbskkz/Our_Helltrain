@@ -1,3 +1,4 @@
+import { EduApiGovService } from './../../@Services/edu-api-gov.service';
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -14,12 +15,14 @@ import {
   CircleQuestionMark
 } from 'lucide-angular';
 
+import { FormsModule } from '@angular/forms';
 import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { EighteenAcademyService } from '../../@Services/eighteen-academy.service';
 import { CategoriesService } from '../../@Services/categories.service';
+
 @Component({
   selector: 'app-side-nav',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, FormsModule],
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss'
 })
@@ -29,7 +32,8 @@ export class SideNavComponent {
     private router: Router,
     private uiBehavior: UiBehaviorService,
     private eac:EighteenAcademyService,
-    private category:CategoriesService
+    private category:CategoriesService,
+    private eduApiGovService: EduApiGovService
   ){}
 
   // Declare icon
@@ -43,6 +47,7 @@ export class SideNavComponent {
   readonly MoonStarIcon = MoonStar;
   readonly CircleQuestionMarkIcon = CircleQuestionMark;
 
+  // 常見分類
   // 宣告商品種類
   get categories():any[]{
     return this.category.categories
@@ -80,13 +85,44 @@ export class SideNavComponent {
     });
   }
 
+  // 進入校板
+  schools: any[] = [];
+  searchText: string = '';
+
+  ngOnInit(): void {
+    this.eduApiGovService.getSchools().subscribe({
+      next: (data) => {
+        this.schools = data;
+      },
+      error: (err) => {
+        console.error('無法載入學校資料：', err);
+      }
+    });
+  }
+
+// 過濾後的學校清單
+get filteredSchools(): any[] {
+  const keyword = this.searchText.trim();
+  if (!keyword) return this.schools;
+  return this.schools.filter(s =>
+    s['學校名稱']?.includes(keyword)
+  );
+}
+
+// 選擇學校後直接導航
+selectSchool(school: any): void {
+  this.router.navigate(['/school-community', Number(school['代碼'])]);
+  this.panelState.school = false;
+  this.searchText = '';
+}
+
 
   goToHome(){
     this.router.navigate(['/home']);
     window.scrollTo({top: 0,
       left: 0,
       behavior: "smooth"});
-    }
+  }
 
   // =========================================================
   // PANEL OPEN / CLOSE
@@ -95,6 +131,7 @@ export class SideNavComponent {
   panelState = {
     academic: false,
     category: false,
+    school: false
   };
 
   togglePanel(event: Event, panel: keyof typeof this.panelState) {
@@ -124,9 +161,13 @@ export class SideNavComponent {
     this.router.navigate(['/product-list', this.selectedCategory]);
   }
 
-  goToSchoolForum(){
-    this.router.navigate(['/school-community/school-product']);
-  }
+  schoolId = 1;
+
+  // goToSchoolForum() {
+  //   // let id = this.userService.currentUser().userId;
+  //   if (this.schoolId) { this.router.navigate(['/school-community', Number(this.schoolId)]); }
+  //   this.panelState.school = false;
+  // }
 
   get academics(): any[]{
     return this.eac.academy

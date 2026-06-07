@@ -45,3 +45,7 @@
 .pagination {
   @include pagination;
 }
+
+.empty-state {
+  @include empty-state;
+}

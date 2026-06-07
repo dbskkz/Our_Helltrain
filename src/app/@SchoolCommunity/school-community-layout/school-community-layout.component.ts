@@ -18,30 +18,35 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 })
 export class SchoolCommunityLayoutComponent extends ProductListingComponent{
 
+  schoolId: number = 0;
+  universityName: string = '';
+
   override ngOnInit(): void {
-    this.loadSchool();
+    this.route.params.subscribe(params => {
+      if (!params['id']) return;
+      this.schoolId = Number(params['id']);
 
-  }
+        // 2. 用 id 查學校名稱
+        this.eduApiGovService.getSchools().subscribe({
+          next: (data) => {
+            const school = data.find(s => Number(s['代碼']) === this.schoolId);
 
-  schools: any[] = [];
-  loading = true;
-  error = '';
+            if (!school) {
+              console.warn('找不到學校，schoolId:', this.schoolId);
+              return;
+            }
 
-  loadSchool(){
-    this.eduApiGovService.getSchools().subscribe({
-      next: (res) => {
-        this.schools = res;
-        console.log(res);
-        this.loading = false;
-      },
-
-      error: (err) => {
-        this.error = '載入失敗';
-        this.loading = false;
-      }
+            this.universityName = school ? school['學校名稱'] : '未知學校';
+            this.schoolId = Number(params['id']);
+          },
+          error: (err) => console.error(err)
+        });
     });
   }
 
-  universityName = '國立清華大學';
+
 
 }
+
+
+

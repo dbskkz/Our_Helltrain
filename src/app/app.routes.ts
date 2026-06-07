@@ -46,10 +46,11 @@ export const routes: Routes = [
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
 
       // TODO: school-community/:universityName
-      { path: 'school-community',
+      { path: 'school-community/:id',
         component: SchoolCommunityLayoutComponent,
         children:[
           // TODO : 當路徑是 /school-community/清華大學/school-product 時
+          { path: '', redirectTo: 'school-product', pathMatch: 'full' },
           { path: 'school-product', component: SchoolCommunityProductComponent }, //校版商品
           { path: 'school-member', component: SchoolCommunityMemberComponent }, //校版成員
           { path: 'school-seeking', component: SchoolCommunitySeekingComponent }, //校版徵求

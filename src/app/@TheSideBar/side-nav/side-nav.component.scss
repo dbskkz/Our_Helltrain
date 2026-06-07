@@ -257,3 +257,60 @@ lucide-icon {
     transform: translateY(0);
   }
 }
+
+
+
+
+
+
+
+// 校版
+/* 校版搜尋 */
+
+.school-search-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.4rem;
+}
+
+.school-search-input {
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+
+  border: 1px solid #ddd;
+  border-radius: 6px;
+
+  font-size: 0.78rem;
+  color: #444;
+  font-family: inherit;
+  background: #fff;
+
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: $primary-yellow;
+  }
+
+  &::placeholder {
+    color: #bbb;
+  }
+}
+
+.school-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.school-empty {
+  padding: 0.6rem;
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: center;
+}

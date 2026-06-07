@@ -13,4 +13,16 @@ export class EduApiGovService {
   getSchools(): Observable<any[]> {
     return this.http.get<any[]>(this.url);
   }
+
+
+  // loadSchool(schools: any[]){
+  //   this.getSchools().subscribe({
+  //     next: (data) => {
+  //       schools.push(...data);
+  //     },
+  //     error: (err) => {
+  //       console.error('無法載入學校資料：', err);
+  //     }
+  //   });
+  // }
 }
