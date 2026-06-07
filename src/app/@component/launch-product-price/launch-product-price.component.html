@@ -186,10 +186,6 @@
       <!-- 資訊表格 -->
       <table class="preview-table">
         <tbody>
-          <tr>
-            <th>商品所在地</th>
-            <td>{{ state.region }}</td>
-          </tr>
           <tr *ngIf="state.locationRegions.length > 0">
             <th>額外面交地區</th>
             <td>{{ state.locationRegions.join('、') }}</td>

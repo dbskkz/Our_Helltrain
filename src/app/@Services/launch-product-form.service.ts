@@ -8,7 +8,6 @@ export interface ProductState {
   tags: string[];
   name: string; // 步驟二的商品名稱（AI 套用會寫入這裡）
   desc: string; // 步驟二的商品描述
-  region: string,
   locationRegions: string[],
   grades: string[],
   imageSlotUrls:string[],
@@ -40,7 +39,7 @@ export class LaunchProductFormService {
     tags: [],
     name: '',
     desc: '',
-    region: '',
+
     locationRegions: [],
     grades: [],
     imageSlotUrls: new Array(7).fill('') as string[],

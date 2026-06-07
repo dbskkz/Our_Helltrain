@@ -262,9 +262,9 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         email: this.email,
         name: this.tempName,
         school: this.schoolControl.value ?? '',
-        department: this.deptControl.value ?? '',
-        phone: this.phoneControl.value ?? '',
-        msg: this.profileControl.value ?? '',
+        department: this.deptControl.value || null,
+        phone: this.phoneControl.value || null,
+        msg: this.profileControl.value || null,
         location: this.areaFormArray.controls
                     .map(c => c.value ?? '')
                     .filter(val => val.trim() !== ''), // 過濾掉空字串
@@ -286,9 +286,9 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
             // 數據同步：用剛剛送出去的資料，來更新畫面上的變數
             this.name = updateData.name;
             this.school = updateData.school;
-            this.department = updateData.department;
-            this.phone = updateData.phone;
-            this.profile = updateData.msg;
+            this.department = updateData.department ?? '';
+            this.phone = updateData.phone  ?? '';
+            this.profile = updateData.msg  ?? '';
             this.areas = updateData.location;
             this.selectedAvatarFile = null;
 

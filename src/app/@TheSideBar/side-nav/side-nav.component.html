@@ -123,11 +123,44 @@
       <button
         type="button"
         class="nav-link"
-        (click)="goToSchoolForum()"
+        (click)="togglePanel($event, 'school')"
+        [class.active]="panelState.school"
       >
         <lucide-icon [name]="SchoolIcon"></lucide-icon>
-        <span>看看校板</span>
+        <span>看看校版</span>
       </button>
+
+      <div class="sub-panel" [class.show]="panelState.school">
+        <div class="school-search-wrap" (click)="$event.stopPropagation()">
+
+          <!-- 搜尋輸入框 -->
+          <input
+            class="school-search-input"
+            type="text"
+            placeholder="輸入學校名稱..."
+            [(ngModel)]="searchText"
+          />
+
+          <!-- 過濾後的學校清單 -->
+          <ul class="school-list">
+            @for (school of filteredSchools; track school['代碼']) {
+              <li>
+                <button
+                  class="sub-link"
+                  (click)="selectSchool(school)"
+                >
+                  <lucide-icon [name]="SchoolIcon"></lucide-icon>
+                  <span class="sub-panel-text">{{ school['學校名稱'] }}</span>
+                </button>
+              </li>
+            }
+            @if (filteredSchools.length === 0) {
+              <li class="school-empty">查無符合學校</li>
+            }
+          </ul>
+
+        </div>
+      </div>
     </li>
 
     <li class="nav-item">
@@ -137,7 +170,7 @@
         (click)="goToManual()"
       >
         <lucide-icon [name]="CircleQuestionMarkIcon"></lucide-icon>
-        <span>使用說明</span>
+        <span>網站說明</span>
       </button>
     </li>
 

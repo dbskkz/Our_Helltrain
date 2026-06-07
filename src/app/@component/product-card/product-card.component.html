@@ -2,26 +2,33 @@
   <section class="product-list">
     @for (item of displayedProducts; track item.title) {
       <div class="card" type="button" (click)="goToProductDetail()">
-        <img src="https://img.freepik.com/free-photo/smooth-gray-background-with-high-quality_53876-124606.jpg?semt=ais_hybrid&w=740&q=80" class="card-img-top" alt="...">
+        <img [src]="item.imgUrl" class="card-img-top" alt="...">
         <div class="card-body">
-          <h6 class="title">{{ item.title }}</h6>
-          <h5 class="price-container">
-            <span class="currency-symbol">$</span>
-            <span class="amount">{{ item.price }}</span>
-          </h5>
-
-          <div class="meta-info">
-            <span class="location" >
-              <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
-              {{ formatLocation(item.location) }} · {{ formatDate(item.time) }}
-            </span>
+          <div class="head">
+            <h6 class="title">{{ item.title }}</h6>
+            <h5 class="price-container">
+              <span class="currency-symbol">$</span>
+              <span class="amount">{{ item.price }}</span>
+            </h5>
           </div>
 
-          <div class="user-info">
-            <div class="picture"></div>
-            <span class="userName">{{item.user.userName}}</span>
-            <span class="userUniversity">{{item.user.university}}</span>
+          <div class="toe">
+
+            <div class="meta-info">
+              <span class="location" >
+                <lucide-icon [img]="MapPinIcon" size="12"></lucide-icon>
+                {{ formatLocation(item.location) }} · {{ formatDate(item.time) }}
+              </span>
+            </div>
+
+            <div class="user-info">
+              <div class="picture"></div>
+              <span class="user-name" [title]="item.user.userName">{{item.user.userName}}</span>
+              <span class="user-university" [title]="item.user.university">{{item.user.university}}</span>
+            </div>
+
           </div>
+
 
         </div>
       </div>

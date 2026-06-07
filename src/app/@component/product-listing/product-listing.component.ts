@@ -1,3 +1,4 @@
+import { EduApiGovService } from './../../@Services/edu-api-gov.service';
 import { GetProductDataRes, ProductServiceService } from './../../@Services/product-service.service';
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
@@ -59,7 +60,8 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     protected aca: EighteenAcademyService,
     public pagination: PaginationService,
     protected productservice:ProductServiceService,
-    protected ctgService:CategoriesService
+    protected ctgService:CategoriesService,
+    protected eduApiGovService:EduApiGovService
   ) {}
 
   // =========================================================
@@ -162,7 +164,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     );
   }
 
-  private handleProductResponse(
+  protected handleProductResponse(
     observable: Observable<GetProductDataRes>
   )
   {
@@ -447,11 +449,12 @@ get sortedProducts(): ProductCard[] {
     this.pagination.goToPage(1);
   }
 
-  // .ts 加這個
+  // 清除篩選
   clearAllFilters(event: Event): void {
     event.stopPropagation();
     this.resetFilters();
     this.resetQuery();
+    this.router.navigate(['/product-list/all'])
   }
 
 

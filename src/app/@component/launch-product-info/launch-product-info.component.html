@@ -17,22 +17,10 @@
   </div>
 
   <div class="form-vertical-container">
-
     <div class="field">
-      <div class="section-label">商品所在地點 <span class="req">*</span></div>
-      <div class="select-group">
-        <select (change)="onRegionChange($event)" [value]="state.region"
-          [class.selected]="state.region !== ''"
-          [class.error]="touched.region && state.region === ''">
-          <option value="" disabled selected>請選擇縣市</option>
-          <option *ngFor="let region of regionOptions" [value]="region">{{ region }}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="section-label">額外可面交地區 <span class="optional">（選填）</span></div>
-        <div class="checkbox-group location-checkbox-group">
+      <div class="section-label">可面交地區 <span class="req">*</span></div>
+        <div class="checkbox-group location-checkbox-group"
+          [class.error]="touched.locationRegions && state.locationRegions.length === 0">
           <label class="checkbox-label" *ngFor="let region of regionOptions">
           <input type="checkbox"
            [checked]="state.locationRegions.includes(region)"

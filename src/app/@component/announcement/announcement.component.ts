@@ -49,10 +49,10 @@ private allAnnouncements: Announcement[] = [
   // 發布中（isPublished: true，startDate <= today，endDate >= today）
   { id: 7,  title: '平台維護公告',           startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content: '本週六凌晨 2-4 點進行系統維護，期間服務暫停，請提前安排交易時間。', imgPath: 'https://picsum.photos/seed/ann7/400/200' },
   { id: 8,  title: '五月交易手續費優惠',     startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content:  '六月份交易手續費全免，把握機會多多交易！',                           imgPath: 'https://picsum.photos/seed/ann8/400/200' },
-  { id: 9,  title: '實名驗證公告',           startDate: '2026-06-10', endDate: '2026-06-30', isPublished: true,  content: '即日起新用戶須完成實名驗證方可進行交易，請於期限內完成。',           imgPath: 'https://picsum.photos/seed/ann9/400/200' },
-  { id: 10, title: '商品評價功能上線',       startDate: '2026-06-15', endDate: '2026-06-30', isPublished: true,  content: '全新交易評價功能正式上線，完成交易後可對買賣雙方進行評分。',           imgPath: 'https://picsum.photos/seed/ann10/400/200' },
-  { id: 11, title: '防詐騙提醒公告',         startDate: '2026-06-20', endDate: '2026-06-30', isPublished: true,  content: '近期詐騙案件增加，請勿在平台外進行交易，謹慎保護個人資料。',           imgPath: 'https://picsum.photos/seed/ann11/400/200' },
-  { id: 12, title: '平台服務條款更新',       startDate: '2026-06-25', endDate: '2026-06-30', isPublished: true,  content: '平台服務條款已更新，請至官網查閱最新版本，繼續使用即視為同意。',     imgPath: 'https://picsum.photos/seed/ann12/400/200' },
+  { id: 9,  title: '實名驗證公告',           startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content: '即日起新用戶須完成實名驗證方可進行交易，請於期限內完成。',           imgPath: 'https://picsum.photos/seed/ann9/400/200' },
+  { id: 10, title: '商品評價功能上線',       startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content: '全新交易評價功能正式上線，完成交易後可對買賣雙方進行評分。',           imgPath: 'https://picsum.photos/seed/ann10/400/200' },
+  { id: 11, title: '防詐騙提醒公告',         startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content: '近期詐騙案件增加，請勿在平台外進行交易，謹慎保護個人資料。',           imgPath: 'https://picsum.photos/seed/ann11/400/200' },
+  { id: 12, title: '平台服務條款更新',       startDate: '2026-06-01', endDate: '2026-06-30', isPublished: true,  content: '平台服務條款已更新，請至官網查閱最新版本，繼續使用即視為同意。',     imgPath: 'https://picsum.photos/seed/ann12/400/200' },
 
   // 已結束（isPublished: true，endDate < today）
   { id: 13, title: '四月系統升級公告',       startDate: '2026-04-01', endDate: '2026-04-30', isPublished: true,  content: '系統已完成升級，效能提升約 30%，感謝耐心等待。',                     imgPath: 'https://picsum.photos/seed/ann13/400/200' },
