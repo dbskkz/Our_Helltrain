@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
-import { RouterOutlet } from "@angular/router";
-import { ActivatedRoute, Router, RouterLinkActive, RouterLink } from '@angular/router';
-
-import { ProductListingComponent } from '../../@component/product-listing/product-listing.component';
-import { LucideAngularModule, House } from "lucide-angular";
-
-import { Options } from '@angular-slider/ngx-slider';
+import { RouterOutlet, ActivatedRoute, Router, RouterLinkActive, RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { ProductCard } from '../../@Interface/product-card';
+
 import { ProductListingStateService } from '../../@Services/product-listing-state.service';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
 
@@ -27,7 +21,7 @@ export class SchoolCommunityLayoutComponent implements OnInit {
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
-    public state: ProductListingStateService,   // ← 共用同一個 service
+    public state: ProductListingStateService,
     private eduApiGovService: EduApiGovService,
   ) {}
 
@@ -43,7 +37,7 @@ export class SchoolCommunityLayoutComponent implements OnInit {
 
           this.universityName = school['學校名稱'];
 
-          // 覆寫 matchCategory：校版不需要分類篩選
+          // 校版不需要分類篩選，覆寫 matchCategory
           this.state.matchCategory = () => true;
 
           this.state.loadByUniversity(this.universityName);
@@ -53,5 +47,3 @@ export class SchoolCommunityLayoutComponent implements OnInit {
     });
   }
 }
-
-

@@ -1,6 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Options } from '@angular-slider/ngx-slider';
 
 import { ProductCard } from '../@Interface/product-card';
 import { ProductServiceService, GetProductDataRes, SearchProductReq } from './product-service.service';
@@ -34,17 +34,44 @@ export class ProductListingStateService {
 
   sortOption: 'newest' | 'price-asc' | 'price-desc' = 'newest';
 
+  // ── Panel 開關（原本在 component，移來這裡讓 HTML 共用）──
+  panelState = {
+    sort:   false,
+    filter: false,
+  };
+
+  // ── 預設值 ────────────────────────────────────────────
   readonly DEFAULT_FILTERS = {
     priceValue:     0,
     priceHighValue: 5000,
     sellerGrade:    1,
-    condition:      '',
-    type:           '',
   } as const;
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
   priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
   sellerGrade    = this.DEFAULT_FILTERS.sellerGrade;
+
+  // ── Slider Options ────────────────────────────────────
+  priceOptions: Options = {
+    floor: 0,
+    ceil: 5000,
+    step: 200,
+    translate: (value: number): string => {
+      if (value >= 5000) return '$5,000+';
+      return `$${value.toLocaleString()}`;
+    }
+  };
+
+  sellerGradeOptions: Options = {
+    showTicksValues: true,
+    stepsArray: [
+      { value: 1 },
+      { value: 2 },
+      { value: 3 },
+      { value: 4 },
+      { value: 5 }
+    ]
+  };
 
   constructor(
     private productservice: ProductServiceService,
@@ -154,6 +181,71 @@ export class ProductListingStateService {
   get pagedProducts(): ProductCard[] {
     const start = (this.pagination.currentPage - 1) * this.pageSize;
     return this.sortedProducts.slice(start, start + this.pageSize);
+  }
+
+  // ── Active Filter Tags ────────────────────────────────
+  get priceLabel(): string {
+    const isDefault = this.priceValue     === this.DEFAULT_FILTERS.priceValue
+                   && this.priceHighValue === this.DEFAULT_FILTERS.priceHighValue;
+    return isDefault ? '價格區間' : `$${this.priceValue} - $${this.priceHighValue}+`;
+  }
+
+  get conditionLabel(): string {
+    const selected = this.condition.filter(c => c.selected).map(c => c.label);
+    if (selected.length === 0) return '物況';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種`;
+  }
+
+  get gradeLabel(): string {
+    return this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade
+      ? '賣家評價'
+      : `評價 ${this.sellerGrade}★ 以上`;
+  }
+
+  get locationLabel(): string {
+    const selected = this.cities.filter(c => c.selected).map(c => c.name);
+    if (selected.length === 0) return '地區';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 個地區`;
+  }
+
+  get schoolLabel(): string {
+    const selected = this.department.filter(d => d.selected).map(d => d.name);
+    if (selected.length === 0) return '科系類別';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 個學群`;
+  }
+
+  get typeLabel(): string {
+    const selected = this.type.filter(d => d.selected).map(d => d.label);
+    if (selected.length === 0) return '常見分類';
+    if (selected.length <= 2) return selected.join('、');
+    return `${selected[0]} 等 ${selected.length} 種分類`;
+  }
+
+  get activeFilters(): { key: string; label: string }[] {
+    const tags: { key: string; label: string }[] = [];
+    if (this.priceLabel     !== '價格區間') tags.push({ key: 'price',     label: this.priceLabel });
+    if (this.conditionLabel !== '物況')     tags.push({ key: 'condition', label: this.conditionLabel });
+    if (this.gradeLabel     !== '賣家評價') tags.push({ key: 'grade',     label: this.gradeLabel });
+    if (this.locationLabel  !== '地區')     tags.push({ key: 'location',  label: this.locationLabel });
+    if (this.schoolLabel    !== '科系類別') tags.push({ key: 'school',    label: this.schoolLabel });
+    if (this.typeLabel      !== '常見分類') tags.push({ key: 'type',      label: this.typeLabel });
+    return tags;
+  }
+
+  removeFilter(key: string): void {
+    if (key === 'price') {
+      this.priceValue     = this.DEFAULT_FILTERS.priceValue;
+      this.priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
+    }
+    if (key === 'condition') this.condition.forEach(c => c.selected = false);
+    if (key === 'grade')     this.sellerGrade = this.DEFAULT_FILTERS.sellerGrade;
+    if (key === 'location')  this.cities.forEach(c => c.selected = false);
+    if (key === 'school')    this.department.forEach(d => d.selected = false);
+    if (key === 'type')      this.type.forEach(t => t.selected = false);
+    this.updatePagination();
   }
 
   // ── 重設 ───────────────────────────────────────────────
