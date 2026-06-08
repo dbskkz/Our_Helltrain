@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { AnnouncementComponent } from './@component/announcement/announcement.component';
-import { BackIndexComponent } from './@component/back-index/back-index.component';
 import { BackUserComponent } from './@component/back-user/back-user.component';
-import { BackProductComponent } from './@component/back-product/back-product.component';
 import { ReportComponent } from './@component/report/report.component';
 import { ProfileSettingsComponent } from './@component/profile-settings/profile-settings.component';
 import { OrderInformationComponent } from './@component/order-information/order-information.component';
