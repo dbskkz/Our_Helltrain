@@ -9,6 +9,7 @@ import { LucideAngularModule, House } from "lucide-angular";
 import { Options } from '@angular-slider/ngx-slider';
 import { FormsModule } from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { ProductCard } from '../../@Interface/product-card';
 
 @Component({
   selector: 'app-school-community-layout',
@@ -38,14 +39,30 @@ export class SchoolCommunityLayoutComponent extends ProductListingComponent {
 
           this.universityName = school ? school['學校名稱'] : '未知學校';
           this.schoolId = Number(params['id']);
+          console.log(school);
+
+
+          this.loadProducts();
         },
         error: (err) => console.error(err)
       });
     });
   }
 
+  override loadProducts(){
+    this.loadUniversityProducts();
+  }
 
+  loadUniversityProducts() {
+    // console.log('universityName:', this.universityName);
+    this.handleProductResponse(
+      this.productservice.getByUniversity(this.universityName)
+    );
+  }
 
+  override matchCategory(product: ProductCard): boolean {
+      return true;
+  }
 }
 
 

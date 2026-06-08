@@ -171,6 +171,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     observable.subscribe({
       next: (res) => {
         this.products = res.productList ?? [];
+
         this.updatePagination();
         this.isLoading = false;
       },
@@ -462,7 +463,7 @@ get sortedProducts(): ProductCard[] {
   // 前端篩選結果
   // =========================================================
 
-  private matchCategory(product: ProductCard): boolean {
+  protected matchCategory(product: ProductCard): boolean {
     const chineseCat = CATEGORY_MAP[this.category!];
 
     return (
@@ -471,9 +472,10 @@ get sortedProducts(): ProductCard[] {
         ? product.type.includes(chineseCat)
         : true
     );
+
   }
 
-  private matchPrice(product: ProductCard): boolean {
+  protected matchPrice(product: ProductCard): boolean {
     if (this.priceHighValue >= 5000) {
       return product.price >= this.priceValue;  // 上限拉滿就不限上限
     }
@@ -483,7 +485,7 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
-  private matchCity(product: ProductCard): boolean {
+  protected matchCity(product: ProductCard): boolean {
     const selectedCity = this.cities
       .filter(c => c.selected)
       .map(c => c.name);
@@ -494,7 +496,7 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
-  private matchSchool(product: ProductCard): boolean {
+  protected matchSchool(product: ProductCard): boolean {
     const selectedSchool = this.department
       .filter(d => d.selected)
       .map(d => d.name);
@@ -505,7 +507,7 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
-  private matchType(product: ProductCard): boolean {
+  protected matchType(product: ProductCard): boolean {
     const selectedTypes = this.type
       .filter(t => t.selected)
       .map(t => CATEGORY_MAP[t.value]);
@@ -516,7 +518,7 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
-  private matchCondition(product: ProductCard): boolean {
+  protected matchCondition(product: ProductCard): boolean {
     const selectedConditions = this.condition
       .filter(c => c.selected)
       .map(c => c.label);

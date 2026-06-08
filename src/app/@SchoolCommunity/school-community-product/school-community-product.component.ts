@@ -1,12 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductListingComponent } from '../../@component/product-listing/product-listing.component';
 import { ProductCardComponent } from "../../@component/product-card/product-card.component";
-import { LucideAngularModule, Home, ChevronRight, ChevronLeft, RotateCcw, X } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 
 import { Options } from '@angular-slider/ngx-slider';
 import { FormsModule } from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { SchoolCommunityLayoutComponent } from '../school-community-layout/school-community-layout.component';
+import { ProductCard } from '../../@Interface/product-card';
+
+
+const CATEGORY_MAP: Record<string, string> = {
+  'books':       '教科書',
+  'equipment':   '專業器材',
+  'daily':       '日用品',
+  'electronics': '3C電子',
+  'furniture':   '家具家電',
+  'notes':       '筆記考古',
+  'fashion':     '服飾配件',
+  'sports':      '戶外運動',
+  'graduation':  '畢業季',
+};
 
 @Component({
   selector: 'app-school-community-product',
@@ -15,22 +29,6 @@ import { SchoolCommunityLayoutComponent } from '../school-community-layout/schoo
   styleUrl: './school-community-product.component.scss'
 })
 export class SchoolCommunityProductComponent extends ProductListingComponent implements OnInit{
-
-  override ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  override loadProducts(){
-    this.loadUniversityProducts();
-  }
-
-  loadUniversityProducts() {
-    // console.log('universityName:', this.universityName);
-    this.handleProductResponse(
-      this.productservice.getByUniversity('國立清華大學')
-    );
-  }
-
 
 
 } // The end of the component
