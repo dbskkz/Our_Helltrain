@@ -46,8 +46,9 @@
         <div class="col-md-3">
           <div class="product-content">
             <h5 class="name">{{ order.product.name }}</h5>
-            <p class="seller">{{ order.counterpart.label }}：{{ order.counterpart.name }} <lucide-icon
-                [name]="MessageCircleMore" (click)="chat()"></lucide-icon></p>
+            <p class="seller">{{ order.counterpart.label }}：{{ order.counterpart.name }}
+              <lucide-icon [name]="MessageCircleMore" class="msgIcon" (click)="chat()"></lucide-icon>
+            </p>
             <div class="details">
               <p class="unit-price">${{ order.product.price }}</p>
             </div>

@@ -165,6 +165,19 @@ $semantic-red-dark: #c62828;
   }
 }
 
+.msgIcon {
+  cursor: pointer;
+  color: $text-gray;
+  transition: color 0.2s;
+  padding: 0.5rem 0.5rem;
+  border-radius: 50%;
+
+  &:hover {
+    color: $neutral-700;
+    background-color: $neutral-100;
+  }
+}
+
 
 .unit-price {
   color: $text-price;
