@@ -1,1 +1,30 @@
-<p>school-community-member works!</p>
+<ul>
+  @for (item of classmate; track $index) {
+
+    <a href="">
+      <li>
+        <div>
+          <img src="" alt="avatar">
+        </div>
+
+        <div>
+          <p>{{item.userName}}</p>
+        </div>
+
+        <div>
+          <p>{{item.department}}</p>
+        </div>
+
+        <div>
+          <p>{{item.msg}}</p>
+        </div>
+
+        <div class="action">
+          <button>聊聊</button>
+          <button>檢舉</button>
+        </div>
+
+      </li>
+    </a>
+  }
+</ul>

@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { map, Observable, tap } from 'rxjs';
-import { BasicResponse, ChangePasswordVo, SetInfoVo, UserReq, UserRes } from '../@Interface/user';
+import { BasicResponse, ChangePasswordVo, SetInfoVo, User, UserReq, UserRes } from '../@Interface/user';
 import { Router } from '@angular/router';
 interface LoginReq {
   email: string;
@@ -107,5 +107,10 @@ export class UserService {
   //修改密碼
   public changePassword(pwdData: ChangePasswordVo) {
     return this.http.post<BasicResponse>(`${this.apiUrl}/changePassword`, pwdData, { withCredentials: true });
+  }
+
+  // 取得各校成員
+  getUserDataBySchool(school : string):Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getClassmate?school=${school}`);
   }
 }

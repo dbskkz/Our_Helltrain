@@ -1,0 +1,6 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+a {
+  @include reset-link;
+}
