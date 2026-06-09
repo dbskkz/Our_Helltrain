@@ -4,22 +4,22 @@
 
       <button class="fab-filter"
        (click)="togglePanel($event, 'filter')"
-       [class.active]="activeFilters.length > 0">
+       [class.active]="state.activeFilters.length > 0">
         <span class="material-symbols-outlined">tune</span>
         <span class="text">篩選</span>
       </button>
 
 
-      @for (tag of activeFilters; track tag.key) {
+      @for (tag of state.activeFilters; track tag.key) {
         <span class="filter-tag">
           {{ tag.label }}
-          <button class="tag-remove" (click)="removeFilter(tag.key)">
+          <button class="tag-remove" (click)="state.removeFilter(tag.key)">
             <lucide-icon [name]="XIcon" size="12"></lucide-icon>
           </button>
         </span>
       }
 
-      @if (activeFilters.length > 0) {
+      @if (state.activeFilters.length > 0) {
         <button class="tag-clear-all" (click)="clearAllFilters($event)">清除全部</button>
       }
 
@@ -29,18 +29,18 @@
     <div class="sort-container">
         <button class="sort-button"
         (click)="togglePanel($event, 'sort')"
-        [class.active]="panelState.sort">
+        [class.active]="state.panelState.sort">
           <span class="text">排序依據</span>
           <span class="material-symbols-outlined">sort</span>
         </button>
 
-        @if (panelState.sort) {
+        @if (state.panelState.sort) {
            <ul class="dropdown-content" (click)="$event.stopPropagation()">
-            <li [class.selected]="sortOption === 'newest'"
+            <li [class.selected]="state.sortOption === 'newest'"
                 (click)="setSort('newest', $event)">最新上架</li>
-            <li [class.selected]="sortOption === 'price-asc'"
+            <li [class.selected]="state.sortOption === 'price-asc'"
                 (click)="setSort('price-asc', $event)">價格由低到高</li>
-            <li [class.selected]="sortOption === 'price-desc'"
+            <li [class.selected]="state.sortOption === 'price-desc'"
                 (click)="setSort('price-desc', $event)">價格由高到低</li>
           </ul>
         }
@@ -51,12 +51,12 @@
   <section class="sidePanel">
 
     <!-- Overlay -->
-    @if (panelState.filter) {
+    @if (state.panelState.filter) {
       <div class="sidebar-overlay" (click)="togglePanel($event, 'filter')"></div>
     }
 
     <!-- 篩選側邊欄 -->
-    <aside class="filter-sidebar" [class.open]="panelState.filter">
+    <aside class="filter-sidebar" [class.open]="state.panelState.filter">
 
       <div class="sidebar-header">
         <span>篩選條件</span>
@@ -71,8 +71,8 @@
         <div class="sidebar-section">
           <h6>價格區間</h6>
           <div class="slider-container static" (click)="$event.stopPropagation()">
-            <ngx-slider [(value)]="priceValue" [(highValue)]="priceHighValue" [options]="priceOptions"></ngx-slider>
-            <div class="range-label">${{ priceValue }} - ${{ priceHighValue }}</div>
+            <ngx-slider [(value)]="state.priceValue" [(highValue)]="state.priceHighValue" [options]="state.priceOptions"></ngx-slider>
+            <div class="range-label">${{ state.priceValue }} - ${{ state.priceHighValue }}</div>
           </div>
         </div>
 
@@ -80,7 +80,7 @@
         <div class="sidebar-section">
           <h6>商品新舊程度</h6>
           <div class="checkbox-group static" (click)="$event.stopPropagation()">
-            @for (cond of condition; track cond.value) {
+            @for (cond of state.condition; track cond.value) {
               <label class="checkbox-item">
                 <input type="checkbox" [(ngModel)]="cond.selected">
                 {{ cond.label }}
@@ -93,7 +93,7 @@
         <div class="sidebar-section">
           <h6>賣家評價</h6>
           <div class="slider-container static" (click)="$event.stopPropagation()">
-            <ngx-slider [(value)]="sellerGrade" [options]="sellerGradeOptions"></ngx-slider>
+            <ngx-slider [(value)]="state.sellerGrade" [options]="state.sellerGradeOptions"></ngx-slider>
           </div>
         </div>
 
@@ -101,7 +101,7 @@
         <div class="sidebar-section">
           <h6>地區</h6>
           <div class="checkbox-group static" (click)="$event.stopPropagation()">
-            @for (city of cities; track city.id) {
+            @for (city of state.cities; track city.id) {
               <label class="checkbox-item">
                 <input type="checkbox" [(ngModel)]="city.selected" (change)="onCityChange()">
                 {{ city.name }}
@@ -114,7 +114,7 @@
         <div class="sidebar-section">
           <h6>科系類別</h6>
           <div class="checkbox-group static" (click)="$event.stopPropagation()">
-            @for (dept of department; track dept.id) {
+            @for (dept of state.department; track dept.id) {
               <label class="checkbox-item">
                 <input type="checkbox" [(ngModel)]="dept.selected" (change)="onDeptChange()">
                 {{ dept.name }}
@@ -127,7 +127,7 @@
         <div class="sidebar-section">
           <h6>常見分類</h6>
           <div class="checkbox-group static" (click)="$event.stopPropagation()">
-            @for (item of type; track $index) {
+            @for (item of state.type; track $index) {
               <label class="checkbox-item">
                 <input type="checkbox" [(ngModel)]="item.selected">
                 {{ item.label }}
@@ -151,21 +151,21 @@
   </section>
 
   <!-- 商品列表 -->
-  @if(pagedProducts.length > 0){
-    <app-product-card [products]="pagedProducts"></app-product-card>
+  @if(state.pagedProducts.length > 0){
+    <app-product-card [products]="state.pagedProducts"></app-product-card>
     <!-- 分頁 -->
     <div class="pagination">
-      <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
+      <button class="page-btn" [disabled]="state.pagination.currentPage === 1" (click)="prevPage()">
         <lucide-icon [name]="prevIcon"></lucide-icon>
       </button>
 
-      @for (page of pagination.pageNumbers; track page) {
-        <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+      @for (page of state.pagination.pageNumbers; track page) {
+        <button class="page-btn" [class.active]="page === state.pagination.currentPage" (click)="goToPage(page)">
           {{ page }}
         </button>
       }
 
-      <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
+      <button class="page-btn" [disabled]="state.pagination.currentPage === state.pagination.totalPages" (click)="nextPage()">
         <lucide-icon [name]="nextIcon"></lucide-icon>
       </button>
     </div>
@@ -180,7 +180,7 @@
     <div class="empty-content">
       <h2>找不到相關商品</h2>
       <p class="empty-description">
-        我們找不到符合 <span>"{{ searchReq.keyword }}"</span> 的結果，請嘗試其他關鍵字。
+        目前此校版沒有商品，請嘗試清除篩選條件。
       </p>
     </div>
 
