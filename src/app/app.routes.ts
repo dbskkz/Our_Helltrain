@@ -24,6 +24,7 @@ import { DraftListComponent } from './@component/draft-list/draft-list.component
 import { SchoolCommunityMemberComponent } from './@SchoolCommunity/school-community-member/school-community-member.component';
 import { SchoolCommunitySeekingComponent } from './@SchoolCommunity/school-community-seeking/school-community-seeking.component';
 import { SchoolCommunityChattingComponent } from './@SchoolCommunity/school-community-chatting/school-community-chatting.component';
+import { ChatComponent } from './@component/chat/chat.component';
 
 export const routes: Routes = [
   //前台
@@ -44,18 +45,21 @@ export const routes: Routes = [
       { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
+      { path: 'chat', component: ChatComponent }, //聊天室
 
       // TODO: school-community/:universityName
-      { path: 'school-community/:id',
+      {
+        path: 'school-community/:id',
         component: SchoolCommunityLayoutComponent,
-        children:[
+        children: [
           // TODO : 當路徑是 /school-community/清華大學/school-product 時
           { path: '', redirectTo: 'school-product', pathMatch: 'full' },
           { path: 'school-product', component: SchoolCommunityProductComponent }, //校版商品
           { path: 'school-member', component: SchoolCommunityMemberComponent }, //校版成員
           { path: 'school-seeking', component: SchoolCommunitySeekingComponent }, //校版徵求
           { path: 'school-chatting', component: SchoolCommunityChattingComponent }, //校版聊天
-        ]}, //校版layout
+        ]
+      }, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
