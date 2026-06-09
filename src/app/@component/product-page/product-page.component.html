@@ -1,179 +1,191 @@
-<main class="page-wrapper">
+<div class="page-wrapper">
 
-  <!-- 麵包屑 -->
-  <div class="breadcrumb">
-    <a routerLink="/home" class="breadcrumb-link">
-      <lucide-icon [img]="HomeIcon" size="14"></lucide-icon>
-      首頁
-    </a>
-    <span class="sep">›</span>
+  @if (product) {
 
-    <a [routerLink]="getCategoryRoute(product.type)" class="breadcrumb-link">
-      {{ product.type }}
-    </a>
+    <div class="breadcrumb">
+      <a routerLink="/home" class="breadcrumb-link">
+        <lucide-icon [img]="HomeIcon" size="14"></lucide-icon>
+        首頁
+      </a>
+      <span class="sep">›</span>
 
-    <span class="sep">›</span>
-    <span class="current">{{ product.productName }}</span>
-  </div>
+      <a [routerLink]="breadcrumbUrl" class="breadcrumb-link">
+        {{ breadcrumbLabel }}
+      </a>
 
-  <!-- 主區塊：左圖 + 右欄 -->
-  <div class="product-main">
-
-    <!-- 左：圖片 -->
-    <div class="gallery">
-      <div class="main-image-container">
-        <img
-          [src]="selectedImage || 'assets/images/default-placeholder.png'"
-          [alt]="product.productName"
-          class="main-image"
-        />
-      </div>
-
-      <div class="thumbnails-slider-wrapper">
-        @if (validImages.length > 4) {
-          <button class="arrow-btn left" (click)="scrollThumbnails('left')" aria-label="向左滑">
-            <lucide-icon [img]="ChevronLeftIcon" size="16"></lucide-icon>
-          </button>
-        }
-        <div class="thumbnails-viewport" #thumbViewport>
-          <div class="thumbnails">
-            @for (img of validImages; track img; let i = $index) {
-              <div
-                class="thumbnail"
-                [class.active]="selectedImageIndex === i"
-                (click)="selectImage(i)"
-              >
-                <img [src]="img" [alt]="'圖片 ' + (i + 1)" />
-              </div>
-            }
-          </div>
-        </div>
-        @if (validImages.length > 4) {
-          <button class="arrow-btn right" (click)="scrollThumbnails('right')" aria-label="向右滑">
-            <lucide-icon [img]="ChevronRightIcon" size="16"></lucide-icon>
-          </button>
-        }
-      </div>
+      <span class="sep">›</span>
+      <span class="current">{{ product.productName }}</span>
     </div>
 
-    <!-- 右欄 -->
-    <div class="product-info">
+    <div class="product-main">
 
-      <div class="title-row">
-        <h1 class="product-title">{{ product.productName }}</h1>
-              <div class="report-section">
-                <button class="btn-report-subtle" (click)="reportProduct()">
-                  <lucide-icon [img]="Flag" size="13"></lucide-icon>
-                  檢舉商品
-                </button>
-              </div>
+      <div class="gallery">
+        <div class="main-image-container">
+          <img
+            [src]="selectedImage || 'assets/images/default-placeholder.png'"
+            [alt]="product.productName"
+            class="main-image"
+          />
+        </div>
+
+        <div class="thumbnails-slider-wrapper">
+          @if (validImages.length > 4) {
+            <button class="arrow-btn left" (click)="scrollThumbnails('left')" aria-label="向左滑">
+              <lucide-icon [img]="ChevronLeftIcon" size="16"></lucide-icon>
+            </button>
+          }
+          <div class="thumbnails-viewport" #thumbViewport>
+            <div class="thumbnails">
+              @for (img of validImages; track img; let i = $index) {
+                <div
+                  class="thumbnail"
+                  [class.active]="selectedImageIndex === i"
+                  (click)="selectImage(i)"
+                >
+                  <img [src]="img" [alt]="'圖片 ' + (i + 1)" />
+                </div>
+              }
+            </div>
+          </div>
+          @if (validImages.length > 4) {
+            <button class="arrow-btn right" (click)="scrollThumbnails('right')" aria-label="向右滑">
+              <lucide-icon [img]="ChevronRightIcon" size="16"></lucide-icon>
+            </button>
+          }
+        </div>
       </div>
 
-      <div class="info-grid">
-        <div class="info-row">
-          <span class="info-key">適用學群</span>
-          <span class="info-val">{{ product.deptGroup }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">可面交地區</span>
-          <span class="info-val">{{ product.location }}</span>
-        </div>
-        @if (product.grade) {
-          <div class="info-row">
-            <span class="info-key">適用年級</span>
-            <span class="info-val">{{ product.grade }}</span>
+      <div class="product-info">
+
+        <div class="title-row">
+          <h1 class="product-title">{{ product.productName }}</h1>
+
+          <div class="kebab-wrap">
+            <button class="btn-kebab" (click)="toggleMenu($event)"  title="更多操作">
+              <lucide-icon [img]="MoreVertical" size="18"></lucide-icon>
+            </button>
+
+            <div class="kebab-dropdown" [style.display]="isMenuOpen ? 'block' : 'none'">
+              <button class="kebab-item" (click)="shareProduct()">
+                <lucide-icon [img]="Copy" size="14"></lucide-icon>
+                <span>分享商品連結</span>
+              </button>
+              <button class="kebab-item danger" (click)="onReportClick()">
+                <lucide-icon [img]="Flag" size="14"></lucide-icon>
+                <span>檢舉此商品</span>
+              </button>
+            </div>
           </div>
-        }
-        @if (product.deptGroup) {
+        </div>
+
+        <div class="info-grid">
+          <div class="info-row">
+            <span class="info-key">適用學群</span>
+            <span class="info-val">{{ product.deptGroup.join('、') }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">可面交地區</span>
+            <span class="info-val">{{ product.location.join('、') }}</span>
+          </div>
+          @if (product.grade && product.grade.length > 0) {
+            <div class="info-row">
+              <span class="info-key">適用年級</span>
+              <span class="info-val">{{ product.grade.join('、') }}</span>
+            </div>
+          }
           <div class="info-row">
             <span class="info-key">商品狀況</span>
             <span class="info-val">{{ product.productCondition }}</span>
           </div>
-        }
-      </div>
-
-      <div class="purchase-row">
-        <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
-        <div class="purchase-actions">
-          <button class="btn-cart" [class.active]="isCollected" (click)="addToCart()">
-            <lucide-icon [img]="HeartIcon" size="15" [class.fill-icon]="isCollected"></lucide-icon>
-            {{ isCollected ? '已收藏' : '加入收藏' }}
-          </button>
-          <button class="btn-buy" [disabled]="isRequested" (click)="sendRequest()">
-           @if (isRequested) {
-              <lucide-icon [img]="CheckIcon" size="15"></lucide-icon>
-              已發送請求
-            } @else {
-              <lucide-icon [img]="SendIcon" size="15"></lucide-icon>
-              發送請求
-            }
-          </button>
         </div>
-      </div>
 
-      <div class="description-section">
-        <h2 class="desc-title">商品說明</h2>
+        <div class="purchase-row">
+          <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
+          <div class="purchase-actions">
 
-        <div class="desc-content-wrapper" [class.expanded]="isExpanded">
-          <div class="desc-content">
-            <p class="desc-text" #descText>{{ product.description }}</p>
+            <button class="btn-tolk" (click)="openChat()">
+              <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
+              聊聊
+            </button>
+
+            <button class="btn-cart" [class.active]="isCollected" (click)="addToCart()">
+              <lucide-icon [img]="HeartIcon" size="18" [class.fill-icon]="isCollected"></lucide-icon>
+              {{ isCollected ? '已收藏' : '加入收藏' }}
+            </button>
+
+            <button class="btn-buy" [disabled]="isRequested" (click)="sendRequest()">
+              @if (isRequested) {
+                <lucide-icon [img]="CheckIcon" size="18"></lucide-icon>
+                已發送請求
+              } @else {
+                <lucide-icon [img]="SendIcon" size="18"></lucide-icon>
+                發送請求
+              }
+            </button>
+
           </div>
-          @if (!isExpanded && isOverflowing) {
-            <div class="fade-overlay"></div>
+        </div>
+
+        <div class="description-section">
+          <h2 class="desc-title">商品說明</h2>
+
+          <div class="desc-content-wrapper" [class.expanded]="isExpanded">
+            <div class="desc-content">
+              <p class="desc-text" #descText>{{ product.description }}</p>
+            </div>
+            @if (!isExpanded && isOverflowing) {
+              <div class="fade-overlay"></div>
+            }
+          </div>
+
+          @if (isOverflowing) {
+            <div class="toggle-btn-container">
+              <button class="btn-toggle-desc" (click)="toggleExpand()">
+                @if (isExpanded) {
+                  收起詳情 <lucide-icon [img]="ChevronUpIcon" size="16"></lucide-icon>
+                } @else {
+                  查看更多 <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
+                }
+              </button>
+            </div>
           }
         </div>
 
-        @if (isOverflowing) {
-          <div class="toggle-btn-container">
-            <button class="btn-toggle-desc" (click)="toggleExpand()">
-              @if (isExpanded) {
-                收起詳情 <lucide-icon [img]="ChevronUpIcon" size="16"></lucide-icon>
-              } @else {
-                查看更多 <lucide-icon [img]="ChevronDownIcon" size="16"></lucide-icon>
-              }
-            </button>
-          </div>
-        }
       </div>
-
     </div>
-  </div>
 
-  <hr class="divider-full" />
+    <hr class="divider-full" />
 
-  <!-- 賣家資訊（全寬） -->
-  <div class="seller-bar">
-    <img
-      [src]="product.user.userImg"
-      [alt]="product.user.userName"
-      class="seller-avatar"
-      onerror="this.src='assets/images/default-avatar.png'"
-    />
-    <div class="seller-info">
-      <span class="seller-name">{{ product.user.userName }}</span>
-      <span class="seller-meta">
-        {{ product.user.university }} {{ product.user.department }}・
-        ★ {{ product.user.grade }}・
-        上架 {{ product.user.productCount }} 件
-      </span>
+    <div class="seller-bar" (click)="gotoStore()" title="前往賣場">
+      <img
+        [src]="product.seller.userImgPath || 'assets/images/default-avatar.png'"
+        [alt]="product.seller.userName"
+        class="seller-avatar"
+        onerror="this.src='assets/images/default-avatar.png'"
+      />
+      <div class="seller-info">
+        <span class="seller-name">{{ product.seller.userName }}</span>
+        <span class="seller-meta">
+          {{ product.seller.school }} ・
+          上架 {{ sellerProductCount ?? '--' }} 件
+        </span>
+      </div>
+      <div class="seller-actions">
+        <!-- <button class="btn-seller" (click)="openChat()">
+          <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
+          聊聊
+        </button> -->
+        <button class="btn-seller" (click)="gotoStore()">
+          <lucide-icon [img]="StoreIcon" size="18"></lucide-icon>
+          賣場
+        </button>
+      </div>
     </div>
-    <div class="seller-actions">
-      <button class="btn-seller" (click)="openChat()">
-        <lucide-icon [img]="MessageCircleIcon" size="15"></lucide-icon>
-        聊聊
-      </button>
-      <button class="btn-seller" (click)="gotoStore()">
-        <lucide-icon [img]="StoreIcon" size="15"></lucide-icon>
-        賣場
-      </button>
-    </div>
-  </div>
 
-  <hr class="divider-full" />
+    <hr class="divider-full" />
 
-  <!-- 交易安全（全寬，同一行） -->
-  <div class="safety-bar">
-    <span class="safety-title">🛡️ 交易安全有保障</span>
+    <div class="safety-bar">
+      <span class="safety-title">🛡️ 交易安全有保障</span>
       <div class="safety-content">
         <span class="safety-item">
           <lucide-icon [img]="CheckIcon" size="13"></lucide-icon>
@@ -188,6 +200,13 @@
           若有任何交易爭議，請立即向平台客服回報
         </span>
       </div>
-  </div>
+    </div>
 
-</main>
+  } @else {
+    <div class="loading-wrapper" style="text-align: center; padding: 100px 0; color: #999;">
+      <div class="spinner" style="margin-bottom: 15px;">⏳</div>
+      <p>二手商品詳細資訊載入中...</p>
+    </div>
+  }
+
+</div>

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { GetProductDataRes } from '../@Interface/product-vo';
+
 
 // interface LoginReq {
 //   email: string;
@@ -51,5 +53,10 @@ export class ApiTestService {
   // 新增檢舉
   addReport(data: reportReq) {
     return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true });
+  }
+
+  //單一商品詳情
+  searchByProductId(productId: number): Observable<GetProductDataRes> {
+    return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);
   }
 }

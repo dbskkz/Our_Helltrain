@@ -244,6 +244,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         areas: this.areaFormArray.controls.map((c) => c.value),
       };
     } else {
+      this.isEditingBasic = true;
       // 確定儲存時的前端大檢查
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
@@ -262,15 +263,24 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         email: this.email,
         name: this.tempName,
         school: this.schoolControl.value ?? '',
-        department: this.deptControl.value || null,
-        phone: this.phoneControl.value || null,
-        msg: this.profileControl.value || null,
+        department: this.deptControl.value ?? '',
+        phone: this.phoneControl.value ?? '',
+        msg: this.profileControl.value ??  '',
         location: this.areaFormArray.controls
                     .map(c => c.value ?? '')
                     .filter(val => val.trim() !== ''), // 過濾掉空字串
         img: base64Img,
         deleteImg: isDelete
       };
+
+      Swal.fire({
+        title: '資料儲存中...',
+        html: '正在為您更新個人檔案，請稍候',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
       // 🌟 3. 正式發送給後端！
       this.userService.updateProfile(updateData).subscribe({
@@ -328,10 +338,9 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
     );
   }
 
-  // ✨ 神級重構 C：把又臭又長的比對安檢抽出來獨立
+  // 把又臭又長的比對安檢抽出來獨立
   private validateAndMarkBasicFields(): boolean {
     const allSchools = this.schoolService.allFlattenedSchools();
-    const allRegions = this.schoolService.allRegions();
     const cleanSchool = this.normalize(this.schoolControl.value);
     this.areaFormArray.controls.forEach(c => {
     if (c.value) this.validateAreaControl(c);
