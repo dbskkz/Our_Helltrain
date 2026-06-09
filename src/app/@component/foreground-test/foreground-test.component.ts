@@ -4,6 +4,7 @@ import { GPSLocationService } from '../../@Services/gps-location.service';
 import { FormsModule } from "@angular/forms";
 import { UserService } from '../../@Services/user.service';
 import { ProductServiceService } from '../../@Services/product-service.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-foreground-test',
@@ -17,7 +18,8 @@ export class ForegroundTestComponent {
     private eduApi : EduApiGovService,
     private gpsApi : GPSLocationService,
     private userService: UserService,
-    private productService:ProductServiceService
+    private productService:ProductServiceService,
+    private activatedRoute:ActivatedRoute
   ){
 
   }
@@ -31,7 +33,7 @@ export class ForegroundTestComponent {
     // 實驗結論 : 政府網站沒有開 CORS ， 故無法使用 。
 
 
-    this.getCurrentPosition();
+    // this.getCurrentPosition();
     // 實驗結論 : chrome 和 MicroSoftEdge 可以正常使用
     // this.gpsExp();
 
@@ -44,9 +46,16 @@ export class ForegroundTestComponent {
 
     // this.submit();
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.productId = params['id'];
+    });
+
+    console.log(this.productId);
+
 
   }
 
+  productId = 0;
   // ========================================================================
   //  用 navigator geolocation API 取得經緯度
   // ========================================================================

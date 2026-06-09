@@ -174,15 +174,6 @@ export class ProductListingComponent implements OnInit, OnDestroy {
 
         this.updatePagination();
         this.isLoading = false;
-
-        console.log("res");
-        console.log(res);
-
-        console.log("filteredProduct");
-        console.log(this.filteredProducts);
-
-        console.log("pagination");
-        console.log(this.pagedProducts);
       },
       error: (err) => {
         console.error(err);
