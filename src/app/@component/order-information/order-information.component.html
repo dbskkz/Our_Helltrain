@@ -24,12 +24,11 @@
 
   <!-- 資料頁 -->
   @for (order of filteredOrders(); track order.orderId) {
-  <section class="order-card" [class.card-buyer]="order.counterpart.label === '賣家'"
-    [class.card-seller]="order.counterpart.label === '買家'">
+  <section class="order-card" [class.card-buyer]="order.myRole === '買家'" [class.card-seller]="order.myRole === '賣家'">
     <header class="order-header">
       <div class="order-info">
         <span class="order-no">訂單編號：{{ order.orderId }}</span>
-        <span class="order-date">下單時間：{{ order.orderDate }}</span>
+        <span class="order-date">下單時間：{{ order.createDate }}</span>
       </div>
     </header>
 
@@ -38,19 +37,19 @@
         <!-- 商品圖片 -->
         <div class="col-md-2">
           <figure class="product-img">
-            <img [src]="order.product.image" [alt]="order.product.name" />
+            <img [src]="order.imgPath" [alt]="order.productName" />
           </figure>
         </div>
 
         <!-- 商品資訊 -->
         <div class="col-md-3">
           <div class="product-content">
-            <h5 class="name">{{ order.product.name }}</h5>
-            <p class="seller">{{ order.counterpart.label }}：{{ order.counterpart.name }}
-              <lucide-icon [name]="MessageCircleMore" class="msgIcon" (click)="chat()"></lucide-icon>
+            <h5 class="name">{{ order.productName }}</h5>
+            <p class="seller"> {{ order.partnerRole }}：{{ order.partnerName }}
+              <lucide-icon [name]="MessageCircleMore" (click)="chat()"></lucide-icon>
             </p>
             <div class="details">
-              <p class="unit-price">${{ order.product.price }}</p>
+              <p class="unit-price">${{ order.price }}</p>
             </div>
           </div>
         </div>
@@ -59,25 +58,37 @@
         <div class="col-md-4 ">
           <div class="delivery-status">
             <!-- 狀態標籤 -->
-            @if (order.status === 'completed') {
+            @if (order.status === '完成交易') {
             <div class="status-tag completed">
               <lucide-icon [name]="CircleCheckBig"></lucide-icon>交易已完成
             </div>
             <p>交易已完成，感謝您的使用！</p>
             }
-            @if (order.status === 'in_progress') {
+            @if (order.status === '交易中') {
             <div class="status-tag in-progress">
               <lucide-icon [name]="CircleDollarSign"></lucide-icon>交易進行中
             </div>
             <p>交易進行中，請耐心等候。</p>
             }
-            @if (order.status === 'pending') {
+            @if (order.status === '請求回應中' && order.myRole === '買家') {
             <div class="status-tag pending">
               <lucide-icon [name]="CircleEllipsis"></lucide-icon>等待回應中
             </div>
             <p>等待對方回應，請稍候。</p>
+            <div class="button-group">
+              <button class="btn-action outline" (click)="canaelOrder(order)">取消訂單請求</button>
+            </div>
             }
-            @if (order.status === 'cancelled') {
+            @if (order.status === '請求回應中' && order.myRole === '賣家') {
+            <div class="status-tag pending">
+              <lucide-icon [name]="CircleEllipsis"></lucide-icon>對方正等待回應中
+            </div>
+            <p>對方正焦急等待中...</p>
+            <div class="button-group">
+              <button class="btn-action outline" (click)="acceptOrder(order)">同意該筆交易</button>
+            </div>
+            }
+            @if (order.status === '已取消') {
             <div class="status-tag cancelled">
               <lucide-icon [name]="CircleX"></lucide-icon>已取消
             </div>
@@ -85,9 +96,9 @@
 
             }
 
-            @if (order.status === 'completed') {
+            @if (order.status === '完成交易') {
             <div class="button-group">
-              @if (order.hasReview) {
+              @if (hasReview) {
               <button class="btn-action outline" (click)="viewReview(order)">查看評價</button>
               } @else {
               <button class="btn-action outline" (click)="submitReview(order)">進行評分</button>
@@ -99,18 +110,28 @@
 
         <div class="col-md-3">
           <div class="button-group">
-            @if (order.status === 'in_progress') {
+            @if (order.status === '交易中' && order.myRole === '買家' && order.buyerCheck !== true) {
             <button class="btn-action primary" (click)="confirmComplete(order)">完成交易</button>
             }
 
-            @if (order.status !== 'cancelled') {
+            @if (order.status === '交易中' && order.myRole === '賣家' && order.sellerCheck !== true) {
+            <button class="btn-action primary" (click)="confirmComplete(order)">完成交易</button>
+            }
+            @if (order.status === '交易中' &&
+            ((order.myRole === '買家' && order.buyerCheck === true) ||
+            (order.myRole === '賣家' && order.sellerCheck === true))) {
+            <button class="btn-action disable">已確認，等待對方回應...</button>
+
+            }
+
+            @if (order.status !== '已取消') {
             <button class="btn-action outline" (click)="chat()">
-              聯絡{{ order.counterpart.label }}
+              聯絡{{ order.partnerRole }}
             </button>
             }
 
-            @if (order.status != 'pending') {
-            <button class="btn-action report" (click)="goRepot()">檢舉</button>
+            @if (order.status !== '請求回應中') {
+            <button class="btn-action report" (click)="goRepot(order)">檢舉</button>
             }
           </div>
         </div>
@@ -119,15 +140,10 @@
   </section>
   }
 
-  <!-- 無資料提示 -->
-  @if (filteredOrders().length === 0) {
-  <div class="empty-state">
-    <p>目前沒有符合條件的訂單。</p>
-  </div>
-  }
-
+  @if (filteredOrders().length > 0) {
   <!-- 分頁 -->
   <nav class="pagination">
+    <span>共{{ allOrders.length }}筆資料</span>
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
       <lucide-icon [name]="ChevronLeft"></lucide-icon>
     </button>
@@ -140,5 +156,24 @@
       <lucide-icon [name]="ChevronRight"></lucide-icon>
     </button>
   </nav>
+  }
+
+  <!-- 無資料提示 -->
+  @if (filteredOrders().length === 0) {
+  <section class="empty-state">
+
+    <div class="empty-icon-wrapper">
+      <span class="material-symbols-outlined">search_off</span>
+    </div>
+
+    <div class="empty-content">
+      <h2>找不到相關訂單</h2>
+      <!-- <p class="empty-description"> -->
+      <!-- 我們找不到符合 <span>"{{ searchReq.keyword }}"</span> 的結果，請嘗試其他關鍵字。 -->
+      <!-- </p> -->
+    </div>
+
+  </section>
+  }
 
 </main>
