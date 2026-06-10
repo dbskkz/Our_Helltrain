@@ -66,8 +66,7 @@ export class UserService {
     localStorage.removeItem('isLoggedIn'); // Demo 暫用
     localStorage.removeItem('userId'); // Demo 暫用
     this.currentUser.set(null);
-    this.isLoggedIn.set(false);
-    this.router.navigate(['/home']);
+    // return this.http.post(`${this.apiUrl}/logout`, { withCredentials: true });
   }
 
   /** 頭像同步變更廣播

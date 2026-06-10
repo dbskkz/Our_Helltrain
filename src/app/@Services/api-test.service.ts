@@ -22,6 +22,7 @@ export class ApiTestService {
   // currentUser = signal<any>(null);
   private productApiUrl = 'http://localhost:8080/product';
   private reportApiUrl = 'http://localhost:8080/report';
+  private orderApiUrl = 'http://localhost:8080/order';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -39,11 +40,6 @@ export class ApiTestService {
   //   // 目前 Demo 階段：把 ID 帶在網址後面傳給後端
   //   return this.http.get(`${this.apiUrl}/getByUserId?userId=${userId}`);
   // }
-  /* 💡 未來的 Token 寫法（留給以後的你）：
-     以後引進 Token 攔截器後，這行程式碼可以直接變成：
-     return this.http.get(`${this.apiUrl}/profile`);
-     完全不用帶 userId，後端看 Token 就知道是誰。Component 端完全不用改！
-  */
 
   // 取得單一帳號內的商品資訊
   searchBySellerId(userId: number): Observable<any> {
@@ -51,8 +47,30 @@ export class ApiTestService {
   }
 
   // 新增檢舉
-  addReport(data: reportReq) {
-    return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true });
+  addReport(data: reportReq) { return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true }); }
+
+  // === Order ===
+  //取得使用者的所有訂單
+  getAllOrder(): Observable<any> { return this.http.get(`${this.orderApiUrl}/getUserOrder`, { withCredentials: true }); }
+
+  // 賣家同意請求
+  acceptOrder(changeOrderStatusVo: any) {
+    return this.http.post(`${this.orderApiUrl}/acceptOrder`, changeOrderStatusVo, { withCredentials: true });
+  }
+
+  // 買家主動取消訂單
+  canaelOrder(changeOrderStatusVo: any) {
+    return this.http.post(`${this.orderApiUrl}/canaelOrder`, changeOrderStatusVo, { withCredentials: true });
+  }
+
+  //雙方點擊確認完成交易
+  checkDelivery(changeOrderStatusVo: any) {
+    return this.http.post(`${this.orderApiUrl}/delivery`, changeOrderStatusVo, { withCredentials: true });
+  }
+
+  //交易雙方給予評價
+  giveLevel(goodLevelReq: any) {
+    return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, { withCredentials: true });
   }
 
   //單一商品詳情

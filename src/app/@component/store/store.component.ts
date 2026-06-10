@@ -92,14 +92,10 @@ export class StoreComponent {
   fetchShopOwnerData(userId: number) {
     this.userService.getUserData(userId).subscribe({
       next: (res) => {
-        const ownerData = res.user;
-        if (ownerData) {
-          this.shopOwnerData.set(ownerData);  // ← 存進 signal
-
-          this.loggedInId = this.userService.currentUser()?.userId;
-          this.isOwner = (userId === Number(this.loggedInId)); // 切換編輯/瀏覽模式
-          this.isGood = (ownerData.goodLevel > 4); // 信譽良好徽章
-        }
+        this.shopOwnerData.set(res.user);
+        this.loggedInId = this.userService.currentUser()?.userId;
+        this.isOwner = (userId === Number(this.loggedInId)); // 切換編輯/瀏覽模式
+        this.isGood = (res.user.goodLevel > 4); // 信譽良好徽章
       },
       error: (err) => {
         console.error('撈取賣場主人資料失敗：', err);
