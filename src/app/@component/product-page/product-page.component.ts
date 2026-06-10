@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp, MoreVertical, Copy } from 'lucide-angular';
+import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp, MoreVertical, Copy, ShieldCheck } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
@@ -33,7 +33,7 @@ export class ProductPageComponent {
 
   readonly HomeIcon          = Home;
   readonly HeartIcon         = Heart;
-  readonly SendIcon          = Send;
+  readonly SendIcon    = Send;
   readonly MessageCircleIcon = MessageCircleMore;
   readonly ChevronLeftIcon   = ChevronLeft;
   readonly ChevronRightIcon  = ChevronRight;
@@ -44,6 +44,7 @@ export class ProductPageComponent {
   readonly ChevronUpIcon = ChevronUp;
   readonly MoreVertical = MoreVertical;
   readonly Copy = Copy;
+  readonly ShieldCheckIcon = ShieldCheck;
 
   // 💡 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;

@@ -28,7 +28,8 @@
           />
         </div>
 
-        <div class="thumbnails-slider-wrapper">
+        @if (validImages.length > 1) {
+                  <div class="thumbnails-slider-wrapper">
           @if (validImages.length > 4) {
             <button class="arrow-btn left" (click)="scrollThumbnails('left')" aria-label="向左滑">
               <lucide-icon [img]="ChevronLeftIcon" size="16"></lucide-icon>
@@ -53,6 +54,7 @@
             </button>
           }
         </div>
+        }
       </div>
 
       <div class="product-info">
@@ -185,7 +187,7 @@
     <hr class="divider-full" />
 
     <div class="safety-bar">
-      <span class="safety-title">🛡️ 交易安全有保障</span>
+      <span class="safety-title"><lucide-icon [img]="ShieldCheckIcon" size="16"></lucide-icon> 交易安全有保障</span>
       <div class="safety-content">
         <span class="safety-item">
           <lucide-icon [img]="CheckIcon" size="13"></lucide-icon>
