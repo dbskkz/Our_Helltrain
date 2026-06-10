@@ -19,7 +19,6 @@ export class ChatComponent {
   message: any[] = [];
 
   ngOnInit(): void {
-
     this.userName = this.userService.currentUser()?.userName || '所以我說userService的名字呢？';
     this.socketService.getMessage().subscribe({
       next: (data: any) => {

@@ -1,14 +1,16 @@
 <main class="container">
-  <div class="left"></div>
-  <div class="right">
-    @for (msg of message; track msg) {
-    <div>
-      <strong>{{ msg.userName }}</strong>: {{ msg.message }}
+  <section class="box row">
+    <div class="left col-4"></div>
+    <div class="right col-8">
+      @for (msg of message; track msg) {
+      <div>
+        <strong>{{ msg.userName }}</strong>: {{ msg.message }}
+      </div>
+      } @empty {
+      <div class="no-message">目前沒有任何聊天訊息喔。</div>
+      }
+      <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter">
+      <button class="send" (click)="sendMsg()">送出</button>
     </div>
-    } @empty {
-    <div class="no-message">目前沒有任何聊天訊息喔。</div>
-    }
-    <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter">
-    <button class="send" (click)="sendMsg()">送出</button>
-  </div>
+  </section>
 </main>

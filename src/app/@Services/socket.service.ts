@@ -17,7 +17,6 @@ export class SocketService {
         transports: ['websocket'],
         forceNew: true, // 強制每次都建立乾淨的 websocket 通道
       });
-
     }
   }
 

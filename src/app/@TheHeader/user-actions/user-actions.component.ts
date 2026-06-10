@@ -61,7 +61,7 @@ export class UserActionsComponent {
   goToOrder() {
     this.router.navigate(['/order_information']);
   }
-  goToDraft(){
+  goToDraft() {
     this.router.navigate(['/draft_list']);
   }
 
@@ -84,8 +84,10 @@ export class UserActionsComponent {
           text: "歡迎再次使用",
           icon: "success"
         });
-        this.userService.logout();
-        this.router.navigate(['/home']);
+        this.userService.logout().subscribe({
+          next: () => this.router.navigate(['/home']),
+          error: () => this.router.navigate(['/home'])
+        });;
       }
     });
 
