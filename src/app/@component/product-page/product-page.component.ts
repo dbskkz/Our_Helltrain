@@ -5,8 +5,9 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
 import { ReportService } from '../../@Services/report.service';
-import { ApiTestService } from '../../@Services/api-test.service';
+import { ApiTestService, OrderVo } from '../../@Services/api-test.service';
 import { ProductVo, GetProductDataRes } from '../../@Interface/product-vo';
+import { OrderRes } from '../../@Interface/order';
 
 
   const CATEGORY_MAP: Record<string, string> = {
@@ -69,76 +70,99 @@ export class ProductPageComponent {
 
 
   ngOnInit(): void {
-    // 從網址列抓取動態商品 id (例如網址是 /product/10123)
+    this.loadProductAndInitDefenses();
+  }
+
+  /**
+   * 主控官：負責撈取商品詳情，並在成功後指揮所有初始化任務
+   */
+  private loadProductAndInitDefenses(): void {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
+    if (!productId) return;
 
-    if (productId) {
-      this.apiTestService.searchByProductId(productId).subscribe({
-        next: (res: GetProductDataRes)=>{
-          if(res.statusCode === 200 && res.productList?.length>0){
-            this.product = res.productList[0];
+    this.apiTestService.searchByProductId(productId).subscribe({
+      next: (res: GetProductDataRes) => {
+        if (res.statusCode === 200 && res.productList?.length > 0) {
+          this.product = res.productList[0];
 
-            //智慧網址探針
-            let prevUrlPath = '';
-            // 1.悄悄翻閱瀏覽器的歷史紀錄（使用防禦型寫法，保證不噴紅字）
-            const nav = (window as any).navigation;
-            if (nav) {
-              const currentIndex = nav.currentEntry?.index;
-              if (currentIndex !== undefined && currentIndex > 0) {
-                const fullUrl = nav.entries()[currentIndex - 1]?.url || '';
-                prevUrlPath = new URL(fullUrl).pathname; // 抓出上一個網頁的路徑
-              }
-            }
+          this.initBreadcrumbNavigation();                // 1. 執行智慧網址探針
+          this.checkIfUserAlreadyRequested();             // 2. 啟動重整重複購買防線
+          this.fetchSellerTotalCount(this.product.userId); // 3. 撈取賣家總上架數
+          this.triggerDescriptionOverflowCheck();         // 4. 檢查商品說明是否過長
 
-            // 2. 開始通靈判斷（幫妳的獨立麵包屑塞值）
-            if (prevUrlPath.includes('/school-community/')) {
-              // 🏫 狀況一：如果是從學校校版點進來的
-              this.breadcrumbLabel = this.product.seller.school; // 抓後端的學校名稱
-              this.breadcrumbUrl = prevUrlPath;                  // 回程網址直接綁定校版網址
-
-            } else if (prevUrlPath.includes('/product-list/')) {
-              // 📚 狀況二：如果是從商品分類列表點進來的
-              // 1. 拆解網址：把 "/product-list/notes" 用斜線切開，抓出最後一節英文代號
-              const urlSegments = prevUrlPath.split('/');
-              const categorySlug = urlSegments[urlSegments.length - 1]; // 拿到 'notes' 或 'daily' 或 'all'
-              // 2. 翻對照表：利用妳檔案最上方宣告的 CATEGORY_MAP，把英文翻譯回中文
-              // (例如：'notes' 轉成 '筆記考古')
-              const matchedChineseName = CATEGORY_MAP[categorySlug];
-
-              // 3. 聰明配對
-              if (matchedChineseName && this.product.type.includes(matchedChineseName)) {
-                // 如果翻出來的中文（筆記考古），確實有在商品的分類陣列裡，就完美顯示它！
-                this.breadcrumbLabel = matchedChineseName;
-              } else if (categorySlug === 'all') {
-                this.breadcrumbLabel = '全部商品';
-              } else {
-                // 萬一真的對不上
-                this.breadcrumbLabel = this.product.type[0];
-              }
-              this.breadcrumbUrl = prevUrlPath;                  // 回程網址直接綁定列表網址
-
-            } else {
-              // 🛡️ 狀況三：安全防呆備案（例如直接開網址或從首頁點進來）
-              this.breadcrumbLabel = this.product.type[0];
-              this.breadcrumbUrl = this.getCategoryRoute(this.product.type[0]);
-            }
-
-            this.fetchSellerTotalCount(this.product.userId);
-
-            setTimeout(()=> this.checkTextOverflow());
-          } else {
-            Swal.fire('查無商品', '該商品可能已經下架，或是不存在喔！', 'warning');
-          }
-        },
-        error: (err) => {
-          console.error('撈取商品詳細失敗：', err);
-          Swal.fire('連線失敗', '系統無法載入商品資訊，請稍後再試', 'error');
+        } else {
+          Swal.fire('查無商品', '該商品可能已經下架，或是不存在喔！', 'warning');
         }
-      });
+      },
+      error: (err) => {
+        console.error('撈取商品詳細失敗：', err);
+        Swal.fire('連線失敗', '系統無法載入商品資訊，請稍後再試', 'error');
+      }
+    });
+  }
+
+  //任務一：智慧網址探針，根據上一頁腳印計算麵包屑文字與路由
+  private initBreadcrumbNavigation(): void {
+    if (!this.product) return;
+
+    let prevUrlPath = '';
+    const nav = (window as any).navigation;
+    if (nav) {
+      const currentIndex = nav.currentEntry?.index;
+      if (currentIndex !== undefined && currentIndex > 0) {
+        const fullUrl = nav.entries()[currentIndex - 1]?.url || '';
+        prevUrlPath = new URL(fullUrl).pathname;
+      }
+    }
+
+    if (prevUrlPath.includes('/school-community/')) {
+      this.breadcrumbLabel = this.product.seller.school;
+      this.breadcrumbUrl = prevUrlPath;
+    } else if (prevUrlPath.includes('/product-list/')) {
+      const urlSegments = prevUrlPath.split('/');
+      const categorySlug = urlSegments[urlSegments.length - 1];
+      const matchedChineseName = CATEGORY_MAP[categorySlug];
+
+      if (matchedChineseName && this.product.type.includes(matchedChineseName)) {
+        this.breadcrumbLabel = matchedChineseName;
+      } else if (categorySlug === 'all') {
+        this.breadcrumbLabel = '全部商品';
+      } else {
+        this.breadcrumbLabel = this.product.type[0];
+      }
+      this.breadcrumbUrl = prevUrlPath;
+    } else {
+      this.breadcrumbLabel = this.product.type[0];
+      this.breadcrumbUrl = this.getCategoryRoute(this.product.type[0]);
     }
   }
 
-  // 🌟 5. 借用同學 API 來數數的專門方法
+  // 任務二：終極重整防線，檢查當前登入者是否已對此商品發送過請求
+  private checkIfUserAlreadyRequested(): void {
+    if (!this.product) return;
+
+    this.apiTestService.getProductAllOrder(this.product.productId).subscribe({
+      next: (orderRes: OrderRes) => {
+        if (orderRes && orderRes.orderList) {
+          const currentUserName = this.userService.currentUser()?.userName;
+
+          const isIHaveRequested = orderRes.orderList.some(order =>
+            order.buyerName === currentUserName &&
+            order.status === '請求回應中'
+          );
+
+          if (isIHaveRequested) {
+            this.isRequested = true; // 變灰鎖定
+          }
+        }
+      },
+      error: (err) => {
+        console.error('初始化檢查商品訂單失敗：', err);
+      }
+    });
+  }
+
+  // 任務三:借用同學 API 來數數的專門方法
   fetchSellerTotalCount(userId: number) {
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
@@ -153,6 +177,13 @@ export class ProductPageComponent {
       }
     });
   }
+
+  //任務四：觸發非同步排版，檢查文字是否超出顯示範圍
+  private triggerDescriptionOverflowCheck(): void {
+    setTimeout(() => this.checkTextOverflow());
+  }
+
+
 
  // 🌟 6. 圖片篩選功能大瘦身！因為後端已經是 List<String> 陣列，不需要再用逗號切開了！
   get validImages(): string[] {
@@ -258,14 +289,44 @@ if (index >= 0 && index < this.validImages.length) {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isRequested = true; // 狀態改為已發送
-        Swal.fire({
-          title: '發送成功！',
-          text: '已成功向賣家發送購買請求，請靜待同學的回覆！',
-          icon: 'success',
-          confirmButtonText: '好的',
-          confirmButtonColor: '#EDA900'
+
+        const orderPayLoad: OrderVo = {
+          productId: this.product!.productId
+        };
+
+        this.apiTestService.addOrder(orderPayLoad).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+               this.isRequested = true; // 狀態改為已發送
+                Swal.fire({
+                  title: '發送成功！',
+                  text: '已成功向賣家發送購買請求，請靜待同學的回覆！',
+                  icon: 'success',
+                  confirmButtonText: '好的',
+                  confirmButtonColor: '#EDA900'
+                });
+            }else{
+              Swal.fire({
+                title: '發送失敗',
+                text: res.message, // 顯示後端吐回來的錯誤原因
+                icon: 'warning',
+                confirmButtonText: '知道了',
+                confirmButtonColor: '#EDA900'
+              });
+            }
+          },
+          error:(err)=>{
+            console.error('發送購買請求失敗：', err);
+            Swal.fire({
+              title: '連線失敗',
+              text: '系統無法載入訂單資訊，請稍後再試',
+              icon: 'error',
+              confirmButtonText: '好的',
+              confirmButtonColor: '#999999'
+            });
+          }
         });
+
       }
     });
   }

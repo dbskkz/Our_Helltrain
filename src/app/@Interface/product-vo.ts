@@ -3,7 +3,7 @@ export interface SellerVo {
   userId: number;
   userName: string;
   school: string;
-  userImgPath: string; // 🎯 修正：精准對齊後端 userImgPath 欄位
+  userImgPath: string;
 }
 
 //商品核心資訊
