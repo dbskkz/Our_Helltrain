@@ -1,6 +1,251 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+// @use '../../styles/variables' as *;
+// @use '../../styles/mixins' as *;
 
-a {
-  @include reset-link;
+// // ========================= BASIC  =========================
+
+// a {
+//   @include reset-link;
+// }
+
+// ul {
+//   @include reset-ul;
+// }
+
+// // ========================= LIST  =========================
+
+// .member-list {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .member-wrapper {
+//   margin-bottom: 12px;
+
+//   a {
+//     display: flex;
+//     align-items: center;
+//     gap: 24px;
+
+//     padding: 18px 24px;
+
+//     background: white;
+//     border: 1px solid #ececec;
+//     border-radius: 16px;
+
+//     transition: all 0.2s ease;
+//   }
+// }
+
+// /* Avatar */
+// .avatar {
+//   flex-shrink: 0;
+
+//   img {
+//     width: 56px;
+//     height: 56px;
+//     border-radius: 50%;
+//     object-fit: cover;
+//   }
+// }
+
+// /* Name */
+// .name {
+//   width: 180px;
+
+//   p {
+//     margin: 0;
+//     font-size: 1rem;
+//     font-weight: 600;
+//   }
+// }
+
+// /* Department */
+// .department {
+//   width: 160px;
+
+//   p {
+//     margin: 0;
+//     color: #666;
+//   }
+// }
+
+// /* Message */
+// .message {
+//   flex: 1;
+
+//   p {
+//     margin: 0;
+//     color: #777;
+
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//   }
+// }
+
+// /* Buttons */
+// .action {
+//   display: flex;
+//   gap: 12px;
+// }
+
+// .btn-action {
+//   display: flex;
+//   gap: 4px;
+//   align-items: center;
+//   border: none;
+//   cursor: pointer;
+
+//   padding: 10px 20px;
+
+//   border-radius: 999px;
+
+//   font-size: 0.9rem;
+//   font-weight: 600;
+
+//   transition: 0.2s;
+// }
+
+// .primary {
+//   color: $primary-yellow-darker;
+//   border: 1px solid $primary-yellow-darker;
+//   background-color: transparent;
+
+//   &:hover {
+//     border-color: transparent;
+//     background: $neutral-100;
+//     color: $primary-yellow-darker;
+//   }
+// }
+
+//  .report {
+//     background-color: #ffebee;
+//     color: #c62828;
+//     border: 1px solid rgba(#c62828, 0.1);
+
+//     lucide-icon {
+//       color: #c62828;
+//     }
+
+//     &:hover {
+//       background-color: #c62828;
+//       color: $background-white;
+
+//       lucide-icon {
+//         color: $background-white;
+//       }
+//     }
+//   }
+
+// .text-btn {
+//   display: flex;
+//   align-items: center;
+//   gap: 4px;
+
+//   border: none;
+//   background: transparent;
+
+//   color: #666;
+
+//   font-size: 0.9rem;
+
+//   cursor: pointer;
+
+//   &:hover {
+//     color: #111;
+//   }
+// }
+
+// .report:hover {
+//   color: #d14343;
+// }
+
+.member-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 32px;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.member-card {
+  display: flex;
+  text-align: center;
+  gap: 1rem;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.avatar-wrapper {
+  position: relative;
+
+  width: 25vw;
+  aspect-ratio: 1;
+}
+
+.avatar {
+  width: 25vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: white;
+  border-radius: 50%;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+.name {
+  margin-top: 16px;
+
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+
+.rating-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 30%;
+  height: 30%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff;
+  border: 2px solid #f7c948;
+
+  color: #d97706;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }

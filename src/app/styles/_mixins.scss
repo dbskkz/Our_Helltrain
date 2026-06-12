@@ -21,6 +21,12 @@
   &:visited { color: inherit; }
 }
 
+@mixin reset-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 @mixin breadcrumb-style($link-color: $text-gray, $hover-color: $semantic-orange){
   display: flex;
   align-items: center;

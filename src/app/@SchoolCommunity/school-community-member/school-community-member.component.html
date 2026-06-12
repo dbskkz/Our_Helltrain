@@ -1,30 +1,58 @@
-<ul>
+<!-- <ul>
   @for (item of classmate; track $index) {
 
-    <a href="">
-      <li>
+    <li class="member-wrapper">
+        <a [routerLink]="['/store', item.userId]">
         <div>
-          <img src="" alt="avatar">
+          <img src="" alt="avatar" class="avatar">
         </div>
 
-        <div>
+        <div class="name">
           <p>{{item.userName}}</p>
         </div>
 
-        <div>
+        <div class="department">
           <p>{{item.department}}</p>
         </div>
 
-        <div>
+        <div class="message">
           <p>{{item.msg}}</p>
         </div>
 
         <div class="action">
-          <button>聊聊</button>
-          <button>檢舉</button>
+          <button class="btn-action primary">
+            <lucide-icon [name]="MessageCircleMore"></lucide-icon>聊聊
+          </button>
+          <button class="btn-action report" (click)="goRepot()">
+            <lucide-icon [name]="Flag"></lucide-icon>檢舉
+          </button>
         </div>
 
+      </a>
       </li>
-    </a>
+  }
+</ul> -->
+
+<ul class="member-list">
+  @for (item of classmate; track $index) {
+    <li class="member-card">
+      <a [routerLink]="['/store', item.userId]">
+
+        <div class="avatar-wrapper">
+          <img
+            [src]="item.imgPath"
+            [alt]="item.userName"
+            class="avatar"
+          >
+
+          <div class="rating-badge">
+            {{ item.goodLevel }}★
+          </div>
+        </div>
+
+        <p class="name">{{ item.userName }}</p>
+
+      </a>
+    </li>
   }
 </ul>

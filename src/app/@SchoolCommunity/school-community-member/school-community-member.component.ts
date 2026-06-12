@@ -1,22 +1,33 @@
 import { UserService } from './../../@Services/user.service';
 import { Component } from '@angular/core';
 import { User } from '../../@Interface/user';
-import { SchoolCommunityLayoutComponent } from '../school-community-layout/school-community-layout.component';
 import { ActivatedRoute } from '@angular/router';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
+import { RouterLink } from '@angular/router';
+
+import {
+  LucideAngularModule,
+  MessageCircleMore, Flag
+} from 'lucide-angular';
+import { ReportService } from '../../@Services/report.service';
 
 @Component({
   selector: 'app-school-community-member',
-  imports: [],
+  imports: [LucideAngularModule, RouterLink],
   templateUrl: './school-community-member.component.html',
   styleUrl: './school-community-member.component.scss'
 })
 export class SchoolCommunityMemberComponent {
+
+  readonly MessageCircleMore = MessageCircleMore;
+  readonly Flag = Flag;
+
   constructor(
-  private route: ActivatedRoute,
-  private eduApiGovService: EduApiGovService,
-  private userService: UserService
-) {}
+    private reportService: ReportService,
+    private route: ActivatedRoute,
+    private eduApiGovService: EduApiGovService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     const schoolId = Number(
@@ -42,5 +53,13 @@ export class SchoolCommunityMemberComponent {
   }
 
   classmate: User[] = [];
+  memberId = '';
+  memberName = '';
+
+  // 檢舉
+  goRepot() {
+    // 檢舉用戶
+    this.reportService.openReportDialog('user', this.memberName, this.memberId);
+  }
 
 }
