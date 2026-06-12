@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,8 @@ import {
   School,
   ClipboardPenLine,
   LockKeyhole,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-angular';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -54,8 +56,15 @@ import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 })
 export class ProfileSettingsComponent {
   // --- 唯讀常數與圖標 ---
-readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, ClipboardPenLine, LockKeyhole };
+readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, BookUser, ClipboardPenLine, LockKeyhole, ChevronDown };
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private schoolService: SchoolDataService,
+    private userService: UserService,
+    private elementRef: ElementRef
+  ) {}
   // --- 狀態變數 ---
   isEditingBasic = false;
   isEditingPassword = false;
@@ -86,32 +95,45 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
   deptControl = new FormControl(this.department);
   phoneControl = new FormControl('', [Validators.pattern(/^09-\d{8}$/)]);
   profileControl = new FormControl(this.profile);
-  areaFormArray = new FormArray<FormControl<string | null>>([]);
+  // areaFormArray = new FormArray<FormControl<string | null>>([]);
+  allRegions = computed(() => this.schoolService.allRegions());
+  selectedAreas: string[] = [];
+  isAreaDrawerOpen = false;
+  readonly MAX_AREAS = 3;
   passwordForm!: FormGroup;
+
+  get isAreaValid(): boolean {
+  return this.selectedAreas.length > 0;
+  }
 
   // 用一個物件把所有基本資料的控制項打包打包！
   // 未來如果有增加「生日、性別」，接直往這裡塞一列就好，下方所有邏輯都不用動！
   private get basicControlsMap() {
     return {
-      school: this.schoolControl,
+      // school: this.schoolControl,
       dept: this.deptControl,
       phone: this.phoneControl,
       profile: this.profileControl,
-      areas: this.areaFormArray,
+      // areas: this.areaFormArray,
     };
   }
 
   // --- RxJS 動態水管 ---
   filteredSchools!: Observable<string[]>;
   filteredDepts!: Observable<string[]>;
-  filteredAreasList: Observable<string[]>[] = [];
+  // filteredAreasList: Observable<string[]>[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private schoolService: SchoolDataService,
-    private userService: UserService
-  ) {}
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  if (!this.isAreaDrawerOpen) return;
+
+  const target = event.target as HTMLElement;
+  const clickedInside = this.elementRef.nativeElement.querySelector('.area-selector')?.contains(target);
+
+  if (!clickedInside) {
+    this.isAreaDrawerOpen = false;
+  }
+}
 
   // --- 串接後端：載入個人資料 ---
   loadUserProfile() {
@@ -166,11 +188,17 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
             backendAreas = [cleanStr];
           }
         }
-        this.areas = [
+        // this.areas = [
+        //   backendAreas[0] || '',
+        //   backendAreas[1] || '',
+        //   backendAreas[2] || ''
+        // ];
+
+        this.selectedAreas = [
           backendAreas[0] || '',
           backendAreas[1] || '',
           backendAreas[2] || ''
-        ];
+        ].filter(a => a !== '');
 
         // 3. 將資料灌進表單控制項 (FormControl)
           this.schoolControl.setValue(this.school, { emitEvent: false });
@@ -179,13 +207,13 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
           this.profileControl.setValue(this.profile, { emitEvent: false });
 
           // 4. 重建並灌入地區 FormArray
-          this.areaFormArray.clear(); // 先把原本空的清掉
-          this.areas.forEach((areaValue, index) => {
-            const validators = index === 0 ? [Validators.required] : [];
-            this.areaFormArray.push(
-              new FormControl({ value: areaValue, disabled: true }, validators)
-            );
-          });
+          // this.areaFormArray.clear(); // 先把原本空的清掉
+          // this.areas.forEach((areaValue, index) => {
+          //   const validators = index === 0 ? [Validators.required] : [];
+          //   this.areaFormArray.push(
+          //     new FormControl({ value: areaValue, disabled: true }, validators)
+          //   );
+          // });
 
           // 因為我們重新建立了 FormArray，所以要重新接上地區的水管！
           this.initAutocompletePipelines();
@@ -199,6 +227,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
   }
 
   ngOnInit() {
+    console.log('allRegions:', this.allRegions);
     // 1. 初始化集體禁用
     this.setBasicControlsStatus(false);
 
@@ -241,7 +270,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
         dept: this.deptControl.value,
         phone: this.phoneControl.value,
         profile: this.profileControl.value,
-        areas: this.areaFormArray.controls.map((c) => c.value),
+        areas: [...this.selectedAreas],
       };
     } else {
       this.isEditingBasic = true;
@@ -262,13 +291,14 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
       const updateData: SetInfoVo = {
         email: this.email,
         name: this.tempName,
-        school: this.schoolControl.value ?? '',
+        school: this.school,
         department: this.deptControl.value ?? '',
         phone: this.phoneControl.value ?? '',
         msg: this.profileControl.value ??  '',
-        location: this.areaFormArray.controls
-                    .map(c => c.value ?? '')
-                    .filter(val => val.trim() !== ''), // 過濾掉空字串
+        // location: this.areaFormArray.controls
+        //             .map(c => c.value ?? '')
+        //             .filter(val => val.trim() !== ''), // 過濾掉空字串
+        location: this.selectedAreas,
         img: base64Img,
         deleteImg: isDelete
       };
@@ -333,32 +363,34 @@ readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, Clipb
     this.deptControl.setValue(this.backupData.dept, { emitEvent: false });
     this.phoneControl.setValue(this.backupData.phone, { emitEvent: false });
     this.profileControl.setValue(this.backupData.profile, { emitEvent: false });
-    this.areaFormArray.controls.forEach((c, i) =>
-      c.setValue(this.backupData.areas[i], { emitEvent: false }),
-    );
+    // this.areaFormArray.controls.forEach((c, i) =>
+    //   c.setValue(this.backupData.areas[i], { emitEvent: false }),
+    // );
+    this.selectedAreas = [...this.backupData.areas];
   }
 
   // 把又臭又長的比對安檢抽出來獨立
   private validateAndMarkBasicFields(): boolean {
     const allSchools = this.schoolService.allFlattenedSchools();
     const cleanSchool = this.normalize(this.schoolControl.value);
-    this.areaFormArray.controls.forEach(c => {
-    if (c.value) this.validateAreaControl(c);
-    });
+
     // 檢查是否在清單內
     if (
       cleanSchool &&!allSchools.some((opt) => opt.toLowerCase().replace(/台/g, '臺') === cleanSchool,)) {
       this.schoolControl.setErrors({ notInList: true });
     }
 
-    const isAnyAreaInvalid = this.areaFormArray.controls.some(c => c.invalid);
-
     // 催生紅字判定
-    if (this.schoolControl.invalid || isAnyAreaInvalid || this.phoneControl.invalid) {
+    if (this.schoolControl.invalid || this.phoneControl.invalid) {
       this.schoolControl.markAsTouched();
       this.phoneControl.markAsTouched();
-      this.areaFormArray.controls.forEach(c => c.markAsTouched());
       this.showWarningAlert('欄位填寫有誤！請務必填寫必填項、確認手機格式，並確認出沒地區沒有重複選取喔！');
+      this.isEditingBasic = true;
+      return true;
+    }
+
+    if (!this.isAreaValid) {
+      this.showWarningAlert('請至少選擇一個常出沒地區！');
       this.isEditingBasic = true;
       return true;
     }
@@ -395,14 +427,13 @@ private validateAreaControl(control: AbstractControl) {
   const allRegions = this.schoolService.allRegions();
   const value = this.normalize(control.value);
 
-  const otherSelected = this.areaFormArray.controls
-    .filter(c => c !== control)
-    .map(c => this.normalize(c.value));
+  // const otherSelected = this.areaFormArray.controls
+  //   .filter(c => c !== control)
+  //   .map(c => this.normalize(c.value));
 
   // 模糊補全
   const matched = allRegions.find(opt =>
-    this.normalize(opt).includes(value) &&
-    !otherSelected.includes(this.normalize(opt))
+    this.normalize(opt).includes(value)
   );
   if (matched) { control.setValue(matched); this.areaRefreshTrigger.next(); return; }
 
@@ -410,15 +441,6 @@ private validateAreaControl(control: AbstractControl) {
   const isInList = allRegions.some(opt => this.normalize(opt) === value);
   if (!isInList) { control.setErrors({ notInList: true }); return; }
 
-  // 重複檢查
-  const allValues = this.areaFormArray.controls.map(c =>this.normalize(c.value));
-  this.areaFormArray.controls.forEach(c => {
-    const v = this.normalize(c.value);
-    if (!v) return;
-    allValues.filter(x => x === v).length > 1
-      ? c.setErrors({ duplicated: true })
-      : c.hasError('duplicated') && c.setErrors(null);
-  });
 }
 
 private validateSchoolControl(control: AbstractControl) {
@@ -438,31 +460,31 @@ private normalize(value: string | null): string {
 private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
 
   private initAutocompletePipelines() {
-    // 地區動態互斥水管
-  this.areaFormArray.controls.forEach((control, index) => {
-    this.filteredAreasList[index] = combineLatest([
-      control.valueChanges.pipe(startWith(control.value || '')),
-      this.areaRefreshTrigger  // ✅ 加入這個，讓其他格選完後可以強迫此格重新過濾
-    ]).pipe(
-      map(([value]) => {
-        const allRegions = this.schoolService.allRegions();
-        const otherSelected = this.areaFormArray.controls
-          .filter((_, idx) => idx !== index)
-          .map((c) => this.normalize(c.value))
-          .filter(val => val !== '');
+  //   // 地區動態互斥水管
+  // this.areaFormArray.controls.forEach((control, index) => {
+  //   this.filteredAreasList[index] = combineLatest([
+  //     control.valueChanges.pipe(startWith(control.value || '')),
+  //     this.areaRefreshTrigger  // ✅ 加入這個，讓其他格選完後可以強迫此格重新過濾
+  //   ]).pipe(
+  //     map(([value]) => {
+  //       const allRegions = this.schoolService.allRegions();
+  //       const otherSelected = this.areaFormArray.controls
+  //         .filter((_, idx) => idx !== index)
+  //         .map((c) => this.normalize(c.value))
+  //         .filter(val => val !== '');
 
-        // ✅ 過濾掉已被其他格選走的選項
-        const available = allRegions.filter(
-          (r) => !otherSelected.includes(r.toLowerCase().replace(/台/g, '臺'))
-        );
-        return this._filter(value || '', available);
-      }),
-    );
-    // 值改變時，重新檢查所有格的重複狀態
-    control.valueChanges.subscribe(() => {
-      this.recheckDuplicates();
-    });
-  });
+  //       // ✅ 過濾掉已被其他格選走的選項
+  //       const available = allRegions.filter(
+  //         (r) => !otherSelected.includes(r.toLowerCase().replace(/台/g, '臺'))
+  //       );
+  //       return this._filter(value || '', available);
+  //     }),
+  //   );
+  //   // 值改變時，重新檢查所有格的重複狀態
+  //   control.valueChanges.subscribe(() => {
+  //     this.recheckDuplicates();
+  //   });
+  // });
 
     // 學校水管
     this.filteredSchools = this.schoolControl.valueChanges.pipe(
@@ -494,20 +516,20 @@ private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
   }
 
   // 專門負責重複檢查的方法，隨時可以呼叫
-private recheckDuplicates() {
-  const allValues = this.areaFormArray.controls.map(c => this.normalize(c.value));
+// private recheckDuplicates() {
+//   const allValues = this.areaFormArray.controls.map(c => this.normalize(c.value));
 
-  this.areaFormArray.controls.forEach(c => {
-    const v = this.normalize(c.value);
-    if (!v) return;
+//   this.areaFormArray.controls.forEach(c => {
+//     const v = this.normalize(c.value);
+//     if (!v) return;
 
-    if (allValues.filter(x => x === v).length > 1) {
-      c.setErrors({ duplicated: true });
-    } else if (c.hasError('duplicated')) {
-      c.setErrors(null);
-    }
-  });
-}
+//     if (allValues.filter(x => x === v).length > 1) {
+//       c.setErrors({ duplicated: true });
+//     } else if (c.hasError('duplicated')) {
+//       c.setErrors(null);
+//     }
+//   });
+// }
 
 
   /* 處理手機輸入與自動填入 '-' */
@@ -558,6 +580,25 @@ private recheckDuplicates() {
       icon: 'warning',
       confirmButtonColor: '#FB831D',
     });
+  }
+
+    toggleAreaDrawer() {
+    if (this.isEditingBasic) {
+      this.isAreaDrawerOpen = !this.isAreaDrawerOpen;
+    }
+  }
+
+  toggleArea(region: string) {
+    if (this.selectedAreas.includes(region)) {
+      this.selectedAreas = this.selectedAreas.filter(a => a !== region);
+    } else if (this.selectedAreas.length < this.MAX_AREAS) {
+      this.selectedAreas = [...this.selectedAreas, region];
+    }
+  }
+
+  removeArea(region: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.selectedAreas = this.selectedAreas.filter(a => a !== region);
   }
 
   //更換照片
