@@ -137,10 +137,8 @@ onDocumentClick(event: MouseEvent) {
 
   // --- 串接後端：載入個人資料 ---
   loadUserProfile() {
-// 實戰中，這裡的 ID 應該是從登入時存的 localStorage 拿出來的
-/**💡💡💡這裡12是測試用，之後要拿掉 💡💡💡*/
-    const currentUserId = Number(localStorage.getItem('userId')) || 12;
-  this.userService.getUserData(currentUserId).subscribe({
+
+  this.userService.getMyInfo().subscribe({
     next:(res)=>{
       if(res.statusCode === 200){
         const user = res.user;
@@ -227,7 +225,6 @@ onDocumentClick(event: MouseEvent) {
   }
 
   ngOnInit() {
-    console.log('allRegions:', this.allRegions);
     // 1. 初始化集體禁用
     this.setBasicControlsStatus(false);
 

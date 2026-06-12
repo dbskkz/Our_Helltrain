@@ -45,9 +45,10 @@
         <div class="col-md-3">
           <div class="product-content">
             <h5 class="name">{{ order.productName }}</h5>
-            <p class="seller"> {{ order.partnerRole }}：{{ order.partnerName }}
-              <lucide-icon [name]="MessageCircleMore" (click)="chat()"></lucide-icon>
-            </p>
+            <span class="seller" (click)="goStore()" [title]="'點擊查看更多資訊'">
+              {{ order.partnerRole }}：{{ order.partnerName }}</span>
+            <lucide-icon class="msg" [name]="MessageCircleMore" (click)="chat(); $event.stopPropagation()"
+              [title]="'聊聊'"></lucide-icon>
             <div class="details">
               <p class="unit-price">${{ order.price }}</p>
             </div>
