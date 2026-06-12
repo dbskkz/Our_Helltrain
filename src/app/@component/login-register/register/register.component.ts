@@ -15,6 +15,39 @@ import { SchoolDataService } from '../../../@Services/school-data.service';
 import { UserService } from '../../../@Services/user.service';
 import { PlatformRulesComponent } from '../../platform-rules/platform-rules.component';
 
+export const SCHOOL_DOMAIN_MAP: Record<string, string> = {
+  // 台北
+  'ntu.edu.tw': '國立臺灣大學',
+  'ntust.edu.tw': '國立臺灣科技大學',
+  'ntnu.edu.tw': '國立臺灣師範大學',
+  'tku.edu.tw': '淡江大學',
+  'fju.edu.tw': '輔仁大學',
+  'scu.edu.tw': '東吳大學',
+  'mcut.edu.tw': '明志科技大學',
+  // 桃竹苗
+  'nthu.edu.tw': '國立清華大學',
+  'nctu.edu.tw': '國立陽明交通大學',
+  'ncu.edu.tw': '國立中央大學',
+  'cycu.edu.tw': '中原大學',
+  // 台中
+  'nchu.edu.tw': '國立中興大學',
+  'thu.edu.tw': '東海大學',
+  'fcu.edu.tw': '逢甲大學',
+  // 台南
+  'ncku.edu.tw': '國立成功大學',
+  // 高雄
+  'nsysu.edu.tw': '國立中山大學',
+  'nuk.edu.tw': '國立高雄大學',
+  'nkust.edu.tw': '國立高雄科技大學',
+};
+
+export function getSchoolFromEmail(email: string): string | null {
+  const domain = email.split('@')[1];
+  if (!domain) return null;
+  const matched = Object.keys(SCHOOL_DOMAIN_MAP).find(key => domain.endsWith(key));
+  return matched ? SCHOOL_DOMAIN_MAP[matched] : null;
+}
+
 @Component({
   selector: 'app-register',
   imports: [   FormsModule,
@@ -161,6 +194,20 @@ export class RegisterComponent {
 
   onEmailChange() {
     this.isEmailTouched = this.userEmail.length > 0;
+
+    const matched = getSchoolFromEmail(this.userEmail);
+  const schoolCtrl = this.registerForm.get('school');
+
+  if (matched) {
+    schoolCtrl?.setValue(matched);
+    schoolCtrl?.disable();
+  } else {
+    // email 還沒填完或認不出來，解鎖讓使用者自己填
+    if (schoolCtrl?.disabled) {
+      schoolCtrl.enable();
+      schoolCtrl.setValue('');
+    }
+  }
   }
 
   onPhoneInput(event: any) {
@@ -210,7 +257,7 @@ export class RegisterComponent {
       email: this.userEmail,
       password: this.registerForm.get('password')?.value,
       location: this.registerForm.get('area')?.value,
-      school: this.registerForm.get('school')?.value,
+      school: this.registerForm.getRawValue().school,
       phone: this.registerForm.get('phone')?.value?.trim() || null,
     };
 
