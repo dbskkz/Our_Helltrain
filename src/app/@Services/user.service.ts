@@ -19,26 +19,12 @@ export class UserService {
   private myProxyUrl = '/user';
 
   private apiUrl = 'http://localhost:8080/user';
-  isLoggedIn = signal<boolean>(localStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
+  isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
   // 存使用者資料的 Signal by.絲絨
   currentUser = signal<any>(null);
 
-  constructor(private http: HttpClient, private router: Router,) {
-    // 💡 補上這段防禦：網頁一打開，如果發現有 userId，就自動去後端撈資料來補滿電台！
-    const savedUserId = localStorage.getItem('userId');
-    if (savedUserId) {
-      this.getUserData(Number(savedUserId)).subscribe({
-        next: (res) => {
-          if (res && res.user) {
-            this.currentUser.set(res.user); // 補滿電台，這樣重整網頁王明也不會消失！
-            this.updateAvatar(res.user.imgPath);
-          }
-        }
-      });
-    }
-  }
-
+  constructor(private http: HttpClient, private router: Router,) { }
 
   // 登入 by.絲絨
   login(data: LoginReq): Observable<any> {
@@ -51,23 +37,26 @@ export class UserService {
     );
   }
 
-
-
   // 取得使用者資料 by.絲絨
   getUserData(userId: number): Observable<any> {
     // 目前 Demo 階段：把 ID 帶在網址後面傳給後端
     return this.http.get(`${this.apiUrl}/getByUserId?userId=${userId}`);
   }
 
+  // 取得自己的資料（從 session）
+  getMyInfo(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/getMyInfo`, { withCredentials: true });
+  }
 
-
+  // 登出
   logout() {
-    this.isLoggedIn.set(false);
-    localStorage.removeItem('isLoggedIn'); // Demo 暫用
-    localStorage.removeItem('userId'); // Demo 暫用
-    this.currentUser.set(null);
-    this.isLoggedIn.set(false);
-    this.router.navigate(['/home']);
+    return this.http.post(`${this.apiUrl}/logOut`, {}, { withCredentials: true })
+      .pipe(tap(() => {
+        this.isLoggedIn.set(false);
+        // sessionStorage.removeItem('isLoggedIn');
+        this.currentUser.set(null);
+        sessionStorage.clear();
+      }));
   }
 
   /** 頭像同步變更廣播

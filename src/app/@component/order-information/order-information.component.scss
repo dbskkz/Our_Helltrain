@@ -1,5 +1,5 @@
 @use "../../styles/variables" as *;
-
+@use '../../styles/mixins' as *;
 
 $buyer-theme-light: #fdf7e7;
 
@@ -165,6 +165,49 @@ $semantic-red-dark: #c62828;
   }
 }
 
+.seller {
+  background: none;
+  border: none;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+
+  // 加上簡約的底線 hover 效果
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: #212529;
+    transition: width 0.2s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+.msg {
+  cursor: pointer;
+  color: $text-gray;
+  transition: color 0.2s;
+  padding: 0.5rem 0.5rem;
+  border-radius: 99999px;
+
+  &:hover {
+    color: $neutral-700;
+    background-color: $neutral-100;
+  }
+}
 
 .unit-price {
   color: $text-price;
@@ -207,6 +250,10 @@ $semantic-red-dark: #c62828;
   }
 }
 
+.empty-state {
+  @include empty-state;
+}
+
 p {
   font-size: $font-size-base;
   color: $text-gray;
@@ -227,15 +274,16 @@ p {
   font-size: $font-size-base;
   border: 1px solid $neutral-300;
   transition: all 0.3s;
+  outline: none;
 
   &.primary {
     background-color: $background-yellow;
     color: $primary-yellow-darker;
-    border-color: $primary-yellow;
+    border-color: $background-yellow-hover;
 
     &:hover {
-      background: $primary-yellow-dark;
-      color: $background-white;
+      background: $background-yellow-hover;
+      color: $primary-yellow-darker;
     }
   }
 
@@ -244,23 +292,22 @@ p {
     color: $text-gray;
 
     &:hover {
-      background: $neutral-300;
+      background: $neutral-100;
     }
   }
 
   &.report {
     background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid rgba(#c62828, 0.1);
+    color: #cc5e5e;
+    border: 1px solid rgba(#cc5e5e, 0.1);
 
     lucide-icon {
-      color: #c62828;
+      color: #cc5e5e;
     }
 
     &:hover {
-      background-color: #c62828;
+      background-color: #cc5e5e;
       color: $background-white;
-      transform: translateY(-2px);
 
       lucide-icon {
         color: $background-white;
