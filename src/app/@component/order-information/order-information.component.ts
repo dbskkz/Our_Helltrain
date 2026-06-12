@@ -128,7 +128,7 @@ export class OrderInformationComponent {
     this.pagination.goToPage(1); // 回第一頁
   }
 
-  chat() { }
+  chat() { this.router.navigate(['/chat']); }
 
   // 分頁
   prevPage() { this.pagination.prevPage(); }
@@ -254,7 +254,12 @@ export class OrderInformationComponent {
   // 檢舉
   goRepot(order: any) {
     // 檢舉用戶
-    this.reportService.openReportDialog('user', order.partnerName, '用戶ID');
+    this.reportService.openReportDialog('user', order.partnerName, '3'); // demo用
+  }
+
+  // 交易對象賣場頁
+  goStore() {
+    this.router.navigate(['/store', 3]); // demo用
   }
 
   // 賣家同意請求

@@ -45,7 +45,6 @@ export const routes: Routes = [
       { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
-      { path: 'chat', component: ChatComponent }, //聊天室
 
       // TODO: school-community/:universityName
       {
@@ -64,6 +63,7 @@ export const routes: Routes = [
     ],
   },
   { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
+  { path: 'chat', component: ChatComponent }, //聊天室
 
   //後台
   {

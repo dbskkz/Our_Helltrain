@@ -24,20 +24,7 @@ export class UserService {
   // 存使用者資料的 Signal by.絲絨
   currentUser = signal<any>(null);
 
-  constructor(private http: HttpClient, private router: Router,) {
-    // session 還在的話自動補資料
-    if (sessionStorage.getItem('isLoggedIn') === 'true') {
-      this.getMyInfo().subscribe({
-        next: (res) => {
-          if (res && res.user) {
-            this.currentUser.set(res.user);
-            this.updateAvatar(res.user.imgPath);
-          }
-        }
-      });
-    }
-  }
-
+  constructor(private http: HttpClient, private router: Router,) { }
 
   // 登入 by.絲絨
   login(data: LoginReq): Observable<any> {
@@ -49,8 +36,6 @@ export class UserService {
       })
     );
   }
-
-
 
   // 取得使用者資料 by.絲絨
   getUserData(userId: number): Observable<any> {
@@ -68,8 +53,9 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/logOut`, {}, { withCredentials: true })
       .pipe(tap(() => {
         this.isLoggedIn.set(false);
-        sessionStorage.removeItem('isLoggedIn');
+        // sessionStorage.removeItem('isLoggedIn');
         this.currentUser.set(null);
+        sessionStorage.clear();
       }));
   }
 

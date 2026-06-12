@@ -35,7 +35,7 @@
       <p>{{shopOwnerData()?.msg}}</p>
       <div class="introBtn">
         @if (!isOwner) {
-        <button class="btn-action primary">
+        <button class="btn-action primary" (click)="chat()">
           <lucide-icon [name]="MessageCircleMore"></lucide-icon>聊聊
         </button>
         <button class="btn-action report" (click)="goRepot()">

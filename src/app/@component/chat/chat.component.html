@@ -1,16 +1,24 @@
-<main class="container">
-  <section class="box row">
-    <div class="left col-4"></div>
-    <div class="right col-8">
-      @for (msg of message; track msg) {
-      <div>
-        <strong>{{ msg.userName }}</strong>: {{ msg.message }}
+<main class="chat-container">
+  <section class="chat-box">
+    <div class="chat-left">
+      <img src="img/logo改版.png" alt="logo" class="logo" title="首頁" (click)="goToHome()">
+    </div>
+
+    <div class="chat-right">
+      <div class="message-list">
+        @for (msg of message; track msg) {
+        <div class="msg-item">
+          <strong class="user-name">{{ msg.userName }}</strong>: {{ msg.message }}
+        </div>
+        } @empty {
+        <div class="no-message">目前沒有任何聊天訊息喔。</div>
+        }
       </div>
-      } @empty {
-      <div class="no-message">目前沒有任何聊天訊息喔。</div>
-      }
-      <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter">
-      <button class="send" (click)="sendMsg()">送出</button>
+
+      <div class="input-group-box">
+        <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter-input" placeholder="請輸入訊息...">
+        <button class="send-btn" (click)="sendMsg()">送出</button>
+      </div>
     </div>
   </section>
 </main>

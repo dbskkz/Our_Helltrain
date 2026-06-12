@@ -165,19 +165,49 @@ $semantic-red-dark: #c62828;
   }
 }
 
-.msgIcon {
+.seller {
+  background: none;
+  border: none;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+
+  // 加上簡約的底線 hover 效果
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: #212529;
+    transition: width 0.2s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+.msg {
   cursor: pointer;
   color: $text-gray;
   transition: color 0.2s;
   padding: 0.5rem 0.5rem;
-  border-radius: 50%;
+  border-radius: 99999px;
 
   &:hover {
     color: $neutral-700;
     background-color: $neutral-100;
   }
 }
-
 
 .unit-price {
   color: $text-price;

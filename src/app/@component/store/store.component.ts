@@ -166,14 +166,13 @@ export class StoreComponent {
   }
 
   // 前往商品詳情頁
-  goProductPage() {
-    this.router.navigate(['/product_page']);
-  }
+  goProductPage() { this.router.navigate(['/product_page']); }
 
   // 編輯個人資料
-  goSettings() {
-    this.router.navigate(['/profile_settings']);
-  }
+  goSettings() { this.router.navigate(['/profile_settings']); }
+
+  // 聊聊
+  chat() { this.router.navigate(['/chat']); }
 
   // 分頁
   prevPage() {
