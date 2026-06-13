@@ -1,0 +1,122 @@
+/* 基礎重設與背景 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 卡片主體 */
+.profile-card {
+    background-color: white;
+    width: 380px;
+    padding: 40px 24px;
+    border-radius: 12px; /* 依據圖片微調圓角，若要完全直角可改 0 */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+}
+
+/* 右上角關閉按鈕 */
+.close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    font-size: 22px;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    line-height: 1;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* 圓形大頭貼外框 */
+.avatar-container {
+    width: 180px;
+    height: 180px;
+    border: 1px solid #8e8e8e; /* 圖片中細緻的灰色外圈 */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 32px;
+    overflow: hidden;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #111; /* 沒圖片時的預設底色 */
+}
+
+/* 使用者名稱 */
+.username {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4a4a4a; /* 圖片中名字顏色較暗 */
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* 學歷資訊層級 */
+.education-info {
+    font-size: 16px;
+    color: #8e8e8e; /* 灰白色字體 */
+    line-height: 1.6;
+    margin-bottom: 36px;
+}
+
+/* 信譽等級標籤（還原圖片中的特殊切角邊框感覺） */
+.badge-container {
+    display: inline-block;
+    position: relative;
+    padding: 2px;
+}
+
+.badge {
+    border: 1px solid #333333;
+    border-radius: 14px;
+    padding: 6px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+
+.badge-label {
+    color: #4a4a4a; /* 暗灰色 */
+}
+
+.badge-value {
+    color: #555555; /* 略帶亮度的灰色 */
+    margin-left: 8px;
+    font-weight: 500;
+}

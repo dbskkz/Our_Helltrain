@@ -161,91 +161,91 @@
 //   color: #d14343;
 // }
 
-.member-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 32px;
+// .member-list {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+//   gap: 32px;
 
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
+//   padding: 0;
+//   margin: 0;
+//   list-style: none;
+// }
 
-.member-card {
-  display: flex;
-  text-align: center;
-  gap: 1rem;
+// .member-card {
+//   display: flex;
+//   text-align: center;
+//   gap: 1rem;
 
-  a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+//   a {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
 
-    text-decoration: none;
-    color: inherit;
-  }
-}
+//     text-decoration: none;
+//     color: inherit;
+//   }
+// }
 
-.avatar-wrapper {
-  position: relative;
+// .avatar-wrapper {
+//   position: relative;
 
-  width: 25vw;
-  aspect-ratio: 1;
-}
+//   width: 25vw;
+//   aspect-ratio: 1;
+// }
 
-.avatar {
-  width: 25vw;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  object-fit: cover;
-}
+// .avatar {
+//   width: 25vw;
+//   aspect-ratio: 1;
+//   border-radius: 50%;
+//   object-fit: cover;
+// }
 
-.badge {
-  position: absolute;
-  top: 0;
-  right: 0;
+// .badge {
+//   position: absolute;
+//   top: 0;
+//   right: 0;
 
-  width: 32px;
-  height: 32px;
+//   width: 32px;
+//   height: 32px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-  background: white;
-  border-radius: 50%;
+//   background: white;
+//   border-radius: 50%;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
-}
+//   box-shadow: 0 2px 8px rgba(0,0,0,.15);
+// }
 
-.name {
-  margin-top: 16px;
+// .name {
+//   margin-top: 16px;
 
-  font-size: 1.25rem;
-  font-weight: 700;
-}
+//   font-size: 1.25rem;
+//   font-weight: 700;
+// }
 
 
-.rating-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
+// .rating-badge {
+//   position: absolute;
+//   top: 0;
+//   right: 0;
 
-  width: 30%;
-  height: 30%;
+//   width: 30%;
+//   height: 30%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-  border-radius: 50%;
+//   border-radius: 50%;
 
-  background: #fff;
-  border: 2px solid #f7c948;
+//   background: #fff;
+//   border: 2px solid #f7c948;
 
-  color: #d97706;
-  font-size: 0.75rem;
-  font-weight: 700;
+//   color: #d97706;
+//   font-size: 0.75rem;
+//   font-weight: 700;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,.12);
-}
+//   box-shadow: 0 2px 8px rgba(0,0,0,.12);
+// }

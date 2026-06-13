@@ -10,10 +10,11 @@ import {
   MessageCircleMore, Flag
 } from 'lucide-angular';
 import { ReportService } from '../../@Services/report.service';
+import { UserCardComponent } from "../../@component/user-card/user-card.component";
 
 @Component({
   selector: 'app-school-community-member',
-  imports: [LucideAngularModule, RouterLink],
+  imports: [LucideAngularModule, RouterLink, UserCardComponent],
   templateUrl: './school-community-member.component.html',
   styleUrl: './school-community-member.component.scss'
 })
