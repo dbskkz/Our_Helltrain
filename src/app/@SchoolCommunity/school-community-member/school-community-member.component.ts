@@ -14,7 +14,7 @@ import { UserCardComponent } from "../../@component/user-card/user-card.componen
 
 @Component({
   selector: 'app-school-community-member',
-  imports: [LucideAngularModule, RouterLink, UserCardComponent],
+  imports: [LucideAngularModule, UserCardComponent],
   templateUrl: './school-community-member.component.html',
   styleUrl: './school-community-member.component.scss'
 })
@@ -51,6 +51,7 @@ export class SchoolCommunityMemberComponent {
           this.classmate = res.user ?? [];
         });
     });
+
   }
 
   classmate: User[] = [];

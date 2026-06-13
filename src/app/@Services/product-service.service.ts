@@ -10,7 +10,9 @@ export interface SearchProductReq {
   minPrice?: number;
   maxPrice?: number;
   types?: string[];
-  grade?: string;
+  conditions?: string[];
+  grades?: string[];
+  deptGroups?: string[];
 }
 
 // 對應後端 GetProductDataRes（你要確認後端實際欄位名稱）

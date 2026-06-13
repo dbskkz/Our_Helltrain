@@ -31,12 +31,14 @@
 
         <div class="filter-section">
           <p class="section-label">商品新舊程度</p>
-          <select class="form-select" aria-label="商品狀態">
-            <option value="">商品狀態</option>
+          <div class="category-grid">
             @for (item of filterForm.conditions; track $index) {
-              <option [value]="item.value">{{ item.label }}</option>
+              <label class="chip">
+                <input type="checkbox" [(ngModel)]="item.selected">
+                {{ item.label }}
+              </label>
             }
-          </select>
+          </div>
         </div>
 
         <div class="filter-section">
@@ -61,12 +63,14 @@
 
         <div class="filter-section">
           <p class="section-label">適用學群</p>
-          <select class="form-select" aria-label="適用學群">
-            <option value="">適用學群</option>
+          <div class="category-grid">
             @for (item of filterForm.academic; track $index) {
-              <option [value]="item.value">{{ item.name }}</option>
+              <label class="chip">
+                <input type="checkbox" [(ngModel)]="item.selected">
+                {{ item.name }}
+              </label>
             }
-          </select>
+          </div>
         </div>
 
         <!-- <div class="filter-section">
@@ -79,7 +83,7 @@
       </div>
 
       <div class="filter-footer">
-        <button type="button" class="btn btn-light reset" (click)="resetFilters()">取消</button>
+        <button type="button" class="btn btn-light reset" (click)="resetFilters()">清除篩選</button>
         <button type="button" class="btn btn-light" (click)="applyFilters()">套用篩選設定</button>
       </div>
     </div>

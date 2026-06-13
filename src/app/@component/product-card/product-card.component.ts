@@ -75,9 +75,4 @@ export class ProductCardComponent {
     return "剛剛";
   }
 
-
-  // goToProductDetail(){
-  //   this.router.navigate(['/test',1]);
-  // }
-
 }
