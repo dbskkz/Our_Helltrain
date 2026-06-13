@@ -31,7 +31,8 @@ export class AddannounceDaialogComponent {
   // 接收傳進來的資料，沒有傳就是 null（新增模式）
   public data = inject(MAT_DIALOG_DATA);
 
-  today: string = new Date().toISOString().split('T')[0];
+  today: string = new Date().toLocaleDateString('en-CA');
+
   selectedFile: File | null = null;
 
   // 編輯模式時，存放現有的圖片網址
@@ -65,7 +66,7 @@ export class AddannounceDaialogComponent {
       this.form.shelfDate = this.data.startDate;
       this.form.removalDate = this.data.endDate;
       this.form.content = this.data.content ?? '';
-      this.form.isPublished = this.data.Published; // 直接帶入 boolean
+      this.form.isPublished = this.data.isPublished; // 直接帶入 boolean
       this.existingImgUrl = this.data.imgPath;
     }
   }

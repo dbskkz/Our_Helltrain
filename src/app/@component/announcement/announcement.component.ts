@@ -44,8 +44,9 @@ export class AnnouncementComponent {
   private allAnnouncements: Announcement[] = [];
 
   private get today(): string {
-    return new Date().toISOString().split('T')[0];
+    return new Date().toLocaleDateString('en-CA'); // 直接回傳 YYYY-MM-DD 格式
   }
+
   private get activeList(): Announcement[] {
     return this.allAnnouncements.filter(
       (a) =>
@@ -58,32 +59,35 @@ export class AnnouncementComponent {
     );
   }
   private get neverList(): Announcement[] {
-    return this.allAnnouncements.filter(
-      (a) => !a.isPublished || (a.isPublished && a.startDate > this.today),
-    );
+    return this.allAnnouncements.filter((a) => {
+        !a.isPublished || (a.isPublished && a.startDate > this.today);
+    });
   }
 
-  loadFromAPI(){
-       this.http.getApi('http://localhost:8080/announce/getAll')
+  loadFromAPI() {
+    this.http
+      .getApi('http://localhost:8080/announce/getAll')
       .subscribe((res: any) => {
         if (res.statusCode == 200) {
           console.log(res.data);
-          this.allAnnouncements = res.data.map((a: any) => ({
-            id: a.id,
-            title: a.title,
-            startDate: a.shelfDate,
-            endDate: a.removalDate,
-            isPublished: a.publish,
-            content: a.content,
-            imgPath: a.imgPath ?? null,
-          }));
+          this.allAnnouncements = res.data.map((a: any) => {
+            console.log('isPublished:', a.publish);
+            return {
+              id: a.id,
+              title: a.title,
+              startDate: a.shelfDate,
+              endDate: a.removalDate,
+              isPublished: a.publish,
+              content: a.content,
+              imgPath: a.imgPath ?? null,
+            };
+          });
           this.reloadAll();
         }
       });
   }
   ngOnInit() {
     this.loadFromAPI();
-
   }
 
   loadActive() {
