@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
+import { UserService } from '../../@Services/user.service';
 
 
 
@@ -13,9 +14,6 @@ import { LaunchProductFormService } from '../../@Services/launch-product-form.se
   styleUrl: './launch-product-info.component.scss'
 })
 export class LaunchProductInfoComponent implements OnInit{
-
-  // 從 Service 取得共用 state
-  get state() { return this.formService.state; }
 
   // 屬性：下拉選單選取項陣列
   catOptions = ['教科書', '專業器材', '生活用品', '3C電子', '家具家電', '筆記考古', '服飾配件', '戶外運動', '畢業季'];
@@ -40,6 +38,17 @@ export class LaunchProductInfoComponent implements OnInit{
     condition: false,
   };
 
+  dialogVisible=false;
+
+  // 透過 Getter 取得 Service 中的共用資料狀態
+  get state() {
+    return this.formService.state;
+  }
+
+  get imageSlotUrls(): string[] {
+  return this.state.imageSlotUrls;
+  }
+
   // ── Toast ──
   toastText = '';
   toastVisible = false;
@@ -48,6 +57,7 @@ export class LaunchProductInfoComponent implements OnInit{
   constructor(
     private router: Router,
     private formService: LaunchProductFormService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -164,20 +174,63 @@ export class LaunchProductInfoComponent implements OnInit{
 
   onNewProduct(): void {
   this.formService.resetState(); // 確保 currentDraftId 被清掉
-  this.router.navigate(['/launch_product_info']);
+  this.router.navigate(['/launch_product_price']);
 }
 
   // 下一步
   onNextClick(): void {
-    if (this.isNextDisabled) return;
-    this.router.navigate(['/launch_product_price']);
+    if (this.isNextDisabled) {
+      const missing: string[] = [];
+      if (this.state.locationRegions.length === 0) missing.push('可面交地區');
+      if (this.state.grades.length === 0) missing.push('建議面交年級');
+      if (this.state.catMain.length === 0) missing.push('分類');
+      if (!this.state.condition) missing.push('商品狀況');
+      this.showToast(`請檢查：${missing.join('、')}`);
+      return;
+    }
+    // 所有欄位都填好了，打開預覽 dialog
+    this.dialogVisible = true;
+  }
+
+  // 返回：關閉 dialog，留在原頁
+  onDialogCancel(): void {
+    this.dialogVisible = false;
+  }
+
+  // 點擊背景也能關閉
+  onBackdropClick(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('dialog-backdrop')) {
+      this.dialogVisible = false;
+    }
+  }
+
+  // 確認上架
+  onDialogConfirm(): void {
+    this.dialogVisible = false;
+    // this.showToast('✓ 商品上架成功！');
+    this.formService.resetState();
+      let id = this.userService.currentUser().userId;
+      if (id) {
+        this.router.navigate(['/store', Number(id)]);
+      }
+  }
+
+  //dialog 填入的圖片清單
+  get filledImages(): string[] {
+    return this.imageSlotUrls.filter(url => url !== '');
   }
 
   showToast(msg: string): void {
     this.toastText = msg;
     this.toastVisible = true;
     clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => { this.toastVisible = false; }, 1500);
+    this.toastTimer = setTimeout(() => { this.toastVisible = false ; }, 1500);
+  }
+
+  // ── 路由切換（上一步 / 下一步：上架） ──
+  onPrevClick(): void {
+    // 回到第一步，Service 內的資料會留著
+    this.router.navigate(['/launch_product_price']);
   }
 
 }
