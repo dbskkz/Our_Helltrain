@@ -22,6 +22,7 @@ export class ApiTestService {
   private reportApiUrl = 'http://localhost:8080/report';
   private orderApiUrl = 'http://localhost:8080/order';
   private collectApiUrl = 'http://localhost:8080/collect';
+  private chatApiUrl = 'http://localhost:8080/chat';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -75,5 +76,10 @@ export class ApiTestService {
   // === collect ===
   addCollect(productId: number) {
     return this.http.post(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
+  }
+
+  // === chat ===
+  getOrCreateRoom(ChatRoomReq: any) {
+    return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
   }
 }

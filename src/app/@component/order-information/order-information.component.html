@@ -47,7 +47,7 @@
             <h5 class="name">{{ order.productName }}</h5>
             <span class="seller" (click)="goStore(order)" [title]="'點擊查看更多資訊'">
               {{ order.partnerRole }}：{{ order.partnerName }}</span>
-            <lucide-icon class="msg" name="MessageCircleMore" (click)="chat(); $event.stopPropagation()"
+            <lucide-icon class="msg" name="MessageCircleMore" (click)="chat(order); $event.stopPropagation()"
               [title]="'聊聊'"></lucide-icon>
             <div class="details">
               <p class="unit-price">${{ order.price }}</p>
@@ -126,7 +126,7 @@
             }
 
             @if (order.status !== '已取消') {
-            <button class="btn-action outline" (click)="chat()" [title]="'聊聊'">
+            <button class="btn-action outline" (click)="chat(order)" [title]="'聊聊'">
               聯絡{{ order.partnerRole }}
             </button>
             }

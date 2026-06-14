@@ -70,7 +70,6 @@ export class OrderInformationComponent {
     this.apiTestService.getAllOrder().subscribe({
       next: (res) => {
         let rawOrders = res.orderList;
-        console.log('訂單：', res);
         this.allOrders = rawOrders.map((order: any) => { // 強行對齊(╬▔皿▔)
           let myRole = order.buyerName === this.currentUserName ? '買家' : '賣家';
           return {
@@ -127,7 +126,10 @@ export class OrderInformationComponent {
     this.pagination.goToPage(1); // 回第一頁
   }
 
-  chat(order: any) { this.router.navigate(['/chat', order.partnerId]); }
+  chat(order: any) {
+    if (!order) return;
+    this.router.navigate(['/chat', order.partnerId]);
+  }
 
   // 分頁
   prevPage() { this.pagination.prevPage(); }

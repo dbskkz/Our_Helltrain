@@ -51,9 +51,10 @@ export class LoginComponent {
                 this.userService.currentUser.set(info.user);
                 this.userService.updateAvatar(info.user.imgPath);
               }
+              this.router.navigate(['/home']);
             }
           });
-          this.router.navigate(['/home']);
+
         },
         error: (err) => {
           this.loginForm.markAllAsTouched();
