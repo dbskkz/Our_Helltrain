@@ -10,12 +10,9 @@
     <div class="card_header">
       <h4><span><lucide-icon [name]="icons.BookUser"></lucide-icon></span> 公開基本檔案</h4>
       <div class="button_group">
-        @if (isEditingBasic) {
-          <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
+        @if (!isEditingBasic) {
+          <button class="edit_btn" (click)="toggleEditBasic()">修改資料</button>
         }
-        <button class="edit_btn" (click)="toggleEditBasic()">
-          {{ isEditingBasic ? '確定儲存' : '修改資料' }}
-        </button>
       </div>
     </div>
 
@@ -242,7 +239,7 @@
   </div>
 
 </div>
-  <hr class="section-divider">
+  <!-- <hr class="section-divider"> -->
 
     <div class="profile_section_block">
       <p class="field-title"><span><lucide-icon [name]="icons.ClipboardPenLine"></lucide-icon></span> 個人簡介</p>
@@ -253,7 +250,15 @@
           <form class="example-form">
             <div class="input-box-wrapper textarea-wrapper">
               <mat-form-field class="self-care" appearance="outline">
-                <textarea matInput [formControl]="profileControl" placeholder="可寫科系背景、常用面交地點與時間、或對買家說的話(限200字)"  maxlength="200" cdkTextareaAutosize #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="3" [cdkAutosizeMaxRows]="6"></textarea>
+                <textarea matInput #profileTextarea
+                [formControl]="profileControl"
+                placeholder="可寫科系背景、常用面交地點與時間、或對買家說的話(限200字)"
+                maxlength="200"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                [cdkAutosizeMinRows]="3"
+                [cdkAutosizeMaxRows]="6"
+                (keydown)="onProfileKeydown($event)"></textarea>
               </mat-form-field>
             </div>
           </form>
@@ -262,6 +267,13 @@
           </div>
         }
       </div>
+    </div>
+
+    <div class="basic-form-actions button_group">
+        @if (isEditingBasic) {
+          <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
+          <button class="edit_btn" (click)="toggleEditBasic()">確定儲存</button>
+        }
     </div>
 
     <div class="email_group_integration">

@@ -701,7 +701,25 @@ mat-form-field { width: 100%; }
 ::ng-deep .self-care {
   width: 100% !important;
 
-  textarea.mat-mdc-input-element { overflow-y: hidden !important; padding: 8px 16px !important; }
+  textarea.mat-mdc-input-element {
+    overflow-y:auto !important;
+    padding: 12px 16px !important;  // ✅ 改成明確指定上下左右
+    box-sizing: border-box !important;
+
+        // 自訂滾動條樣式
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary-yellow;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: $semantic-orange;
+    } }
 
   &.mat-form-field-appearance-outline {
     .mat-mdc-text-field-wrapper { background-color: transparent !important; }
@@ -842,4 +860,13 @@ mat-form-field { width: 100%; }
   color: $text-gray;
   margin-top: 10px;
   margin-bottom: 0;
+}
+
+.basic-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+
 }

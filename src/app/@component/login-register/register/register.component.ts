@@ -7,7 +7,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, startWith, map } from 'rxjs';
 import Swal from 'sweetalert2';
 import { UserReq, BasicResponse } from '../../../@Interface/user';
@@ -85,7 +85,6 @@ export class RegisterComponent {
 
   constructor(
     private dialog: MatDialog,
-    private router: Router,
     private route: ActivatedRoute,
     private schoolService: SchoolDataService,
     private userService: UserService,

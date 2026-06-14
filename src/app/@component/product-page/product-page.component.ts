@@ -372,7 +372,6 @@ closeMenu(): void {
   /*檢舉商品的功能*/
   reportProduct() {
     if (!this.product) return;
-    console.log('準備檢舉商品，商品 ID:', this.product.productId);
     this.reportService.openReportDialog(
       'product',
       this.product.productName,
@@ -403,7 +402,7 @@ closeMenu(): void {
 
   gotoStore(): void {
     if (!this.product) return;
-    console.log('前往賣場：', this.product.seller?.userName);
+
     this.router.navigate(['/store', this.product.userId]);
   }
 

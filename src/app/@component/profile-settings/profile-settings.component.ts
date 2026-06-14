@@ -6,7 +6,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -15,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
 import {
   LucideAngularModule,
   PencilLine,
@@ -30,7 +29,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-angular';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
@@ -73,10 +72,10 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
   hideConfirmPassword = signal(true);
 
   // --- 使用者原始數據 (與後端對接用) ---
+  currentUserId: number | null = null;
   name = '';
   school = '';
   department = '';
-  areas: string[] = ['', '', ''];
   phone = '';
   email = '';
   profile = '';
@@ -95,7 +94,6 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
   deptControl = new FormControl(this.department);
   phoneControl = new FormControl('', [Validators.pattern(/^09-\d{8}$/)]);
   profileControl = new FormControl(this.profile);
-  // areaFormArray = new FormArray<FormControl<string | null>>([]);
   allRegions = computed(() => this.schoolService.allRegions());
   selectedAreas: string[] = [];
   isAreaDrawerOpen = false;
@@ -110,18 +108,14 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
   // 未來如果有增加「生日、性別」，接直往這裡塞一列就好，下方所有邏輯都不用動！
   private get basicControlsMap() {
     return {
-      // school: this.schoolControl,
       dept: this.deptControl,
       phone: this.phoneControl,
       profile: this.profileControl,
-      // areas: this.areaFormArray,
     };
   }
 
   // --- RxJS 動態水管 ---
-  filteredSchools!: Observable<string[]>;
   filteredDepts!: Observable<string[]>;
-  // filteredAreasList: Observable<string[]>[] = [];
 
 @HostListener('document:click', ['$event'])
 onDocumentClick(event: MouseEvent) {
@@ -142,7 +136,7 @@ onDocumentClick(event: MouseEvent) {
     next:(res)=>{
       if(res.statusCode === 200){
         const user = res.user;
-
+        this.currentUserId = user.userId || user.id;
         this.name = user.userName;
         this.email = user.userEmail;
         this.school = user.school;
@@ -186,11 +180,6 @@ onDocumentClick(event: MouseEvent) {
             backendAreas = [cleanStr];
           }
         }
-        // this.areas = [
-        //   backendAreas[0] || '',
-        //   backendAreas[1] || '',
-        //   backendAreas[2] || ''
-        // ];
 
         this.selectedAreas = [
           backendAreas[0] || '',
@@ -203,15 +192,6 @@ onDocumentClick(event: MouseEvent) {
           this.deptControl.setValue(this.department, { emitEvent: false });
           this.phoneControl.setValue(this.phone, { emitEvent: false });
           this.profileControl.setValue(this.profile, { emitEvent: false });
-
-          // 4. 重建並灌入地區 FormArray
-          // this.areaFormArray.clear(); // 先把原本空的清掉
-          // this.areas.forEach((areaValue, index) => {
-          //   const validators = index === 0 ? [Validators.required] : [];
-          //   this.areaFormArray.push(
-          //     new FormControl({ value: areaValue, disabled: true }, validators)
-          //   );
-          // });
 
           // 因為我們重新建立了 FormArray，所以要重新接上地區的水管！
           this.initAutocompletePipelines();
@@ -263,7 +243,6 @@ onDocumentClick(event: MouseEvent) {
       this.tempName = this.name;
       this.backupData = {
         avatarUrl: this.avatarUrl,
-        school: this.schoolControl.value,
         dept: this.deptControl.value,
         phone: this.phoneControl.value,
         profile: this.profileControl.value,
@@ -292,9 +271,6 @@ onDocumentClick(event: MouseEvent) {
         department: this.deptControl.value ?? '',
         phone: this.phoneControl.value ?? '',
         msg: this.profileControl.value ??  '',
-        // location: this.areaFormArray.controls
-        //             .map(c => c.value ?? '')
-        //             .filter(val => val.trim() !== ''), // 過濾掉空字串
         location: this.selectedAreas,
         img: base64Img,
         deleteImg: isDelete
@@ -326,14 +302,8 @@ onDocumentClick(event: MouseEvent) {
             this.department = updateData.department ?? '';
             this.phone = updateData.phone  ?? '';
             this.profile = updateData.msg  ?? '';
-            this.areas = updateData.location;
             this.selectedAvatarFile = null;
 
-          } else if (res.statusCode === 401 && res.message === 'Please login first') {
-            // ⚠️ 假設這是你們後端「未登入」的代碼，依你們實際情況調整
-            Swal.fire({ title: '登入已過期', text: '請重新登入', icon: 'error' }).then(() => {
-              this.router.navigate(['/login']);
-            });
           } else {
             // ❌ 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
             this.showWarningAlert(res.message);
@@ -356,26 +326,14 @@ onDocumentClick(event: MouseEvent) {
     this.userService.updateAvatar(this.backupData.avatarUrl);
     this.selectedAvatarFile = null;
     this.tempName = this.name;
-    this.schoolControl.setValue(this.backupData.school, { emitEvent: false });
     this.deptControl.setValue(this.backupData.dept, { emitEvent: false });
     this.phoneControl.setValue(this.backupData.phone, { emitEvent: false });
     this.profileControl.setValue(this.backupData.profile, { emitEvent: false });
-    // this.areaFormArray.controls.forEach((c, i) =>
-    //   c.setValue(this.backupData.areas[i], { emitEvent: false }),
-    // );
     this.selectedAreas = [...this.backupData.areas];
   }
 
   // 把又臭又長的比對安檢抽出來獨立
   private validateAndMarkBasicFields(): boolean {
-    const allSchools = this.schoolService.allFlattenedSchools();
-    const cleanSchool = this.normalize(this.schoolControl.value);
-
-    // 檢查是否在清單內
-    if (
-      cleanSchool &&!allSchools.some((opt) => opt.toLowerCase().replace(/台/g, '臺') === cleanSchool,)) {
-      this.schoolControl.setErrors({ notInList: true });
-    }
 
     // 催生紅字判定
     if (this.schoolControl.invalid || this.phoneControl.invalid) {
@@ -408,88 +366,11 @@ onDocumentClick(event: MouseEvent) {
     return false; // 代表完全沒問題，放行儲存
   }
 
-  //讓地區（或學校）在 Blur 失去焦點時當場進行清單安檢
-validateOnBlur(control: AbstractControl, type: 'school' | 'area') {
-  setTimeout(() => {
-    control.markAsTouched();
-    const value = this.normalize(control.value);
-    if (!value) { control.setErrors(null); return; }
-
-    if (type === 'area') this.validateAreaControl(control);
-    else this.validateSchoolControl(control);
-  }, 200);
-}
-
-private validateAreaControl(control: AbstractControl) {
-  const allRegions = this.schoolService.allRegions();
-  const value = this.normalize(control.value);
-
-  // const otherSelected = this.areaFormArray.controls
-  //   .filter(c => c !== control)
-  //   .map(c => this.normalize(c.value));
-
-  // 模糊補全
-  const matched = allRegions.find(opt =>
-    this.normalize(opt).includes(value)
-  );
-  if (matched) { control.setValue(matched); this.areaRefreshTrigger.next(); return; }
-
-  // 安檢
-  const isInList = allRegions.some(opt => this.normalize(opt) === value);
-  if (!isInList) { control.setErrors({ notInList: true }); return; }
-
-}
-
-private validateSchoolControl(control: AbstractControl) {
-  const value = this.normalize(control.value);
-  const isValid = this.schoolService.allFlattenedSchools()
-    .some(opt => this.normalize(opt) === value);
-  control.setErrors(isValid ? null : { notInList: true });
-}
 
   // --- 各類獨立小工具方法 (Helper Functions) ---
 
-//台→臺
-private normalize(value: string | null): string {
- return (value || '').trim().toLowerCase().replace(/台/g, '臺');
-}
-
-private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
-
   private initAutocompletePipelines() {
-  //   // 地區動態互斥水管
-  // this.areaFormArray.controls.forEach((control, index) => {
-  //   this.filteredAreasList[index] = combineLatest([
-  //     control.valueChanges.pipe(startWith(control.value || '')),
-  //     this.areaRefreshTrigger  // ✅ 加入這個，讓其他格選完後可以強迫此格重新過濾
-  //   ]).pipe(
-  //     map(([value]) => {
-  //       const allRegions = this.schoolService.allRegions();
-  //       const otherSelected = this.areaFormArray.controls
-  //         .filter((_, idx) => idx !== index)
-  //         .map((c) => this.normalize(c.value))
-  //         .filter(val => val !== '');
 
-  //       // ✅ 過濾掉已被其他格選走的選項
-  //       const available = allRegions.filter(
-  //         (r) => !otherSelected.includes(r.toLowerCase().replace(/台/g, '臺'))
-  //       );
-  //       return this._filter(value || '', available);
-  //     }),
-  //   );
-  //   // 值改變時，重新檢查所有格的重複狀態
-  //   control.valueChanges.subscribe(() => {
-  //     this.recheckDuplicates();
-  //   });
-  // });
-
-    // 學校水管
-    this.filteredSchools = this.schoolControl.valueChanges.pipe(
-      startWith(this.schoolControl.value || ''),
-      map((value) =>
-        this._filter(value || '', this.schoolService.allFlattenedSchools()),
-      ),
-    );
 
     // 科系水管
     this.filteredDepts = this.deptControl.valueChanges.pipe(
@@ -504,30 +385,7 @@ private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
       ),
     );
 
-    // 換學校清空科系
-    this.schoolControl.valueChanges.subscribe((newValue) => {
-      if (this.isEditingBasic && newValue !== this.school) {
-        this.deptControl.setValue('', { emitEvent: true });
-      }
-    });
   }
-
-  // 專門負責重複檢查的方法，隨時可以呼叫
-// private recheckDuplicates() {
-//   const allValues = this.areaFormArray.controls.map(c => this.normalize(c.value));
-
-//   this.areaFormArray.controls.forEach(c => {
-//     const v = this.normalize(c.value);
-//     if (!v) return;
-
-//     if (allValues.filter(x => x === v).length > 1) {
-//       c.setErrors({ duplicated: true });
-//     } else if (c.hasError('duplicated')) {
-//       c.setErrors(null);
-//     }
-//   });
-// }
-
 
   /* 處理手機輸入與自動填入 '-' */
   onPhoneInput(event: any) {
@@ -578,6 +436,32 @@ private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
       confirmButtonColor: '#FB831D',
     });
   }
+
+  //自介縮排
+  onProfileKeydown(event: KeyboardEvent) {
+  if (event.key === 'Tab') {
+    event.preventDefault();  // 阻止瀏覽器原生的 Tab 跳到下一個欄位
+
+    const textarea = event.target as HTMLTextAreaElement;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = this.profileControl.value || '';
+
+    const indent = '　　';  // 兩個全形空格，視覺上像縮排
+
+    const newText = text.substring(0, start) + indent + text.substring(end);
+
+    // 檢查是否超過字數限制
+    if (newText.length > 200) return;
+
+    this.profileControl.setValue(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + indent.length, start + indent.length);
+    });
+  }
+}
 
     toggleAreaDrawer() {
     if (this.isEditingBasic) {
@@ -713,9 +597,13 @@ private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
   }
 
   gotoStore() {
-    if (this.isEditingBasic) return;
-    const myId = localStorage.getItem('userId');
-    this.router.navigate(['/store', myId]);
+ if (this.isEditingBasic) return;
+    if (!this.currentUserId) {
+      console.warn('尚未取得使用者 ID，無法導向個人商城');
+      return;
+    }
+    this.router.navigate(['/store', this.currentUserId]);
   }
+
 
 }
