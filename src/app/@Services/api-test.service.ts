@@ -21,6 +21,7 @@ export class ApiTestService {
   private productApiUrl = 'http://localhost:8080/product';
   private reportApiUrl = 'http://localhost:8080/report';
   private orderApiUrl = 'http://localhost:8080/order';
+  private collectApiUrl = 'http://localhost:8080/collect';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -69,5 +70,10 @@ export class ApiTestService {
   //交易雙方給予評價
   giveLevel(goodLevelReq: any) {
     return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, { withCredentials: true });
+  }
+
+  // === collect ===
+  addCollect(productId: number) {
+    return this.http.post(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
   }
 }
