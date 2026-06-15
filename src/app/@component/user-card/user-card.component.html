@@ -1,0 +1,27 @@
+<div class="profile-list">
+  @for (item of users; track item.userId) {
+    <div class="profile-card" type="button" [routerLink]="['/store', item.userId]">
+
+      <div class="avatar-container">
+        <img
+          [src]="item.imgPath"
+          alt="使用者頭像"
+          class="avatar"
+        >
+      </div>
+
+      <h3 class="username" [title]="item.userName">
+        {{ item.userName }}
+      </h3>
+
+      <p class="department" [title]="item.department">
+        {{ item.department }}
+      </p>
+
+      <div class="reputation">
+        信譽評分: {{ item.goodLevel }}★
+      </div>
+
+    </div>
+  }
+</div>

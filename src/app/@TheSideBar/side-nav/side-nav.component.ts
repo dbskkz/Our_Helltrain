@@ -76,7 +76,7 @@ export class SideNavComponent {
   confirmDepts(): void {
     if (this.selectedDepts.length === 0) {
       return;
-    }
+  }
 
     this.router.navigate(['/product-list', 'all'], {
       queryParams: this.selectedDepts.length > 0
@@ -92,7 +92,25 @@ export class SideNavComponent {
   ngOnInit(): void {
     this.eduApiGovService.getSchools().subscribe({
       next: (data) => {
-        this.schools = data;
+        // this.schools = Array.from(
+        //   new Map(
+        //     data.map(item => [
+        //       item['代碼'],
+        //       item
+        //     ])
+        //   ).values()
+        // );
+
+        // console.log('去重後', this.schools.length);
+
+        const latestYear = Math.max(
+          ...data.map(x => Number(x['學年度']))
+        );
+
+        this.schools = data.filter(
+          x => Number(x['學年度']) === latestYear
+        );
+
       },
       error: (err) => {
         console.error('無法載入學校資料：', err);
