@@ -21,8 +21,10 @@ export class SocketService {
   }
 
   // 加入房間
-  joinRoom(roomId: number) {
-    if (this.socket) { this.socket.emit('join_room', { roomId: roomId }); }
+  joinRoom(roomId: number, userName: string) {
+    if (this.socket) {
+      this.socket.emit('join_room', { roomId: roomId, userName: userName });
+    }
   }
 
   // 發送訊息給後端

@@ -54,6 +54,7 @@ export class ChatComponent {
     ).subscribe({
       next: (data: any) => {
         this.message.push(data);
+        console.log('data:', data);
       },
       error: (err) => console.error('Socket 接收失敗:', err)
     });
@@ -71,7 +72,7 @@ export class ChatComponent {
         this.roomId = room.roomId;
         console.log(' 成功取得/建立房間！房號為：', this.roomId);
         if (this.roomId !== null) {
-          this.socketService.joinRoom(this.roomId);
+          this.socketService.joinRoom(this.roomId, this.userName);
         } else {
           console.error('得到的房號是 null，無法加入 Socket 房間！');
         }
