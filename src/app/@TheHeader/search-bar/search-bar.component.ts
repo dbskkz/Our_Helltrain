@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LucideAngularModule, Search, Shapes, MapPin, Filter } from 'lucide-angular';
+import { LucideAngularModule, Search, Shapes, MapPin, Funnel } from 'lucide-angular';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { SearchProductReq } from '../../@Services/product-service.service';
 
@@ -14,7 +14,7 @@ import { SearchProductReq } from '../../@Services/product-service.service';
 })
 export class SearchBarComponent {
 
-  readonly FilterIcon = Filter;
+  readonly FilterIcon = Funnel;
   readonly SearchIcon = Search;
   readonly ShapesIcon = Shapes;
   readonly MapPinIcon = MapPin;

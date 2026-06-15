@@ -1,11 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { GetProductDataRes } from '../@Interface/product-vo';
+import { BasicResponse } from '../@Interface/user';
+import { OrderRes } from '../@Interface/order';
+
 
 // interface LoginReq {
 //   email: string;
 //   password: string;
 // }
+
+export interface OrderVo {
+  productId: number;
+}
 
 interface reportReq { }
 
@@ -21,6 +29,8 @@ export class ApiTestService {
   private productApiUrl = 'http://localhost:8080/product';
   private reportApiUrl = 'http://localhost:8080/report';
   private orderApiUrl = 'http://localhost:8080/order';
+  private collectApiUrl = 'http://localhost:8080/collect';
+  private chatApiUrl = 'http://localhost:8080/chat';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -69,5 +79,29 @@ export class ApiTestService {
   //交易雙方給予評價
   giveLevel(goodLevelReq: any) {
     return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, { withCredentials: true });
+  }
+
+  // === collect ===
+  addCollect(productId: number) {
+    return this.http.post(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
+  }
+
+  // === chat ===
+  getOrCreateRoom(ChatRoomReq: any) {
+    return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
+  }
+  //商品頁:單一商品詳情
+  searchByProductId(productId: number): Observable<GetProductDataRes> {
+    return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);
+  }
+
+  //商品頁:向賣家發送商品請求
+  addOrder(vo: OrderVo): Observable<BasicResponse> {
+    return this.http.post<BasicResponse>(`${this.orderApiUrl}/addOrder`, vo, { withCredentials: true });
+  }
+
+  // 查詢單一商品的所有訂單
+  getProductAllOrder(productId: number): Observable<OrderRes> {
+    return this.http.get<OrderRes>(`${this.orderApiUrl}/getProductOrder?productId=${productId}`, { withCredentials: true });
   }
 }
