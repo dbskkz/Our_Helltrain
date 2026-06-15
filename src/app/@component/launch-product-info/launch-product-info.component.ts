@@ -1,4 +1,4 @@
-import { NgFor, NgIf} from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,17 +9,17 @@ import { UserService } from '../../@Services/user.service';
 
 @Component({
   selector: 'app-launch-product-info',
-  imports: [NgFor, NgIf,FormsModule],
+  imports: [NgFor, NgIf, FormsModule],
   templateUrl: './launch-product-info.component.html',
   styleUrl: './launch-product-info.component.scss'
 })
-export class LaunchProductInfoComponent implements OnInit{
+export class LaunchProductInfoComponent implements OnInit {
 
   // 屬性：下拉選單選取項陣列
   catOptions = ['教科書', '專業器材', '生活用品', '3C電子', '家具家電', '筆記考古', '服飾配件', '戶外運動', '畢業季'];
-  regionOptions = ['基隆市','台北市','新北市','桃園縣','新竹市','新竹縣','苗栗縣',
-                   '台中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','台南市',
-                   '高雄市','屏東縣','台東縣','花蓮縣','宜蘭縣','澎湖縣','金門縣','連江縣'];
+  regionOptions = ['基隆市', '台北市', '新北市', '桃園縣', '新竹市', '新竹縣', '苗栗縣',
+    '台中市', '彰化縣', '南投縣', '雲林縣', '嘉義市', '嘉義縣', '台南市',
+    '高雄市', '屏東縣', '台東縣', '花蓮縣', '宜蘭縣', '澎湖縣', '金門縣', '連江縣'];
 
   // 年級清單
   gradeList: string[] = ['大一', '大二', '大三', '大四以上', '碩士', '博士', '不分年級'];
@@ -38,7 +38,7 @@ export class LaunchProductInfoComponent implements OnInit{
     condition: false,
   };
 
-  dialogVisible=false;
+  dialogVisible = false;
 
   // 透過 Getter 取得 Service 中的共用資料狀態
   get state() {
@@ -46,7 +46,7 @@ export class LaunchProductInfoComponent implements OnInit{
   }
 
   get imageSlotUrls(): string[] {
-  return this.state.imageSlotUrls;
+    return this.state.imageSlotUrls;
   }
 
   // ── Toast ──
@@ -58,7 +58,7 @@ export class LaunchProductInfoComponent implements OnInit{
     private router: Router,
     private formService: LaunchProductFormService,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // 還原自訂類別狀態：若 state.catMain 裡有不在 catOptions 的值，代表有自訂
@@ -85,17 +85,17 @@ export class LaunchProductInfoComponent implements OnInit{
     this.isNextDisabled = !this.isStep1Valid();
   }
 
- //可面交地區 Checkbox
- onLocationRegionChange(event: Event, region: string): void {
-  const checked = (event.target as HTMLInputElement).checked;
-  if (checked) {
-    this.state.locationRegions = [...this.state.locationRegions , region];
-  } else {
-    this.state.locationRegions = this.state.locationRegions.filter(r => r !== region);
+  //可面交地區 Checkbox
+  onLocationRegionChange(event: Event, region: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.state.locationRegions = [...this.state.locationRegions, region];
+    } else {
+      this.state.locationRegions = this.state.locationRegions.filter(r => r !== region);
+    }
+    this.touched.locationRegions = true;
+    this.updateNextButton();
   }
-  this.touched.locationRegions = true;
-  this.updateNextButton();
-}
 
   // ── 年級 Checkbox 複選處理 ──
   onGradeChange(event: Event, grade: string): void {
@@ -154,7 +154,7 @@ export class LaunchProductInfoComponent implements OnInit{
   }
 
 
-   onConditionChange(event: Event): void {
+  onConditionChange(event: Event): void {
     this.state.condition = (event.target as HTMLSelectElement).value;
     this.touched.condition = true;
     this.updateNextButton();
@@ -167,15 +167,16 @@ export class LaunchProductInfoComponent implements OnInit{
   }
 
   // 儲存草稿
-  onSaveDraft(): void {
-  this.formService.saveDraft();
-  this.showToast('✓ 草稿已儲存');
-}
+  async onSaveDraft(): Promise<void> {
+    const userId = Number(this.userService.currentUser().userId);
+    await this.formService.saveDraft(userId);
+    this.showToast('✓ 草稿已儲存');
+  }
 
   onNewProduct(): void {
-  this.formService.resetState(); // 確保 currentDraftId 被清掉
-  this.router.navigate(['/launch_product_price']);
-}
+    this.formService.resetState(); // 確保 currentDraftId 被清掉
+    this.router.navigate(['/launch_product_price']);
+  }
 
   // 下一步
   onNextClick(): void {
@@ -205,14 +206,12 @@ export class LaunchProductInfoComponent implements OnInit{
   }
 
   // 確認上架
-  onDialogConfirm(): void {
+  async onDialogConfirm(): Promise<void> {
     this.dialogVisible = false;
-    // this.showToast('✓ 商品上架成功！');
+    const userId = Number(this.userService.currentUser().userId);
+    await this.formService.publishProduct(userId);  //  上架 API
     this.formService.resetState();
-      let id = this.userService.currentUser().userId;
-      if (id) {
-        this.router.navigate(['/store', Number(id)]);
-      }
+    this.router.navigate(['/store', userId]);
   }
 
   //dialog 填入的圖片清單
@@ -224,7 +223,7 @@ export class LaunchProductInfoComponent implements OnInit{
     this.toastText = msg;
     this.toastVisible = true;
     clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => { this.toastVisible = false ; }, 1500);
+    this.toastTimer = setTimeout(() => { this.toastVisible = false; }, 1500);
   }
 
   // ── 路由切換（上一步 / 下一步：上架） ──

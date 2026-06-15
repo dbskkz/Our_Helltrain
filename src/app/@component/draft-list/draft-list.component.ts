@@ -2,6 +2,7 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DraftItem, LaunchProductFormService } from '../../@Services/launch-product-form.service';
+import { UserService } from '../../@Services/user.service';
 
 interface PublishedProduct {
   id: string;
@@ -9,7 +10,6 @@ interface PublishedProduct {
   price: number;
   image: string;
   category: string;
-  createdAt: Date;
 }
 
 @Component({
@@ -30,20 +30,10 @@ export class DraftListComponent implements OnInit{
   ];
 
 
-
   drafts: DraftItem[] = [];
+  publishedProducts: any[] = [];
   showConfirm = false;
 
-  publishedProducts: PublishedProduct[] = [
-  {
-    id: 'P001',
-    name: 'Nike Air Max 90',
-    price: 1200,
-    image: '',
-    category: '服飾配件',
-    createdAt: new Date('2024/05/16'),
-  },
-  ];
 
   private pendingDeleteId: string | null = null;
 
@@ -53,13 +43,20 @@ export class DraftListComponent implements OnInit{
 
   constructor(
     private formService: LaunchProductFormService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.drafts = this.formService.getDrafts();
-    this.clampPage(); // 初始化後確認頁碼不超出範圍
+    const userId = Number(this.userService.currentUser().userId);
+    this.loadAllData(userId);
   }
+
+  async loadAllData(userId: number): Promise<void> {
+  this.drafts = await this.formService.getDrafts(userId);
+  this.publishedProducts = await this.formService.getPublished(userId);
+  this.clampPage();
+}
 
   changeTab(tabName: string) {
     this.currentTab = tabName;
@@ -77,7 +74,10 @@ export class DraftListComponent implements OnInit{
 
   // 載入草稿並跳回 step1 繼續編輯
   onLoad(id: string): void {
-    this.formService.loadDraft(id);
+    const draft = this.drafts.find(d => d.id === id);
+    if (draft) {
+    this.formService.loadDraft(draft);
+    }
     this.router.navigate(['/launch_product_info']);
   }
 
@@ -104,19 +104,25 @@ export class DraftListComponent implements OnInit{
     }
   }
 
-  confirmDelete(): void {
-    if (this.pendingDeleteId) {
-      this.formService.deleteDraft(this.pendingDeleteId);
-      this.drafts = this.formService.getDrafts();
-      this.clampPage(); // 刪除後頁碼可能超出，需修正
-    }
-    this.showConfirm = false;
-    this.pendingDeleteId = null;
+  async confirmDelete(): Promise<void> {
+  if (this.pendingDeleteId) {
+    await this.formService.deleteDraft(this.pendingDeleteId);
+    const userId = Number(this.userService.currentUser().userId);
+    await this.loadAllData(userId);
   }
+  this.showConfirm = false;
+  this.pendingDeleteId = null;
+}
 
   cancelDelete(): void {
   this.showConfirm = false;
   this.pendingDeleteId = null;
+  }
+
+  async onUnpublish(id: string): Promise<void> {
+    await this.formService.unpublishProduct(id);
+    const userId = Number(this.userService.currentUser().userId);
+    await this.loadAllData(userId);
   }
 
   //分頁

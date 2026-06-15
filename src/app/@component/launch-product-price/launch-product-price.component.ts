@@ -2,6 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
+import { UserService } from '../../@Services/user.service';
 
 
 
@@ -62,6 +63,7 @@ export class LaunchProductPriceComponent implements OnInit {
   constructor(
     private router: Router,
     private formService: LaunchProductFormService,
+    private userService: UserService
 
   ) { }
 
@@ -321,7 +323,8 @@ export class LaunchProductPriceComponent implements OnInit {
     this.toastVisible = true;
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => {
-      this.toastVisible = false ;},1500
+      this.toastVisible = false;
+    }, 1500
     );
   }
   // 下一步
@@ -331,8 +334,9 @@ export class LaunchProductPriceComponent implements OnInit {
   }
 
   // 儲存草稿
-  onSaveDraft(): void {
-    this.formService.saveDraft();
+  async onSaveDraft(): Promise<void> {
+    const userId = Number(this.userService.currentUser().userId);
+    await this.formService.saveDraft(userId);
     this.showToast('✓ 草稿已儲存');
   }
 
