@@ -4,11 +4,12 @@ import { Component, Input } from '@angular/core';
 import { LucideAngularModule, MapPin } from 'lucide-angular';
 import { ProductCard } from '../../@Interface/product-card';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-product-card',
-  imports: [LucideAngularModule,],
+  imports: [LucideAngularModule, RouterLink],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss'
 })
@@ -72,12 +73,6 @@ export class ProductCardComponent {
     }
 
     return "剛剛";
-  }
-
-
-
-  goToProductDetail(){
-    this.router.navigate(['/product_page']);
   }
 
 }

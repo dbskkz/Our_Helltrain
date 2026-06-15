@@ -105,8 +105,6 @@ export class HomepageComponent{
     return this.productService.getAll().subscribe({
       next: (res) => {
         this.allProducts = res.productList;
-        console.log(res.statusCode);
-
       },
       error: (err) => {
         console.error(err);

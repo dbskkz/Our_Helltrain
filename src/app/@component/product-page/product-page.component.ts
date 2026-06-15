@@ -1,12 +1,17 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp } from 'lucide-angular';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { LucideAngularModule,Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp, MoreVertical, Copy, ShieldCheck } from 'lucide-angular';
 import Swal from 'sweetalert2';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
 import { ReportService } from '../../@Services/report.service';
+import { ApiTestService, OrderVo } from '../../@Services/api-test.service';
+import { ProductVo, GetProductDataRes } from '../../@Interface/product-vo';
+import { OrderRes } from '../../@Interface/order';
+
 
   const CATEGORY_MAP: Record<string, string> = {
+  'all':         '全部商品',
   'books':       '教科書',
   'equipment':   '專業器材',
   'daily':       '生活用品',
@@ -18,35 +23,6 @@ import { ReportService } from '../../@Services/report.service';
   'graduation':  '畢業季',
 };
 
-// 模擬未來後端回傳的 DTO 結構
-export interface ProductDetailDTO {
-  productId: number;
-  userId: number;
-  productName: string;
-  description: string;
-  price: number;
-  imgPath: string;
-  type: string;
-  shelfDate: string;
-  productCondition: string;
-  status: string;
-  grade?: string;
-  deptGroup?: string;
-  location: string;
-
-  // 💥 關鍵新增：把賣家資訊全部打包在這個巢狀物件裡！
-  user: {
-    userName: string;
-    userImg: string;     // 大頭貼
-    university: string;  // 學校
-    department: string;  // 科系
-    location: string[];  // 常出沒地區陣列
-    grade: string;       // 信用等級
-    tradeCount: number;  // 交易次數 (如果有的話)
-    productCount: number; //上架商品數
-  };
-}
-
 @Component({
   selector: 'app-product-page',
   imports: [CommonModule,RouterLink, CurrencyPipe, LucideAngularModule],
@@ -57,7 +33,7 @@ export class ProductPageComponent {
 
   readonly HomeIcon          = Home;
   readonly HeartIcon         = Heart;
-  readonly SendIcon          = Send;
+  readonly SendIcon    = Send;
   readonly MessageCircleIcon = MessageCircleMore;
   readonly ChevronLeftIcon   = ChevronLeft;
   readonly ChevronRightIcon  = ChevronRight;
@@ -66,73 +42,153 @@ export class ProductPageComponent {
   readonly StoreIcon         = Store;
   readonly ChevronDownIcon = ChevronDown;
   readonly ChevronUpIcon = ChevronUp;
+  readonly MoreVertical = MoreVertical;
+  readonly Copy = Copy;
+  readonly ShieldCheckIcon = ShieldCheck;
 
   // 💡 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
+  @ViewChild('descText') descText!: ElementRef;
 
-  constructor(public userService: UserService, private router: Router, private reportService: ReportService) {}
+  constructor(
+    private route: ActivatedRoute,
+    public userService: UserService,
+    private router: Router,
+    private reportService: ReportService,
+    private apiTestService: ApiTestService) {}
 
-
-
-  // 模擬未來後端回傳的真實 JSON 資料
- product: ProductDetailDTO = {
-  productId: 10123,
-  userId: 99,
-  productName: '葬送的芙莉蓮 1',
-  description:`「魔王被勇者一行人打倒後的世界。
-勇者欣梅爾與僧侶海塔爾、戰士艾森與魔法使芙莉蓮，為了再次體驗各地的人們帶來的感動，踏上了各處旅行的旅途。這是關於某個魔法使的後日談——
-
-【書況詳細說明】
-本書為一手購入的自有書（非租書店流出），平時均收納於防潮封閉式書櫃中，無日曬褪色、無煙味或寵物接觸環境，整體書況保存極佳，外觀約有九五成新。書斑極少，僅書側有些微自然的歲月存放痕跡。
-
-內頁部分：
-1. 全書完好：內頁極為乾淨，保證絕無任何鉛筆、原子筆或螢光筆之劃記。
-2. 結構穩固：無折角、無撕裂、無泡水變形，亦無任何缺頁或掉頁狀況。
-3. 附原廠書套：出貨時會附上全新透明哈哈書套，保護書皮不被刮傷。
-
-【二手規格小檔案】
-■ 書名：葬送的芙莉蓮 1 (臺灣東立正版)
-■ 作者：山田鐘人 (原作) / アベツカサ (作畫)
-■ 裝訂：平裝 / 單行本 / 繁體中文
-
-由於目前正值畢業季大出清，希望這本治癒人心的神作能流轉到下一位真心喜愛動漫的同學手中。為了方便大家，本商品非常歡迎在國立臺灣大學校園內（如總圖、公館捷運站、或各大教學大樓）進行面交，時間均可配合調整。有任何關於課本、二手書況的問題，歡迎直接點選上方的聊天按鈕與我聯繫，謝謝！」`,
-  price: 180,
-  imgPath: 'https://picsum.photos/id/1025/400/500,https://picsum.photos/id/103/400/500,https://picsum.photos/id/1062/400/500,https://picsum.photos/id/106/400/500,https://picsum.photos/id/62/400/500',
-  type: '教科書',
-  shelfDate: '2026-05-28',
-  productCondition: '狀況良好',
-  status: 'AVAILABLE',
-  grade: '大一',
-  deptGroup: '資訊學群',
-  location: '台北市',
-
-  // 替換掉原本散落的 sellerName 和 sellerGrade，改成這個完美的物件
-  user: {
-    userName: '企管水豚',
-    userImg: 'https://picsum.photos/id/1025/400/500', // 隨便塞個圖片路徑測試
-    university: '輔仁大學',
-    department: '企管系',
-    location: ['新北市', '台北市'],
-    grade: '4.9',
-    tradeCount: 52,
-    productCount: 7
-  }
-};
-
+  // 等待後端回傳的 JSON 資料
+  product: ProductVo | null = null;
+  sellerProductCount: number | null = null; //用來裝從同學 API 借來的「總上架件數」
+  breadcrumbLabel = ''; // 用來存麵包屑要顯示的文字（學校名或分類名）
+  breadcrumbUrl = '';   // 用來存麵包屑點擊後要回跳的網址路徑
   selectedImageIndex = 0;
   isExpanded = false; //控制商品說明是否展開
   isOverflowing = false; // 用來決定要不要顯示[查看更多]按鈕
   isCollected = false; // 是否已收藏
   isRequested = false; // 是否已發送請求
-  @ViewChild('descText') descText!: ElementRef;
+  isMenuOpen = false; //檢舉分享選單
 
-  ngOnInit(): void {}
 
-  //圖片篩選邏輯 即使後端開了 7 個欄位或陣列長度是 7，我們只把「有圖片」的網址抓出來
+  ngOnInit(): void {
+    this.loadProductAndInitDefenses();
+  }
+
+  /**
+   * 主控官：負責撈取商品詳情，並在成功後指揮所有初始化任務
+   */
+  private loadProductAndInitDefenses(): void {
+    const productId = Number(this.route.snapshot.paramMap.get('id'));
+    if (!productId) return;
+
+    this.apiTestService.searchByProductId(productId).subscribe({
+      next: (res: GetProductDataRes) => {
+        if (res.statusCode === 200 && res.productList?.length > 0) {
+          this.product = res.productList[0];
+
+          this.initBreadcrumbNavigation();                // 1. 執行智慧網址探針
+          this.checkIfUserAlreadyRequested();             // 2. 啟動重整重複購買防線
+          this.fetchSellerTotalCount(this.product.userId); // 3. 撈取賣家總上架數
+          this.triggerDescriptionOverflowCheck();         // 4. 檢查商品說明是否過長
+
+        } else {
+          Swal.fire('查無商品', '該商品可能已經下架，或是不存在喔！', 'warning');
+        }
+      },
+      error: (err) => {
+        console.error('撈取商品詳細失敗：', err);
+        Swal.fire('連線失敗', '系統無法載入商品資訊，請稍後再試', 'error');
+      }
+    });
+  }
+
+  //任務一：智慧網址探針，根據上一頁腳印計算麵包屑文字與路由
+  private initBreadcrumbNavigation(): void {
+    if (!this.product) return;
+
+    let prevUrlPath = '';
+    const nav = (window as any).navigation;
+    if (nav) {
+      const currentIndex = nav.currentEntry?.index;
+      if (currentIndex !== undefined && currentIndex > 0) {
+        const fullUrl = nav.entries()[currentIndex - 1]?.url || '';
+        prevUrlPath = new URL(fullUrl).pathname;
+      }
+    }
+
+    if (prevUrlPath.includes('/school-community/')) {
+      this.breadcrumbLabel = this.product.seller.school;
+      this.breadcrumbUrl = prevUrlPath;
+    } else if (prevUrlPath.includes('/product-list/')) {
+      const urlSegments = prevUrlPath.split('/');
+      const categorySlug = urlSegments[urlSegments.length - 1];
+      const matchedChineseName = CATEGORY_MAP[categorySlug];
+
+      if (matchedChineseName && this.product.type.includes(matchedChineseName)) {
+        this.breadcrumbLabel = matchedChineseName;
+      } else if (categorySlug === 'all') {
+        this.breadcrumbLabel = '全部商品';
+      } else {
+        this.breadcrumbLabel = this.product.type[0];
+      }
+      this.breadcrumbUrl = prevUrlPath;
+    } else {
+      this.breadcrumbLabel = this.product.type[0];
+      this.breadcrumbUrl = this.getCategoryRoute(this.product.type[0]);
+    }
+  }
+
+  // 任務二：終極重整防線，檢查當前登入者是否已對此商品發送過請求
+  private checkIfUserAlreadyRequested(): void {
+    if (!this.product) return;
+
+    this.apiTestService.getProductAllOrder(this.product.productId).subscribe({
+      next: (orderRes: OrderRes) => {
+        if (orderRes && orderRes.orderList) {
+          const currentUserName = this.userService.currentUser()?.userName;
+
+          const isIHaveRequested = orderRes.orderList.some(order =>
+            order.buyerName === currentUserName &&
+            order.status === '請求回應中'
+          );
+
+          if (isIHaveRequested) {
+            this.isRequested = true; // 變灰鎖定
+          }
+        }
+      },
+      error: (err) => {
+        console.error('初始化檢查商品訂單失敗：', err);
+      }
+    });
+  }
+
+  // 任務三:借用同學 API 來數數的專門方法
+  fetchSellerTotalCount(userId: number) {
+    this.apiTestService.searchBySellerId(userId).subscribe({
+      next: (res) => {
+        if (res && res.productList) {
+          // 🎯 核心精華：直接拿同學撈出來的商品陣列長度，當作總上架筆數！
+          this.sellerProductCount = res.productList.length;
+        }
+      },
+      error: (err) => {
+        console.error('撈取賣家上架數失敗：', err);
+        this.sellerProductCount = 0; // 失敗就防呆給 0 筆
+      }
+    });
+  }
+
+  //任務四：觸發非同步排版，檢查文字是否超出顯示範圍
+  private triggerDescriptionOverflowCheck(): void {
+    setTimeout(() => this.checkTextOverflow());
+  }
+
+
+
+ // 🌟 6. 圖片篩選功能大瘦身！因為後端已經是 List<String> 陣列，不需要再用逗號切開了！
   get validImages(): string[] {
-    if (!this.product.imgPath) return [];
-    // 用逗號切開，並順便濾掉可能不小心產生的空白字元
-    return this.product.imgPath.split(',').map(url => url.trim()).filter(url => url !== '');
+    return this.product?.imgPath ?? []; // 防呆：如果 product 還沒回來，先給空陣列
   }
 
   // 取得當前選中的主圖
@@ -181,7 +237,6 @@ if (index >= 0 && index < this.validImages.length) {
     const viewport = this.thumbViewport.nativeElement;
     // 一個縮圖 54px + gap 8px = 62px，每次移動一個縮圖的距離
     const scrollAmount = 62;
-
     if (direction == 'left') {
       viewport.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     } else {
@@ -204,6 +259,7 @@ if (index >= 0 && index < this.validImages.length) {
 /* 商品操作按鈕 */
 //加入收藏
   addToCart(): void {
+    if (!this.product) return;
     this.isCollected = !this.isCollected;
 
    if (this.isCollected) {
@@ -219,6 +275,7 @@ if (index >= 0 && index < this.validImages.length) {
 
   // 發送請求按鈕
   sendRequest(): void {
+    if (!this.product) return;
 // 防呆：如果已經發送過了，就不讓使用者再點擊
     if (this.isRequested) return;
     Swal.fire({
@@ -233,21 +290,88 @@ if (index >= 0 && index < this.validImages.length) {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isRequested = true; // 狀態改為已發送
-        Swal.fire({
-          title: '發送成功！',
-          text: '已成功向賣家發送購買請求，請靜待同學的回覆！',
-          icon: 'success',
-          confirmButtonText: '好的',
-          confirmButtonColor: '#EDA900'
+
+        const orderPayLoad: OrderVo = {
+          productId: this.product!.productId
+        };
+
+        this.apiTestService.addOrder(orderPayLoad).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+               this.isRequested = true; // 狀態改為已發送
+                Swal.fire({
+                  title: '發送成功！',
+                  text: '已成功向賣家發送購買請求，請靜待同學的回覆！',
+                  icon: 'success',
+                  confirmButtonText: '好的',
+                  confirmButtonColor: '#EDA900'
+                });
+            }else{
+              Swal.fire({
+                title: '發送失敗',
+                text: res.message, // 顯示後端吐回來的錯誤原因
+                icon: 'warning',
+                confirmButtonText: '知道了',
+                confirmButtonColor: '#EDA900'
+              });
+            }
+          },
+          error:(err)=>{
+            console.error('發送購買請求失敗：', err);
+            Swal.fire({
+              title: '連線失敗',
+              text: '系統無法載入訂單資訊，請稍後再試',
+              icon: 'error',
+              confirmButtonText: '好的',
+              confirmButtonColor: '#999999'
+            });
+          }
         });
+
       }
     });
   }
 
+  // 在底下加入三個點控制的方法
+toggleMenu(event: Event): void {
+  event.stopPropagation();
+  this.isMenuOpen = !this.isMenuOpen;
+}
+
+// 🔗 分享商品功能（超簡單神技）
+shareProduct(): void {
+  if (!this.product) return;
+
+  // 抓取目前網頁的完整網址，直接塞進使用者的剪貼簿
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    this.isMenuOpen = false; // 複製完順手關閉選單
+
+    // 彈出精美提示
+    Swal.fire({
+      title: '連結已複製！',
+      text: '快去分享給學校同學吧 🚀',
+      icon: 'success',
+      confirmButtonText: '太棒了',
+      confirmButtonColor: '#EDA900'
+    });
+  });
+}
+
+// 🚩 點擊選單內的檢舉
+onReportClick(): void {
+  this.isMenuOpen = false; // 關閉選單
+  this.reportProduct();    // 呼叫妳原本就寫好的檢舉功能
+}
+
+// 當使用者點選網頁其他任何地方時，自動把選單收起來
+@HostListener('document:click')
+closeMenu(): void {
+   this.isMenuOpen = false;
+}
+
   /*檢舉商品的功能*/
   reportProduct() {
-    console.log('準備檢舉商品，商品 ID:', this.product.productId);
+    if (!this.product) return;
     this.reportService.openReportDialog(
       'product',
       this.product.productName,
@@ -256,14 +380,30 @@ if (index >= 0 && index < this.validImages.length) {
     );
   }
 
+  allProducts: any[] = []; //全部商品
+
+    // 取得販賣商品資訊
+  fetchProduct(userId: number) {
+    this.apiTestService.searchBySellerId(userId).subscribe({
+      next: (res) => {
+        this.allProducts = res.productList;
+      },
+      error: (err) => { console.error('撈取商品失敗：', err); }
+    });
+
+  }
+
    // --- 賣家操作 ---
   openChat(): void {
-    console.log('開啟聊天室：', this.product.user.userName);
+    if (!this.product) return;
+    console.log('開啟聊天室：', this.product.seller?.userName);
     // 未來串接：this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
   }
 
   gotoStore(): void {
-    console.log('前往賣場：', this.product.user.userName);
-    this.router.navigate(['/store']);
+    if (!this.product) return;
+
+    this.router.navigate(['/store', this.product.userId]);
   }
+
  }

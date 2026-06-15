@@ -1,36 +1,32 @@
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
+
+// 針對手機版最佳化
+@media (max-width: 768px) {
+  .sub-list {
+    gap: 1.2rem;
+  }
+  .sub-link {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.1rem;
+  }
+}
 
 // ==========================================================
 // 1. 頁面外層
 // ==========================================================
 .page-wrapper {
-  max-width: 1400px;
-  margin: 32px auto;
-  padding: 0 24px;
+  @include common-layout;
 }
 
 // ==========================================================
 // 2. 麵包屑
 // ==========================================================
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9rem;
-  color: #888;
-  margin-bottom: 24px;
-
-  .breadcrumb-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    color: #888;
-    text-decoration: none;
-    &:hover { color: $semantic-orange; }
-  }
-
-  .sep { color: #bbb; }
-  .current { color: #333; font-weight: 500; }
+  margin-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  @include breadcrumb-style;
+   width: 100% !important;
 }
 
 // ==========================================================
@@ -136,6 +132,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+   min-width: 0;
 }
 
 .title-row {
@@ -146,32 +143,85 @@
   margin-bottom: 16px;
 }
 
-/* ── 檢舉按鈕 ── */
-.report-section {
-  display: flex;
-  justify-content: flex-end; // 靠右對齊
-
-  .btn-report-subtle {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: none;
-    border: none;
-    color: #e53935;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    lucide-icon {
-      color: inherit;
-    }
-
-    &:hover {
-      color: $semantic-orange; // 只有當滑鼠移過去時，才亮起警告的橘色/紅色
-      text-decoration: underline;
-    }
-  }
+.kebab-wrap {
+  position: relative;
+  display: inline-block;
 }
+
+.btn-kebab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  &:hover { background: #f3f4f6; }
+}
+
+.kebab-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  width: 138px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 6px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 9999;
+}
+
+.kebab-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+
+  span {
+    flex: 1;
+    text-align: left;
+  }
+
+  &:hover { background: #f9fafb; }
+  &.danger { color: #94a3b8; }
+  &.danger:hover { background: #fef2f2; color: #ef4444; }
+}
+
+
+/* ── 檢舉按鈕 ── */
+// .report-section {
+//   display: flex;
+//   justify-content: flex-end; // 靠右對齊
+
+//   .btn-report-subtle {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 4px;
+//     background: none;
+//     border: none;
+//     color: #e53935;
+//     font-size: 13px;
+//     cursor: pointer;
+//     transition: all 0.2s ease;
+
+//     lucide-icon {
+//       color: inherit;
+//     }
+
+//     &:hover {
+//       color: $semantic-orange; // 只有當滑鼠移過去時，才亮起警告的橘色/紅色
+//       text-decoration: underline;
+//     }
+//   }
+// }
 
 .product-title {
   font-size: 28px;
@@ -221,8 +271,8 @@
 // 全寬分隔線（賣家、安全用）
 .divider-full {
   border: 0;
-  border-top: 1px solid #eee;
-  margin: 20px 0;
+  border-top: 1px solid #aeaeae;
+  margin: 15px 0;
 }
 
 // 商品說明
@@ -253,6 +303,12 @@
   padding: 12px 0;
   margin-top: 16px;
   margin-bottom: 16px;
+
+    @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
 
 .price {
@@ -267,7 +323,8 @@
 }
 
 .btn-cart,
-.btn-buy {
+.btn-buy,
+.btn-tolk {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -324,7 +381,7 @@
 .btn-buy {
   background: $primary-yellow;
   color: $text-black;
-  transition: background-color 0.15s; // 💡 修正為 background-color 防止紅字
+  transition: background-color 0.15s;
 
   &:hover:not(:disabled) {
     background-color: $primary-yellow-dark;
@@ -340,6 +397,17 @@
   }
 }
 
+.btn-tolk{
+  background: #ffffff;
+  border: 1px solid $primary-yellow-darker;
+  color: $primary-yellow-darker;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: #fffbeb;
+  }
+}
+
 // ==========================================================
 // 6. 賣家資訊（全寬一行）
 // ==========================================================
@@ -347,11 +415,12 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  cursor: pointer;
 }
 
 .seller-avatar {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #F5CBA7;
@@ -366,14 +435,14 @@
   gap: 3px;
 
   .seller-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: #1a1a1a;
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-black;
   }
 
   .seller-meta {
-    font-size: 14px;
-    color: #888;
+    font-size: 15px;
+    color: $neutral-500;
   }
 }
 
@@ -387,7 +456,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px !important;
+  font-size: 15px !important;
   padding: 7px 16px;
   border-radius: 20px;
   border: 1px solid #ddd;
@@ -414,17 +483,11 @@
   padding: 12px 18px;
 
   .safety-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #784212;
-    white-space: nowrap;
-  }
-
-  .safety-item {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 13px;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
     color: #784212;
     white-space: nowrap;
   }
@@ -441,7 +504,7 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 12px;
+    font-size: 15px;
     color: #784212;
     white-space: nowrap;
   }

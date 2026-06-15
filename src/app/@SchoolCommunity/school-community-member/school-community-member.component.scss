@@ -1,0 +1,35 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.search-container {
+  width: 100%;
+  max-width: 500px; // 限制搜尋框最大寬度，避免在桌機版過寬
+  margin: 1rem 0;
+}
+
+.search {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: 1px solid $neutral-300;
+  border-radius: 999px; // 膠囊狀設計，呼應你的 sort-button 風格
+  background-color: $background-white;
+  color: $text-black;
+  outline: none;
+
+  &::placeholder {
+    color: $neutral-500;
+  }
+
+  &:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba($neutral-ice, 0.5);
+  }
+}
+
+// ============================================================================================
+// 找不到同學時的友善提示狀態 (No Result State)
+// ============================================================================================
+.empty-state {
+  @include empty-state;
+}
