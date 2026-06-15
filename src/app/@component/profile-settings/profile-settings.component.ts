@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,7 +6,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -15,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
 import {
   LucideAngularModule,
   PencilLine,
@@ -27,8 +26,10 @@ import {
   School,
   ClipboardPenLine,
   LockKeyhole,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-angular';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
@@ -54,8 +55,15 @@ import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 })
 export class ProfileSettingsComponent {
   // --- 唯讀常數與圖標 ---
-  readonly icons = { School, MapPin, Phone, Box, Mail, PencilLine, BookUser, ClipboardPenLine, LockKeyhole };
+readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, BookUser, ClipboardPenLine, LockKeyhole, ChevronDown };
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private schoolService: SchoolDataService,
+    private userService: UserService,
+    private elementRef: ElementRef
+  ) {}
   // --- 狀態變數 ---
   isEditingBasic = false;
   isEditingPassword = false;
@@ -64,10 +72,10 @@ export class ProfileSettingsComponent {
   hideConfirmPassword = signal(true);
 
   // --- 使用者原始數據 (與後端對接用) ---
+  currentUserId: number | null = null;
   name = '';
   school = '';
   department = '';
-  areas: string[] = ['', '', ''];
   phone = '';
   email = '';
   profile = '';
@@ -86,116 +94,114 @@ export class ProfileSettingsComponent {
   deptControl = new FormControl(this.department);
   phoneControl = new FormControl('', [Validators.pattern(/^09-\d{8}$/)]);
   profileControl = new FormControl(this.profile);
-  areaFormArray = new FormArray<FormControl<string | null>>([]);
+  allRegions = computed(() => this.schoolService.allRegions());
+  selectedAreas: string[] = [];
+  isAreaDrawerOpen = false;
+  readonly MAX_AREAS = 3;
   passwordForm!: FormGroup;
+
+  get isAreaValid(): boolean {
+  return this.selectedAreas.length > 0;
+  }
 
   // 用一個物件把所有基本資料的控制項打包打包！
   // 未來如果有增加「生日、性別」，接直往這裡塞一列就好，下方所有邏輯都不用動！
   private get basicControlsMap() {
     return {
-      school: this.schoolControl,
       dept: this.deptControl,
       phone: this.phoneControl,
       profile: this.profileControl,
-      areas: this.areaFormArray,
     };
   }
 
   // --- RxJS 動態水管 ---
-  filteredSchools!: Observable<string[]>;
   filteredDepts!: Observable<string[]>;
-  filteredAreasList: Observable<string[]>[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private schoolService: SchoolDataService,
-    private userService: UserService
-  ) { }
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  if (!this.isAreaDrawerOpen) return;
+
+  const target = event.target as HTMLElement;
+  const clickedInside = this.elementRef.nativeElement.querySelector('.area-selector')?.contains(target);
+
+  if (!clickedInside) {
+    this.isAreaDrawerOpen = false;
+  }
+}
 
   // --- 串接後端：載入個人資料 ---
   loadUserProfile() {
-    // 實戰中，這裡的 ID 應該是從登入時存的 localStorage 拿出來的
-    /**💡💡💡這裡12是測試用，之後要拿掉 💡💡💡*/
-    // const currentUserId = Number(localStorage.getItem('userId')) || 12;
-    this.userService.getMyInfo().subscribe({ // 絲絨改掉了，12你也沒拿掉。
-      next: (res) => {
-        if (res.statusCode === 200) {
-          const user = res.user;
 
-          this.name = user.userName;
-          this.email = user.userEmail;
-          this.school = user.school;
-          this.department = user.department || '';
-          this.phone = user.phone || '';
-          this.profile = user.msg || '';
-          this.score = user.goodLevel || 5;
+  this.userService.getMyInfo().subscribe({
+    next:(res)=>{
+      if(res.statusCode === 200){
+        const user = res.user;
+        this.currentUserId = user.userId || user.id;
+        this.name = user.userName;
+        this.email = user.userEmail;
+        this.school = user.school;
+        this.department = user.department || '';
+        this.phone = user.phone || '';
+        this.profile = user.msg || '';
+        this.score = user.goodLevel || 5;
 
-          if (user.imgPath && user.imgPath.trim() !== '') {
-            if (user.imgPath.startsWith('http')) {
-              this.avatarUrl = user.imgPath; // 👉 如果是 Cloudinary 網址，直球對決直接用！
-            } else {
-              this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
+      if (user.imgPath && user.imgPath.trim() !== '') {
+          if (user.imgPath.startsWith('http')) {
+            this.avatarUrl = user.imgPath; // 👉 如果是 Cloudinary 網址，直球對決直接用！
+          } else {
+            this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
+          }
+        } else {
+          this.avatarUrl = 'https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png';
+        }
+
+        // 同步通知全站右上角
+        this.userService.updateAvatar(this.avatarUrl as string);
+
+       // 2. 處理地區 (🌟 終極拆彈防禦：管他資料庫是字串、陣列、還是帶括號的亂碼，前端統統相容！)
+        let backendAreas: string[] = [];
+
+        if (Array.isArray(user.location)) {
+          // 情境 A：後端給的是標準陣列 (例如：["臺南市"])
+          backendAreas = user.location;
+        } else if (user.location && typeof user.location === 'string') {
+          const cleanStr = user.location.trim();
+
+          // 情境 B：後端給的是「長得像陣列的字串」 (例如：'["臺北市"]')
+          if (cleanStr.startsWith('[') && cleanStr.endsWith(']')) {
+            try {
+              backendAreas = JSON.parse(cleanStr);
+            } catch (e) {
+              // 萬一 JSON 解析失敗，用正規表達式把中括號和雙引號暴力濾掉
+              backendAreas = [cleanStr.replace(/[\[\]"']/g, '')];
             }
           } else {
-            this.avatarUrl = 'https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png';
+            // 情境 C：後端給的是最單純的純字串 (例如：'臺北市')
+            backendAreas = [cleanStr];
           }
+        }
 
-          // 同步通知全站右上角
-          this.userService.updateAvatar(this.avatarUrl as string);
+        this.selectedAreas = [
+          backendAreas[0] || '',
+          backendAreas[1] || '',
+          backendAreas[2] || ''
+        ].filter(a => a !== '');
 
-          // 2. 處理地區 (🌟 終極拆彈防禦：管他資料庫是字串、陣列、還是帶括號的亂碼，前端統統相容！)
-          let backendAreas: string[] = [];
-
-          if (Array.isArray(user.location)) {
-            // 情境 A：後端給的是標準陣列 (例如：["臺南市"])
-            backendAreas = user.location;
-          } else if (user.location && typeof user.location === 'string') {
-            const cleanStr = user.location.trim();
-
-            // 情境 B：後端給的是「長得像陣列的字串」 (例如：'["臺北市"]')
-            if (cleanStr.startsWith('[') && cleanStr.endsWith(']')) {
-              try {
-                backendAreas = JSON.parse(cleanStr);
-              } catch (e) {
-                // 萬一 JSON 解析失敗，用正規表達式把中括號和雙引號暴力濾掉
-                backendAreas = [cleanStr.replace(/[\[\]"']/g, '')];
-              }
-            } else {
-              // 情境 C：後端給的是最單純的純字串 (例如：'臺北市')
-              backendAreas = [cleanStr];
-            }
-          }
-          this.areas = [
-            backendAreas[0] || '',
-            backendAreas[1] || '',
-            backendAreas[2] || ''
-          ];
-
-          // 3. 將資料灌進表單控制項 (FormControl)
+        // 3. 將資料灌進表單控制項 (FormControl)
           this.schoolControl.setValue(this.school, { emitEvent: false });
           this.deptControl.setValue(this.department, { emitEvent: false });
           this.phoneControl.setValue(this.phone, { emitEvent: false });
           this.profileControl.setValue(this.profile, { emitEvent: false });
 
-          // 4. 重建並灌入地區 FormArray
-          this.areaFormArray.clear(); // 先把原本空的清掉
-          this.areas.forEach((areaValue, index) => {
-            const validators = index === 0 ? [Validators.required] : [];
-            this.areaFormArray.push(
-              new FormControl({ value: areaValue, disabled: true }, validators)
-            );
-          });
-
           // 因為我們重新建立了 FormArray，所以要重新接上地區的水管！
           this.initAutocompletePipelines();
-        }
-      },
-      error: (err) => {
-        console.error('取得個人資料失敗', err);
-        this.showWarningAlert('無法載入個人資料，請稍後再試。');
       }
-    });
+    },
+    error: (err) =>{
+      console.error('取得個人資料失敗', err);
+      this.showWarningAlert('無法載入個人資料，請稍後再試。');
+    }
+  });
   }
 
   ngOnInit() {
@@ -208,14 +214,14 @@ export class ProfileSettingsComponent {
         oldPassword: [{ value: '', disabled: true }, [Validators.required]],
         newPassword: [
           { value: '', disabled: true },
-          [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)],
+          [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)],
         ],
         confirmPassword: [{ value: '', disabled: true }, [Validators.required]],
       },
       { validators: this.passwordMatchValidator },
     );
 
-    // 3. 呼叫 API 載入資料 (這裡面會自動幫你處理 FormArray 和水管)
+  // 3. 呼叫 API 載入資料 (這裡面會自動幫你處理 FormArray 和水管)
     this.loadUserProfile();
   }
 
@@ -237,13 +243,13 @@ export class ProfileSettingsComponent {
       this.tempName = this.name;
       this.backupData = {
         avatarUrl: this.avatarUrl,
-        school: this.schoolControl.value,
         dept: this.deptControl.value,
         phone: this.phoneControl.value,
         profile: this.profileControl.value,
-        areas: this.areaFormArray.controls.map((c) => c.value),
+        areas: [...this.selectedAreas],
       };
     } else {
+      this.isEditingBasic = true;
       // 確定儲存時的前端大檢查
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
@@ -261,16 +267,23 @@ export class ProfileSettingsComponent {
       const updateData: SetInfoVo = {
         email: this.email,
         name: this.tempName,
-        school: this.schoolControl.value ?? '',
-        department: this.deptControl.value || null,
-        phone: this.phoneControl.value || null,
-        msg: this.profileControl.value || null,
-        location: this.areaFormArray.controls
-          .map(c => c.value ?? '')
-          .filter(val => val.trim() !== ''), // 過濾掉空字串
+        school: this.school,
+        department: this.deptControl.value ?? '',
+        phone: this.phoneControl.value ?? '',
+        msg: this.profileControl.value ??  '',
+        location: this.selectedAreas,
         img: base64Img,
         deleteImg: isDelete
       };
+
+      Swal.fire({
+        title: '資料儲存中...',
+        html: '正在為您更新個人檔案，請稍候',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
       // 🌟 3. 正式發送給後端！
       this.userService.updateProfile(updateData).subscribe({
@@ -287,16 +300,10 @@ export class ProfileSettingsComponent {
             this.name = updateData.name;
             this.school = updateData.school;
             this.department = updateData.department ?? '';
-            this.phone = updateData.phone ?? '';
-            this.profile = updateData.msg ?? '';
-            this.areas = updateData.location;
+            this.phone = updateData.phone  ?? '';
+            this.profile = updateData.msg  ?? '';
             this.selectedAvatarFile = null;
 
-          } else if (res.statusCode === 401 && res.message === 'Please login first') {
-            // ⚠️ 假設這是你們後端「未登入」的代碼，依你們實際情況調整
-            Swal.fire({ title: '登入已過期', text: '請重新登入', icon: 'error' }).then(() => {
-              this.router.navigate(['/login']);
-            });
           } else {
             // ❌ 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
             this.showWarningAlert(res.message);
@@ -319,37 +326,26 @@ export class ProfileSettingsComponent {
     this.userService.updateAvatar(this.backupData.avatarUrl);
     this.selectedAvatarFile = null;
     this.tempName = this.name;
-    this.schoolControl.setValue(this.backupData.school, { emitEvent: false });
     this.deptControl.setValue(this.backupData.dept, { emitEvent: false });
     this.phoneControl.setValue(this.backupData.phone, { emitEvent: false });
     this.profileControl.setValue(this.backupData.profile, { emitEvent: false });
-    this.areaFormArray.controls.forEach((c, i) =>
-      c.setValue(this.backupData.areas[i], { emitEvent: false }),
-    );
+    this.selectedAreas = [...this.backupData.areas];
   }
 
-  // ✨ 神級重構 C：把又臭又長的比對安檢抽出來獨立
+  // 把又臭又長的比對安檢抽出來獨立
   private validateAndMarkBasicFields(): boolean {
-    const allSchools = this.schoolService.allFlattenedSchools();
-    const allRegions = this.schoolService.allRegions();
-    const cleanSchool = this.normalize(this.schoolControl.value);
-    this.areaFormArray.controls.forEach(c => {
-      if (c.value) this.validateAreaControl(c);
-    });
-    // 檢查是否在清單內
-    if (
-      cleanSchool && !allSchools.some((opt) => opt.toLowerCase().replace(/台/g, '臺') === cleanSchool,)) {
-      this.schoolControl.setErrors({ notInList: true });
-    }
-
-    const isAnyAreaInvalid = this.areaFormArray.controls.some(c => c.invalid);
 
     // 催生紅字判定
-    if (this.schoolControl.invalid || isAnyAreaInvalid || this.phoneControl.invalid) {
+    if (this.schoolControl.invalid || this.phoneControl.invalid) {
       this.schoolControl.markAsTouched();
       this.phoneControl.markAsTouched();
-      this.areaFormArray.controls.forEach(c => c.markAsTouched());
       this.showWarningAlert('欄位填寫有誤！請務必填寫必填項、確認手機格式，並確認出沒地區沒有重複選取喔！');
+      this.isEditingBasic = true;
+      return true;
+    }
+
+    if (!this.isAreaValid) {
+      this.showWarningAlert('請至少選擇一個常出沒地區！');
       this.isEditingBasic = true;
       return true;
     }
@@ -370,98 +366,11 @@ export class ProfileSettingsComponent {
     return false; // 代表完全沒問題，放行儲存
   }
 
-  //讓地區（或學校）在 Blur 失去焦點時當場進行清單安檢
-  validateOnBlur(control: AbstractControl, type: 'school' | 'area') {
-    setTimeout(() => {
-      control.markAsTouched();
-      const value = this.normalize(control.value);
-      if (!value) { control.setErrors(null); return; }
-
-      if (type === 'area') this.validateAreaControl(control);
-      else this.validateSchoolControl(control);
-    }, 200);
-  }
-
-  private validateAreaControl(control: AbstractControl) {
-    const allRegions = this.schoolService.allRegions();
-    const value = this.normalize(control.value);
-
-    const otherSelected = this.areaFormArray.controls
-      .filter(c => c !== control)
-      .map(c => this.normalize(c.value));
-
-    // 模糊補全
-    const matched = allRegions.find(opt =>
-      this.normalize(opt).includes(value) &&
-      !otherSelected.includes(this.normalize(opt))
-    );
-    if (matched) { control.setValue(matched); this.areaRefreshTrigger.next(); return; }
-
-    // 安檢
-    const isInList = allRegions.some(opt => this.normalize(opt) === value);
-    if (!isInList) { control.setErrors({ notInList: true }); return; }
-
-    // 重複檢查
-    const allValues = this.areaFormArray.controls.map(c => this.normalize(c.value));
-    this.areaFormArray.controls.forEach(c => {
-      const v = this.normalize(c.value);
-      if (!v) return;
-      allValues.filter(x => x === v).length > 1
-        ? c.setErrors({ duplicated: true })
-        : c.hasError('duplicated') && c.setErrors(null);
-    });
-  }
-
-  private validateSchoolControl(control: AbstractControl) {
-    const value = this.normalize(control.value);
-    const isValid = this.schoolService.allFlattenedSchools()
-      .some(opt => this.normalize(opt) === value);
-    control.setErrors(isValid ? null : { notInList: true });
-  }
 
   // --- 各類獨立小工具方法 (Helper Functions) ---
 
-  //台→臺
-  private normalize(value: string | null): string {
-    return (value || '').trim().toLowerCase().replace(/台/g, '臺');
-  }
-
-  private areaRefreshTrigger = new BehaviorSubject<void>(undefined);
-
   private initAutocompletePipelines() {
-    // 地區動態互斥水管
-    this.areaFormArray.controls.forEach((control, index) => {
-      this.filteredAreasList[index] = combineLatest([
-        control.valueChanges.pipe(startWith(control.value || '')),
-        this.areaRefreshTrigger  // ✅ 加入這個，讓其他格選完後可以強迫此格重新過濾
-      ]).pipe(
-        map(([value]) => {
-          const allRegions = this.schoolService.allRegions();
-          const otherSelected = this.areaFormArray.controls
-            .filter((_, idx) => idx !== index)
-            .map((c) => this.normalize(c.value))
-            .filter(val => val !== '');
 
-          // ✅ 過濾掉已被其他格選走的選項
-          const available = allRegions.filter(
-            (r) => !otherSelected.includes(r.toLowerCase().replace(/台/g, '臺'))
-          );
-          return this._filter(value || '', available);
-        }),
-      );
-      // 值改變時，重新檢查所有格的重複狀態
-      control.valueChanges.subscribe(() => {
-        this.recheckDuplicates();
-      });
-    });
-
-    // 學校水管
-    this.filteredSchools = this.schoolControl.valueChanges.pipe(
-      startWith(this.schoolControl.value || ''),
-      map((value) =>
-        this._filter(value || '', this.schoolService.allFlattenedSchools()),
-      ),
-    );
 
     // 科系水管
     this.filteredDepts = this.deptControl.valueChanges.pipe(
@@ -476,30 +385,7 @@ export class ProfileSettingsComponent {
       ),
     );
 
-    // 換學校清空科系
-    this.schoolControl.valueChanges.subscribe((newValue) => {
-      if (this.isEditingBasic && newValue !== this.school) {
-        this.deptControl.setValue('', { emitEvent: true });
-      }
-    });
   }
-
-  // 專門負責重複檢查的方法，隨時可以呼叫
-  private recheckDuplicates() {
-    const allValues = this.areaFormArray.controls.map(c => this.normalize(c.value));
-
-    this.areaFormArray.controls.forEach(c => {
-      const v = this.normalize(c.value);
-      if (!v) return;
-
-      if (allValues.filter(x => x === v).length > 1) {
-        c.setErrors({ duplicated: true });
-      } else if (c.hasError('duplicated')) {
-        c.setErrors(null);
-      }
-    });
-  }
-
 
   /* 處理手機輸入與自動填入 '-' */
   onPhoneInput(event: any) {
@@ -519,7 +405,7 @@ export class ProfileSettingsComponent {
     );
   }
 
-  // 驗證器：確保輸入的值必須存在於 Service 的官方清單中
+   // 驗證器：確保輸入的值必須存在於 Service 的官方清單中
   private passwordMatchValidator(control: AbstractControl) {
     const newPwd = control.get('newPassword');
     const cfPwd = control.get('confirmPassword');
@@ -551,6 +437,51 @@ export class ProfileSettingsComponent {
     });
   }
 
+  //自介縮排
+  onProfileKeydown(event: KeyboardEvent) {
+  if (event.key === 'Tab') {
+    event.preventDefault();  // 阻止瀏覽器原生的 Tab 跳到下一個欄位
+
+    const textarea = event.target as HTMLTextAreaElement;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = this.profileControl.value || '';
+
+    const indent = '　　';  // 兩個全形空格，視覺上像縮排
+
+    const newText = text.substring(0, start) + indent + text.substring(end);
+
+    // 檢查是否超過字數限制
+    if (newText.length > 200) return;
+
+    this.profileControl.setValue(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + indent.length, start + indent.length);
+    });
+  }
+}
+
+    toggleAreaDrawer() {
+    if (this.isEditingBasic) {
+      this.isAreaDrawerOpen = !this.isAreaDrawerOpen;
+    }
+  }
+
+  toggleArea(region: string) {
+    if (this.selectedAreas.includes(region)) {
+      this.selectedAreas = this.selectedAreas.filter(a => a !== region);
+    } else if (this.selectedAreas.length < this.MAX_AREAS) {
+      this.selectedAreas = [...this.selectedAreas, region];
+    }
+  }
+
+  removeArea(region: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.selectedAreas = this.selectedAreas.filter(a => a !== region);
+  }
+
   //更換照片
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -569,8 +500,8 @@ export class ProfileSettingsComponent {
       reader.onload = (e) => {
         this.avatarUrl = reader.result;
         if (reader.result) {
-          this.userService.updateAvatar(reader.result as string);
-        }
+        this.userService.updateAvatar(reader.result as string);
+      }
       };
       reader.readAsDataURL(file);
     }
@@ -597,7 +528,7 @@ export class ProfileSettingsComponent {
     });
   }
 
-  //密碼確認修改按鈕
+//密碼確認修改按鈕
   toggleEditPassword() {
     this.isEditingPassword = !this.isEditingPassword;
     if (this.isEditingPassword) {
@@ -615,37 +546,37 @@ export class ProfileSettingsComponent {
       }
 
       const requestData: ChangePasswordVo = {
-        nowPad: this.passwordForm.value.oldPassword,
-        newPad: this.passwordForm.value.newPassword
+      nowPad: this.passwordForm.value.oldPassword,
+      newPad: this.passwordForm.value.newPassword
       };
 
       this.userService.changePassword(requestData).subscribe({
-        next: (res) => {
-          if (res.statusCode === 200) {
-            Swal.fire({
-              title: '密碼修改成功！',
-              icon: 'success',
-              confirmButtonText: '確定',
-              confirmButtonColor: '#FB831D',
-            });
-            // 成功後才執行收尾動作 (禁用並清空密碼表單)
-            this.finalizeEdit();
-          } else {
+        next:(res) => {
+          if(res.statusCode === 200){
+          Swal.fire({
+            title: '密碼修改成功！',
+            icon: 'success',
+            confirmButtonText: '確定',
+            confirmButtonColor: '#FB831D',
+          });
+          // 成功後才執行收尾動作 (禁用並清空密碼表單)
+          this.finalizeEdit();
+          }else{
             console.error('修改密碼被後端拒絕:', res.message);
             Swal.fire({
-              title: '修改失敗',
-              text: '舊密碼輸入錯誤，請確認後再試！',
-              icon: 'error',
-              confirmButtonText: '知道了',
-              confirmButtonColor: '#FB831D',
-            });
-            this.isEditingPassword = true;
+            title: '修改失敗',
+            text: '舊密碼輸入錯誤，請確認後再試！',
+            icon: 'error',
+            confirmButtonText: '知道了',
+            confirmButtonColor: '#FB831D',
+          });
+          this.isEditingPassword = true;
           }
         },
         error: (err) => {
-          console.error('更換密碼 API 錯誤', err);
-          Swal.fire('系統錯誤', '無法連線到伺服器，請稍後再試！', 'error');
-          this.isEditingPassword = true;
+        console.error('更換密碼 API 錯誤', err);
+        Swal.fire('系統錯誤', '無法連線到伺服器，請稍後再試！', 'error');
+        this.isEditingPassword = true;
         }
       });
 
@@ -666,9 +597,13 @@ export class ProfileSettingsComponent {
   }
 
   gotoStore() {
-    if (this.isEditingBasic) return;
-    const myId = localStorage.getItem('userId');
-    this.router.navigate(['/store', myId]);
+ if (this.isEditingBasic) return;
+    if (!this.currentUserId) {
+      console.warn('尚未取得使用者 ID，無法導向個人商城');
+      return;
+    }
+    this.router.navigate(['/store', this.currentUserId]);
   }
+
 
 }

@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { AnnouncementComponent } from './@component/announcement/announcement.component';
-import { BackIndexComponent } from './@component/back-index/back-index.component';
 import { BackUserComponent } from './@component/back-user/back-user.component';
-import { BackProductComponent } from './@component/back-product/back-product.component';
 import { ReportComponent } from './@component/report/report.component';
 import { ProfileSettingsComponent } from './@component/profile-settings/profile-settings.component';
 import { OrderInformationComponent } from './@component/order-information/order-information.component';
@@ -36,14 +34,14 @@ export const routes: Routes = [
       { path: 'home', component: HomepageComponent },
       { path: 'product-list/:category', component: ProductListingComponent },
       { path: 'cart', component: ShoppingCartComponent },
-      { path: 'test', component: ForegroundTestComponent },
+      { path: 'test/:id', component: ForegroundTestComponent },
       { path: 'order_information', component: OrderInformationComponent }, //訂單資料
       { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
       { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
       { path: 'launch_product_price', component: LaunchProductPriceComponent }, //上架商品頁-價格
       { path: 'draft_list', component: DraftListComponent }, //儲存草稿頁
       { path: 'store/:id', component: StoreComponent }, //賣場頁面
-      { path: 'product_page', component: ProductPageComponent }, //商品頁
+      { path: 'product_page/:id', component: ProductPageComponent }, //商品頁
       { path: 'front_report', component: FrontReportComponent }, //檢舉頁
 
       // TODO: school-community/:universityName

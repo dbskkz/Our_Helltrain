@@ -73,8 +73,6 @@ export class SearchPanelComponent {
       d.selected = false;
       d.children?.forEach(c => c.selected = false);
     });
-
-    this.closePanel.emit();
   }
 
   applyFilters() {
@@ -100,32 +98,54 @@ export class SearchPanelComponent {
     // 分類
     const selectedTypes = this.filterForm.categories
       .filter(c => c.selected)
-      .map(c => c.value);
+      .map(c => c.label);
 
     if (selectedTypes.length) {
       req.types = selectedTypes;
+    }
+
+    // 物況
+    const selectedConditions = this.filterForm.conditions
+      .filter(c => c.selected)
+      .map(c => c.label);
+
+    if(selectedConditions.length) {
+      req.conditions = selectedConditions;
     }
 
     // 年級
     const selectedDegrees = this.filterForm.degree
       .flatMap(d => {
 
-        if (!d.selected) {
-          return [];
+        if (!d.selected) return [];
+
+        // 有子項目（學士）→ 只看子項目有沒有被選
+        if (d.children) {
+          const selectedChildren = d.children
+            .filter(c => c.selected)
+            .map(c => c.label);
+
+          // 子項目沒有任何被選 → 代表全選，把所有子項目都加入
+          return selectedChildren.length
+            ? selectedChildren
+            : d.children.map(c => c.label);  // 全選：大一、大二、大三、大四以上
         }
 
-        const selectedChildren =
-          d.children
-            ?.filter(c => c.selected)
-            .map(c => c.value) ?? [];
-
-        return selectedChildren.length
-          ? selectedChildren
-          : [d.value];
+        // 無子項目（碩士、博士）→ 直接用 label
+        return [d.label];
       });
 
     if (selectedDegrees.length) {
-      req.grade = selectedDegrees.join(',');
+      req.grades = selectedDegrees;
+    }
+
+    // 學群
+    const selectedDept = this.filterForm.academic
+      .filter(d => d.selected)
+      .map(d => d.name);
+
+    if (selectedDept.length) {
+      req.deptGroups = selectedDept;
     }
 
     this.router.navigate(

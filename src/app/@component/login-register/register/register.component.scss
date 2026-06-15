@@ -7,7 +7,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px; /* 💡 統一每一行欄位向下維持 20px 的舒適呼吸感 */
+  margin-bottom: 30px; /* 💡 統一每一行欄位向下維持 20px 的舒適呼吸感 */
 }
 
 /* 獨立出來的登入 Email 額外間距 */
@@ -186,8 +186,8 @@ mat-icon.suffix-icon {
 .badge-secure {
   display: inline-flex;
   align-items: center;
-  background-color: #EAF6E9;
-  color: $semantic-green;
+  background-color: #f0f0f0;
+  color: #888888;
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 12px;
@@ -199,6 +199,11 @@ mat-icon.suffix-icon {
     width: 12px;
     height: 12px;
     margin-right: 2px;
+  }
+
+    &.valid {
+    background-color: #EAF6E9;
+    color: $semantic-green;
   }
 }
 

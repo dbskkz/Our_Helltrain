@@ -10,12 +10,9 @@
     <div class="card_header">
       <h4><span><lucide-icon [name]="icons.BookUser"></lucide-icon></span> 公開基本檔案</h4>
       <div class="button_group">
-        @if (isEditingBasic) {
-          <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
+        @if (!isEditingBasic) {
+          <button class="edit_btn" (click)="toggleEditBasic()">修改資料</button>
         }
-        <button class="edit_btn" (click)="toggleEditBasic()">
-          {{ isEditingBasic ? '確定儲存' : '修改資料' }}
-        </button>
       </div>
     </div>
 
@@ -84,7 +81,7 @@
 
 <div class="region_group_grid">
 
-  <div class="grid-field-item school">
+  <!-- <div class="grid-field-item school">
     <p class="field-title"><lucide-icon [name]="icons.School"></lucide-icon>就讀學校</p>
 
     <div class="field-content-block">
@@ -113,6 +110,20 @@
         }
       }
     </div>
+  </div> -->
+
+  <div class="grid-field-item school">
+    <p class="field-title"><lucide-icon [name]="icons.School"></lucide-icon>就讀學校</p>
+
+    <div class="field-content-block">
+      <!-- 不管有沒有在編輯，學校都顯示純文字 -->
+      <p class="pure-text-display">{{ school }}</p>
+
+      <!-- 編輯模式下加一個小提示 -->
+      @if (isEditingBasic) {
+        <p class="email-hint">學校與驗證信箱綁定，如需修改請聯繫客服</p>
+      }
+    </div>
   </div>
 
   <div class="grid-field-item department">
@@ -138,109 +149,70 @@
     </div>
   </div>
 
-  <div class="grid-field-item multi-area-section">
-    <p class="field-title"><lucide-icon [name]="icons.MapPin"></lucide-icon>常出沒地區
-      @if (isEditingBasic) {<span class="optional-text">(最多填三個)</span>}
-    </p>
+<div class="grid-field-item area">
+  <p class="field-title">
+    <lucide-icon [name]="icons.MapPin"></lucide-icon>
+    常出沒地區
+    <span class="optional-text">（最多填三個）</span>
+  </p>
 
-    <div class="field-content-block">
-      @if (!isEditingBasic) {
-        <div class="area-tags-display">
-          @for (areaValue of areas; track $index) {
-            @if (areaValue) {
-              @if (!$first) { <span class="area-split-dash">、</span> }
-              <span class="pure-text-display">{{ areaValue }}</span>
+  <div class="field-content-block">
+   @if (!isEditingBasic) {
+  <p class="pure-text-display">
+    @for (area of selectedAreas; track area; let last = $last) {
+      {{ area }}@if (!last) { 、 }
+    }
+  </p>
+}@else {
+      <!-- 編輯模式：下拉選擇器 -->
+      <div class="area-selector">
+
+        <!-- 觸發按鈕 -->
+        <div class="area-trigger" (click)="toggleAreaDrawer()"
+          [class.open]="isAreaDrawerOpen"
+          >
+          <div class="area-chips-row">
+            @if (selectedAreas.length === 0) {
+              <span class="area-placeholder">請選擇地區</span>
             }
-          }
+            @for (area of selectedAreas; track area) {
+              <span class="area-chip">
+                {{ area }}
+                <button type="button" class="chip-remove"
+                  (click)="removeArea(area, $event)">✕</button>
+              </span>
+            }
+          </div>
+          <lucide-icon [name]="isAreaDrawerOpen ? icons.ChevronUp : icons.ChevronDown"
+            class="trigger-chevron"
+            [class.rotated]="isAreaDrawerOpen">
+          </lucide-icon>
         </div>
-      } @else {
-          <div class="area-edit-grid">
-            <!-- 第一格 -->
-            <div class="area-column-item">
-              <div class="input-box-wrapper">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                  <input type="text" placeholder="地區1"
-                    matInput [formControl]="areaFormArray.controls[0]"
-                    [matAutocomplete]="autoArea0"
-                    class="custom-input"
-                    required
-                    (blur)="validateOnBlur(areaFormArray.controls[0], 'area')"
-                    maxlength="5">
-                  <mat-autocomplete #autoArea0="matAutocomplete" >
-                    @for (opt of filteredAreasList[0] | async; track opt) {
-                      <mat-option [value]="opt">{{opt}}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
 
-              </div>
-                @if (areaFormArray.controls[0].touched) {
-                  @if (areaFormArray.controls[0].hasError('required')) {
-                    <p class="field-hint error-text">✘ 地區第一格是必填喔！</p>
-                  } @else if (areaFormArray.controls[0].hasError('notInList')) {
-                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
-                  } @else if (areaFormArray.controls[0].hasError('duplicated')) {
-                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
-                  }
-                }
-            </div>
-
-            <!-- 第二格 -->
-            <div class="area-column-item">
-              <div class="input-box-wrapper">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                  <input type="text" placeholder="地區2(選填)"
-                    matInput [formControl]="areaFormArray.controls[1]"
-                    [matAutocomplete]="autoArea1"
-                    class="custom-input"
-                    (blur)="validateOnBlur(areaFormArray.controls[1], 'area')"
-                    maxlength="5">
-                  <mat-autocomplete #autoArea1="matAutocomplete" >
-                    @for (opt of filteredAreasList[1] | async; track opt) {
-                      <mat-option [value]="opt">{{opt}}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              </div>
-                @if (areaFormArray.controls[1].touched) {
-                  @if (areaFormArray.controls[1].hasError('notInList')) {
-                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
-                  } @else if (areaFormArray.controls[1].hasError('duplicated')) {
-                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
-                  }
-                }
-            </div>
-
-            <!-- 第三格 -->
-            <div class="area-column-item">
-              <div class="input-box-wrapper">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
-                  <input type="text" placeholder="地區3(選填)"
-                    matInput [formControl]="areaFormArray.controls[2]"
-                    [matAutocomplete]="autoArea2"
-                    class="custom-input"
-                    (blur)="validateOnBlur(areaFormArray.controls[2], 'area')"
-                    maxlength="5">
-                  <mat-autocomplete #autoArea2="matAutocomplete" >
-                    @for (opt of filteredAreasList[2] | async; track opt) {
-                      <mat-option [value]="opt">{{opt}}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              </div>
-               @if (areaFormArray.controls[2].touched) {
-                  @if (areaFormArray.controls[2].hasError('notInList')) {
-                    <p class="field-hint error-text">⚠ 請點選選單中的縣市！</p>
-                  } @else if (areaFormArray.controls[2].hasError('duplicated')) {
-                    <p class="field-hint error-text">⚠ 此縣市已重複選取！</p>
-                  }
+        <!-- 展開的選項抽屜 -->
+        @if (isAreaDrawerOpen) {
+          <div class="area-drawer">
+            <div class="area-tags-wrap">
+              @for (region of allRegions(); track region) {
+                <div class="area-tag"
+                  [class.selected]="selectedAreas.includes(region)"
+                  [class.disabled]="!selectedAreas.includes(region) && selectedAreas.length >= MAX_AREAS"
+                  (click)="toggleArea(region)">
+                  {{ region }}
+                </div>
               }
             </div>
+            <p class="area-drawer-hint">已選 {{ selectedAreas.length }} / {{ MAX_AREAS }} 個</p>
           </div>
+        }
 
-      }
-    </div>
+        @if (!isAreaValid) {
+          <p class="field-hint error-text">✘ 請至少選擇一個地區</p>
+        }
+      </div>
+    }
   </div>
+</div>
 
   <div class="grid-field-item phone_section">
     <p class="field-title"><lucide-icon [name]="icons.Phone"></lucide-icon>手機號碼
@@ -267,7 +239,7 @@
   </div>
 
 </div>
-  <hr class="section-divider">
+  <!-- <hr class="section-divider"> -->
 
     <div class="profile_section_block">
       <p class="field-title"><span><lucide-icon [name]="icons.ClipboardPenLine"></lucide-icon></span> 個人簡介</p>
@@ -278,7 +250,15 @@
           <form class="example-form">
             <div class="input-box-wrapper textarea-wrapper">
               <mat-form-field class="self-care" appearance="outline">
-                <textarea matInput [formControl]="profileControl" placeholder="可寫科系背景、常用面交地點與時間、或對買家說的話(限200字)" maxlength="200" cdkTextareaAutosize #autosize="cdkTextareaAutosize" [cdkAutosizeMinRows]="3" [cdkAutosizeMaxRows]="6"></textarea>
+                <textarea matInput #profileTextarea
+                [formControl]="profileControl"
+                placeholder="可寫科系背景、常用面交地點與時間、或對買家說的話(限200字)"
+                maxlength="200"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                [cdkAutosizeMinRows]="3"
+                [cdkAutosizeMaxRows]="6"
+                (keydown)="onProfileKeydown($event)"></textarea>
               </mat-form-field>
             </div>
           </form>
@@ -287,6 +267,13 @@
           </div>
         }
       </div>
+    </div>
+
+    <div class="basic-form-actions button_group">
+        @if (isEditingBasic) {
+          <button class="cancel_btn" (click)="cancelEditBasic()">取消修改</button>
+          <button class="edit_btn" (click)="toggleEditBasic()">確定儲存</button>
+        }
     </div>
 
     <div class="email_group_integration">
