@@ -191,13 +191,22 @@ export class LaunchProductInfoComponent implements OnInit {
   // 儲存草稿
   onSaveDraft() {
     if (this.formService.isUpdate()) {
+      Swal.fire({ title: '正在儲存草稿', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
       this.formService.updateProduct(this.formService.toProductReq(this.state)).subscribe({
-        next: (res) => { this.showToast('✓ 草稿已儲存'); },
+        next: (res) => {
+          Swal.close();
+          this.showToast('✓ 草稿已儲存');
+        },
         error: (err) => console.error('儲存草稿失敗:', err)
       })
     } else {
+      Swal.fire({ title: '正在儲存草稿', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+
       this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
         next: (res) => {
+          Swal.close();
           this.formService.markAsCreated(res.productId);
           this.showToast('✓ 草稿已新增');
         },
@@ -241,6 +250,8 @@ export class LaunchProductInfoComponent implements OnInit {
 
   // 確認上架
   async onDialogConfirm(): Promise<void> {
+    Swal.fire({ title: '正在上架商品', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
     this.dialogVisible = false;
     const userId = Number(this.userService.currentUser().userId);
     const req = this.formService.toProductReq(this.state);
@@ -262,9 +273,11 @@ export class LaunchProductInfoComponent implements OnInit {
         this.formService.publishProduct(productId).subscribe({
           next: (pubRes) => {
             if (res.statusCode !== 200) {
+              Swal.close();
               Swal.fire({ title: '上架失敗', text: '上架失敗，請稍後嘗試', icon: 'error' });
               return;
             }
+            Swal.close();
             Swal.fire({ title: '商品已上架！', icon: 'success', timer: 500, showConfirmButton: false });
             this.formService.resetState();
             this.router.navigate(['/store', userId]);

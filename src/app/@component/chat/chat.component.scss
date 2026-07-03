@@ -48,7 +48,7 @@ lucide-icon {
     gap: .5rem;
     align-items: center;
     border-bottom: none;
-    height:3.5rem;
+    height: 3.5rem;
 
     p {
       margin: 0;
@@ -57,14 +57,14 @@ lucide-icon {
       color: #1a1a1a;
     }
 
-    .last-page{
+    .last-page {
       color: $text-muted;
       background-color: $neutral-snow;
       padding: .3rem;
       border-radius: $border-radius-sm;
       @include centered;
 
-      &:hover{
+      &:hover {
         color: $text-gray;
         background-color: $neutral-ice;
       }
@@ -125,6 +125,7 @@ lucide-icon {
   &::-webkit-scrollbar {
     width: 4px;
   }
+
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 2px;
@@ -188,7 +189,7 @@ lucide-icon {
     div {
       position: absolute;
       right: 0;
-      top: 4px;
+      top: 20px;
       background-color: $theme-orange;
       color: #ffffff;
       font-size: 10px;
@@ -205,6 +206,7 @@ lucide-icon {
 
   // 假裝在右上角補上時間（因為原 HTML 內沒有時間欄位，利用偽元素優雅補上效果）
   position: relative;
+
   &::after {
     content: "19:15";
     position: absolute;
@@ -225,8 +227,8 @@ lucide-icon {
   flex-direction: column;
   background-color: #FAFAFA; // 整個聊天背景改為舒服的淺灰
 
-  min-width: 0;        // 防止被內部大寬度物件撐破
-  position: relative;  // 穩定佈局
+  min-width: 0; // 防止被內部大寬度物件撐破
+  position: relative; // 穩定佈局
 
   // 🚀 利用 CSS hack 幫你在 .product 上方憑空生出一個「假頂欄」來對齊設計圖
   .chat-header {
@@ -439,7 +441,7 @@ lucide-icon {
       color: $text-gray;
     }
 
-    &:hover{
+    &:hover {
       cursor: pointer;
       background-color: $neutral-hover-blue;
     }
@@ -482,7 +484,7 @@ lucide-icon {
 
 //==========
 
-.chat-shared-img{
+.chat-shared-img {
   height: 30vh;
   aspect-ratio: 1;
   object-fit: cover;
@@ -538,6 +540,7 @@ lucide-icon {
     }
   }
 }
+
 //===========
 
 // 預覽banner

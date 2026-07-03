@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
 import { UserService } from '../../@Services/user.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -373,25 +374,33 @@ export class LaunchProductPriceComponent implements OnInit {
   // 儲存草稿
   onSaveDraft() {
     if (this.formService.isUpdate()) {
-      // update
+      Swal.fire({ title: '正在儲存草稿', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
       this.formService.updateProduct(this.formService.toProductReq(this.state)).subscribe({
-        next: (res) => { this.showToast('✓ 草稿已儲存'); },
+        next: (res) => {
+          Swal.close();
+          this.showToast('✓ 草稿已儲存');
+        },
         error: (err) => console.error('儲存草稿失敗:', err)
       })
     } else {
-      // add
+      Swal.fire({ title: '正在儲存草稿', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+
       this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
         next: (res) => {
+          Swal.close();
           this.formService.markAsCreated(res.productId);
           this.showToast('✓ 草稿已新增');
         },
         error: (err) => console.error('新增草稿失敗:', err)
       })
     }
-
-    // const userId = Number(this.userService.currentUser().userId);
-    // // await this.formService.saveDraft();
-    // this.showToast('✓ 草稿已儲存');
   }
 
+  // const userId = Number(this.userService.currentUser().userId);
+  // // await this.formService.saveDraft();
+  // this.showToast('✓ 草稿已儲存');
 }
+
+
